@@ -1,0 +1,193 @@
+{
+  "app": {
+    "name": "Learning Companion",
+    "welcomeTo": "Chào mừng tới",
+    "skipToContent": "Bỏ qua tới nội dung chính"
+  },
+  "showcase": {
+    "title": "Học sâu hơn với chính tài liệu của bạn",
+    "subtitle": "Tải tài liệu lên, hỏi trợ lý, ôn bằng thẻ ghi nhớ và theo dõi tiến độ ở cùng một nơi.",
+    "progress": "Tiến độ",
+    "privacy": "Dữ liệu học tập chỉ mình bạn mở được, kể cả quản trị viên cũng không xem được nội dung.",
+    "cards": {
+      "library": { "tag": "Tài liệu", "title": "Giáo trình Kinh tế vi mô", "value": "8/12 chương" },
+      "flashcards": { "tag": "Thẻ ghi nhớ", "title": "Từ vựng chủ đề Môi trường", "value": "18/40 thẻ" },
+      "assistant": { "tag": "Trợ lý học tập", "title": "Giải thích định luật Ohm bằng ví dụ", "value": "Kèm trích dẫn" }
+    }
+  },
+  "register": {
+    "titleLine1": "Bắt đầu bằng việc",
+    "titleLine2": "tạo <strong>tài khoản</strong> của bạn.",
+    "subtitle": "Chỉ mất một phút. Sau đó bạn nhận thư để xác thực địa chỉ và vào học ngay.",
+    "displayName": {
+      "label": "Tên hiển thị",
+      "placeholder": "Ví dụ: Lan Anh",
+      "hint": "Tên hiển thị trong ứng dụng, tối đa 50 ký tự."
+    },
+    "email": {
+      "label": "Thư điện tử",
+      "placeholder": "ban@example.com"
+    },
+    "password": {
+      "label": "Mật khẩu",
+      "placeholder": "Ít nhất 10 ký tự",
+      "show": "Hiện mật khẩu",
+      "hide": "Ẩn mật khẩu",
+      "ruleLength": "Ít nhất 10 ký tự",
+      "ruleCommon": "Không phải mật khẩu phổ biến đã bị lộ",
+      "ruleState": { "pass": "đã đạt", "fail": "không đạt", "pending": "chưa xác nhận" },
+      "tip": "Mẹo: một cụm từ dài, dễ nhớ như “mùa thu hà nội 2026” an toàn hơn một chuỗi ngắn phức tạp."
+    },
+    "confirmPassword": {
+      "label": "Nhập lại mật khẩu",
+      "placeholder": "Nhập lại đúng mật khẩu ở trên"
+    },
+    "strength": {
+      "label": "Độ mạnh mật khẩu",
+      "levels": ["Rất yếu", "Yếu", "Tạm được", "Mạnh", "Rất mạnh"]
+    },
+    "terms": "Tôi đã đọc và đồng ý với <terms>Điều khoản sử dụng</terms> và <privacy>Chính sách quyền riêng tư</privacy>.",
+    "termsVersion": "Phiên bản {{version}}",
+    "opensInNewTab": "(mở trong thẻ mới)",
+    "submit": "Tạo tài khoản",
+    "submitHint": "Chúng tôi sẽ gửi thư xác thực ngay",
+    "submitting": "Đang tạo tài khoản…",
+    "haveAccount": "Đã có tài khoản?",
+    "login": "Đăng nhập",
+    "errorSummary_one": "Biểu mẫu còn {{count}} chỗ cần sửa.",
+    "errorSummary_other": "Biểu mẫu còn {{count}} chỗ cần sửa.",
+    "termsLoadFailed": "Chưa tải được phiên bản điều khoản.",
+    "valid": "Hợp lệ"
+  },
+  "validation": {
+    "displayNameRequired": "Hãy nhập tên hiển thị.",
+    "displayNameTooLong": "Tên hiển thị tối đa 50 ký tự.",
+    "emailRequired": "Hãy nhập địa chỉ thư điện tử.",
+    "emailInvalid": "Địa chỉ thư chưa đúng định dạng, ví dụ: ban@example.com.",
+    "passwordRequired": "Hãy nhập mật khẩu.",
+    "passwordTooShort": "Mật khẩu cần dài ít nhất 10 ký tự.",
+    "passwordTooLong": "Mật khẩu dài tối đa 128 ký tự.",
+    "confirmRequired": "Hãy nhập lại mật khẩu.",
+    "confirmMismatch": "Hai mật khẩu chưa khớp nhau.",
+    "termsRequired": "Bạn cần đồng ý điều khoản và chính sách quyền riêng tư để tạo tài khoản."
+  },
+  "errors": {
+    "PASSWORD_BREACHED": "Mật khẩu này đã từng bị lộ trong các vụ rò rỉ dữ liệu nên rất dễ bị đoán ra. Hãy dùng một cụm từ dài hơn, ví dụ “mùa thu hà nội 2026”.",
+    "PASSWORD_TOO_SHORT": "Mật khẩu cần dài ít nhất 10 ký tự.",
+    "PASSWORD_TOO_LONG": "Mật khẩu dài tối đa 128 ký tự.",
+    "TERMS_NOT_ACCEPTED": "Bạn cần đồng ý điều khoản và chính sách quyền riêng tư để tạo tài khoản.",
+    "TERMS_VERSION_OUTDATED": "Điều khoản vừa được cập nhật. Hãy đọc bản mới rồi đánh dấu đồng ý lại.",
+    "RATE_LIMITED": "Bạn thao tác quá nhanh. Hãy thử lại sau ít phút.",
+    "NETWORK_ERROR": "Không kết nối được tới máy chủ. Hãy kiểm tra mạng rồi thử lại.",
+    "VALIDATION_FAILED": "Một số thông tin chưa hợp lệ, hãy kiểm tra lại.",
+    "INTERNAL_ERROR": "Hệ thống đang gặp sự cố. Hãy thử lại sau ít phút.",
+    "requestId": "Mã tra cứu: {{id}}"
+  },
+  "checkEmail": {
+    "title": "Kiểm tra hộp thư của bạn",
+    "body": "Chúng tôi đã gửi thư tới <email>{{email}}</email>. Bấm nút trong thư để kích hoạt tài khoản.",
+    "expires": "Đường dẫn trong thư có hiệu lực 24 giờ và chỉ dùng được một lần.",
+    "tipsTitle": "Chưa thấy thư?",
+    "tips": [
+      "Đợi một lát, thư thường tới trong vòng một phút.",
+      "Xem thư mục Thư rác, Quảng cáo hoặc Cập nhật.",
+      "Kiểm tra lại địa chỉ thư ở trên có đúng không."
+    ],
+    "resend": "Gửi lại thư",
+    "resendIn": "Gửi lại sau {{time}}",
+    "resending": "Đang gửi…",
+    "resent": "Nếu địa chỉ này đang chờ xác thực, một thư mới vừa được gửi. Đường dẫn trong thư cũ sẽ không dùng được nữa.",
+    "changeEmail": "Đổi địa chỉ thư",
+    "openMailbox": "Mở {{provider}}",
+    "manual": {
+      "title": "Gửi lại thư xác thực",
+      "body": "Nhập địa chỉ thư bạn đã dùng khi đăng ký, chúng tôi sẽ gửi một đường dẫn mới.",
+      "submit": "Gửi thư xác thực"
+    }
+  },
+  "verify": {
+    "verifying": "Đang xác thực địa chỉ thư…",
+    "success": {
+      "title": "Tài khoản đã được kích hoạt",
+      "body": "Chào mừng <strong>{{name}}</strong>! Bạn đã được đăng nhập và có thể bắt đầu học ngay.",
+      "cta": "Bắt đầu học",
+      "redirect": "Tự chuyển vào ứng dụng sau {{seconds}} giây."
+    },
+    "expired": {
+      "title": "Đường dẫn đã hết hạn",
+      "body": "Đường dẫn xác thực chỉ có hiệu lực trong 24 giờ. Bấm nút bên dưới để nhận thư mới, không cần nhập lại địa chỉ.",
+      "cta": "Gửi thư xác thực mới",
+      "sent": "Đã gửi thư mới. Hãy mở thư mới nhất trong hộp thư của bạn."
+    },
+    "used": {
+      "title": "Đường dẫn này đã được dùng",
+      "body": "Địa chỉ thư đã được xác thực trước đó, bạn không cần làm gì thêm.",
+      "ctaApp": "Vào ứng dụng",
+      "ctaLogin": "Đi tới đăng nhập"
+    },
+    "invalid": {
+      "title": "Đường dẫn không hợp lệ",
+      "body": "Đường dẫn có thể bị thiếu khi sao chép, hoặc bạn đã yêu cầu một thư mới hơn. Hãy mở thư mới nhất, hoặc nhập địa chỉ để nhận thư khác."
+    },
+    "failed": {
+      "title": "Chưa xác thực được",
+      "retry": "Thử lại"
+    },
+    "backToRegister": "Quay lại trang đăng ký"
+  },
+  "login": {
+    "title": "Đăng nhập",
+    "comingSoon": "Đăng nhập bằng mật khẩu đang được hoàn thiện và sẽ có trong bản cập nhật tới.",
+    "noAccount": "Chưa có tài khoản?",
+    "register": "Tạo tài khoản"
+  },
+  "home": {
+    "greeting": "Chào {{name}}",
+    "nav": "Trang chính",
+    "ready": "Tài khoản của bạn đã sẵn sàng",
+    "readyBody": "Địa chỉ thư <strong>{{email}}</strong> đã được xác thực. Các chức năng học tập sẽ lần lượt xuất hiện ở đây.",
+    "verifiedAt": "Xác thực lúc {{time}}",
+    "logout": "Đăng xuất",
+    "loggingOut": "Đang đăng xuất…",
+    "next": "Sắp có",
+    "cards": {
+      "library": { "tag": "Tài liệu", "title": "Tải tài liệu học đầu tiên" },
+      "flashcards": { "tag": "Thẻ ghi nhớ", "title": "Tạo bộ thẻ ôn tập" },
+      "assistant": { "tag": "Trợ lý học tập", "title": "Hỏi trợ lý về tài liệu" }
+    },
+    "account": "Tài khoản",
+    "role": { "LEARNER": "Người học", "ADMIN": "Quản trị viên" }
+  },
+  "legal": {
+    "terms": "Điều khoản sử dụng",
+    "privacy": "Chính sách quyền riêng tư",
+    "version": "Phiên bản {{version}} · áp dụng từ {{date}}",
+    "summary": "Tóm tắt dễ hiểu",
+    "loadFailed": "Chưa tải được nội dung. Hãy thử lại.",
+    "draftNote": "Bản đang dùng trong giai đoạn phát triển. Nội dung đầy đủ được hoàn thiện cùng chức năng quản lý đồng ý."
+  },
+  "notFound": {
+    "title": "Không tìm thấy trang",
+    "body": "Đường dẫn có thể đã thay đổi hoặc không còn tồn tại.",
+    "home": "Về trang chính"
+  },
+  "dev": {
+    "mailbox": "Hộp thư thử",
+    "mailboxTitle": "Hộp thư mô phỏng",
+    "mailboxBody": "Môi trường phát triển không gửi thư thật. Mọi thư hệ thống gửi đi nằm ở đây.",
+    "empty": "Chưa có thư nào.",
+    "refresh": "Tải lại",
+    "clear": "Xóa hết",
+    "clock": "Đồng hồ thử",
+    "clockOffset": "Đang lệch {{hours}} giờ so với thực tế",
+    "advance25h": "Tua nhanh 25 giờ",
+    "advance1m": "Tua nhanh 1 phút",
+    "resetClock": "Đặt lại",
+    "to": "Tới",
+    "links": "Đường dẫn trong thư"
+  },
+  "common": {
+    "loading": "Đang tải…",
+    "back": "Quay lại"
+  }
+}

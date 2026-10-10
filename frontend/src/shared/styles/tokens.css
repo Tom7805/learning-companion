@@ -1,0 +1,69 @@
+/*
+ * Token thiết kế theo "first look": viền mực đậm, thẻ pastel vàng / tím / xanh, nút chính màu tím nhạt
+ * với nút tròn vàng, điểm nhấn cam. Tailwind sinh tiện ích từ các biến trong @theme (bg-ink, text-muted...).
+ */
+@theme {
+  --font-sans: 'Lexend Variable', 'Segoe UI', system-ui, sans-serif;
+
+  --color-ink: #1d1d1f;
+  --color-ink-soft: #3a3a3e;
+  --color-muted: #63636b;
+  --color-subtle: #6f6f77;
+  --color-paper: #f4f3ef;
+  --color-surface: #ffffff;
+  --color-field: #f1f1f3;
+  --color-line: #d8d8de;
+  --color-night: #2a2a2c;
+  --color-night-soft: #3a3a3d;
+
+  --color-accent: #ff5a36;
+  --color-accent-strong: #e8461f;
+  --color-accent-ink: #b8371a;
+  --color-sun: #ffd45c;
+  --color-sun-soft: #ffe9a8;
+  --color-lilac: #c9c2fb;
+  --color-lilac-strong: #b6acf7;
+  --color-lilac-soft: #e5e0fd;
+  --color-sky: #bfe3f7;
+  --color-sky-soft: #e1f2fc;
+  --color-mint: #8fdccc;
+
+  --color-success: #1e7a43;
+  --color-success-soft: #e3f5e8;
+  --color-danger: #c62f2f;
+  --color-danger-soft: #fde9e7;
+  --color-warning: #9a5b00;
+  --color-warning-soft: #fff1d1;
+  --color-focus: #2f6ad9;
+
+  --radius-field: 0.75rem;
+  --radius-card: 1.25rem;
+  --radius-panel: 1.75rem;
+
+  --shadow-pop: 0 1px 0 rgb(29 29 31 / 0.04), 0 8px 24px -12px rgb(29 29 31 / 0.18);
+
+  --animate-fade-up: fade-up 0.35s ease-out both;
+  --animate-pop: pop 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

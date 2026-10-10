@@ -1,0 +1,181 @@
+{
+  "app": {
+    "name": "Learning Companion",
+    "welcomeTo": "Welcome to",
+    "skipToContent": "Skip to main content"
+  },
+  "showcase": {
+    "title": "Learn deeper with your own materials",
+    "subtitle": "Upload documents, ask the assistant, review with flashcards and track your progress in one place.",
+    "progress": "Progress",
+    "privacy": "Only you can open your study data — not even administrators can see its content.",
+    "cards": {
+      "library": { "tag": "Library", "title": "Microeconomics textbook", "value": "8/12 chapters" },
+      "flashcards": { "tag": "Flashcards", "title": "Environment vocabulary", "value": "18/40 cards" },
+      "assistant": { "tag": "Study assistant", "title": "Explain Ohm's law with examples", "value": "With citations" }
+    }
+  },
+  "register": {
+    "titleLine1": "Let's start by",
+    "titleLine2": "creating your <strong>account.</strong>",
+    "subtitle": "It takes a minute. Then confirm your email address and start learning.",
+    "displayName": {
+      "label": "Display name",
+      "placeholder": "e.g. Lan Anh",
+      "hint": "Shown in the app, up to 50 characters."
+    },
+    "email": { "label": "Email address", "placeholder": "you@example.com" },
+    "password": {
+      "label": "Password",
+      "placeholder": "At least 10 characters",
+      "show": "Show password",
+      "hide": "Hide password",
+      "ruleLength": "At least 10 characters",
+      "ruleCommon": "Not a commonly leaked password",
+      "ruleState": { "pass": "met", "fail": "not met", "pending": "not confirmed yet" },
+      "tip": "Tip: a long, memorable phrase like “autumn in hanoi 2026” is safer than a short complex string."
+    },
+    "confirmPassword": { "label": "Re-type password", "placeholder": "Type the same password again" },
+    "strength": {
+      "label": "Password strength",
+      "levels": ["Very weak", "Weak", "Fair", "Strong", "Very strong"]
+    },
+    "terms": "I have read and agree to the <terms>Terms of Service</terms> and the <privacy>Privacy Policy</privacy>.",
+    "termsVersion": "Version {{version}}",
+    "opensInNewTab": "(opens in a new tab)",
+    "submit": "Create account",
+    "submitHint": "We'll send a verification email right away",
+    "submitting": "Creating your account…",
+    "haveAccount": "Already have an account?",
+    "login": "Sign in",
+    "errorSummary_one": "{{count}} field needs your attention.",
+    "errorSummary_other": "{{count}} fields need your attention.",
+    "termsLoadFailed": "Could not load the terms version.",
+    "valid": "Valid"
+  },
+  "validation": {
+    "displayNameRequired": "Enter a display name.",
+    "displayNameTooLong": "Display name can be at most 50 characters.",
+    "emailRequired": "Enter your email address.",
+    "emailInvalid": "Enter an email like you@example.com.",
+    "passwordRequired": "Enter a password.",
+    "passwordTooShort": "Password must be at least 10 characters.",
+    "passwordTooLong": "Password can be at most 128 characters.",
+    "confirmRequired": "Re-type your password.",
+    "confirmMismatch": "The passwords do not match.",
+    "termsRequired": "You need to accept the terms and privacy policy to create an account."
+  },
+  "errors": {
+    "PASSWORD_BREACHED": "This password has appeared in data breaches and is easy to guess. Use a longer phrase, for example “autumn in hanoi 2026”.",
+    "PASSWORD_TOO_SHORT": "Password must be at least 10 characters.",
+    "PASSWORD_TOO_LONG": "Password can be at most 128 characters.",
+    "TERMS_NOT_ACCEPTED": "You need to accept the terms and privacy policy to create an account.",
+    "TERMS_VERSION_OUTDATED": "The terms were just updated. Please read the new version and accept again.",
+    "RATE_LIMITED": "Too many attempts. Please try again in a few minutes.",
+    "NETWORK_ERROR": "Cannot reach the server. Check your connection and try again.",
+    "VALIDATION_FAILED": "Some details are not valid, please check them.",
+    "INTERNAL_ERROR": "Something went wrong on our side. Please try again shortly.",
+    "requestId": "Reference: {{id}}"
+  },
+  "checkEmail": {
+    "title": "Check your inbox",
+    "body": "We sent an email to <email>{{email}}</email>. Press the button in it to activate your account.",
+    "expires": "The link works once and expires after 24 hours.",
+    "tipsTitle": "No email yet?",
+    "tips": [
+      "Wait a moment — it usually arrives within a minute.",
+      "Look in your Spam, Promotions or Updates folder.",
+      "Check that the address above is correct."
+    ],
+    "resend": "Resend email",
+    "resendIn": "Resend in {{time}}",
+    "resending": "Sending…",
+    "resent": "If this address is waiting for verification, a new email is on its way. Links in older emails no longer work.",
+    "changeEmail": "Use a different email",
+    "openMailbox": "Open {{provider}}",
+    "manual": {
+      "title": "Resend verification email",
+      "body": "Enter the email you registered with and we'll send a new link.",
+      "submit": "Send verification email"
+    }
+  },
+  "verify": {
+    "verifying": "Verifying your email…",
+    "success": {
+      "title": "Your account is active",
+      "body": "Welcome <strong>{{name}}</strong>! You're signed in and ready to learn.",
+      "cta": "Start learning",
+      "redirect": "Taking you to the app in {{seconds}} seconds."
+    },
+    "expired": {
+      "title": "This link has expired",
+      "body": "Verification links work for 24 hours. Press the button below to get a new email — no need to type your address again.",
+      "cta": "Send a new verification email",
+      "sent": "New email sent. Open the most recent one in your inbox."
+    },
+    "used": {
+      "title": "This link was already used",
+      "body": "Your email address is already verified, nothing else to do.",
+      "ctaApp": "Go to the app",
+      "ctaLogin": "Go to sign in"
+    },
+    "invalid": {
+      "title": "This link is not valid",
+      "body": "The link may have been cut off when copied, or you requested a newer email. Open the latest email, or enter your address to get another one."
+    },
+    "failed": { "title": "Could not verify yet", "retry": "Try again" },
+    "backToRegister": "Back to sign up"
+  },
+  "login": {
+    "title": "Sign in",
+    "comingSoon": "Password sign-in is being finished and will arrive in the next update.",
+    "noAccount": "No account yet?",
+    "register": "Create an account"
+  },
+  "home": {
+    "greeting": "Hi {{name}}",
+    "nav": "Home",
+    "ready": "Your account is ready",
+    "readyBody": "<strong>{{email}}</strong> is verified. Study features will appear here as they ship.",
+    "verifiedAt": "Verified at {{time}}",
+    "logout": "Sign out",
+    "loggingOut": "Signing out…",
+    "next": "Coming soon",
+    "cards": {
+      "library": { "tag": "Library", "title": "Upload your first document" },
+      "flashcards": { "tag": "Flashcards", "title": "Build a review deck" },
+      "assistant": { "tag": "Study assistant", "title": "Ask about your materials" }
+    },
+    "account": "Account",
+    "role": { "LEARNER": "Learner", "ADMIN": "Administrator" }
+  },
+  "legal": {
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "version": "Version {{version}} · effective {{date}}",
+    "summary": "Plain-language summary",
+    "loadFailed": "Could not load this page. Please try again.",
+    "draftNote": "Development version. The full text ships with consent management."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The link may have changed or no longer exists.",
+    "home": "Back to home"
+  },
+  "dev": {
+    "mailbox": "Test mailbox",
+    "mailboxTitle": "Simulated mailbox",
+    "mailboxBody": "The development environment never sends real email. Everything the system sends lands here.",
+    "empty": "No email yet.",
+    "refresh": "Refresh",
+    "clear": "Clear all",
+    "clock": "Test clock",
+    "clockOffset": "Running {{hours}} hours ahead of real time",
+    "advance25h": "Jump 25 hours",
+    "advance1m": "Jump 1 minute",
+    "resetClock": "Reset",
+    "to": "To",
+    "links": "Links in this email"
+  },
+  "common": { "loading": "Loading…", "back": "Back" }
+}
