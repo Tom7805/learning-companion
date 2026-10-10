@@ -1,0 +1,75 @@
+spring:
+  application:
+    name: learning-companion
+  profiles:
+    default: dev
+  datasource:
+    # 127.0.0.1 thay vì localhost: trên Windows, localhost có thể trỏ vào Postgres khác qua IPv6.
+    # Tiền tố LC_ để không bị biến môi trường chung (DB_PASSWORD...) của dự án khác ghi đè.
+    url: ${LC_DB_URL:jdbc:postgresql://127.0.0.1:5432/learning_companion}
+    username: ${LC_DB_USERNAME:learning_companion}
+    password: ${LC_DB_PASSWORD:learning_companion}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    locations: classpath:db/migration
+    # Tệp migration rỗng của bộ khung được bỏ qua (FlywayConfig); khi story sau điền nội dung
+    # cho một số phiên bản nhỏ hơn bản đã chạy, Flyway vẫn áp dụng được.
+    out-of-order: true
+  jackson:
+    default-property-inclusion: non_null
+  thymeleaf:
+    check-template-location: false
+  mail:
+    host: ${SMTP_HOST:localhost}
+    port: ${SMTP_PORT:1025}
+    username: ${SMTP_USERNAME:}
+    password: ${SMTP_PASSWORD:}
+  web:
+    locale: vi
+
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-stacktrace: never
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  health:
+    # Thư đi qua MailGateway (mô phỏng hoặc SMTP) và tự thử lại; máy chủ SMTP tạm lỗi không làm ứng dụng "DOWN".
+    mail:
+      enabled: false
+
+app:
+  frontend-url: ${APP_FRONTEND_URL:http://localhost:5173}
+  auth:
+    verification-token-ttl: 24h
+    resend-cooldown: 60s
+    session-idle-timeout: 2h
+    session-cookie-name: lc_session
+    secure-cookies: ${APP_SECURE_COOKIES:false}
+    register-limit-per-hour: 10
+    resend-limit-per-hour: 20
+    registration-attempt-notice-interval: 1h
+    remember-device-duration: 30d
+    max-failed-logins: 5
+    lockout-duration: 15m
+    login-limit-per-hour: 100
+    device-cookie-name: lc_device
+  mail:
+    gateway: ${APP_MAIL_GATEWAY:mock}
+    from-address: ${APP_MAIL_FROM:no-reply@learningcompanion.local}
+    from-name: Learning Companion

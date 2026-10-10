@@ -1,0 +1,15 @@
+# Môi trường phát triển: thư gửi qua bản mô phỏng, đồng hồ điều chỉnh được để thử các mốc hết hạn.
+app:
+  mail:
+    gateway: mock
+  dev-tools:
+    enabled: true
+  auth:
+    # Thử tay và kiểm thử đầu cuối tạo nhiều tài khoản từ cùng một máy; môi trường thật giữ mức mặc định.
+    register-limit-per-hour: 500
+    resend-limit-per-hour: 500
+    login-limit-per-hour: 2000
+
+logging:
+  level:
+    com.learningcompanion: DEBUG

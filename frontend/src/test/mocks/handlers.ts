@@ -1,0 +1,76 @@
+import { http, HttpResponse } from 'msw'
+import type { Account, DeviceSession } from '@/features/auth/types'
+import type { LegalCurrent } from '@/features/privacy/types'
+
+export const legalCurrent: LegalCurrent = {
+  terms: { version: '2026-10-01', summary: 'Tóm tắt điều khoản', effectiveAt: '2026-09-30T17:00:00Z' },
+  privacy: { version: '2026-10-01', summary: 'Tóm tắt chính sách', effectiveAt: '2026-09-30T17:00:00Z' },
+}
+
+export const verifiedAccount: Account = {
+  id: '0b6f8d2e-1111-4f0a-9c1e-000000000001',
+  email: 'lan.anh@example.com',
+  displayName: 'Lan Anh',
+  role: 'LEARNER',
+  status: 'ACTIVE',
+  emailVerifiedAt: '2026-10-10T06:00:00Z',
+}
+
+export function apiError(status: number, code: string, field?: string) {
+  return HttpResponse.json(
+    {
+      code,
+      message: `server:${code}`,
+      status,
+      fieldErrors: field ? [{ field, code, message: `server:${code}` }] : [],
+      requestId: 'req-test-1',
+    },
+    { status },
+  )
+}
+
+/** Phản hồi mặc định của API; từng bài kiểm thử ghi đè bằng server.use(...). */
+export const handlers = [
+  http.get('*/api/v1/auth/session', () => HttpResponse.json({ authenticated: false })),
+  http.get('*/api/v1/legal/current', () => HttpResponse.json(legalCurrent)),
+  http.post('*/api/v1/auth/register', async ({ request }) => {
+    const body = (await request.json()) as { email: string }
+    return HttpResponse.json({ email: body.email.trim().toLowerCase(), resendAvailableInSeconds: 60 }, { status: 202 })
+  }),
+  http.post('*/api/v1/auth/verify-email', () => HttpResponse.json(verifiedAccount)),
+  http.post('*/api/v1/auth/verify-email/resend', () =>
+    HttpResponse.json({ resendAvailableInSeconds: 60 }, { status: 202 }),
+  ),
+  http.post('*/api/v1/auth/login', () => HttpResponse.json(verifiedAccount)),
+  http.get('*/api/v1/auth/sessions', () => HttpResponse.json(deviceSessions)),
+  http.delete('*/api/v1/auth/sessions/:id', () => new HttpResponse(null, { status: 204 })),
+  http.post('*/api/v1/auth/sessions/revoke-others', () => HttpResponse.json({ revokedCount: 1 })),
+]
+
+export const deviceSessions: DeviceSession[] = [
+  {
+    id: 'phien-thu-vien',
+    browser: 'Chrome',
+    operatingSystem: 'Windows',
+    deviceType: 'DESKTOP',
+    localNetwork: false,
+    location: 'Hà Nội, VN',
+    signedInAt: '2026-10-10T01:00:00Z',
+    lastActiveAt: '2026-10-10T02:00:00Z',
+    expiresAt: '2026-10-10T04:00:00Z',
+    rememberDevice: false,
+    current: false,
+  },
+  {
+    id: 'phien-dien-thoai',
+    browser: 'Chrome',
+    operatingSystem: 'Android',
+    deviceType: 'MOBILE',
+    localNetwork: true,
+    signedInAt: '2026-10-09T01:00:00Z',
+    lastActiveAt: '2026-10-10T03:00:00Z',
+    expiresAt: '2026-11-08T01:00:00Z',
+    rememberDevice: true,
+    current: true,
+  },
+]

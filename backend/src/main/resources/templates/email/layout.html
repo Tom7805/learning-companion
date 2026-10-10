@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${subject}">Learning Companion</title>
+</head>
+<body style="margin:0;padding:0;background:#f1f0ec;font-family:'Segoe UI',Helvetica,Arial,sans-serif;color:#1d1d1f;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f1f0ec;padding:32px 12px;">
+    <tr>
+        <td align="center">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+                   style="max-width:560px;background:#ffffff;border:1.5px solid #1d1d1f;border-radius:20px;">
+                <tr>
+                    <td style="padding:28px 32px 8px 32px;font-size:15px;color:#6b6b70;">
+                        Chào mừng tới <span style="color:#ff5a36;font-weight:700;font-size:18px;">Learning Companion</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:8px 32px 32px 32px;font-size:15px;line-height:1.6;">
+                        <div th:replace="${content}"></div>
+                    </td>
+                </tr>
+            </table>
+            <p style="max-width:560px;margin:16px auto 0 auto;font-size:12px;line-height:1.5;color:#8a8a90;">
+                Đây là thư tự động từ Learning Companion, bạn không cần trả lời thư này.
+            </p>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
