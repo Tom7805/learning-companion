@@ -1,7 +1,8 @@
-import axios from 'axios'
+import axios, { isAxiosError } from 'axios'
 
 const XSRF_COOKIE = 'XSRF-TOKEN'
 const MUTATING = new Set(['post', 'put', 'patch', 'delete'])
+const SESSION_LOST = new Set(['SESSION_EXPIRED', 'SESSION_REVOKED', 'UNAUTHENTICATED'])
 
 /**
  * Phiên đăng nhập nằm trong cookie HttpOnly. Máy chủ phát cookie XSRF-TOKEN, axios đọc và gửi lại
@@ -27,4 +28,25 @@ http.interceptors.request.use(async (config) => {
     await axios.get('/api/v1/auth/session', { withCredentials: true })
   }
   return config
+})
+
+type SessionLostListener = (reason: string) => void
+const sessionLostListeners = new Set<SessionLostListener>()
+
+/** Đăng ký nhận báo khi máy chủ cho biết phiên đã hết hạn, bị thu hồi hoặc chưa đăng nhập. */
+export function onSessionLost(listener: SessionLostListener) {
+  sessionLostListeners.add(listener)
+  return () => {
+    sessionLostListeners.delete(listener)
+  }
+}
+
+http.interceptors.response.use(undefined, (error: unknown) => {
+  if (isAxiosError(error) && error.response?.status === 401) {
+    const code = (error.response.data as { code?: string } | undefined)?.code
+    if (code && SESSION_LOST.has(code)) {
+      sessionLostListeners.forEach((listener) => listener(code))
+    }
+  }
+  return Promise.reject(error)
 })

@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import type { Account } from '@/features/auth/types'
+import type { Account, DeviceSession } from '@/features/auth/types'
 import type { LegalCurrent } from '@/features/privacy/types'
 
 export const legalCurrent: LegalCurrent = {
@@ -41,4 +41,36 @@ export const handlers = [
   http.post('*/api/v1/auth/verify-email/resend', () =>
     HttpResponse.json({ resendAvailableInSeconds: 60 }, { status: 202 }),
   ),
+  http.post('*/api/v1/auth/login', () => HttpResponse.json(verifiedAccount)),
+  http.get('*/api/v1/auth/sessions', () => HttpResponse.json(deviceSessions)),
+  http.delete('*/api/v1/auth/sessions/:id', () => new HttpResponse(null, { status: 204 })),
+  http.post('*/api/v1/auth/sessions/revoke-others', () => HttpResponse.json({ revokedCount: 1 })),
+]
+
+export const deviceSessions: DeviceSession[] = [
+  {
+    id: 'phien-thu-vien',
+    browser: 'Chrome',
+    operatingSystem: 'Windows',
+    deviceType: 'DESKTOP',
+    localNetwork: false,
+    location: 'Hà Nội, VN',
+    signedInAt: '2026-10-10T01:00:00Z',
+    lastActiveAt: '2026-10-10T02:00:00Z',
+    expiresAt: '2026-10-10T04:00:00Z',
+    rememberDevice: false,
+    current: false,
+  },
+  {
+    id: 'phien-dien-thoai',
+    browser: 'Chrome',
+    operatingSystem: 'Android',
+    deviceType: 'MOBILE',
+    localNetwork: true,
+    signedInAt: '2026-10-09T01:00:00Z',
+    lastActiveAt: '2026-10-10T03:00:00Z',
+    expiresAt: '2026-11-08T01:00:00Z',
+    rememberDevice: true,
+    current: true,
+  },
 ]

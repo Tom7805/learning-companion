@@ -1,12 +1,12 @@
 import { expect, test as base, type APIRequestContext, type Page } from '@playwright/test'
 import { DISPLAY_NAME, STRONG_PASSWORD } from './testData'
 
-const API = 'http://127.0.0.1:8080/api/v1'
+const API = `${process.env.E2E_API_URL ?? 'http://127.0.0.1:8080'}/api/v1`
 
 export interface CapturedMail {
   to: string
   subject: string
-  template: 'VERIFY_EMAIL' | 'REGISTRATION_ATTEMPT'
+  template: 'VERIFY_EMAIL' | 'REGISTRATION_ATTEMPT' | 'NEW_DEVICE_LOGIN' | 'ACCOUNT_LOCKED'
   links: string[]
   sentAt: string
 }
@@ -69,6 +69,23 @@ export async function registerThroughUi(page: Page, email: string, password = ST
   await fillRegisterForm(page, { email, password })
   await page.getByRole('button', { name: /Tạo tài khoản/ }).click()
   await expect(page).toHaveURL(/\/register\/check-email$/)
+}
+
+/** Tạo tài khoản đã xác thực trên trình duyệt của `page`; trình duyệt đó được đăng nhập luôn. */
+export async function createVerifiedAccount(page: Page, dev: DevApi, email: string) {
+  await registerThroughUi(page, email)
+  await page.goto(await dev.verifyLink(email))
+  await expect(page.getByRole('heading', { name: 'Tài khoản đã được kích hoạt' })).toBeVisible()
+}
+
+export async function loginThroughUi(page: Page, email: string, password = STRONG_PASSWORD, remember = false) {
+  await page.goto('/login')
+  await page.getByLabel('Thư điện tử').fill(email)
+  await page.getByLabel('Mật khẩu', { exact: true }).fill(password)
+  if (remember) {
+    await page.getByRole('checkbox', { name: 'Ghi nhớ thiết bị này' }).check()
+  }
+  await page.getByRole('button', { name: /Đăng nhập/ }).click()
 }
 
 export const test = base.extend<{ dev: DevApi }>({

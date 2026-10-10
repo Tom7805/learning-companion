@@ -26,6 +26,10 @@ export function useVerifyEmail() {
   })
 }
 
+export function useLogin() {
+  return useMutation({ mutationFn: authApi.login })
+}
+
 /**
  * Xóa phiên khỏi bộ nhớ đệm rồi gọi `afterLogout` (thường là chuyển trang) ngay trong cùng nhịp.
  * React Query cập nhật giao diện theo lô nên trang đích được dựng với phiên đã xóa, tránh việc
@@ -39,5 +43,25 @@ export function useLogout(afterLogout?: () => void) {
       queryClient.setQueryData<SessionStatus>(queryKeys.session, { authenticated: false })
       afterLogout?.()
     },
+  })
+}
+
+export function useDeviceSessions() {
+  return useQuery({ queryKey: queryKeys.deviceSessions, queryFn: authApi.sessions, staleTime: 10_000 })
+}
+
+export function useRevokeSession() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: authApi.revokeSession,
+    onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.deviceSessions }),
+  })
+}
+
+export function useRevokeOtherSessions() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: authApi.revokeOtherSessions,
+    onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.deviceSessions }),
   })
 }

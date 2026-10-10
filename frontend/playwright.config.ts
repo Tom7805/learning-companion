@@ -2,8 +2,10 @@ import { readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { defineConfig, devices } from '@playwright/test'
 
-const FRONTEND_URL = 'http://localhost:5173'
-const BACKEND_HEALTH = 'http://127.0.0.1:8080/actuator/health'
+// Đổi được cổng để chạy song song với máy chủ đang dùng để phát triển, ví dụ E2E_BASE_URL=http://localhost:5174.
+const FRONTEND_URL = process.env.E2E_BASE_URL ?? 'http://localhost:5173'
+const API_URL = process.env.E2E_API_URL ?? 'http://127.0.0.1:8080'
+const BACKEND_HEALTH = `${API_URL}/actuator/health`
 
 // Bộ khung có sẵn các tệp kiểm thử rỗng cho story sau, chỉ chạy tệp đã có nội dung.
 const specs = readdirSync('e2e')

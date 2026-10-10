@@ -134,9 +134,10 @@ test.describe('NCL-01-CN-001 · Đăng ký và xác thực thư điện tử', (
     expect(session?.sameSite).toBe('Lax')
 
     await page.getByRole('button', { name: 'Đăng xuất' }).first().click()
-    await expect(page).toHaveURL(/\/login$/)
+    await expect(page).toHaveURL(/\/login\?loggedOut=1$/)
+    await expect(page.getByTestId('session-notice')).toHaveText('Bạn đã đăng xuất. Hẹn gặp lại!')
     await page.goto('/')
-    await expect(page).toHaveURL(/\/register$/)
+    await expect(page).toHaveURL(/\/login$/)
   })
 
   test('Đường dẫn chỉ dùng được một lần', async ({ page, dev, browser }) => {

@@ -11,6 +11,8 @@ export interface ApiError {
   message: string
   status: number
   fieldErrors: FieldError[]
+  /** Dữ liệu riêng của từng lỗi, ví dụ remainingAttempts, retryAfterSeconds. */
+  details?: Record<string, unknown>
   requestId?: string
 }
 
@@ -24,6 +26,7 @@ export function toApiError(error: unknown): ApiError {
         message: data.message ?? '',
         status: error.response.status,
         fieldErrors: data.fieldErrors ?? [],
+        details: data.details,
         requestId: data.requestId,
       }
     }
@@ -33,4 +36,9 @@ export function toApiError(error: unknown): ApiError {
     return { code: 'INTERNAL_ERROR', message: error.message, status: error.response.status, fieldErrors: [] }
   }
   return { code: 'INTERNAL_ERROR', message: String(error), status: 0, fieldErrors: [] }
+}
+
+export function detailNumber(error: ApiError | null | undefined, key: string): number | undefined {
+  const value = error?.details?.[key]
+  return typeof value === 'number' ? value : undefined
 }

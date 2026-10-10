@@ -5,6 +5,7 @@ import com.learningcompanion.auth.api.dto.ResendAcceptedResponse;
 import com.learningcompanion.auth.api.dto.ResendVerificationRequest;
 import com.learningcompanion.auth.api.dto.VerifyEmailRequest;
 import com.learningcompanion.auth.application.EmailVerificationService;
+import com.learningcompanion.auth.application.SessionService;
 import com.learningcompanion.shared.config.AppProperties;
 import com.learningcompanion.shared.web.ApiPaths;
 import com.learningcompanion.shared.web.ClientInfo;
@@ -37,10 +38,14 @@ public class EmailVerificationController {
     @PostMapping
     public ResponseEntity<AccountResponse> verify(@Valid @RequestBody VerifyEmailRequest request,
                                                   HttpServletRequest http) {
+        SessionCookies.DeviceCookie device = sessionCookies.device(http);
         EmailVerificationService.VerificationResult result =
-                verificationService.verify(request.token(), ClientInfo.from(http));
+                verificationService.verify(request.token(), device.id(), ClientInfo.from(http));
+        SessionService.StartedSession session = result.session();
         return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, sessionCookies.issue(result.session().rawToken()).toString())
+                .header(HttpHeaders.SET_COOKIE, sessionCookies.issue(session.rawToken(), session.rememberDevice(),
+                        session.lifetime()).toString())
+                .header(HttpHeaders.SET_COOKIE, device.cookie().toString())
                 .body(AccountResponse.of(result.account()));
     }
 

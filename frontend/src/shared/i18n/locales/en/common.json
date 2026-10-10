@@ -10,9 +10,21 @@
     "progress": "Progress",
     "privacy": "Only you can open your study data — not even administrators can see its content.",
     "cards": {
-      "library": { "tag": "Library", "title": "Microeconomics textbook", "value": "8/12 chapters" },
-      "flashcards": { "tag": "Flashcards", "title": "Environment vocabulary", "value": "18/40 cards" },
-      "assistant": { "tag": "Study assistant", "title": "Explain Ohm's law with examples", "value": "With citations" }
+      "library": {
+        "tag": "Library",
+        "title": "Microeconomics textbook",
+        "value": "8/12 chapters"
+      },
+      "flashcards": {
+        "tag": "Flashcards",
+        "title": "Environment vocabulary",
+        "value": "18/40 cards"
+      },
+      "assistant": {
+        "tag": "Study assistant",
+        "title": "Explain Ohm's law with examples",
+        "value": "With citations"
+      }
     }
   },
   "register": {
@@ -24,7 +36,10 @@
       "placeholder": "e.g. Lan Anh",
       "hint": "Shown in the app, up to 50 characters."
     },
-    "email": { "label": "Email address", "placeholder": "you@example.com" },
+    "email": {
+      "label": "Email address",
+      "placeholder": "you@example.com"
+    },
     "password": {
       "label": "Password",
       "placeholder": "At least 10 characters",
@@ -32,13 +47,26 @@
       "hide": "Hide password",
       "ruleLength": "At least 10 characters",
       "ruleCommon": "Not a commonly leaked password",
-      "ruleState": { "pass": "met", "fail": "not met", "pending": "not confirmed yet" },
+      "ruleState": {
+        "pass": "met",
+        "fail": "not met",
+        "pending": "not confirmed yet"
+      },
       "tip": "Tip: a long, memorable phrase like “autumn in hanoi 2026” is safer than a short complex string."
     },
-    "confirmPassword": { "label": "Re-type password", "placeholder": "Type the same password again" },
+    "confirmPassword": {
+      "label": "Re-type password",
+      "placeholder": "Type the same password again"
+    },
     "strength": {
       "label": "Password strength",
-      "levels": ["Very weak", "Weak", "Fair", "Strong", "Very strong"]
+      "levels": [
+        "Very weak",
+        "Weak",
+        "Fair",
+        "Strong",
+        "Very strong"
+      ]
     },
     "terms": "I have read and agree to the <terms>Terms of Service</terms> and the <privacy>Privacy Policy</privacy>.",
     "termsVersion": "Version {{version}}",
@@ -75,7 +103,15 @@
     "NETWORK_ERROR": "Cannot reach the server. Check your connection and try again.",
     "VALIDATION_FAILED": "Some details are not valid, please check them.",
     "INTERNAL_ERROR": "Something went wrong on our side. Please try again shortly.",
-    "requestId": "Reference: {{id}}"
+    "requestId": "Reference: {{id}}",
+    "INVALID_CREDENTIALS": "The email or password is not correct.",
+    "ACCOUNT_LOCKED": "Sign-in is temporarily locked after too many wrong passwords.",
+    "EMAIL_NOT_VERIFIED": "This email address is not verified yet.",
+    "ACCOUNT_UNAVAILABLE": "This account cannot sign in right now.",
+    "SESSION_EXPIRED": "Your session has expired.",
+    "SESSION_REVOKED": "This device was signed out.",
+    "REVOKE_LINK_INVALID": "This sign-out link is not valid.",
+    "NOT_FOUND": "Not found, it may have changed. Please reload the page."
   },
   "checkEmail": {
     "title": "Check your inbox",
@@ -123,14 +159,43 @@
       "title": "This link is not valid",
       "body": "The link may have been cut off when copied, or you requested a newer email. Open the latest email, or enter your address to get another one."
     },
-    "failed": { "title": "Could not verify yet", "retry": "Try again" },
+    "failed": {
+      "title": "Could not verify yet",
+      "retry": "Try again"
+    },
     "backToRegister": "Back to sign up"
   },
   "login": {
     "title": "Sign in",
-    "comingSoon": "Password sign-in is being finished and will arrive in the next update.",
     "noAccount": "No account yet?",
-    "register": "Create an account"
+    "register": "Create an account",
+    "titleLine1": "Welcome back,",
+    "titleLine2": "<strong>sign in</strong> to keep learning.",
+    "subtitle": "Use the email and password you registered with.",
+    "passwordPlaceholder": "Your password",
+    "remember": "Remember this device",
+    "rememberHint": "Stay signed in for 30 days. Don't tick this on shared computers like library PCs.",
+    "submit": "Sign in",
+    "submitHint": "Pick up where you left off",
+    "submitting": "Signing in…",
+    "invalid": "The email or password is not correct.",
+    "attemptsLeft_one": "{{count}} attempt left before sign-in is locked for 15 minutes.",
+    "attemptsLeft_other": "{{count}} attempts left before sign-in is locked for 15 minutes.",
+    "locked": {
+      "title": "Sign-in is temporarily locked",
+      "body": "The password was entered wrongly 5 times in a row. To protect the account you can try again in:",
+      "unlocked": "The lock has ended, you can sign in again."
+    },
+    "notVerified": {
+      "body": "This email address is not verified yet. Open the verification email or get a new one.",
+      "resend": "Resend verification email"
+    },
+    "unavailable": "This account cannot sign in right now. Please contact support.",
+    "reason": {
+      "SESSION_EXPIRED": "Your session expired after a period of inactivity. Please sign in again.",
+      "SESSION_REVOKED": "This device was signed out from another device. Sign in again if that was you.",
+      "loggedOut": "You have signed out. See you soon!"
+    }
   },
   "home": {
     "greeting": "Hi {{name}}",
@@ -142,12 +207,24 @@
     "loggingOut": "Signing out…",
     "next": "Coming soon",
     "cards": {
-      "library": { "tag": "Library", "title": "Upload your first document" },
-      "flashcards": { "tag": "Flashcards", "title": "Build a review deck" },
-      "assistant": { "tag": "Study assistant", "title": "Ask about your materials" }
+      "library": {
+        "tag": "Library",
+        "title": "Upload your first document"
+      },
+      "flashcards": {
+        "tag": "Flashcards",
+        "title": "Build a review deck"
+      },
+      "assistant": {
+        "tag": "Study assistant",
+        "title": "Ask about your materials"
+      }
     },
     "account": "Account",
-    "role": { "LEARNER": "Learner", "ADMIN": "Administrator" }
+    "role": {
+      "LEARNER": "Learner",
+      "ADMIN": "Administrator"
+    }
   },
   "legal": {
     "terms": "Terms of Service",
@@ -177,5 +254,66 @@
     "to": "To",
     "links": "Links in this email"
   },
-  "common": { "loading": "Loading…", "back": "Back" }
+  "common": {
+    "loading": "Loading…",
+    "back": "Back",
+    "retry": "Try again",
+    "close": "Close"
+  },
+  "devices": {
+    "nav": "Devices",
+    "title": "Signed-in devices",
+    "subtitle": "See where your account is signed in and sign out devices you no longer use.",
+    "count_one": "{{count}} device",
+    "count_other": "{{count}} devices",
+    "revokeOthers": "Sign out all other devices",
+    "columns": {
+      "device": "Device",
+      "location": "Location",
+      "lastActive": "Last active"
+    },
+    "current": "This device",
+    "remembered": "Remembered 30 days",
+    "activeNow": "Active now",
+    "signedInAt": "Signed in {{time}}",
+    "location": {
+      "local": "Local network",
+      "unknown": "Unknown location"
+    },
+    "type": {
+      "DESKTOP": "Computer",
+      "MOBILE": "Phone",
+      "TABLET": "Tablet"
+    },
+    "deviceName": "{{browser}} on {{os}}",
+    "signOut": "Sign out",
+    "signOutDevice": "Sign out {{device}}",
+    "confirmTitle": "Sign out {{device}}?",
+    "confirmBody": "That device will need to sign in again on its next action.",
+    "confirmSelfBody": "This is the device you are using; you will be taken to the sign-in screen.",
+    "confirmOthersTitle": "Sign out all other devices?",
+    "confirmOthersBody_one": "{{count}} other device will need to sign in again. This device stays signed in.",
+    "confirmOthersBody_other": "{{count}} other devices will need to sign in again. This device stays signed in.",
+    "confirm": "Sign out",
+    "cancel": "Cancel",
+    "revoked": "Signed out {{device}}.",
+    "revokedOthers_one": "Signed out {{count}} other device.",
+    "revokedOthers_other": "Signed out {{count}} other devices.",
+    "onlyThis": "Only this device is signed in.",
+    "loadFailed": "Could not load your devices.",
+    "tip": "Got a new-device alert that wasn't you? Press the button in the email, or sign that device out right here."
+  },
+  "revokeLink": {
+    "revoking": "Signing that device out…",
+    "successTitle": "That device is signed out",
+    "successBody": "<strong>{{device}}</strong>, signed in at {{time}}, must sign in again on its next action.",
+    "alreadyTitle": "That device was already signed out",
+    "alreadyBody": "<strong>{{device}}</strong> was signed out earlier, nothing else to do.",
+    "advice": "If that sign-in wasn't you, change to a new password as soon as possible.",
+    "invalidTitle": "This link is not valid",
+    "invalidBody": "The link may have been cut off when copied. You can still sign in and sign devices out from Signed-in devices.",
+    "toLogin": "Go to sign in",
+    "toDevices": "See signed-in devices",
+    "failedTitle": "Could not sign that device out"
+  }
 }

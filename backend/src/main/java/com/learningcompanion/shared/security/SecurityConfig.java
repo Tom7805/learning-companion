@@ -47,8 +47,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST,
                                 ApiPaths.AUTH + "/register",
+                                ApiPaths.AUTH + "/login",
                                 ApiPaths.AUTH + "/verify-email",
-                                ApiPaths.AUTH + "/verify-email/resend").permitAll()
+                                ApiPaths.AUTH + "/verify-email/resend",
+                                ApiPaths.AUTH + "/sessions/revoke-link").permitAll()
                         .requestMatchers(HttpMethod.GET, ApiPaths.AUTH + "/session", ApiPaths.LEGAL + "/**")
                         .permitAll()
                         .requestMatchers(ApiPaths.DEV + "/**").permitAll()
@@ -56,13 +58,26 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .exceptionHandling(errors -> errors
                         .authenticationEntryPoint((request, response, ex) -> resolver.resolveException(
-                                request, response, null, new BusinessException(ErrorCode.UNAUTHENTICATED)))
+                                request, response, null, new BusinessException(unauthenticatedCode(request))))
                         .accessDeniedHandler((request, response, ex) -> resolver.resolveException(
                                 request, response, null, new BusinessException(ErrorCode.FORBIDDEN))))
                 .addFilterBefore(new SessionAuthenticationFilter(sessionResolver,
-                        properties.auth().sessionCookieName()), AnonymousAuthenticationFilter.class)
+                        properties.auth().sessionCookieName(), properties.auth().secureCookies()),
+                        AnonymousAuthenticationFilter.class)
                 .addFilterAfter(new CsrfCookieFilter(), AnonymousAuthenticationFilter.class);
         return http.build();
+    }
+
+    /** Cho giao diện biết vì sao cần đăng nhập lại: phiên hết hạn, bị đăng xuất từ xa hay chưa từng đăng nhập. */
+    private static ErrorCode unauthenticatedCode(HttpServletRequest request) {
+        Object problem = request.getAttribute(SessionAuthenticationFilter.SESSION_PROBLEM);
+        if (problem == SessionResolver.Problem.EXPIRED) {
+            return ErrorCode.SESSION_EXPIRED;
+        }
+        if (problem == SessionResolver.Problem.REVOKED) {
+            return ErrorCode.SESSION_REVOKED;
+        }
+        return ErrorCode.UNAUTHENTICATED;
     }
 
     /** Không dùng đăng nhập theo tên người dùng của Spring, tắt kho người dùng mặc định. */

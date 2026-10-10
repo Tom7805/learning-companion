@@ -20,7 +20,12 @@ public record AppProperties(String frontendUrl, Auth auth, Mail mail, DevTools d
             boolean secureCookies,
             int registerLimitPerHour,
             int resendLimitPerHour,
-            Duration registrationAttemptNoticeInterval) {
+            Duration registrationAttemptNoticeInterval,
+            Duration rememberDeviceDuration,
+            int maxFailedLogins,
+            Duration lockoutDuration,
+            int loginLimitPerHour,
+            String deviceCookieName) {
     }
 
     public record Mail(String gateway, String fromAddress, String fromName) {

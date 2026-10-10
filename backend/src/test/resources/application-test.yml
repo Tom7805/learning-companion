@@ -7,3 +7,4 @@ app:
     # Kiểm thử gửi nhiều yêu cầu từ cùng một địa chỉ IP.
     register-limit-per-hour: 1000
     resend-limit-per-hour: 1000
+    login-limit-per-hour: 5000

@@ -8,6 +8,7 @@ app:
     # Thử tay và kiểm thử đầu cuối tạo nhiều tài khoản từ cùng một máy; môi trường thật giữ mức mặc định.
     register-limit-per-hour: 500
     resend-limit-per-hour: 500
+    login-limit-per-hour: 2000
 
 logging:
   level:

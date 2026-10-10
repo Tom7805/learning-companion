@@ -103,7 +103,7 @@ public class EmailVerificationService {
      * nên lỗi nghiệp vụ không hủy giao dịch.
      */
     @Transactional(noRollbackFor = BusinessException.class)
-    public VerificationResult verify(String rawToken, ClientInfo client) {
+    public VerificationResult verify(String rawToken, String deviceId, ClientInfo client) {
         Instant now = Instant.now(clock);
         VerificationToken token = verificationTokens.findByTokenHash(tokens.hash(rawToken))
                 .orElseThrow(() -> new BusinessException(ErrorCode.VERIFICATION_TOKEN_INVALID));
@@ -128,7 +128,8 @@ public class EmailVerificationService {
         account.markEmailVerified(now);
         audit.byUser(account.getId(), AuditAction.EMAIL_VERIFIED, AuditObjectType.USER_ACCOUNT, account.getId(),
                 Map.of("status", account.getStatus().name()), client);
-        SessionService.StartedSession session = sessionService.start(account, client);
+        SessionService.StartedSession session = sessionService.start(account, client, false, deviceId,
+                "EMAIL_VERIFIED");
         return new VerificationResult(account, session);
     }
 

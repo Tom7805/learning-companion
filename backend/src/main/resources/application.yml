@@ -64,6 +64,11 @@ app:
     register-limit-per-hour: 10
     resend-limit-per-hour: 20
     registration-attempt-notice-interval: 1h
+    remember-device-duration: 30d
+    max-failed-logins: 5
+    lockout-duration: 15m
+    login-limit-per-hour: 100
+    device-cookie-name: lc_device
   mail:
     gateway: ${APP_MAIL_GATEWAY:mock}
     from-address: ${APP_MAIL_FROM:no-reply@learningcompanion.local}

@@ -1,37 +1,51 @@
-import { KeyRound } from 'lucide-react'
+import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { Link, Navigate } from 'react-router'
+import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router'
 import { routes } from '@/app/routes'
+import { queryKeys } from '@/shared/api/queryKeys'
 import { usePageHeading } from '@/shared/hooks/usePageHeading'
-import { Alert, buttonClasses } from '@/shared/ui'
+import { Alert } from '@/shared/ui'
 import { useSession } from '../api/queries'
-import { StatusIcon } from '../components/StatusIcon'
+import { LoginForm } from '../components/LoginForm'
+import { pendingVerification } from '../lib/pendingVerification'
+import type { Account, SessionLostReason, SessionStatus } from '../types'
 
-/** Chỗ giữ cho trang đăng nhập; biểu mẫu đăng nhập thuộc story NCL-01-CN-002. */
+interface LoginLocationState {
+  from?: string
+  reason?: SessionLostReason
+}
+
 export function LoginPage() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [params] = useSearchParams()
+  const queryClient = useQueryClient()
   const session = useSession()
-  const heading = usePageHeading(t('login.title'))
+  usePageHeading(t('login.title'))
+
+  const state = (location.state as LoginLocationState | null) ?? {}
+  const from = state.from && state.from.startsWith('/') && !state.from.startsWith('//') ? state.from : routes.home
 
   if (session.data?.authenticated) {
-    return <Navigate to={routes.home} replace />
+    return <Navigate to={from} replace />
   }
 
-  return (
-    <div className="flex flex-col gap-7">
-      <StatusIcon tone="lilac">
-        <KeyRound className="size-7" />
-      </StatusIcon>
-      <h1 ref={heading} tabIndex={-1} className="text-[28px] leading-tight tracking-tight outline-none sm:text-[32px]">
-        {t('login.title')}
-      </h1>
-      <Alert tone="info">{t('login.comingSoon')}</Alert>
-      <p className="text-sm text-muted">
-        {t('login.noAccount')}{' '}
-        <Link to={routes.register} className={buttonClasses('ghost', 'md', 'h-auto px-0 text-accent-ink underline-offset-4 hover:bg-transparent hover:underline')}>
-          {t('login.register')}
-        </Link>
-      </p>
-    </div>
-  )
+  const notice = state.reason ? (
+    <Alert tone="warning" data-testid="session-notice">
+      {t(`login.reason.${state.reason}`)}
+    </Alert>
+  ) : params.has('loggedOut') ? (
+    <Alert tone="success" data-testid="session-notice">
+      {t('login.reason.loggedOut')}
+    </Alert>
+  ) : undefined
+
+  const handleLoggedIn = (account: Account) => {
+    pendingVerification.clear()
+    queryClient.setQueryData<SessionStatus>(queryKeys.session, { authenticated: true, account })
+    navigate(from, { replace: true })
+  }
+
+  return <LoginForm notice={notice} onLoggedIn={handleLoggedIn} />
 }

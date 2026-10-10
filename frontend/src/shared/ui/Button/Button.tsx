@@ -1,5 +1,5 @@
 import { ArrowRight } from 'lucide-react'
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import type { ButtonHTMLAttributes, ReactNode, Ref } from 'react'
 import { cn } from '@/shared/lib/cn'
 import { Spinner } from '../Spinner'
 
@@ -7,6 +7,8 @@ type Variant = 'accent' | 'dark' | 'outline' | 'ghost'
 type Size = 'md' | 'lg'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  /** React 19 truyền ref như prop thường, được chuyển thẳng xuống thẻ button. */
+  ref?: Ref<HTMLButtonElement>
   variant?: Variant
   size?: Size
   loading?: boolean

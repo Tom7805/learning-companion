@@ -1,7 +1,14 @@
 import { createBrowserRouter, Outlet } from 'react-router'
 import { DevMailboxPage } from '@/dev/DevMailboxPage'
 import { DevToolbar } from '@/dev/DevToolbar'
-import { CheckEmailPage, LoginPage, RegisterPage, VerifyEmailPage } from '@/features/auth'
+import {
+  CheckEmailPage,
+  DevicesPage,
+  LoginPage,
+  RegisterPage,
+  RevokeDevicePage,
+  VerifyEmailPage,
+} from '@/features/auth'
 import { DashboardPage } from '@/features/dashboard/pages/DashboardPage'
 import { LegalDocumentPage } from '@/features/privacy/pages/LegalDocumentPage'
 import { AppShell } from '@/layouts/AppShell'
@@ -25,7 +32,15 @@ export const router = createBrowserRouter([
     children: [
       {
         element: <ProtectedRoute />,
-        children: [{ element: <AppShell />, children: [{ path: routes.home, element: <DashboardPage /> }] }],
+        children: [
+          {
+            element: <AppShell />,
+            children: [
+              { path: routes.home, element: <DashboardPage /> },
+              { path: routes.devices, element: <DevicesPage /> },
+            ],
+          },
+        ],
       },
       {
         element: <AuthLayout />,
@@ -34,6 +49,7 @@ export const router = createBrowserRouter([
           { path: routes.checkEmail, element: <CheckEmailPage /> },
           { path: routes.verifyEmail, element: <VerifyEmailPage /> },
           { path: routes.login, element: <LoginPage /> },
+          { path: routes.revokeDevice, element: <RevokeDevicePage /> },
           { path: routes.terms, element: <LegalDocumentPage kind="terms" /> },
           { path: routes.privacy, element: <LegalDocumentPage kind="privacy" /> },
           { path: '*', element: <NotFoundPage /> },

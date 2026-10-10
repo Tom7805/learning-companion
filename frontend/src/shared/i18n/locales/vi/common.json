@@ -10,9 +10,21 @@
     "progress": "Tiến độ",
     "privacy": "Dữ liệu học tập chỉ mình bạn mở được, kể cả quản trị viên cũng không xem được nội dung.",
     "cards": {
-      "library": { "tag": "Tài liệu", "title": "Giáo trình Kinh tế vi mô", "value": "8/12 chương" },
-      "flashcards": { "tag": "Thẻ ghi nhớ", "title": "Từ vựng chủ đề Môi trường", "value": "18/40 thẻ" },
-      "assistant": { "tag": "Trợ lý học tập", "title": "Giải thích định luật Ohm bằng ví dụ", "value": "Kèm trích dẫn" }
+      "library": {
+        "tag": "Tài liệu",
+        "title": "Giáo trình Kinh tế vi mô",
+        "value": "8/12 chương"
+      },
+      "flashcards": {
+        "tag": "Thẻ ghi nhớ",
+        "title": "Từ vựng chủ đề Môi trường",
+        "value": "18/40 thẻ"
+      },
+      "assistant": {
+        "tag": "Trợ lý học tập",
+        "title": "Giải thích định luật Ohm bằng ví dụ",
+        "value": "Kèm trích dẫn"
+      }
     }
   },
   "register": {
@@ -35,7 +47,11 @@
       "hide": "Ẩn mật khẩu",
       "ruleLength": "Ít nhất 10 ký tự",
       "ruleCommon": "Không phải mật khẩu phổ biến đã bị lộ",
-      "ruleState": { "pass": "đã đạt", "fail": "không đạt", "pending": "chưa xác nhận" },
+      "ruleState": {
+        "pass": "đã đạt",
+        "fail": "không đạt",
+        "pending": "chưa xác nhận"
+      },
       "tip": "Mẹo: một cụm từ dài, dễ nhớ như “mùa thu hà nội 2026” an toàn hơn một chuỗi ngắn phức tạp."
     },
     "confirmPassword": {
@@ -44,7 +60,13 @@
     },
     "strength": {
       "label": "Độ mạnh mật khẩu",
-      "levels": ["Rất yếu", "Yếu", "Tạm được", "Mạnh", "Rất mạnh"]
+      "levels": [
+        "Rất yếu",
+        "Yếu",
+        "Tạm được",
+        "Mạnh",
+        "Rất mạnh"
+      ]
     },
     "terms": "Tôi đã đọc và đồng ý với <terms>Điều khoản sử dụng</terms> và <privacy>Chính sách quyền riêng tư</privacy>.",
     "termsVersion": "Phiên bản {{version}}",
@@ -81,7 +103,15 @@
     "NETWORK_ERROR": "Không kết nối được tới máy chủ. Hãy kiểm tra mạng rồi thử lại.",
     "VALIDATION_FAILED": "Một số thông tin chưa hợp lệ, hãy kiểm tra lại.",
     "INTERNAL_ERROR": "Hệ thống đang gặp sự cố. Hãy thử lại sau ít phút.",
-    "requestId": "Mã tra cứu: {{id}}"
+    "requestId": "Mã tra cứu: {{id}}",
+    "INVALID_CREDENTIALS": "Thư điện tử hoặc mật khẩu chưa đúng.",
+    "ACCOUNT_LOCKED": "Đăng nhập đang tạm khóa do nhập sai mật khẩu nhiều lần.",
+    "EMAIL_NOT_VERIFIED": "Địa chỉ thư chưa được xác thực.",
+    "ACCOUNT_UNAVAILABLE": "Tài khoản này hiện không đăng nhập được.",
+    "SESSION_EXPIRED": "Phiên đăng nhập đã hết hạn.",
+    "SESSION_REVOKED": "Thiết bị này đã bị đăng xuất.",
+    "REVOKE_LINK_INVALID": "Đường dẫn đăng xuất thiết bị không hợp lệ.",
+    "NOT_FOUND": "Không tìm thấy dữ liệu, có thể nó đã thay đổi. Hãy tải lại trang."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -137,9 +167,35 @@
   },
   "login": {
     "title": "Đăng nhập",
-    "comingSoon": "Đăng nhập bằng mật khẩu đang được hoàn thiện và sẽ có trong bản cập nhật tới.",
     "noAccount": "Chưa có tài khoản?",
-    "register": "Tạo tài khoản"
+    "register": "Tạo tài khoản",
+    "titleLine1": "Mừng bạn quay lại,",
+    "titleLine2": "<strong>đăng nhập</strong> để học tiếp.",
+    "subtitle": "Dùng địa chỉ thư và mật khẩu bạn đã đăng ký.",
+    "passwordPlaceholder": "Mật khẩu của bạn",
+    "remember": "Ghi nhớ thiết bị này",
+    "rememberHint": "Giữ đăng nhập 30 ngày. Đừng chọn trên máy dùng chung như máy ở thư viện.",
+    "submit": "Đăng nhập",
+    "submitHint": "Tiếp tục nơi bạn dừng lại",
+    "submitting": "Đang đăng nhập…",
+    "invalid": "Thư điện tử hoặc mật khẩu chưa đúng.",
+    "attemptsLeft_one": "Còn {{count}} lần thử trước khi đăng nhập bị tạm khóa 15 phút.",
+    "attemptsLeft_other": "Còn {{count}} lần thử trước khi đăng nhập bị tạm khóa 15 phút.",
+    "locked": {
+      "title": "Đăng nhập đang tạm khóa",
+      "body": "Mật khẩu đã bị nhập sai 5 lần liên tiếp. Để bảo vệ tài khoản, bạn có thể thử lại sau:",
+      "unlocked": "Hết thời gian khóa, bạn có thể đăng nhập lại."
+    },
+    "notVerified": {
+      "body": "Địa chỉ thư này chưa được xác thực. Hãy mở thư xác thực trong hộp thư, hoặc nhận một thư mới.",
+      "resend": "Gửi lại thư xác thực"
+    },
+    "unavailable": "Tài khoản này hiện không đăng nhập được. Hãy liên hệ bộ phận hỗ trợ.",
+    "reason": {
+      "SESSION_EXPIRED": "Phiên đăng nhập đã hết hạn do lâu không thao tác. Hãy đăng nhập lại để tiếp tục.",
+      "SESSION_REVOKED": "Thiết bị này đã bị đăng xuất từ một thiết bị khác. Hãy đăng nhập lại nếu đó là bạn.",
+      "loggedOut": "Bạn đã đăng xuất. Hẹn gặp lại!"
+    }
   },
   "home": {
     "greeting": "Chào {{name}}",
@@ -151,12 +207,24 @@
     "loggingOut": "Đang đăng xuất…",
     "next": "Sắp có",
     "cards": {
-      "library": { "tag": "Tài liệu", "title": "Tải tài liệu học đầu tiên" },
-      "flashcards": { "tag": "Thẻ ghi nhớ", "title": "Tạo bộ thẻ ôn tập" },
-      "assistant": { "tag": "Trợ lý học tập", "title": "Hỏi trợ lý về tài liệu" }
+      "library": {
+        "tag": "Tài liệu",
+        "title": "Tải tài liệu học đầu tiên"
+      },
+      "flashcards": {
+        "tag": "Thẻ ghi nhớ",
+        "title": "Tạo bộ thẻ ôn tập"
+      },
+      "assistant": {
+        "tag": "Trợ lý học tập",
+        "title": "Hỏi trợ lý về tài liệu"
+      }
     },
     "account": "Tài khoản",
-    "role": { "LEARNER": "Người học", "ADMIN": "Quản trị viên" }
+    "role": {
+      "LEARNER": "Người học",
+      "ADMIN": "Quản trị viên"
+    }
   },
   "legal": {
     "terms": "Điều khoản sử dụng",
@@ -188,6 +256,64 @@
   },
   "common": {
     "loading": "Đang tải…",
-    "back": "Quay lại"
+    "back": "Quay lại",
+    "retry": "Thử lại",
+    "close": "Đóng"
+  },
+  "devices": {
+    "nav": "Thiết bị",
+    "title": "Thiết bị đang đăng nhập",
+    "subtitle": "Xem tài khoản đang đăng nhập ở đâu và đăng xuất những thiết bị bạn không còn dùng.",
+    "count_one": "{{count}} thiết bị",
+    "count_other": "{{count}} thiết bị",
+    "revokeOthers": "Đăng xuất mọi thiết bị khác",
+    "columns": {
+      "device": "Thiết bị",
+      "location": "Vị trí",
+      "lastActive": "Hoạt động gần nhất"
+    },
+    "current": "Thiết bị này",
+    "remembered": "Ghi nhớ 30 ngày",
+    "activeNow": "Đang hoạt động",
+    "signedInAt": "Đăng nhập {{time}}",
+    "location": {
+      "local": "Mạng nội bộ",
+      "unknown": "Không rõ vị trí"
+    },
+    "type": {
+      "DESKTOP": "Máy tính",
+      "MOBILE": "Điện thoại",
+      "TABLET": "Máy tính bảng"
+    },
+    "deviceName": "{{browser}} trên {{os}}",
+    "signOut": "Đăng xuất",
+    "signOutDevice": "Đăng xuất {{device}}",
+    "confirmTitle": "Đăng xuất {{device}}?",
+    "confirmBody": "Thiết bị đó sẽ phải đăng nhập lại ở lần thao tác kế tiếp.",
+    "confirmSelfBody": "Đây là thiết bị bạn đang dùng, bạn sẽ được đưa về màn hình đăng nhập.",
+    "confirmOthersTitle": "Đăng xuất mọi thiết bị khác?",
+    "confirmOthersBody_one": "{{count}} thiết bị khác sẽ phải đăng nhập lại. Thiết bị này vẫn giữ đăng nhập.",
+    "confirmOthersBody_other": "{{count}} thiết bị khác sẽ phải đăng nhập lại. Thiết bị này vẫn giữ đăng nhập.",
+    "confirm": "Đăng xuất",
+    "cancel": "Hủy",
+    "revoked": "Đã đăng xuất {{device}}.",
+    "revokedOthers_one": "Đã đăng xuất {{count}} thiết bị khác.",
+    "revokedOthers_other": "Đã đăng xuất {{count}} thiết bị khác.",
+    "onlyThis": "Chỉ có thiết bị này đang đăng nhập.",
+    "loadFailed": "Chưa tải được danh sách thiết bị.",
+    "tip": "Nhận được thư cảnh báo thiết bị mới mà không phải bạn? Bấm nút trong thư, hoặc đăng xuất thiết bị đó ngay tại đây."
+  },
+  "revokeLink": {
+    "revoking": "Đang đăng xuất thiết bị…",
+    "successTitle": "Đã đăng xuất thiết bị đó",
+    "successBody": "<strong>{{device}}</strong>, đăng nhập lúc {{time}}, sẽ phải đăng nhập lại ở lần thao tác kế tiếp.",
+    "alreadyTitle": "Thiết bị đó đã được đăng xuất",
+    "alreadyBody": "<strong>{{device}}</strong> đã được đăng xuất trước đó, bạn không cần làm gì thêm.",
+    "advice": "Nếu lần đăng nhập đó không phải của bạn, hãy đổi sang một mật khẩu mới sớm nhất có thể.",
+    "invalidTitle": "Đường dẫn không hợp lệ",
+    "invalidBody": "Đường dẫn có thể bị thiếu khi sao chép. Bạn vẫn có thể đăng nhập và đăng xuất thiết bị trong mục Thiết bị đang đăng nhập.",
+    "toLogin": "Đi tới đăng nhập",
+    "toDevices": "Xem thiết bị đang đăng nhập",
+    "failedTitle": "Chưa đăng xuất được thiết bị"
   }
 }

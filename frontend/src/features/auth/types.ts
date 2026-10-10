@@ -7,9 +7,13 @@ export interface Account {
   emailVerifiedAt?: string
 }
 
+/** Lý do trình duyệt không còn đăng nhập, để màn hình đăng nhập báo đúng. */
+export type SessionLostReason = 'SESSION_EXPIRED' | 'SESSION_REVOKED'
+
 export interface SessionStatus {
   authenticated: boolean
   account?: Account
+  reason?: SessionLostReason
 }
 
 export interface RegisterPayload {
@@ -36,4 +40,34 @@ export interface PendingVerification {
   resendAvailableAt: number
   /** Để điền lại biểu mẫu khi người học bấm "Đổi địa chỉ thư"; không bao giờ lưu mật khẩu. */
   displayName?: string
+}
+
+export interface LoginPayload {
+  email: string
+  password: string
+  rememberDevice: boolean
+}
+
+export type DeviceType = 'DESKTOP' | 'MOBILE' | 'TABLET'
+
+/** Một thiết bị đang đăng nhập. */
+export interface DeviceSession {
+  id: string
+  browser: string
+  operatingSystem: string
+  deviceType?: DeviceType
+  location?: string
+  localNetwork: boolean
+  signedInAt: string
+  lastActiveAt: string
+  expiresAt: string
+  rememberDevice: boolean
+  current: boolean
+}
+
+export interface RevokedByLink {
+  browser: string
+  operatingSystem: string
+  signedInAt: string
+  alreadyRevoked: boolean
 }
