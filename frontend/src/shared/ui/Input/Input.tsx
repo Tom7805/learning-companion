@@ -40,6 +40,9 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
             'placeholder:text-transparent focus:placeholder:text-subtle',
             'placeholder-shown:border-line placeholder-shown:bg-field',
             'focus:border-focus focus:bg-surface focus:ring-4 focus:ring-focus/15',
+            // Trình duyệt tự điền: coi như đã có giá trị, giữ nền trắng thay cho nền xanh mặc định của Chrome.
+            'autofill:border-ink autofill:shadow-[inset_0_0_0_1000px_var(--color-surface)]',
+            'autofill:[-webkit-text-fill-color:var(--color-ink)]',
             (trailing || showValid || error) && 'pr-12',
             trailing && (showValid || error) && 'pr-20',
             error && 'border-danger placeholder-shown:border-danger focus:border-danger focus:ring-danger/15',
@@ -53,6 +56,8 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
             'bg-surface text-ink-soft transition-all duration-150',
             'peer-placeholder-shown:top-1/2 peer-placeholder-shown:bg-transparent',
             'peer-placeholder-shown:text-[15px] peer-placeholder-shown:font-normal peer-placeholder-shown:text-muted',
+            'peer-autofill:top-0 peer-autofill:bg-surface peer-autofill:text-xs peer-autofill:font-medium',
+            'peer-autofill:text-ink-soft',
             'peer-focus:top-0 peer-focus:bg-surface peer-focus:text-xs peer-focus:font-medium peer-focus:text-focus',
             error && 'text-danger peer-placeholder-shown:text-danger peer-focus:text-danger',
           )}
