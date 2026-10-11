@@ -16,6 +16,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
@@ -65,7 +66,9 @@ public class GlobalExceptionHandler {
                 .body(body(ErrorCode.VALIDATION_FAILED, ErrorCode.VALIDATION_FAILED.defaultMessage(), List.of(), null));
     }
 
-    @ExceptionHandler({NoResourceFoundException.class, HttpRequestMethodNotSupportedException.class})
+    /** Mã sai định dạng trong đường dẫn được trả lời như mã không tồn tại. */
+    @ExceptionHandler({NoResourceFoundException.class, HttpRequestMethodNotSupportedException.class,
+            MethodArgumentTypeMismatchException.class})
     public ResponseEntity<ApiError> handleNotFound(Exception ex) {
         return ResponseEntity.status(ErrorCode.NOT_FOUND.status())
                 .body(body(ErrorCode.NOT_FOUND, ErrorCode.NOT_FOUND.defaultMessage(), List.of(), null));

@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import type { Account, DeviceSession } from '@/features/auth/types'
+import type { LearningDocument } from '@/features/library/types'
 import type { LegalCurrent } from '@/features/privacy/types'
 
 export const legalCurrent: LegalCurrent = {
@@ -50,7 +51,40 @@ export const handlers = [
   http.post('*/api/v1/auth/password/reset/check', () => new HttpResponse(null, { status: 204 })),
   http.post('*/api/v1/auth/password/reset', () => HttpResponse.json({ email: verifiedAccount.email })),
   http.post('*/api/v1/auth/password/change', () => HttpResponse.json({ revokedSessions: 1 })),
+  http.get('*/api/v1/library/documents', () =>
+    HttpResponse.json([
+      {
+        id: sampleDocument.id,
+        title: sampleDocument.title,
+        type: sampleDocument.type,
+        originalFilename: sampleDocument.originalFilename,
+        sizeBytes: sampleDocument.sizeBytes,
+        createdAt: sampleDocument.createdAt,
+      },
+    ]),
+  ),
+  http.get('*/api/v1/library/documents/:id', ({ params }) =>
+    params.id === sampleDocument.id ? HttpResponse.json(sampleDocument) : apiError(404, 'NOT_FOUND'),
+  ),
+  http.post('*/api/v1/library/documents/:id/file-link', () =>
+    HttpResponse.json({ url: '/api/v1/files/link-1', expiresAt: new Date(Date.now() + 300_000).toISOString() }),
+  ),
+  http.get('*/api/v1/files/:token', () =>
+    new HttpResponse(sampleDocument.contentText, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } }),
+  ),
 ]
+
+export const sampleDocument: LearningDocument = {
+  id: '5d1c0e6a-2222-4b1a-8c3e-000000000001',
+  title: 'Ghi chú: Định luật Ohm',
+  type: 'TEXT',
+  contentText: 'Định luật Ohm\n\nI = U / R',
+  originalFilename: 'dinh-luat-ohm.txt',
+  mimeType: 'text/plain; charset=utf-8',
+  sizeBytes: 1536,
+  createdAt: '2026-10-11T03:00:00Z',
+  updatedAt: '2026-10-11T03:00:00Z',
+}
 
 export const deviceSessions: DeviceSession[] = [
   {

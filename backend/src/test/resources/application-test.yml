@@ -3,6 +3,10 @@ app:
     gateway: mock
   dev-tools:
     enabled: true
+  storage:
+    local-root: ${java.io.tmpdir}/lc-test-storage
+    encryption-key: dGVzdC1vbmx5LWVuY3J5cHRpb24ta2V5LTMyLWJ5dGU=
+    signing-key: dGVzdC1vbmx5LXNpZ25pbmcta2V5LW9mLTMyLWJ5dGU=
   auth:
     # Kiểm thử gửi nhiều yêu cầu từ cùng một địa chỉ IP.
     register-limit-per-hour: 1000

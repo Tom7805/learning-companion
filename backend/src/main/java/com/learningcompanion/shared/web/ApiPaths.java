@@ -6,6 +6,9 @@ public final class ApiPaths {
     public static final String AUTH = V1 + "/auth";
     public static final String LEGAL = V1 + "/legal";
     public static final String DEV = V1 + "/dev";
+    public static final String LIBRARY = V1 + "/library";
+    public static final String FILES = V1 + "/files";
+    public static final String ADMIN = V1 + "/admin";
 
     private ApiPaths() {
     }

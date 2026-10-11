@@ -4,5 +4,6 @@ public enum AuditObjectType {
     USER_ACCOUNT,
     VERIFICATION_TOKEN,
     CONSENT,
-    SESSION
+    SESSION,
+    DOCUMENT
 }

@@ -117,7 +117,8 @@
     "RESET_TOKEN_INVALID": "This password reset link can no longer be used.",
     "RESET_TOKEN_EXPIRED": "This password reset link has expired.",
     "CURRENT_PASSWORD_INVALID": "Your current password is incorrect.",
-    "PASSWORD_REUSED": "Your new password must be different from the one you use now."
+    "PASSWORD_REUSED": "Your new password must be different from the one you use now.",
+    "FILE_LINK_EXPIRED": "The file link has expired."
   },
   "checkEmail": {
     "title": "Check your inbox",
@@ -261,7 +262,8 @@
     "advance1m": "Jump 1 minute",
     "resetClock": "Reset",
     "to": "To",
-    "links": "Links in this email"
+    "links": "Links in this email",
+    "sampleDocument": "Create sample document"
   },
   "common": {
     "loading": "Loading…",
@@ -415,6 +417,50 @@
       "count_other": "{{count}} other devices signed in",
       "cta": "Sign out of all devices",
       "manage": "See each device"
+    }
+  },
+  "library": {
+    "nav": "Library",
+    "title": "My library",
+    "subtitle": "Your study materials. Open a document to read its content and view the original file.",
+    "summary_one": "{{count}} document · {{size}}",
+    "summary_other": "{{count}} documents · {{size}}",
+    "privacy": "Only you can open your learning data here. Administrators only see counts and storage used, never the content.",
+    "loadFailed": "We could not load your library.",
+    "empty": {
+      "title": "Your library is empty",
+      "body": "Documents you add will appear here, and only you can open them."
+    },
+    "type": {
+      "PDF": "PDF",
+      "DOCX": "Word",
+      "PPTX": "Slides",
+      "TEXT": "Text",
+      "IMAGE": "Image",
+      "AUDIO": "Audio",
+      "VIDEO": "Video",
+      "WEB": "Web page"
+    },
+    "onlyYou": "Only visible to you",
+    "addedAt": "Added {{time}}",
+    "content": "Content",
+    "noContent": "This document has no text content yet.",
+    "backToLibrary": "Back to library",
+    "notFound": {
+      "title": "Document not found",
+      "body": "This document does not exist, was deleted, or does not belong to your account."
+    },
+    "file": {
+      "title": "Original file",
+      "preview": "View original file",
+      "reload": "Reload file",
+      "download": "Download",
+      "loading": "Opening file…",
+      "previewLabel": "Preview of {{name}}",
+      "protected": "The file is stored encrypted and only opens through a secure link that lasts 5 minutes. Expired links are renewed automatically.",
+      "renewed": "The previous secure link had expired, so a new one was fetched to open the file.",
+      "openFailed": "We could not open the original file. Try again in a few minutes.",
+      "unsupported": "This file type cannot be previewed in the page yet. Download it to open."
     }
   }
 }

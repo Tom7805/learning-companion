@@ -4,6 +4,10 @@ app:
     gateway: mock
   dev-tools:
     enabled: true
+  storage:
+    # Khóa chỉ dùng cho máy phát triển, môi trường thật phải đặt khóa riêng qua biến môi trường.
+    encryption-key: ${APP_STORAGE_ENCRYPTION_KEY:ZGV2LW9ubHktZW5jcnlwdGlvbi1rZXktMzItYnl0ZXM=}
+    signing-key: ${APP_STORAGE_SIGNING_KEY:ZGV2LW9ubHktc2lnbmluZy1rZXktb2YtMzItYnl0ZXM=}
   auth:
     # Thử tay và kiểm thử đầu cuối tạo nhiều tài khoản từ cùng một máy; môi trường thật giữ mức mặc định.
     register-limit-per-hour: 500

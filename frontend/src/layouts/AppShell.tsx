@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { LayoutGrid, LogOut, MonitorSmartphone, ShieldCheck } from 'lucide-react'
+import { BookOpen, LayoutGrid, LogOut, MonitorSmartphone, ShieldCheck } from 'lucide-react'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, Outlet, useLocation } from 'react-router'
@@ -11,6 +11,7 @@ import { Brand, Button } from '@/shared/ui'
 
 const navItems = [
   { to: routes.home, icon: LayoutGrid, label: 'home.nav', end: true },
+  { to: routes.library, icon: BookOpen, label: 'library.nav', end: false },
   { to: routes.devices, icon: MonitorSmartphone, label: 'devices.nav', end: false },
   { to: routes.security, icon: ShieldCheck, label: 'security.nav', end: false },
 ] as const

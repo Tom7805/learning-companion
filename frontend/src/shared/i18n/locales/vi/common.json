@@ -117,7 +117,8 @@
     "RESET_TOKEN_INVALID": "Đường dẫn đặt lại mật khẩu không còn dùng được.",
     "RESET_TOKEN_EXPIRED": "Đường dẫn đặt lại mật khẩu đã hết hạn.",
     "CURRENT_PASSWORD_INVALID": "Mật khẩu hiện tại chưa đúng.",
-    "PASSWORD_REUSED": "Mật khẩu mới cần khác mật khẩu đang dùng."
+    "PASSWORD_REUSED": "Mật khẩu mới cần khác mật khẩu đang dùng.",
+    "FILE_LINK_EXPIRED": "Đường dẫn mở tệp đã hết hạn."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -261,7 +262,8 @@
     "advance1m": "Tua nhanh 1 phút",
     "resetClock": "Đặt lại",
     "to": "Tới",
-    "links": "Đường dẫn trong thư"
+    "links": "Đường dẫn trong thư",
+    "sampleDocument": "Tạo tài liệu mẫu"
   },
   "common": {
     "loading": "Đang tải…",
@@ -415,6 +417,50 @@
       "count_other": "{{count}} thiết bị khác đang đăng nhập",
       "cta": "Đăng xuất khỏi mọi thiết bị",
       "manage": "Xem từng thiết bị"
+    }
+  },
+  "library": {
+    "nav": "Thư viện",
+    "title": "Thư viện của tôi",
+    "subtitle": "Tài liệu học tập của bạn. Mở một tài liệu để đọc nội dung và xem tệp gốc.",
+    "summary_one": "{{count}} tài liệu · {{size}}",
+    "summary_other": "{{count}} tài liệu · {{size}}",
+    "privacy": "Chỉ mình bạn mở được dữ liệu học tập ở đây. Quản trị viên chỉ thấy số lượng và dung lượng đã dùng, không bao giờ thấy nội dung.",
+    "loadFailed": "Chưa tải được thư viện.",
+    "empty": {
+      "title": "Thư viện của bạn đang trống",
+      "body": "Tài liệu bạn đưa lên sẽ nằm ở đây và chỉ mình bạn mở được."
+    },
+    "type": {
+      "PDF": "PDF",
+      "DOCX": "Word",
+      "PPTX": "Trình chiếu",
+      "TEXT": "Văn bản",
+      "IMAGE": "Hình ảnh",
+      "AUDIO": "Âm thanh",
+      "VIDEO": "Video",
+      "WEB": "Trang web"
+    },
+    "onlyYou": "Chỉ mình bạn xem được",
+    "addedAt": "Thêm lúc {{time}}",
+    "content": "Nội dung",
+    "noContent": "Tài liệu này chưa có nội dung văn bản.",
+    "backToLibrary": "Về thư viện",
+    "notFound": {
+      "title": "Không tìm thấy tài liệu",
+      "body": "Tài liệu này không tồn tại, đã bị xóa hoặc không thuộc tài khoản của bạn."
+    },
+    "file": {
+      "title": "Tệp gốc",
+      "preview": "Xem tệp gốc",
+      "reload": "Tải lại tệp",
+      "download": "Tải xuống",
+      "loading": "Đang mở tệp…",
+      "previewLabel": "Xem trước {{name}}",
+      "protected": "Tệp được lưu mã hóa và chỉ mở qua đường dẫn an toàn có hạn 5 phút. Đường dẫn hết hạn thì hệ thống tự lấy đường dẫn mới.",
+      "renewed": "Đường dẫn an toàn cũ đã hết hạn nên hệ thống đã tự lấy đường dẫn mới để mở tệp.",
+      "openFailed": "Chưa mở được tệp gốc. Hãy thử lại sau ít phút.",
+      "unsupported": "Chưa xem trước được loại tệp này ngay trong trang, hãy tải xuống để mở."
     }
   }
 }
