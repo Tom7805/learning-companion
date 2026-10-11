@@ -1,5 +1,7 @@
 export const routes = {
   home: '/',
+  library: '/library',
+  libraryDocument: '/library/:id',
   devices: '/devices',
   security: '/security',
   register: '/register',
@@ -13,3 +15,5 @@ export const routes = {
   privacy: '/legal/privacy',
   devMailbox: '/dev/mailbox',
 } as const
+
+export const documentPath = (id: string) => `/library/${encodeURIComponent(id)}`

@@ -30,6 +30,7 @@ public enum ErrorCode {
     UNAUTHENTICATED(HttpStatus.UNAUTHORIZED, "Bạn cần đăng nhập để tiếp tục."),
     FORBIDDEN(HttpStatus.FORBIDDEN, "Bạn không có quyền thực hiện thao tác này."),
     NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy dữ liệu."),
+    FILE_LINK_EXPIRED(HttpStatus.GONE, "Đường dẫn mở tệp đã hết hạn."),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Hệ thống gặp sự cố, hãy thử lại sau.");
 
     private final HttpStatus status;

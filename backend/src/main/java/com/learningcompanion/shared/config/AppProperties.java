@@ -4,7 +4,7 @@ import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "app")
-public record AppProperties(String frontendUrl, Auth auth, Mail mail, DevTools devTools) {
+public record AppProperties(String frontendUrl, Auth auth, Mail mail, DevTools devTools, Storage storage) {
 
     public AppProperties {
         if (devTools == null) {
@@ -34,5 +34,12 @@ public record AppProperties(String frontendUrl, Auth auth, Mail mail, DevTools d
     }
 
     public record DevTools(boolean enabled) {
+    }
+
+    /**
+     * Kho tệp gốc: tệp được mã hóa trước khi ghi và chỉ mở qua đường dẫn ký có hạn (NCL-01-CN-004).
+     * Khóa mã hóa và khóa ký là 32 byte dạng Base64, môi trường thật đặt qua biến môi trường.
+     */
+    public record Storage(String localRoot, String encryptionKey, String signingKey, Duration signedUrlTtl) {
     }
 }

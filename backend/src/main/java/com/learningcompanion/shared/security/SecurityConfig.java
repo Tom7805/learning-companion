@@ -56,6 +56,9 @@ public class SecurityConfig {
                                 ApiPaths.AUTH + "/password/reset").permitAll()
                         .requestMatchers(HttpMethod.GET, ApiPaths.AUTH + "/session", ApiPaths.LEGAL + "/**")
                         .permitAll()
+                        // Đường dẫn ký tự nó là quyền mở tệp, có hạn năm phút (NCL-01-CN-004).
+                        .requestMatchers(HttpMethod.GET, ApiPaths.FILES + "/*").permitAll()
+                        .requestMatchers(ApiPaths.ADMIN + "/**").hasRole("ADMIN")
                         .requestMatchers(ApiPaths.DEV + "/**").permitAll()
                         .requestMatchers("/actuator/health", "/error").permitAll()
                         .anyRequest().authenticated())

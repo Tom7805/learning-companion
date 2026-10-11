@@ -71,6 +71,12 @@ app:
     device-cookie-name: lc_device
     password-reset-token-ttl: 30m
     password-reset-limit-per-hour: 20
+  storage:
+    local-root: ${APP_STORAGE_ROOT:${user.home}/.learning-companion/storage}
+    # Không có giá trị mặc định: thiếu khóa thì ứng dụng không khởi động.
+    encryption-key: ${APP_STORAGE_ENCRYPTION_KEY:}
+    signing-key: ${APP_STORAGE_SIGNING_KEY:}
+    signed-url-ttl: 5m
   mail:
     gateway: ${APP_MAIL_GATEWAY:mock}
     from-address: ${APP_MAIL_FROM:no-reply@learningcompanion.local}

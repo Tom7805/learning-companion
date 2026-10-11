@@ -13,6 +13,7 @@ import {
   VerifyEmailPage,
 } from '@/features/auth'
 import { DashboardPage } from '@/features/dashboard/pages/DashboardPage'
+import { DocumentPage, LibraryPage } from '@/features/library'
 import { LegalDocumentPage } from '@/features/privacy/pages/LegalDocumentPage'
 import { AppShell } from '@/layouts/AppShell'
 import { AuthLayout } from '@/layouts/AuthLayout'
@@ -40,6 +41,8 @@ export const router = createBrowserRouter([
             element: <AppShell />,
             children: [
               { path: routes.home, element: <DashboardPage /> },
+              { path: routes.library, element: <LibraryPage /> },
+              { path: routes.libraryDocument, element: <DocumentPage /> },
               { path: routes.devices, element: <DevicesPage /> },
               { path: routes.security, element: <SecurityPage /> },
             ],

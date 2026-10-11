@@ -57,6 +57,17 @@ export class DevApi {
     return link!
   }
 
+  /** Bản ghi học tập mẫu kèm tệp gốc cho một tài khoản (chỉ có ở hồ sơ dev). Trả về mã tài liệu. */
+  async sampleDocument(email: string, title?: string): Promise<string> {
+    const response = await this.request.post(`${API}/dev/library/sample`, { data: { email, title } })
+    expect(response.ok()).toBeTruthy()
+    return (await response.json()).id
+  }
+
+  async setRole(email: string, role: 'LEARNER' | 'ADMIN') {
+    expect((await this.request.post(`${API}/dev/accounts/role`, { data: { email, role } })).ok()).toBeTruthy()
+  }
+
   async advanceClock(seconds: number) {
     expect((await this.request.post(`${API}/dev/clock/advance`, { data: { seconds } })).ok()).toBeTruthy()
   }
