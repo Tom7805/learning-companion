@@ -1,5 +1,6 @@
 // Chỉ xuất các thành phần đã hiện thực; các thư mục còn trống sẽ được thêm khi story cần tới.
 export { Alert } from './Alert'
+export { Avatar } from './Avatar'
 export { Badge } from './Badge'
 export { Brand } from './Brand'
 export { Button, CtaButton, buttonClasses } from './Button'

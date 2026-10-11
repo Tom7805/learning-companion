@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router'
 import { routes } from '@/app/routes'
 import { toApiError } from '@/shared/api/errors'
+import { useDateFormat } from '@/shared/hooks/useDateFormat'
 import { usePageHeading } from '@/shared/hooks/usePageHeading'
-import { formatDateTime } from '@/shared/lib/date'
 import { formatBytes } from '@/shared/lib/format'
 import { Alert, Badge, Button, Skeleton, buttonClasses } from '@/shared/ui'
 import { useDocument } from '../api/queries'
@@ -17,6 +17,7 @@ import { DocumentViewer } from '../components/viewer/DocumentViewer'
  */
 export function DocumentPage() {
   const { t, i18n } = useTranslation()
+  const format = useDateFormat()
   const { id = '' } = useParams()
   const document = useDocument(id)
   const notFound = document.isError && toApiError(document.error).status === 404
@@ -86,7 +87,7 @@ export function DocumentPage() {
           {doc.title}
         </h1>
         <p className="text-sm text-muted">
-          {t('library.addedAt', { time: formatDateTime(doc.createdAt, i18n.language) })} ·{' '}
+          {t('library.addedAt', { time: format.dateTime(doc.createdAt) })} ·{' '}
           {formatBytes(doc.sizeBytes, i18n.language)}
         </p>
       </header>

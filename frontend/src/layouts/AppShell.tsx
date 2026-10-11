@@ -2,12 +2,15 @@ import { useQueryClient } from '@tanstack/react-query'
 import { BookOpen, LayoutGrid, LogOut, MonitorSmartphone, ShieldCheck } from 'lucide-react'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NavLink, Outlet, useLocation } from 'react-router'
+import { NavLink, Outlet, useLocation, useSearchParams } from 'react-router'
 import { routes } from '@/app/routes'
 import { useAuth, useLogout } from '@/features/auth'
+import { SettingsDialog, useProfile } from '@/features/settings'
 import { queryKeys } from '@/shared/api/queryKeys'
 import { cn } from '@/shared/lib/cn'
+import { setDisplayTimeZone } from '@/shared/lib/timezone'
 import { Brand, Button } from '@/shared/ui'
+import { AccountMenu } from './AccountMenu'
 
 const navItems = [
   { to: routes.home, icon: LayoutGrid, label: 'home.nav', end: true },
@@ -28,6 +31,25 @@ export function AppShell() {
   // Tải lại hẳn trang đăng nhập: xóa sạch mọi dữ liệu của người dùng cũ còn trong bộ nhớ trình duyệt.
   const logout = useLogout(() => window.location.replace(`${routes.login}?loggedOut=1`))
   const handleLogout = () => logout.mutate()
+  const profile = useProfile()
+  const timeZone = profile.data?.timeZone
+  // Cài đặt mở bằng tham số trên địa chỉ nên tải lại trang hay bấm Quay lại vẫn đúng trạng thái.
+  const [params, setParams] = useSearchParams()
+  const settingsOpen = params.has('settings')
+  const openSettings = () => setParams((current) => ({ ...Object.fromEntries(current), settings: 'profile' }))
+  const closeSettings = () =>
+    setParams(
+      (current) => {
+        current.delete('settings')
+        return current
+      },
+      { replace: true },
+    )
+
+  // Mọi mốc thời gian hiển thị theo múi giờ trong hồ sơ; chưa chọn thì theo thiết bị (QTN-09).
+  useEffect(() => {
+    setDisplayTimeZone(timeZone ?? undefined)
+  }, [timeZone])
 
   // Mỗi lần chuyển trang thì hỏi lại máy chủ: phiên hết hạn hoặc bị đăng xuất từ xa sẽ được phát hiện ngay.
   useEffect(() => {
@@ -61,16 +83,19 @@ export function AppShell() {
               <item.icon className="size-5" aria-hidden="true" />
             </NavLink>
           ))}
-          <button
-            type="button"
-            onClick={handleLogout}
-            disabled={logout.isPending}
-            aria-label={t('home.logout')}
-            title={t('home.logout')}
-            className="mt-auto grid size-12 place-items-center rounded-2xl text-white/80 transition-colors hover:bg-white/10"
-          >
-            <LogOut className="size-5" aria-hidden="true" />
-          </button>
+          {account && (
+            <div className="mt-auto">
+              <AccountMenu
+                placement="sidebar"
+                name={account.displayName}
+                email={account.email}
+                avatarUrl={profile.data?.avatarUrl}
+                onSettings={openSettings}
+                onLogout={handleLogout}
+                loggingOut={logout.isPending}
+              />
+            </div>
+          )}
         </nav>
 
         <div className="flex min-w-0 flex-1 flex-col bg-surface px-5 py-6 sm:rounded-[1.5rem] sm:px-8 lg:px-10">
@@ -78,12 +103,15 @@ export function AppShell() {
             <Brand />
             {account && (
               <div className="flex w-full min-w-0 items-center gap-3 sm:w-auto">
-                <span
-                  aria-hidden="true"
-                  className="grid size-11 place-items-center rounded-full border-[1.5px] border-ink bg-sun text-base font-semibold"
-                >
-                  {initials(account.displayName)}
-                </span>
+                <AccountMenu
+                  placement="header"
+                  name={account.displayName}
+                  email={account.email}
+                  avatarUrl={profile.data?.avatarUrl}
+                  onSettings={openSettings}
+                  onLogout={handleLogout}
+                  loggingOut={logout.isPending}
+                />
                 <span className="flex min-w-0 flex-1 flex-col leading-tight">
                   <span className="font-semibold" data-testid="account-name">
                     {account.displayName}
@@ -124,14 +152,9 @@ export function AppShell() {
           <main id="main" className="flex-1 pt-8">
             <Outlet />
           </main>
+          <SettingsDialog open={settingsOpen} onClose={closeSettings} />
         </div>
       </div>
     </div>
   )
-}
-
-function initials(name: string) {
-  const parts = name.trim().split(/\s+/)
-  const letters = parts.length > 1 ? parts[0][0] + parts[parts.length - 1][0] : parts[0].slice(0, 2)
-  return letters.toUpperCase()
 }

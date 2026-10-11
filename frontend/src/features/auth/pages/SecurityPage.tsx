@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { routes } from '@/app/routes'
 import { toApiError } from '@/shared/api/errors'
+import { useDateFormat } from '@/shared/hooks/useDateFormat'
 import { usePageHeading } from '@/shared/hooks/usePageHeading'
-import { formatDateTime, formatRelative } from '@/shared/lib/date'
 import { Alert, Button, ConfirmDialog, Skeleton } from '@/shared/ui'
 import { useDeviceSessions, useRevokeOtherSessions } from '../api/queries'
 import { ChangePasswordForm } from '../components/ChangePasswordForm'
@@ -15,7 +15,8 @@ type Notice = { tone: 'success' | 'danger'; text: string } | null
 
 /** Bảo mật tài khoản (NCL-01-CN-003): đổi mật khẩu và đăng xuất khỏi mọi thiết bị khác. */
 export function SecurityPage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
+  const format = useDateFormat()
   const heading = usePageHeading(t('security.title'))
   const { account } = useAuth()
   const sessions = useDeviceSessions()
@@ -67,9 +68,9 @@ export function SecurityPage() {
                 {account?.passwordChangedAt ? (
                   <time
                     dateTime={account.passwordChangedAt}
-                    title={formatDateTime(account.passwordChangedAt, i18n.language)}
+                    title={format.dateTime(account.passwordChangedAt)}
                   >
-                    {t('security.lastChanged', { time: formatRelative(account.passwordChangedAt, i18n.language) })}
+                    {t('security.lastChanged', { time: format.relative(account.passwordChangedAt) })}
                   </time>
                 ) : (
                   t('security.neverChanged')

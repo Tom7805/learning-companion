@@ -118,7 +118,13 @@
     "RESET_TOKEN_EXPIRED": "Đường dẫn đặt lại mật khẩu đã hết hạn.",
     "CURRENT_PASSWORD_INVALID": "Mật khẩu hiện tại chưa đúng.",
     "PASSWORD_REUSED": "Mật khẩu mới cần khác mật khẩu đang dùng.",
-    "FILE_LINK_EXPIRED": "Đường dẫn mở tệp đã hết hạn."
+    "FILE_LINK_EXPIRED": "Đường dẫn mở tệp đã hết hạn.",
+    "DISPLAY_NAME_REQUIRED": "Hãy nhập tên hiển thị.",
+    "DISPLAY_NAME_TOO_LONG": "Tên hiển thị tối đa 50 ký tự.",
+    "INVALID_TIME_ZONE": "Múi giờ này không hợp lệ, hãy chọn trong danh sách.",
+    "INVALID_PREFERENCE": "Giá trị này không hợp lệ.",
+    "AVATAR_INVALID_FORMAT": "Ảnh đại diện cần là tệp ảnh JPG, PNG hoặc WebP.",
+    "FILE_TOO_LARGE": "Tệp quá lớn."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -461,6 +467,72 @@
       "renewed": "Đường dẫn an toàn cũ đã hết hạn nên hệ thống đã tự lấy đường dẫn mới để mở tệp.",
       "openFailed": "Chưa mở được tệp gốc. Hãy thử lại sau ít phút.",
       "unsupported": "Chưa xem trước được loại tệp này ngay trong trang, hãy tải xuống để mở."
+    }
+  },
+  "account": {
+    "menu": "Trình đơn tài khoản của {{name}}",
+    "menuLabel": "Tài khoản"
+  },
+  "settings": {
+    "title": "Cài đặt"
+  },
+  "profile": {
+    "nav": "Hồ sơ",
+    "title": "Hồ sơ và tùy chọn học tập",
+    "subtitle": "Giúp trợ lý và mọi mốc thời gian hợp với cách học và nhịp sống của bạn.",
+    "autosave": "Mọi thay đổi được lưu ngay.",
+    "loadFailed": "Chưa tải được hồ sơ.",
+    "status": {
+      "saving": "Đang lưu…",
+      "saved": "Đã lưu",
+      "error": "Chưa lưu được"
+    },
+    "avatar": {
+      "label": "Ảnh đại diện",
+      "hint": "Ảnh JPG, PNG hoặc WebP, tối đa 5 MB. Ảnh sẽ được cắt vuông.",
+      "upload": "Tải ảnh lên",
+      "change": "Đổi ảnh",
+      "remove": "Gỡ ảnh",
+      "tooLarge": "Ảnh tối đa 5 MB, hãy chọn ảnh nhỏ hơn.",
+      "cropTitle": "Cắt ảnh đại diện",
+      "cropHint": "Kéo ảnh để chọn vị trí, dùng thanh trượt để phóng to. Bàn phím: phím mũi tên để dịch, + và − để thu phóng.",
+      "cropArea": "Vùng cắt ảnh đại diện",
+      "zoom": "Thu phóng",
+      "cancel": "Hủy",
+      "save": "Dùng ảnh này"
+    },
+    "displayName": {
+      "label": "Tên hiển thị",
+      "count": "{{count}}/{{max}} ký tự"
+    },
+    "timeZone": {
+      "label": "Múi giờ",
+      "description": "Lịch học, lời nhắc và mọi mốc thời gian đều hiển thị theo múi giờ này.",
+      "notSet": "Chưa chọn (đang theo thiết bị)",
+      "device": "Thiết bị của bạn đang ở múi giờ {{zone}}.",
+      "useDevice": "Dùng múi giờ này",
+      "changed": "Từ giờ mọi mốc thời gian hiển thị theo múi giờ {{zone}}.",
+      "example": "Ví dụ: bây giờ là {{before}} theo múi giờ cũ, tức {{after}} theo múi giờ mới. Lịch học và lời nhắc được tính lại theo múi giờ mới."
+    },
+    "language": {
+      "label": "Ngôn ngữ trả lời của trợ lý",
+      "description": "Trợ lý trả lời bằng ngôn ngữ này, trừ khi bạn hỏi bằng ngôn ngữ khác.",
+      "vi": "Tiếng Việt",
+      "en": "English"
+    },
+    "goal": {
+      "label": "Mục tiêu học mỗi ngày",
+      "description": "Số phút bạn muốn học mỗi ngày, dùng để theo dõi chuỗi ngày học.",
+      "minutes_one": "{{count}} phút",
+      "minutes_other": "{{count}} phút",
+      "custom": "Số phút tùy chọn",
+      "perDay": "phút mỗi ngày",
+      "range": "Mục tiêu từ {{min}} đến {{max}} phút mỗi ngày."
+    },
+    "rollover": {
+      "label": "Mốc đổi ngày học",
+      "description": "Học trước {{time}} vẫn được tính cho ngày hôm trước, hợp với người hay học khuya.",
+      "default": "(mặc định)"
     }
   }
 }

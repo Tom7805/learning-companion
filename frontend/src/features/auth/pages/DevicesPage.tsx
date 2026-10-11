@@ -3,9 +3,9 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { routes } from '@/app/routes'
 import { toApiError } from '@/shared/api/errors'
+import { useDateFormat } from '@/shared/hooks/useDateFormat'
 import { usePageHeading } from '@/shared/hooks/usePageHeading'
 import { cn } from '@/shared/lib/cn'
-import { formatDateTime, formatRelative } from '@/shared/lib/date'
 import { Alert, Badge, Button, ConfirmDialog, Skeleton } from '@/shared/ui'
 import { useDeviceSessions, useRevokeOtherSessions, useRevokeSession } from '../api/queries'
 import type { DeviceSession } from '../types'
@@ -17,7 +17,8 @@ const iconTone = { DESKTOP: 'bg-sky', MOBILE: 'bg-sun', TABLET: 'bg-lilac' } as 
 
 /** Thiết bị đang đăng nhập (NCL-01-CN-002): xem, đăng xuất từng thiết bị hoặc mọi thiết bị khác. */
 export function DevicesPage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
+  const format = useDateFormat()
   const heading = usePageHeading(t('devices.title'))
   const sessions = useDeviceSessions()
   const revokeOne = useRevokeSession()
@@ -145,7 +146,7 @@ export function DevicesPage() {
                     </p>
                     <p className="text-[13px] text-muted">
                       {t(`devices.type.${type}`)} ·{' '}
-                      {t('devices.signedInAt', { time: formatDateTime(session.signedInAt, i18n.language) })}
+                      {t('devices.signedInAt', { time: format.dateTime(session.signedInAt) })}
                       {session.rememberDevice && <> · {t('devices.remembered')}</>}
                     </p>
                   </div>
@@ -164,8 +165,8 @@ export function DevicesPage() {
                       {t('devices.activeNow')}
                     </span>
                   ) : (
-                    <time dateTime={session.lastActiveAt} title={formatDateTime(session.lastActiveAt, i18n.language)}>
-                      {formatRelative(session.lastActiveAt, i18n.language)}
+                    <time dateTime={session.lastActiveAt} title={format.dateTime(session.lastActiveAt)}>
+                      {format.relative(session.lastActiveAt)}
                     </time>
                   )}
                 </p>
