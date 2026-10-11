@@ -1,10 +1,13 @@
 export const routes = {
   home: '/',
   devices: '/devices',
+  security: '/security',
   register: '/register',
   checkEmail: '/register/check-email',
   verifyEmail: '/verify-email',
   login: '/login',
+  forgotPassword: '/forgot-password',
+  resetPassword: '/reset-password',
   revokeDevice: '/devices/revoke',
   terms: '/legal/terms',
   privacy: '/legal/privacy',

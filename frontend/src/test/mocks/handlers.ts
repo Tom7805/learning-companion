@@ -16,13 +16,14 @@ export const verifiedAccount: Account = {
   emailVerifiedAt: '2026-10-10T06:00:00Z',
 }
 
-export function apiError(status: number, code: string, field?: string) {
+export function apiError(status: number, code: string, field?: string, details?: Record<string, unknown>) {
   return HttpResponse.json(
     {
       code,
       message: `server:${code}`,
       status,
       fieldErrors: field ? [{ field, code, message: `server:${code}` }] : [],
+      details,
       requestId: 'req-test-1',
     },
     { status },
@@ -45,6 +46,10 @@ export const handlers = [
   http.get('*/api/v1/auth/sessions', () => HttpResponse.json(deviceSessions)),
   http.delete('*/api/v1/auth/sessions/:id', () => new HttpResponse(null, { status: 204 })),
   http.post('*/api/v1/auth/sessions/revoke-others', () => HttpResponse.json({ revokedCount: 1 })),
+  http.post('*/api/v1/auth/password/forgot', () => HttpResponse.json({ resendAvailableInSeconds: 60 }, { status: 202 })),
+  http.post('*/api/v1/auth/password/reset/check', () => new HttpResponse(null, { status: 204 })),
+  http.post('*/api/v1/auth/password/reset', () => HttpResponse.json({ email: verifiedAccount.email })),
+  http.post('*/api/v1/auth/password/change', () => HttpResponse.json({ revokedSessions: 1 })),
 ]
 
 export const deviceSessions: DeviceSession[] = [

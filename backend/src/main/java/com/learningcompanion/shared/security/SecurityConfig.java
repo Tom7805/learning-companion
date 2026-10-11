@@ -50,7 +50,10 @@ public class SecurityConfig {
                                 ApiPaths.AUTH + "/login",
                                 ApiPaths.AUTH + "/verify-email",
                                 ApiPaths.AUTH + "/verify-email/resend",
-                                ApiPaths.AUTH + "/sessions/revoke-link").permitAll()
+                                ApiPaths.AUTH + "/sessions/revoke-link",
+                                ApiPaths.AUTH + "/password/forgot",
+                                ApiPaths.AUTH + "/password/reset/check",
+                                ApiPaths.AUTH + "/password/reset").permitAll()
                         .requestMatchers(HttpMethod.GET, ApiPaths.AUTH + "/session", ApiPaths.LEGAL + "/**")
                         .permitAll()
                         .requestMatchers(ApiPaths.DEV + "/**").permitAll()

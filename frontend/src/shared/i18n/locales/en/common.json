@@ -91,7 +91,9 @@
     "passwordTooLong": "Password can be at most 128 characters.",
     "confirmRequired": "Re-type your password.",
     "confirmMismatch": "The passwords do not match.",
-    "termsRequired": "You need to accept the terms and privacy policy to create an account."
+    "termsRequired": "You need to accept the terms and privacy policy to create an account.",
+    "currentPasswordRequired": "Enter your current password.",
+    "passwordSameAsCurrent": "Your new password must be different from the current one."
   },
   "errors": {
     "PASSWORD_BREACHED": "This password has appeared in data breaches and is easy to guess. Use a longer phrase, for example “autumn in hanoi 2026”.",
@@ -111,7 +113,11 @@
     "SESSION_EXPIRED": "Your session has expired.",
     "SESSION_REVOKED": "This device was signed out.",
     "REVOKE_LINK_INVALID": "This sign-out link is not valid.",
-    "NOT_FOUND": "Not found, it may have changed. Please reload the page."
+    "NOT_FOUND": "Not found, it may have changed. Please reload the page.",
+    "RESET_TOKEN_INVALID": "This password reset link can no longer be used.",
+    "RESET_TOKEN_EXPIRED": "This password reset link has expired.",
+    "CURRENT_PASSWORD_INVALID": "Your current password is incorrect.",
+    "PASSWORD_REUSED": "Your new password must be different from the one you use now."
   },
   "checkEmail": {
     "title": "Check your inbox",
@@ -184,7 +190,8 @@
     "locked": {
       "title": "Sign-in is temporarily locked",
       "body": "The password was entered wrongly 5 times in a row. To protect the account you can try again in:",
-      "unlocked": "The lock has ended, you can sign in again."
+      "unlocked": "The lock has ended, you can sign in again.",
+      "resetLink": "Can’t remember it? Reset your password to unlock now"
     },
     "notVerified": {
       "body": "This email address is not verified yet. Open the verification email or get a new one.",
@@ -194,8 +201,10 @@
     "reason": {
       "SESSION_EXPIRED": "Your session expired after a period of inactivity. Please sign in again.",
       "SESSION_REVOKED": "This device was signed out from another device. Sign in again if that was you.",
-      "loggedOut": "You have signed out. See you soon!"
-    }
+      "loggedOut": "You have signed out. See you soon!",
+      "passwordReset": "Your password was reset and every device was signed out. Sign in with your new password."
+    },
+    "forgot": "Forgot password?"
   },
   "home": {
     "greeting": "Hi {{name}}",
@@ -314,6 +323,98 @@
     "invalidBody": "The link may have been cut off when copied. You can still sign in and sign devices out from Signed-in devices.",
     "toLogin": "Go to sign in",
     "toDevices": "See signed-in devices",
-    "failedTitle": "Could not sign that device out"
+    "failedTitle": "Could not sign that device out",
+    "changePassword": "Change password now",
+    "resetPassword": "Reset password"
+  },
+  "forgot": {
+    "title": "Forgot password",
+    "titleLine1": "Forgot your password?",
+    "titleLine2": "<strong>No worries</strong>, reset it in minutes.",
+    "subtitle": "Enter the email address you signed up with. We will send you a link to choose a new password.",
+    "submit": "Send instructions",
+    "submitHint": "The link works for 30 minutes",
+    "submitting": "Sending…",
+    "backToLogin": "Back to sign in",
+    "rememberedIt": "Remembered it?",
+    "sent": {
+      "title": "Check your inbox",
+      "body": "If <email>{{email}}</email> has a Learning Companion account, password reset instructions have been sent to it.",
+      "expires": "The link in the email works once and expires after 30 minutes.",
+      "resent": "Instructions sent again. Use the newest email, the link in older ones no longer works.",
+      "resend": "Resend email",
+      "resending": "Resending…",
+      "changeEmail": "Use a different address",
+      "tipsTitle": "No email yet?",
+      "tips": [
+        "Emails usually arrive within a minute. Check your Spam and Promotions folders too.",
+        "Double-check the address above. If it is wrong, use a different address.",
+        "For your security, we never say which addresses have an account."
+      ]
+    }
+  },
+  "reset": {
+    "title": "Choose a new password",
+    "checking": "Checking your link…",
+    "subtitle": "Pick a new password that differs from your old one. Once saved, every device signed in to this account will be signed out.",
+    "submit": "Save new password",
+    "submitHint": "Signs out every signed-in device",
+    "submitting": "Saving…",
+    "success": {
+      "title": "Your new password is set",
+      "body": "Every device has been signed out and a confirmation email was sent to <strong>{{email}}</strong>.",
+      "cta": "Sign in with your new password"
+    },
+    "expired": {
+      "title": "This link has expired",
+      "body": "Password reset links only work for 30 minutes. Get a new link, it will arrive in a moment.",
+      "cta": "Send a new link",
+      "sent": "A new link is on its way. Open the newest email in your inbox."
+    },
+    "invalid": {
+      "title": "This link can no longer be used",
+      "body": "It was already used, replaced by a newer link, or copied incompletely. Request a new link instead.",
+      "cta": "Request a new link"
+    },
+    "failed": {
+      "title": "We could not check this link"
+    }
+  },
+  "security": {
+    "nav": "Security",
+    "title": "Account security",
+    "subtitle": "Change your password and control which devices are signed in to your account.",
+    "lastChanged": "Password last changed {{time}}",
+    "neverChanged": "Password not changed since the account was created",
+    "change": {
+      "title": "Change password",
+      "body": "After the change, every other device is signed out. This device stays signed in.",
+      "currentLabel": "Current password",
+      "currentPlaceholder": "The password you use now",
+      "newLabel": "New password",
+      "newPlaceholder": "At least 10 characters, ideally a phrase",
+      "confirmLabel": "Repeat new password",
+      "confirmPlaceholder": "Type it again to be sure",
+      "submit": "Change password",
+      "submitting": "Changing…",
+      "success_zero": "Password changed. A confirmation email was sent to your inbox.",
+      "success_one": "Password changed and {{count}} other device signed out. A confirmation email was sent to your inbox.",
+      "success_other": "Password changed and {{count}} other devices signed out. A confirmation email was sent to your inbox.",
+      "forgot": "Forgot your current password?",
+      "attemptsLeft_one": "{{count}} attempt left before the account is locked for 15 minutes.",
+      "attemptsLeft_other": "{{count}} attempts left before the account is locked for 15 minutes.",
+      "lockedTitle": "Password change temporarily locked",
+      "lockedBody": "The current password was entered wrong 5 times in a row. To protect your account, try again in:",
+      "unlocked": "The lock has ended, you can try again."
+    },
+    "sessions": {
+      "title": "Sign out of all devices",
+      "body": "Use this if you forgot to sign out on a shared computer or think someone else got into your account. This device stays signed in.",
+      "count_zero": "No other device is signed in.",
+      "count_one": "{{count}} other device signed in",
+      "count_other": "{{count}} other devices signed in",
+      "cta": "Sign out of all devices",
+      "manage": "See each device"
+    }
   }
 }

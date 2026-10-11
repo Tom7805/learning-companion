@@ -1,15 +1,19 @@
 import { LockKeyhole } from 'lucide-react'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { formatMinutesSeconds, useCountdown } from '@/shared/hooks/useCountdown'
 
 interface LockoutNoticeProps {
   lockedUntil: number
   onUnlocked: () => void
+  title?: string
+  body?: string
+  /** Lối thoát khi đang bị khóa, ví dụ đường dẫn đặt lại mật khẩu. */
+  action?: ReactNode
 }
 
 /** Khóa tạm sau 5 lần nhập sai: hiện thời gian chờ còn lại và tự mở lại khi hết giờ. */
-export function LockoutNotice({ lockedUntil, onUnlocked }: LockoutNoticeProps) {
+export function LockoutNotice({ lockedUntil, onUnlocked, title, body, action }: LockoutNoticeProps) {
   const { t } = useTranslation()
   const seconds = useCountdown(lockedUntil)
   const notified = useRef(false)
@@ -34,11 +38,12 @@ export function LockoutNotice({ lockedUntil, onUnlocked }: LockoutNoticeProps) {
         <LockKeyhole className="size-6" />
       </span>
       <div className="flex flex-col gap-1">
-        <p className="font-semibold">{t('login.locked.title')}</p>
-        <p className="text-sm leading-relaxed text-ink-soft">{t('login.locked.body')}</p>
+        <p className="font-semibold">{title ?? t('login.locked.title')}</p>
+        <p className="text-sm leading-relaxed text-ink-soft">{body ?? t('login.locked.body')}</p>
         <p className="text-3xl font-semibold tabular-nums tracking-tight" data-testid="lockout-countdown">
           {formatMinutesSeconds(seconds)}
         </p>
+        {action && <div className="mt-1 text-sm">{action}</div>}
       </div>
     </div>
   )

@@ -19,15 +19,20 @@ public class PasswordPolicyValidator {
     }
 
     public void validate(String password) {
+        validate(password, FIELD);
+    }
+
+    /** `field` là tên ô trên biểu mẫu để giao diện gắn lỗi đúng chỗ (password, newPassword...). */
+    public void validate(String password, String field) {
         int length = password == null ? 0 : password.codePointCount(0, password.length());
         if (length < MIN_LENGTH) {
-            throw new BusinessException(ErrorCode.PASSWORD_TOO_SHORT, FIELD);
+            throw new BusinessException(ErrorCode.PASSWORD_TOO_SHORT, field);
         }
         if (length > MAX_LENGTH) {
-            throw new BusinessException(ErrorCode.PASSWORD_TOO_LONG, FIELD);
+            throw new BusinessException(ErrorCode.PASSWORD_TOO_LONG, field);
         }
         if (breachedPasswordChecker.isBreached(password)) {
-            throw new BusinessException(ErrorCode.PASSWORD_BREACHED, FIELD);
+            throw new BusinessException(ErrorCode.PASSWORD_BREACHED, field);
         }
     }
 }

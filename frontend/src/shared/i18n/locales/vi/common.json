@@ -91,7 +91,9 @@
     "passwordTooLong": "Mật khẩu dài tối đa 128 ký tự.",
     "confirmRequired": "Hãy nhập lại mật khẩu.",
     "confirmMismatch": "Hai mật khẩu chưa khớp nhau.",
-    "termsRequired": "Bạn cần đồng ý điều khoản và chính sách quyền riêng tư để tạo tài khoản."
+    "termsRequired": "Bạn cần đồng ý điều khoản và chính sách quyền riêng tư để tạo tài khoản.",
+    "currentPasswordRequired": "Hãy nhập mật khẩu hiện tại.",
+    "passwordSameAsCurrent": "Mật khẩu mới cần khác mật khẩu hiện tại."
   },
   "errors": {
     "PASSWORD_BREACHED": "Mật khẩu này đã từng bị lộ trong các vụ rò rỉ dữ liệu nên rất dễ bị đoán ra. Hãy dùng một cụm từ dài hơn, ví dụ “mùa thu hà nội 2026”.",
@@ -111,7 +113,11 @@
     "SESSION_EXPIRED": "Phiên đăng nhập đã hết hạn.",
     "SESSION_REVOKED": "Thiết bị này đã bị đăng xuất.",
     "REVOKE_LINK_INVALID": "Đường dẫn đăng xuất thiết bị không hợp lệ.",
-    "NOT_FOUND": "Không tìm thấy dữ liệu, có thể nó đã thay đổi. Hãy tải lại trang."
+    "NOT_FOUND": "Không tìm thấy dữ liệu, có thể nó đã thay đổi. Hãy tải lại trang.",
+    "RESET_TOKEN_INVALID": "Đường dẫn đặt lại mật khẩu không còn dùng được.",
+    "RESET_TOKEN_EXPIRED": "Đường dẫn đặt lại mật khẩu đã hết hạn.",
+    "CURRENT_PASSWORD_INVALID": "Mật khẩu hiện tại chưa đúng.",
+    "PASSWORD_REUSED": "Mật khẩu mới cần khác mật khẩu đang dùng."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -184,7 +190,8 @@
     "locked": {
       "title": "Đăng nhập đang tạm khóa",
       "body": "Mật khẩu đã bị nhập sai 5 lần liên tiếp. Để bảo vệ tài khoản, bạn có thể thử lại sau:",
-      "unlocked": "Hết thời gian khóa, bạn có thể đăng nhập lại."
+      "unlocked": "Hết thời gian khóa, bạn có thể đăng nhập lại.",
+      "resetLink": "Không nhớ mật khẩu? Đặt lại để mở khóa ngay"
     },
     "notVerified": {
       "body": "Địa chỉ thư này chưa được xác thực. Hãy mở thư xác thực trong hộp thư, hoặc nhận một thư mới.",
@@ -194,8 +201,10 @@
     "reason": {
       "SESSION_EXPIRED": "Phiên đăng nhập đã hết hạn do lâu không thao tác. Hãy đăng nhập lại để tiếp tục.",
       "SESSION_REVOKED": "Thiết bị này đã bị đăng xuất từ một thiết bị khác. Hãy đăng nhập lại nếu đó là bạn.",
-      "loggedOut": "Bạn đã đăng xuất. Hẹn gặp lại!"
-    }
+      "loggedOut": "Bạn đã đăng xuất. Hẹn gặp lại!",
+      "passwordReset": "Mật khẩu đã được đặt lại, mọi thiết bị đã được đăng xuất. Hãy đăng nhập bằng mật khẩu mới."
+    },
+    "forgot": "Quên mật khẩu?"
   },
   "home": {
     "greeting": "Chào {{name}}",
@@ -314,6 +323,98 @@
     "invalidBody": "Đường dẫn có thể bị thiếu khi sao chép. Bạn vẫn có thể đăng nhập và đăng xuất thiết bị trong mục Thiết bị đang đăng nhập.",
     "toLogin": "Đi tới đăng nhập",
     "toDevices": "Xem thiết bị đang đăng nhập",
-    "failedTitle": "Chưa đăng xuất được thiết bị"
+    "failedTitle": "Chưa đăng xuất được thiết bị",
+    "changePassword": "Đổi mật khẩu ngay",
+    "resetPassword": "Đặt lại mật khẩu"
+  },
+  "forgot": {
+    "title": "Quên mật khẩu",
+    "titleLine1": "Quên mật khẩu?",
+    "titleLine2": "<strong>Đừng lo</strong>, đặt lại trong vài phút.",
+    "subtitle": "Nhập địa chỉ thư bạn đã dùng để đăng ký. Chúng tôi sẽ gửi đường dẫn để bạn đặt mật khẩu mới.",
+    "submit": "Gửi hướng dẫn",
+    "submitHint": "Đường dẫn dùng được trong 30 phút",
+    "submitting": "Đang gửi…",
+    "backToLogin": "Quay lại đăng nhập",
+    "rememberedIt": "Nhớ ra rồi?",
+    "sent": {
+      "title": "Kiểm tra hộp thư của bạn",
+      "body": "Nếu <email>{{email}}</email> có tài khoản Learning Companion, hướng dẫn đặt lại mật khẩu đã được gửi tới địa chỉ này.",
+      "expires": "Đường dẫn trong thư chỉ dùng được một lần và hết hạn sau 30 phút.",
+      "resent": "Đã gửi lại hướng dẫn. Hãy dùng thư mới nhất, đường dẫn trong thư cũ không còn hiệu lực.",
+      "resend": "Gửi lại thư",
+      "resending": "Đang gửi lại…",
+      "changeEmail": "Dùng địa chỉ khác",
+      "tipsTitle": "Chưa thấy thư?",
+      "tips": [
+        "Thư thường tới trong vòng một phút, hãy kiểm tra cả mục Thư rác và Quảng cáo.",
+        "Kiểm tra lại địa chỉ ở trên đã đúng chưa, nếu sai hãy dùng địa chỉ khác.",
+        "Vì lý do bảo mật, chúng tôi không cho biết địa chỉ nào đã đăng ký tài khoản."
+      ]
+    }
+  },
+  "reset": {
+    "title": "Đặt mật khẩu mới",
+    "checking": "Đang kiểm tra đường dẫn…",
+    "subtitle": "Chọn một mật khẩu mới khác mật khẩu cũ. Sau khi lưu, mọi thiết bị đang đăng nhập tài khoản này sẽ bị đăng xuất.",
+    "submit": "Lưu mật khẩu mới",
+    "submitHint": "Đăng xuất mọi thiết bị đang đăng nhập",
+    "submitting": "Đang lưu…",
+    "success": {
+      "title": "Đã đặt mật khẩu mới",
+      "body": "Mọi thiết bị đã được đăng xuất và thư xác nhận đã được gửi tới <strong>{{email}}</strong>.",
+      "cta": "Đăng nhập bằng mật khẩu mới"
+    },
+    "expired": {
+      "title": "Đường dẫn đã hết hạn",
+      "body": "Đường dẫn đặt lại mật khẩu chỉ dùng được trong 30 phút. Hãy nhận đường dẫn mới, thư sẽ tới trong giây lát.",
+      "cta": "Gửi đường dẫn mới",
+      "sent": "Đã gửi đường dẫn mới. Hãy mở thư mới nhất trong hộp thư của bạn."
+    },
+    "invalid": {
+      "title": "Đường dẫn không còn dùng được",
+      "body": "Đường dẫn này đã được dùng, đã bị thay bằng một đường dẫn mới hơn, hoặc bị sao chép thiếu. Hãy yêu cầu đường dẫn mới.",
+      "cta": "Yêu cầu đường dẫn mới"
+    },
+    "failed": {
+      "title": "Chưa kiểm tra được đường dẫn"
+    }
+  },
+  "security": {
+    "nav": "Bảo mật",
+    "title": "Bảo mật tài khoản",
+    "subtitle": "Đổi mật khẩu và kiểm soát những thiết bị đang đăng nhập tài khoản của bạn.",
+    "lastChanged": "Đổi mật khẩu lần cuối {{time}}",
+    "neverChanged": "Chưa đổi mật khẩu kể từ khi tạo tài khoản",
+    "change": {
+      "title": "Đổi mật khẩu",
+      "body": "Sau khi đổi, mọi thiết bị khác sẽ bị đăng xuất, thiết bị này vẫn giữ đăng nhập.",
+      "currentLabel": "Mật khẩu hiện tại",
+      "currentPlaceholder": "Mật khẩu bạn đang dùng",
+      "newLabel": "Mật khẩu mới",
+      "newPlaceholder": "Ít nhất 10 ký tự, nên là một cụm từ",
+      "confirmLabel": "Nhập lại mật khẩu mới",
+      "confirmPlaceholder": "Nhập lại để chắc chắn",
+      "submit": "Đổi mật khẩu",
+      "submitting": "Đang đổi…",
+      "success_zero": "Đã đổi mật khẩu. Thư xác nhận đã được gửi tới hộp thư của bạn.",
+      "success_one": "Đã đổi mật khẩu và đăng xuất {{count}} thiết bị khác. Thư xác nhận đã được gửi tới hộp thư của bạn.",
+      "success_other": "Đã đổi mật khẩu và đăng xuất {{count}} thiết bị khác. Thư xác nhận đã được gửi tới hộp thư của bạn.",
+      "forgot": "Không nhớ mật khẩu hiện tại?",
+      "attemptsLeft_one": "Còn {{count}} lần thử trước khi tài khoản bị tạm khóa 15 phút.",
+      "attemptsLeft_other": "Còn {{count}} lần thử trước khi tài khoản bị tạm khóa 15 phút.",
+      "lockedTitle": "Tạm khóa đổi mật khẩu",
+      "lockedBody": "Mật khẩu hiện tại đã bị nhập sai 5 lần liên tiếp. Để bảo vệ tài khoản, bạn có thể thử lại sau:",
+      "unlocked": "Hết thời gian khóa, bạn có thể thử lại."
+    },
+    "sessions": {
+      "title": "Đăng xuất khỏi mọi thiết bị",
+      "body": "Dùng khi bạn quên đăng xuất trên máy dùng chung hoặc nghi có người khác vào tài khoản. Thiết bị này vẫn giữ đăng nhập.",
+      "count_zero": "Không có thiết bị nào khác đang đăng nhập.",
+      "count_one": "{{count}} thiết bị khác đang đăng nhập",
+      "count_other": "{{count}} thiết bị khác đang đăng nhập",
+      "cta": "Đăng xuất khỏi mọi thiết bị",
+      "manage": "Xem từng thiết bị"
+    }
   }
 }

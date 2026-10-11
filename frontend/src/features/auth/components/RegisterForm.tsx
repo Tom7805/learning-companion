@@ -40,6 +40,8 @@ export function RegisterForm({ prefill, onRegistered }: RegisterFormProps) {
     setError,
     setValue,
     setFocus,
+    getValues,
+    trigger,
     formState: { errors, touchedFields, isSubmitted, submitCount },
   } = useForm<RegisterFormInput, unknown, RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -197,7 +199,10 @@ export function RegisterForm({ prefill, onRegistered }: RegisterFormProps) {
             valid={isValid('password') && !breached}
             validLabel={t('register.valid')}
             trailing={passwordToggle}
-            {...register('password')}
+            {...register('password', {
+              // Sửa mật khẩu sau khi đã nhập ô xác nhận thì báo khớp hay chưa ngay.
+              onChange: () => getValues('confirmPassword') && void trigger('confirmPassword'),
+            })}
           />
           {values.password && <PasswordStrengthMeter password={values.password} breached={breached} />}
         </div>

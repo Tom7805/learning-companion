@@ -69,6 +69,8 @@ app:
     lockout-duration: 15m
     login-limit-per-hour: 100
     device-cookie-name: lc_device
+    password-reset-token-ttl: 30m
+    password-reset-limit-per-hour: 20
   mail:
     gateway: ${APP_MAIL_GATEWAY:mock}
     from-address: ${APP_MAIL_FROM:no-reply@learningcompanion.local}

@@ -6,7 +6,13 @@ const API = `${process.env.E2E_API_URL ?? 'http://127.0.0.1:8080'}/api/v1`
 export interface CapturedMail {
   to: string
   subject: string
-  template: 'VERIFY_EMAIL' | 'REGISTRATION_ATTEMPT' | 'NEW_DEVICE_LOGIN' | 'ACCOUNT_LOCKED'
+  template:
+    | 'VERIFY_EMAIL'
+    | 'REGISTRATION_ATTEMPT'
+    | 'NEW_DEVICE_LOGIN'
+    | 'ACCOUNT_LOCKED'
+    | 'PASSWORD_RESET'
+    | 'PASSWORD_CHANGED'
   links: string[]
   sentAt: string
 }
@@ -40,6 +46,14 @@ export class DevApi {
     const mail = await this.waitForMail(to, 'VERIFY_EMAIL', count)
     const link = mail.links.find((candidate) => candidate.includes('/verify-email?token='))
     expect(link, 'thư xác thực phải chứa đường dẫn').toBeTruthy()
+    return link!
+  }
+
+  /** Đường dẫn đặt lại mật khẩu trong thư mới nhất (thư mới đứng đầu hộp thư). */
+  async resetLink(to: string, count = 1) {
+    const mail = await this.waitForMail(to, 'PASSWORD_RESET', count)
+    const link = mail.links.find((candidate) => candidate.includes('/reset-password?token='))
+    expect(link, 'thư đặt lại mật khẩu phải chứa đường dẫn').toBeTruthy()
     return link!
   }
 

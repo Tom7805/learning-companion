@@ -278,6 +278,8 @@ test.describe('NCL-01-CN-002 · Đăng nhập và quản lý phiên', () => {
     await page.keyboard.press('Space')
     await expect(page.getByRole('checkbox', { name: 'Ghi nhớ thiết bị này' })).toBeChecked()
     await page.keyboard.press('Tab')
+    await expect(page.getByRole('link', { name: 'Quên mật khẩu?' })).toBeFocused()
+    await page.keyboard.press('Tab')
     await expect(page.getByRole('button', { name: /Đăng nhập/ })).toBeFocused()
     await page.keyboard.press('Enter')
     await expect(page.getByTestId('home-greeting')).toBeVisible()

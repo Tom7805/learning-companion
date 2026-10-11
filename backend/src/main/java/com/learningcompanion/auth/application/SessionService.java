@@ -41,6 +41,8 @@ public class SessionService implements SessionResolver {
     public static final String REASON_REVOKED_BY_USER = "REVOKED_BY_USER";
     public static final String REASON_REVOKED_OTHERS = "REVOKED_OTHERS";
     public static final String REASON_REVOKED_FROM_EMAIL = "REVOKED_FROM_EMAIL";
+    public static final String REASON_PASSWORD_CHANGED = "PASSWORD_CHANGED";
+    public static final String REASON_PASSWORD_RESET = "PASSWORD_RESET";
 
     private final UserSessionRepository sessions;
     private final UserAccountRepository accounts;
@@ -165,6 +167,19 @@ public class SessionService implements SessionResolver {
                 .toList();
         others.forEach(session -> revoke(session, user.userId(), REASON_REVOKED_OTHERS, client));
         return others.size();
+    }
+
+    /**
+     * Thu hồi mọi phiên còn hiệu lực của tài khoản, trừ `keepSessionId` (có thể null). Dùng khi đổi hoặc
+     * đặt lại mật khẩu: kẻ đang giữ phiên cũ không còn dùng được nữa.
+     */
+    @Transactional(propagation = Propagation.MANDATORY)
+    public int revokeAll(UUID userId, UUID keepSessionId, String reason, ClientInfo client) {
+        List<UserSession> active = sessions.findActiveByUserId(userId, Instant.now(clock)).stream()
+                .filter(session -> !session.getId().equals(keepSessionId))
+                .toList();
+        active.forEach(session -> revoke(session, userId, reason, client));
+        return active.size();
     }
 
     /** Nút "đăng xuất thiết bị đó" trong thư cảnh báo; bấm lại lần nữa vẫn báo thành công. */

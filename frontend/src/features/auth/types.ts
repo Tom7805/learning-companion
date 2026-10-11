@@ -5,6 +5,8 @@ export interface Account {
   role: 'LEARNER' | 'ADMIN'
   status: 'PENDING_VERIFICATION' | 'ACTIVE' | 'SUSPENDED' | 'PENDING_DELETION'
   emailVerifiedAt?: string
+  /** Lần đổi hoặc đặt lại mật khẩu gần nhất; trống nếu chưa từng đổi từ lúc tạo tài khoản. */
+  passwordChangedAt?: string
 }
 
 /** Lý do trình duyệt không còn đăng nhập, để màn hình đăng nhập báo đúng. */
@@ -70,4 +72,20 @@ export interface RevokedByLink {
   operatingSystem: string
   signedInAt: string
   alreadyRevoked: boolean
+}
+
+export interface ResetPasswordPayload {
+  token: string
+  password: string
+}
+
+export interface ChangePasswordPayload {
+  currentPassword: string
+  newPassword: string
+}
+
+/** Trạng thái màn hình "đã gửi hướng dẫn đặt lại", giữ trong lịch sử trình duyệt qua lần tải lại trang. */
+export interface ForgotPasswordSent {
+  email: string
+  resendAvailableAt: number
 }

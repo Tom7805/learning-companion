@@ -65,3 +65,31 @@ export function useRevokeOtherSessions() {
     onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.deviceSessions }),
   })
 }
+
+export function useForgotPassword() {
+  return useMutation({ mutationFn: authApi.forgotPassword })
+}
+
+/** Đặt lại xong thì mọi phiên của tài khoản đều bị thu hồi, kể cả phiên của trình duyệt này. */
+export function useResetPassword() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: authApi.resetPassword,
+    onSuccess: () => {
+      queryClient.setQueryData<SessionStatus>(queryKeys.session, { authenticated: false })
+      queryClient.removeQueries({ queryKey: queryKeys.deviceSessions })
+    },
+  })
+}
+
+/** Đổi mật khẩu giữ thiết bị này đăng nhập; danh sách thiết bị và thời điểm đổi mật khẩu cần tải lại. */
+export function useChangePassword() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: authApi.changePassword,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.session })
+      void queryClient.invalidateQueries({ queryKey: queryKeys.deviceSessions })
+    },
+  })
+}

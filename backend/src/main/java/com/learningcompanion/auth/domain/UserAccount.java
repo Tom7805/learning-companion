@@ -39,6 +39,9 @@ public class UserAccount {
     @Column(name = "email_verified_at")
     private Instant emailVerifiedAt;
 
+    @Column(name = "password_changed_at")
+    private Instant passwordChangedAt;
+
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
@@ -75,6 +78,12 @@ public class UserAccount {
         updatedAt = now;
     }
 
+    public void changePassword(String newPasswordHash, Instant now) {
+        passwordHash = newPasswordHash;
+        passwordChangedAt = now;
+        updatedAt = now;
+    }
+
     public boolean isPendingVerification() {
         return status == AccountStatus.PENDING_VERIFICATION;
     }
@@ -105,6 +114,10 @@ public class UserAccount {
 
     public Instant getEmailVerifiedAt() {
         return emailVerifiedAt;
+    }
+
+    public Instant getPasswordChangedAt() {
+        return passwordChangedAt;
     }
 
     public Instant getCreatedAt() {

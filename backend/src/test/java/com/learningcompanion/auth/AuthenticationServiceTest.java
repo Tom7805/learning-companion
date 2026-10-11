@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 
 import com.learningcompanion.auth.application.AuthMailNotifier;
 import com.learningcompanion.auth.application.AuthenticationService;
+import com.learningcompanion.auth.application.LoginAttemptService;
 import com.learningcompanion.auth.application.SessionService;
 import com.learningcompanion.auth.domain.LoginThrottle;
 import com.learningcompanion.auth.domain.LoginThrottleRepository;
@@ -61,7 +62,7 @@ class AuthenticationServiceTest {
         AppProperties properties = new AppProperties("http://localhost:5173",
                 new AppProperties.Auth(Duration.ofHours(24), Duration.ofSeconds(60), Duration.ofHours(2),
                         "lc_session", false, 10, 20, Duration.ofHours(1), Duration.ofDays(30), 5,
-                        Duration.ofMinutes(15), 1000, "lc_device"),
+                        Duration.ofMinutes(15), 1000, "lc_device", Duration.ofMinutes(30), 20),
                 new AppProperties.Mail("mock", "no-reply@test", "Test"), null);
         when(passwordHasher.hash(anyString())).thenReturn("dummy-hash");
         when(passwordHasher.matches(anyString(), anyString())).thenReturn(false);
@@ -83,8 +84,9 @@ class AuthenticationServiceTest {
                 new SessionService.StartedSession(UUID.randomUUID(), "raw", inv.getArgument(2),
                         inv.<Boolean>getArgument(2) ? Duration.ofDays(30) : Duration.ofHours(2)));
 
-        service = new AuthenticationService(accounts, throttles, passwordHasher, sessionService,
-                new RateLimiter(clock), audit, events, clock, properties);
+        LoginAttemptService loginAttempts = new LoginAttemptService(throttles, audit, events, clock, properties);
+        service = new AuthenticationService(accounts, loginAttempts, passwordHasher, sessionService,
+                new RateLimiter(clock), audit, properties);
     }
 
     @Test

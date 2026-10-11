@@ -4,9 +4,12 @@ import { DevToolbar } from '@/dev/DevToolbar'
 import {
   CheckEmailPage,
   DevicesPage,
+  ForgotPasswordPage,
   LoginPage,
   RegisterPage,
+  ResetPasswordPage,
   RevokeDevicePage,
+  SecurityPage,
   VerifyEmailPage,
 } from '@/features/auth'
 import { DashboardPage } from '@/features/dashboard/pages/DashboardPage'
@@ -38,6 +41,7 @@ export const router = createBrowserRouter([
             children: [
               { path: routes.home, element: <DashboardPage /> },
               { path: routes.devices, element: <DevicesPage /> },
+              { path: routes.security, element: <SecurityPage /> },
             ],
           },
         ],
@@ -49,6 +53,8 @@ export const router = createBrowserRouter([
           { path: routes.checkEmail, element: <CheckEmailPage /> },
           { path: routes.verifyEmail, element: <VerifyEmailPage /> },
           { path: routes.login, element: <LoginPage /> },
+          { path: routes.forgotPassword, element: <ForgotPasswordPage /> },
+          { path: routes.resetPassword, element: <ResetPasswordPage /> },
           { path: routes.revokeDevice, element: <RevokeDevicePage /> },
           { path: routes.terms, element: <LegalDocumentPage kind="terms" /> },
           { path: routes.privacy, element: <LegalDocumentPage kind="privacy" /> },

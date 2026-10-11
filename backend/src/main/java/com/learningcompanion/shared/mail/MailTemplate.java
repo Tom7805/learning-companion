@@ -4,7 +4,9 @@ public enum MailTemplate {
     VERIFY_EMAIL("email/verify-email", "Xác thực địa chỉ thư của bạn"),
     REGISTRATION_ATTEMPT("email/registration-attempt", "Có người vừa thử đăng ký bằng địa chỉ thư của bạn"),
     NEW_DEVICE_LOGIN("email/new-device-login", "Tài khoản của bạn vừa đăng nhập trên thiết bị mới"),
-    ACCOUNT_LOCKED("email/account-locked", "Đăng nhập tạm khóa do nhập sai mật khẩu nhiều lần");
+    ACCOUNT_LOCKED("email/account-locked", "Đăng nhập tạm khóa do nhập sai mật khẩu nhiều lần"),
+    PASSWORD_RESET("email/password-reset", "Đặt lại mật khẩu Learning Companion"),
+    PASSWORD_CHANGED("email/password-changed", "Mật khẩu tài khoản của bạn vừa được thay đổi");
 
     private final String view;
     private final String subject;

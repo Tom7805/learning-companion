@@ -5,7 +5,9 @@ import type {
   LoginPayload,
   RegisterPayload,
   RegistrationAccepted,
+  ChangePasswordPayload,
   ResendAccepted,
+  ResetPasswordPayload,
   RevokedByLink,
   SessionStatus,
 } from '../types'
@@ -47,6 +49,22 @@ export const authApi = {
   },
   async revokeByLink(token: string) {
     const { data } = await http.post<RevokedByLink>('/auth/sessions/revoke-link', { token })
+    return data
+  },
+  /** Luôn được chấp nhận như nhau, dù địa chỉ có tài khoản hay không. */
+  async forgotPassword(input: { email: string } | { token: string }) {
+    const { data } = await http.post<ResendAccepted>('/auth/password/forgot', input)
+    return data
+  },
+  async checkResetToken(token: string) {
+    await http.post('/auth/password/reset/check', { token })
+  },
+  async resetPassword(payload: ResetPasswordPayload) {
+    const { data } = await http.post<{ email: string }>('/auth/password/reset', payload)
+    return data
+  },
+  async changePassword(payload: ChangePasswordPayload) {
+    const { data } = await http.post<{ revokedSessions: number }>('/auth/password/change', payload)
     return data
   },
 }
