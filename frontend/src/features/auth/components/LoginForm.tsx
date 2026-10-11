@@ -19,10 +19,12 @@ const WARN_WHEN_ATTEMPTS_LEFT = 2
 interface LoginFormProps {
   /** Thông báo đặt trên biểu mẫu, ví dụ phiên vừa hết hạn. */
   notice?: ReactNode
+  /** Địa chỉ điền sẵn, ví dụ khi vừa đặt lại mật khẩu; khi đó con trỏ đặt sẵn ở ô mật khẩu. */
+  defaultEmail?: string
   onLoggedIn: (account: Account) => void
 }
 
-export function LoginForm({ notice, onLoggedIn }: LoginFormProps) {
+export function LoginForm({ notice, defaultEmail = '', onLoggedIn }: LoginFormProps) {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const login = useLogin()
@@ -44,12 +46,13 @@ export function LoginForm({ notice, onLoggedIn }: LoginFormProps) {
     setValue,
     setFocus,
     getValues,
+    watch,
     setError: setFieldError,
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     mode: 'onTouched',
-    defaultValues: { email: '', password: '', rememberDevice: false },
+    defaultValues: { email: defaultEmail, password: '', rememberDevice: false },
   })
 
   const pending = login.isPending
@@ -109,6 +112,12 @@ export function LoginForm({ notice, onLoggedIn }: LoginFormProps) {
 
   const message = (text?: string) => (text && i18n.exists(text) ? t(text) : text)
   const attemptsLeft = detailNumber(error, 'remainingAttempts')
+  // Mang địa chỉ đã gõ sang màn hình quên mật khẩu để khỏi gõ lại.
+  const forgotLink = (label: string, className: string) => (
+    <Link to={routes.forgotPassword} state={{ email: watch('email').trim() }} className={className}>
+      {label}
+    </Link>
+  )
 
   return (
     <form onSubmit={onSubmit} noValidate className="flex flex-col gap-6" aria-describedby="login-subtitle">
@@ -124,7 +133,13 @@ export function LoginForm({ notice, onLoggedIn }: LoginFormProps) {
       </header>
 
       {!submitted && notice}
-      {locked && <LockoutNotice lockedUntil={lockedUntil} onUnlocked={handleUnlocked} />}
+      {locked && (
+        <LockoutNotice
+          lockedUntil={lockedUntil}
+          onUnlocked={handleUnlocked}
+          action={forgotLink(t('login.locked.resetLink'), 'font-medium text-accent-ink underline underline-offset-4')}
+        />
+      )}
       {unlocked && <Alert tone="success">{t('login.locked.unlocked')}</Alert>}
       {error?.code === 'INVALID_CREDENTIALS' && (
         <Alert tone="danger" data-testid="login-error">
@@ -180,6 +195,7 @@ export function LoginForm({ notice, onLoggedIn }: LoginFormProps) {
           autoComplete="current-password"
           autoCapitalize="none"
           spellCheck={false}
+          autoFocus={Boolean(defaultEmail)}
           error={message(errors.password?.message)}
           trailing={
             <button
@@ -195,7 +211,10 @@ export function LoginForm({ notice, onLoggedIn }: LoginFormProps) {
           {...register('password')}
         />
         <div className="flex flex-col gap-1">
-          <Checkbox label={t('login.remember')} aria-describedby="remember-hint" {...register('rememberDevice')} />
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+            <Checkbox label={t('login.remember')} aria-describedby="remember-hint" {...register('rememberDevice')} />
+            {forgotLink(t('login.forgot'), 'text-sm font-medium text-accent-ink underline-offset-4 hover:underline')}
+          </div>
           <p id="remember-hint" className="pl-9 text-[13px] leading-snug text-muted">
             {t('login.rememberHint')}
           </p>

@@ -9,6 +9,7 @@ app:
     register-limit-per-hour: 500
     resend-limit-per-hour: 500
     login-limit-per-hour: 2000
+    password-reset-limit-per-hour: 500
 
 logging:
   level:

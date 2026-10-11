@@ -1,6 +1,6 @@
 import { screen, waitFor, within } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { routes } from '@/app/routes'
 import { deviceSessions } from '@/test/mocks/handlers'
 import { server } from '@/test/mocks/server'
@@ -12,6 +12,13 @@ function renderPage() {
 }
 
 describe('DevicesPage', () => {
+  // Thời gian "hoạt động gần nhất" được tính theo giờ hiện tại: cố định đồng hồ để kết quả không đổi theo ngày chạy.
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-10-10T03:30:00Z'))
+  })
+  afterEach(() => vi.useRealTimers())
+
   it('liệt kê thiết bị, thiết bị đang dùng đứng đầu kèm vị trí và trạng thái', async () => {
     renderPage()
 

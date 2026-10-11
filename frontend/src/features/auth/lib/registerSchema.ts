@@ -1,20 +1,11 @@
 import { z } from 'zod'
-import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH, passwordLength } from './passwordStrength'
+import { emailField, newPasswordField } from './passwordSchema'
 
 /** Lời nhắn là khóa dịch, giao diện dịch khi hiển thị để đổi ngôn ngữ không phải dựng lại schema. */
 const fields = z.object({
   displayName: z.string().trim().min(1, 'validation.displayNameRequired').max(50, 'validation.displayNameTooLong'),
-  email: z
-    .string()
-    .trim()
-    .min(1, 'validation.emailRequired')
-    .max(254, 'validation.emailInvalid')
-    .pipe(z.email('validation.emailInvalid')),
-  password: z
-    .string()
-    .min(1, 'validation.passwordRequired')
-    .refine((value) => passwordLength(value) >= PASSWORD_MIN_LENGTH, 'validation.passwordTooShort')
-    .refine((value) => passwordLength(value) <= PASSWORD_MAX_LENGTH, 'validation.passwordTooLong'),
+  email: emailField,
+  password: newPasswordField,
   confirmPassword: z.string().min(1, 'validation.confirmRequired'),
   acceptTerms: z.boolean().refine((value) => value, 'validation.termsRequired'),
 })

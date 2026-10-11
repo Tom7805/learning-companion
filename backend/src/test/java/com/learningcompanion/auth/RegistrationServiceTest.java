@@ -66,7 +66,7 @@ class RegistrationServiceTest {
         AppProperties properties = new AppProperties("http://localhost:5173",
                 new AppProperties.Auth(Duration.ofHours(24), Duration.ofSeconds(60), Duration.ofHours(2),
                         "lc_session", false, 3, 20, Duration.ofHours(1), Duration.ofDays(30), 5,
-                        Duration.ofMinutes(15), 100, "lc_device"),
+                        Duration.ofMinutes(15), 100, "lc_device", Duration.ofMinutes(30), 20),
                 new AppProperties.Mail("mock", "no-reply@test", "Test"), null);
         service = new RegistrationService(accounts, new PasswordPolicyValidator(new BreachedPasswordChecker()),
                 passwordHasher, termsVersionService, consentService, emailVerificationService, rateLimiter, audit,

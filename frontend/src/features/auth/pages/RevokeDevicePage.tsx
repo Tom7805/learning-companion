@@ -107,7 +107,15 @@ export function RevokeDevicePage() {
             />
           </p>
         </header>
-        <Alert tone="warning">{t('revokeLink.advice')}</Alert>
+        <Alert tone="warning">
+          <p>{t('revokeLink.advice')}</p>
+          <Link
+            to={signedIn ? routes.security : routes.forgotPassword}
+            className="mt-2 inline-block font-semibold underline underline-offset-4"
+          >
+            {signedIn ? t('revokeLink.changePassword') : t('revokeLink.resetPassword')}
+          </Link>
+        </Alert>
         {nextLink}
       </div>
     )

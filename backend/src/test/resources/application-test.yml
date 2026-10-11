@@ -8,3 +8,4 @@ app:
     register-limit-per-hour: 1000
     resend-limit-per-hour: 1000
     login-limit-per-hour: 5000
+    password-reset-limit-per-hour: 1000

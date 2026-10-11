@@ -25,7 +25,9 @@ public record AppProperties(String frontendUrl, Auth auth, Mail mail, DevTools d
             int maxFailedLogins,
             Duration lockoutDuration,
             int loginLimitPerHour,
-            String deviceCookieName) {
+            String deviceCookieName,
+            Duration passwordResetTokenTtl,
+            int passwordResetLimitPerHour) {
     }
 
     public record Mail(String gateway, String fromAddress, String fromName) {

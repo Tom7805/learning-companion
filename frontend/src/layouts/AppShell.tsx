@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { LayoutGrid, LogOut, MonitorSmartphone } from 'lucide-react'
+import { LayoutGrid, LogOut, MonitorSmartphone, ShieldCheck } from 'lucide-react'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, Outlet, useLocation } from 'react-router'
@@ -12,6 +12,7 @@ import { Brand, Button } from '@/shared/ui'
 const navItems = [
   { to: routes.home, icon: LayoutGrid, label: 'home.nav', end: true },
   { to: routes.devices, icon: MonitorSmartphone, label: 'devices.nav', end: false },
+  { to: routes.security, icon: ShieldCheck, label: 'security.nav', end: false },
 ] as const
 
 /**
@@ -101,7 +102,7 @@ export function AppShell() {
               </div>
             )}
           </header>
-          <nav aria-label={t('app.name')} className="mt-5 flex gap-2 sm:hidden">
+          <nav aria-label={t('app.name')} className="mt-5 flex flex-wrap gap-2 sm:hidden">
             {navItems.map((item) => (
               <NavLink
                 key={item.to}

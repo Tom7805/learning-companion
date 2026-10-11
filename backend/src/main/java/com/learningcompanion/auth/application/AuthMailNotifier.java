@@ -65,6 +65,23 @@ public class AuthMailNotifier {
                 "lockoutMinutes", properties.auth().lockoutDuration().toMinutes()));
     }
 
+    @TransactionalEventListener
+    public void on(PasswordResetRequested event) {
+        mailService.send(event.email(), MailTemplate.PASSWORD_RESET, Map.of(
+                "displayName", event.displayName(),
+                "resetUrl", frontendUrl("/reset-password", event.rawToken()),
+                "ttlMinutes", properties.auth().passwordResetTokenTtl().toMinutes()));
+    }
+
+    @TransactionalEventListener
+    public void on(PasswordChangedNotice event) {
+        mailService.send(event.email(), MailTemplate.PASSWORD_CHANGED, Map.of(
+                "displayName", event.displayName(),
+                "changedAt", TIME.format(event.changedAt()),
+                "viaReset", event.viaReset(),
+                "forgotUrl", properties.frontendUrl() + "/forgot-password"));
+    }
+
     private String frontendUrl(String path, String token) {
         return UriComponentsBuilder.fromUriString(properties.frontendUrl())
                 .path(path)
@@ -84,5 +101,11 @@ public class AuthMailNotifier {
     }
 
     public record AccountLockedNotice(String email, String displayName, Instant lockedUntil) {
+    }
+
+    public record PasswordResetRequested(String email, String displayName, String rawToken) {
+    }
+
+    public record PasswordChangedNotice(String email, String displayName, Instant changedAt, boolean viaReset) {
     }
 }

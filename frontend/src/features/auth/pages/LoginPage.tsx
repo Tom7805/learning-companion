@@ -13,6 +13,10 @@ import type { Account, SessionLostReason, SessionStatus } from '../types'
 interface LoginLocationState {
   from?: string
   reason?: SessionLostReason
+  /** Địa chỉ điền sẵn, ví dụ khi quay lại từ màn hình quên mật khẩu. */
+  email?: string
+  /** Vừa đặt lại mật khẩu qua thư. */
+  passwordReset?: boolean
 }
 
 export function LoginPage() {
@@ -31,7 +35,11 @@ export function LoginPage() {
     return <Navigate to={from} replace />
   }
 
-  const notice = state.reason ? (
+  const notice = state.passwordReset ? (
+    <Alert tone="success" data-testid="session-notice">
+      {t('login.reason.passwordReset')}
+    </Alert>
+  ) : state.reason ? (
     <Alert tone="warning" data-testid="session-notice">
       {t(`login.reason.${state.reason}`)}
     </Alert>
@@ -47,5 +55,5 @@ export function LoginPage() {
     navigate(from, { replace: true })
   }
 
-  return <LoginForm notice={notice} onLoggedIn={handleLoggedIn} />
+  return <LoginForm notice={notice} defaultEmail={state.email} onLoggedIn={handleLoggedIn} />
 }
