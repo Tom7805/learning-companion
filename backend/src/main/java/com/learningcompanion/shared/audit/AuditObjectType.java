@@ -5,5 +5,6 @@ public enum AuditObjectType {
     VERIFICATION_TOKEN,
     CONSENT,
     SESSION,
-    DOCUMENT
+    DOCUMENT,
+    PROFILE
 }

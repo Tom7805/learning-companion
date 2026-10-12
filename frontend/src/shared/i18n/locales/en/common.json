@@ -118,7 +118,13 @@
     "RESET_TOKEN_EXPIRED": "This password reset link has expired.",
     "CURRENT_PASSWORD_INVALID": "Your current password is incorrect.",
     "PASSWORD_REUSED": "Your new password must be different from the one you use now.",
-    "FILE_LINK_EXPIRED": "The file link has expired."
+    "FILE_LINK_EXPIRED": "The file link has expired.",
+    "DISPLAY_NAME_REQUIRED": "Enter a display name.",
+    "DISPLAY_NAME_TOO_LONG": "Display name can be at most 50 characters.",
+    "INVALID_TIME_ZONE": "This time zone is not valid, pick one from the list.",
+    "INVALID_PREFERENCE": "This value is not valid.",
+    "AVATAR_INVALID_FORMAT": "Your avatar must be a JPG, PNG or WebP image.",
+    "FILE_TOO_LARGE": "The file is too large."
   },
   "checkEmail": {
     "title": "Check your inbox",
@@ -461,6 +467,72 @@
       "renewed": "The previous secure link had expired, so a new one was fetched to open the file.",
       "openFailed": "We could not open the original file. Try again in a few minutes.",
       "unsupported": "This file type cannot be previewed in the page yet. Download it to open."
+    }
+  },
+  "account": {
+    "menu": "Account menu for {{name}}",
+    "menuLabel": "Account"
+  },
+  "settings": {
+    "title": "Settings"
+  },
+  "profile": {
+    "nav": "Profile",
+    "title": "Profile and learning preferences",
+    "subtitle": "Helps the assistant and every time fit how and when you study.",
+    "autosave": "Every change is saved right away.",
+    "loadFailed": "We could not load your profile.",
+    "status": {
+      "saving": "Saving…",
+      "saved": "Saved",
+      "error": "Not saved"
+    },
+    "avatar": {
+      "label": "Avatar",
+      "hint": "JPG, PNG or WebP, up to 5 MB. The image will be cropped square.",
+      "upload": "Upload photo",
+      "change": "Change photo",
+      "remove": "Remove photo",
+      "tooLarge": "Images can be at most 5 MB, pick a smaller one.",
+      "cropTitle": "Crop your avatar",
+      "cropHint": "Drag the image to position it and use the slider to zoom. Keyboard: arrow keys to move, + and − to zoom.",
+      "cropArea": "Avatar crop area",
+      "zoom": "Zoom",
+      "cancel": "Cancel",
+      "save": "Use this photo"
+    },
+    "displayName": {
+      "label": "Display name",
+      "count": "{{count}}/{{max}} characters"
+    },
+    "timeZone": {
+      "label": "Time zone",
+      "description": "Your study plan, reminders and every time are shown in this time zone.",
+      "notSet": "Not set (following this device)",
+      "device": "This device is in the {{zone}} time zone.",
+      "useDevice": "Use this time zone",
+      "changed": "From now on every time is shown in the {{zone}} time zone.",
+      "example": "For example, it is {{before}} in the old time zone, which is {{after}} in the new one. Your study plan and reminders are recalculated."
+    },
+    "language": {
+      "label": "Assistant reply language",
+      "description": "The assistant replies in this language unless you ask in another one.",
+      "vi": "Tiếng Việt",
+      "en": "English"
+    },
+    "goal": {
+      "label": "Daily study goal",
+      "description": "Minutes you want to study each day, used to track your streak.",
+      "minutes_one": "{{count}} min",
+      "minutes_other": "{{count}} min",
+      "custom": "Custom minutes",
+      "perDay": "minutes a day",
+      "range": "Choose between {{min}} and {{max}} minutes a day."
+    },
+    "rollover": {
+      "label": "Study day starts at",
+      "description": "Studying before {{time}} still counts for the previous day, handy for night owls.",
+      "default": "(default)"
     }
   }
 }

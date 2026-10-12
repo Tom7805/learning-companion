@@ -1,6 +1,7 @@
 import { Bookmark, CircleCheckBig } from 'lucide-react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAuth } from '@/features/auth'
+import { useDateFormat } from '@/shared/hooks/useDateFormat'
 import { usePageHeading } from '@/shared/hooks/usePageHeading'
 import { cn } from '@/shared/lib/cn'
 import { Badge } from '@/shared/ui'
@@ -13,16 +14,13 @@ const cards = [
 
 /** Trang chính tạm thời sau khi xác thực; các khối học tập thật thuộc các story sau. */
 export function DashboardPage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
+  const format = useDateFormat()
   const { account } = useAuth()
   const heading = usePageHeading(t('home.greeting', { name: account?.displayName ?? '' }))
   if (!account) return null
 
-  const verifiedAt = account.emailVerifiedAt
-    ? new Intl.DateTimeFormat(i18n.language, { dateStyle: 'medium', timeStyle: 'short' }).format(
-        new Date(account.emailVerifiedAt),
-      )
-    : null
+  const verifiedAt = account.emailVerifiedAt ? format.dateTime(account.emailVerifiedAt) : null
 
   return (
     <div className="flex flex-col gap-8">

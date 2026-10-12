@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw'
 import type { Account, DeviceSession } from '@/features/auth/types'
 import type { LearningDocument } from '@/features/library/types'
+import type { Profile } from '@/features/settings/types'
 import type { LegalCurrent } from '@/features/privacy/types'
 
 export const legalCurrent: LegalCurrent = {
@@ -69,6 +70,14 @@ export const handlers = [
   http.post('*/api/v1/library/documents/:id/file-link', () =>
     HttpResponse.json({ url: '/api/v1/files/link-1', expiresAt: new Date(Date.now() + 300_000).toISOString() }),
   ),
+  http.get('*/api/v1/profiles/me', () => HttpResponse.json(sampleProfile)),
+  http.patch('*/api/v1/profiles/:id', async ({ request }) =>
+    HttpResponse.json({ ...sampleProfile, ...((await request.json()) as Partial<Profile>) }),
+  ),
+  http.put('*/api/v1/profiles/:id/avatar', () =>
+    HttpResponse.json({ ...sampleProfile, avatarUrl: `/api/v1/profiles/${sampleProfile.id}/avatar?v=1` }),
+  ),
+  http.delete('*/api/v1/profiles/:id/avatar', () => HttpResponse.json({ ...sampleProfile, avatarUrl: null })),
   http.get('*/api/v1/files/:token', () =>
     new HttpResponse(sampleDocument.contentText, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } }),
   ),
@@ -113,3 +122,15 @@ export const deviceSessions: DeviceSession[] = [
     current: true,
   },
 ]
+
+export const sampleProfile: Profile = {
+  id: '7a3e9c10-3333-4c2b-9d4f-000000000001',
+  displayName: 'Lan Anh',
+  email: 'lan.anh@example.com',
+  timeZone: null,
+  assistantLanguage: 'vi',
+  dailyGoalMinutes: 15,
+  dayRolloverHour: 4,
+  avatarUrl: null,
+  updatedAt: '2026-10-12T03:00:00Z',
+}

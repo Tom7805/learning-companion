@@ -115,7 +115,8 @@ public class RegistrationService {
         }
     }
 
-    static String normalizeDisplayName(String displayName) {
+    /** Bỏ khoảng trắng thừa; dùng chung cho đăng ký và sửa hồ sơ. */
+    public static String normalizeDisplayName(String displayName) {
         return displayName == null ? "" : displayName.strip().replaceAll("\\s+", " ");
     }
 

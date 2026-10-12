@@ -4,7 +4,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Link, useNavigate, useSearchParams } from 'react-router'
 import { routes } from '@/app/routes'
 import { toApiError } from '@/shared/api/errors'
-import { formatDateTime } from '@/shared/lib/date'
+import { useDateFormat } from '@/shared/hooks/useDateFormat'
 import { usePageHeading } from '@/shared/hooks/usePageHeading'
 import { Alert, Button, Spinner, buttonClasses } from '@/shared/ui'
 import { authApi } from '../api/authApi'
@@ -31,7 +31,8 @@ function revokeOnce(token: string) {
 
 /** Nút "Đăng xuất thiết bị đó" trong thư cảnh báo thiết bị mới (NCL-01-CN-002, TC-03). */
 export function RevokeDevicePage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
+  const format = useDateFormat()
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const session = useSession()
@@ -102,7 +103,7 @@ export function RevokeDevicePage() {
           <p className="text-[15px] leading-relaxed text-ink-soft" data-testid="revoke-result">
             <Trans
               i18nKey={state.result.alreadyRevoked ? 'revokeLink.alreadyBody' : 'revokeLink.successBody'}
-              values={{ device, time: formatDateTime(state.result.signedInAt, i18n.language) }}
+              values={{ device, time: format.dateTime(state.result.signedInAt) }}
               components={{ strong: <strong className="font-semibold text-ink" /> }}
             />
           </p>

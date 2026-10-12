@@ -22,6 +22,9 @@ export function formatRelative(isoDate: string, language: string, now: number = 
   return formatter.format(0, 'second')
 }
 
-export function formatDateTime(isoDate: string, language: string) {
-  return new Intl.DateTimeFormat(language, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(isoDate))
+/** Ngày giờ theo ngôn ngữ giao diện, ở múi giờ được chọn (mặc định múi giờ của thiết bị). */
+export function formatDateTime(isoDate: string, language: string, timeZone?: string) {
+  return new Intl.DateTimeFormat(language, { dateStyle: 'medium', timeStyle: 'short', timeZone }).format(
+    new Date(isoDate),
+  )
 }

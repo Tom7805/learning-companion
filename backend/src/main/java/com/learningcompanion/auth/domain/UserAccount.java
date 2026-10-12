@@ -84,6 +84,11 @@ public class UserAccount {
         updatedAt = now;
     }
 
+    public void rename(String newDisplayName, Instant now) {
+        displayName = newDisplayName;
+        updatedAt = now;
+    }
+
     public boolean isPendingVerification() {
         return status == AccountStatus.PENDING_VERIFICATION;
     }

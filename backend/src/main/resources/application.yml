@@ -1,6 +1,11 @@
 spring:
   application:
     name: learning-companion
+  servlet:
+    multipart:
+      # Ảnh đại diện gốc tối đa 5 MB; giao diện đã cắt và thu nhỏ trước khi gửi.
+      max-file-size: 5MB
+      max-request-size: 6MB
   profiles:
     default: dev
   datasource:
