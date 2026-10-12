@@ -6,7 +6,8 @@ public enum MailTemplate {
     NEW_DEVICE_LOGIN("email/new-device-login", "Tài khoản của bạn vừa đăng nhập trên thiết bị mới"),
     ACCOUNT_LOCKED("email/account-locked", "Đăng nhập tạm khóa do nhập sai mật khẩu nhiều lần"),
     PASSWORD_RESET("email/password-reset", "Đặt lại mật khẩu Learning Companion"),
-    PASSWORD_CHANGED("email/password-changed", "Mật khẩu tài khoản của bạn vừa được thay đổi");
+    PASSWORD_CHANGED("email/password-changed", "Mật khẩu tài khoản của bạn vừa được thay đổi"),
+    PRODUCT_NEWS("email/product-news", "Có gì mới ở Learning Companion");
 
     private final String view;
     private final String subject;

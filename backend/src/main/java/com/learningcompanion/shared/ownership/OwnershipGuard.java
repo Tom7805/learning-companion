@@ -5,6 +5,7 @@ import com.learningcompanion.shared.exception.BusinessException;
 import com.learningcompanion.shared.exception.ErrorCode;
 import com.learningcompanion.shared.web.ClientInfo;
 import java.util.UUID;
+import java.util.function.Predicate;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,5 +32,21 @@ public class OwnershipGuard {
             }
             return new BusinessException(ErrorCode.NOT_FOUND);
         });
+    }
+
+    /**
+     * Cho thao tác trên dữ liệu gắn trực tiếp với tài khoản (ví dụ đồng ý theo mục đích): chỉ chính chủ tài khoản
+     * mới được làm. Mã tài khoản của người khác được trả lời như không tồn tại, lần từ chối được ghi nhật ký.
+     */
+    public UUID requireSelf(UUID accountId, Predicate<UUID> accountExists, AuditObjectType objectType,
+                            ClientInfo client) {
+        UUID ownerId = owner.requireOwnerId();
+        if (!ownerId.equals(accountId)) {
+            if (accountExists.test(accountId)) {
+                deniedLogger.notOwner(ownerId, objectType, accountId, client);
+            }
+            throw new BusinessException(ErrorCode.NOT_FOUND);
+        }
+        return ownerId;
     }
 }

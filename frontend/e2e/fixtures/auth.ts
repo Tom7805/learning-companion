@@ -13,6 +13,7 @@ export interface CapturedMail {
     | 'ACCOUNT_LOCKED'
     | 'PASSWORD_RESET'
     | 'PASSWORD_CHANGED'
+    | 'PRODUCT_NEWS'
   links: string[]
   sentAt: string
 }
@@ -66,6 +67,27 @@ export class DevApi {
 
   async setRole(email: string, role: 'LEARNER' | 'ADMIN') {
     expect((await this.request.post(`${API}/dev/accounts/role`, { data: { email, role } })).ok()).toBeTruthy()
+  }
+
+  /** Đăng phiên bản điều khoản mới có hiệu lực sau ngần ấy giây theo đồng hồ máy chủ. */
+  async publishTerms(version: string, changes: string[], effectiveInSeconds: number) {
+    const response = await this.request.post(`${API}/dev/legal/versions`, {
+      data: {
+        documentType: 'TERMS_OF_SERVICE',
+        version,
+        summary: 'Bản cập nhật thử nghiệm.',
+        highlights: ['Bạn dùng ứng dụng cho việc học của chính mình.'],
+        changes,
+        effectiveInSeconds,
+      },
+    })
+    expect(response.ok()).toBeTruthy()
+  }
+
+  /** Gửi một bản tin tính năng mới tới những người đang đồng ý nhận. */
+  async sendProductNews(headline: string) {
+    const response = await this.request.post(`${API}/dev/product-news`, { data: { headline, body: 'Thử ngay.' } })
+    expect(response.ok()).toBeTruthy()
   }
 
   async advanceClock(seconds: number) {

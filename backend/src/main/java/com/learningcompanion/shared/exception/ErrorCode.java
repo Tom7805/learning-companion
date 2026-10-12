@@ -31,6 +31,8 @@ public enum ErrorCode {
     FORBIDDEN(HttpStatus.FORBIDDEN, "Bạn không có quyền thực hiện thao tác này."),
     NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy dữ liệu."),
     FILE_LINK_EXPIRED(HttpStatus.GONE, "Đường dẫn mở tệp đã hết hạn."),
+    TERMS_ACCEPTANCE_REQUIRED(HttpStatus.FORBIDDEN, "Điều khoản vừa được cập nhật, hãy đọc và đồng ý để dùng tiếp."),
+    CONSENT_PURPOSE_REQUIRED(HttpStatus.BAD_REQUEST, "Mục đích này bắt buộc để dùng dịch vụ, không tắt được."),
     DISPLAY_NAME_REQUIRED(HttpStatus.BAD_REQUEST, "Hãy nhập tên hiển thị."),
     DISPLAY_NAME_TOO_LONG(HttpStatus.BAD_REQUEST, "Tên hiển thị tối đa 50 ký tự."),
     INVALID_TIME_ZONE(HttpStatus.BAD_REQUEST, "Múi giờ không hợp lệ."),

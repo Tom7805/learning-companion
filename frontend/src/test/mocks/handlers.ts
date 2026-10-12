@@ -2,7 +2,7 @@ import { http, HttpResponse } from 'msw'
 import type { Account, DeviceSession } from '@/features/auth/types'
 import type { LearningDocument } from '@/features/library/types'
 import type { Profile } from '@/features/settings/types'
-import type { LegalCurrent } from '@/features/privacy/types'
+import type { ConsentHistoryEntry, LegalCurrent, PrivacyStatus } from '@/features/privacy/types'
 
 export const legalCurrent: LegalCurrent = {
   terms: { version: '2026-10-01', summary: 'Tóm tắt điều khoản', effectiveAt: '2026-09-30T17:00:00Z' },
@@ -71,6 +71,23 @@ export const handlers = [
     HttpResponse.json({ url: '/api/v1/files/link-1', expiresAt: new Date(Date.now() + 300_000).toISOString() }),
   ),
   http.get('*/api/v1/profiles/me', () => HttpResponse.json(sampleProfile)),
+  http.get('*/api/v1/accounts/:id/privacy', () => HttpResponse.json(privacyStatus)),
+  http.put('*/api/v1/accounts/:id/consents/:purpose', async ({ params, request }) => {
+    const { granted } = (await request.json()) as { granted: boolean }
+    return HttpResponse.json({
+      ...privacyStatus,
+      purposes: privacyStatus.purposes.map((item) =>
+        item.purpose === params.purpose
+          ? { ...item, granted, documentVersion: '2026-10-01', updatedAt: '2026-10-12T03:20:00Z' }
+          : item,
+      ),
+    })
+  }),
+  http.get('*/api/v1/accounts/:id/consents/history', () => HttpResponse.json(consentHistory)),
+  http.post('*/api/v1/accounts/:id/terms/accept', () =>
+    HttpResponse.json({ ...privacyStatus, acceptanceRequired: false }),
+  ),
+  http.post('*/api/v1/analytics/events', () => HttpResponse.json({ recorded: true }, { status: 202 })),
   http.patch('*/api/v1/profiles/:id', async ({ request }) =>
     HttpResponse.json({ ...sampleProfile, ...((await request.json()) as Partial<Profile>) }),
   ),
@@ -134,3 +151,21 @@ export const sampleProfile: Profile = {
   avatarUrl: null,
   updatedAt: '2026-10-12T03:00:00Z',
 }
+
+export const privacyStatus: PrivacyStatus = {
+  accountId: verifiedAccount.id,
+  terms: { ...legalCurrent.terms, highlights: ['Bạn dùng ứng dụng cho việc học của chính mình.'], changes: [] },
+  privacy: { ...legalCurrent.privacy, highlights: ['Dữ liệu học tập thuộc về bạn.'], changes: [] },
+  acceptedTermsVersion: '2026-10-01',
+  acceptedPrivacyVersion: '2026-10-01',
+  acceptanceRequired: false,
+  purposes: [
+    { purpose: 'ANONYMOUS_USAGE_ANALYTICS', granted: false, documentVersion: null, updatedAt: null },
+    { purpose: 'PRODUCT_NEWS_EMAIL', granted: false, documentVersion: null, updatedAt: null },
+  ],
+}
+
+export const consentHistory: ConsentHistoryEntry[] = [
+  { id: 'h2', purpose: 'PRIVACY_POLICY', granted: true, documentVersion: '2026-10-01', recordedAt: '2026-10-10T06:00:00Z' },
+  { id: 'h1', purpose: 'TERMS_OF_SERVICE', granted: true, documentVersion: '2026-10-01', recordedAt: '2026-10-10T06:00:00Z' },
+]

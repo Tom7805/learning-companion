@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ConsentHistoryRepository extends JpaRepository<ConsentHistory, UUID> {
 
     List<ConsentHistory> findByUserIdOrderByRecordedAtAsc(UUID userId);
+
+    List<ConsentHistory> findByUserIdOrderByRecordedAtDesc(UUID userId);
 }
