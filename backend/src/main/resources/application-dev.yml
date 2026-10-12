@@ -4,6 +4,9 @@ app:
     gateway: mock
   dev-tools:
     enabled: true
+  oauth:
+    # Nhà cung cấp giả lập có trang cho phép quyền riêng; đặt APP_OAUTH_MODE=google để thử với Google thật.
+    mode: ${APP_OAUTH_MODE:mock}
   storage:
     # Khóa chỉ dùng cho máy phát triển, môi trường thật phải đặt khóa riêng qua biến môi trường.
     encryption-key: ${APP_STORAGE_ENCRYPTION_KEY:ZGV2LW9ubHktZW5jcnlwdGlvbi1rZXktMzItYnl0ZXM=}

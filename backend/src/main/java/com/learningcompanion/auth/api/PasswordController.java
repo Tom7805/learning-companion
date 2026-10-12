@@ -7,6 +7,7 @@ import com.learningcompanion.auth.api.dto.PasswordResetResponse;
 import com.learningcompanion.auth.api.dto.ResendAcceptedResponse;
 import com.learningcompanion.auth.api.dto.ResetPasswordRequest;
 import com.learningcompanion.auth.api.dto.ResetTokenRequest;
+import com.learningcompanion.auth.api.dto.SetPasswordRequest;
 import com.learningcompanion.auth.application.PasswordService;
 import com.learningcompanion.shared.config.AppProperties;
 import com.learningcompanion.shared.security.AuthenticatedUser;
@@ -67,5 +68,12 @@ public class PasswordController {
                                           @Valid @RequestBody ChangePasswordRequest request, HttpServletRequest http) {
         return new PasswordChangedResponse(passwordService.changePassword(user, request.currentPassword(),
                 request.newPassword(), ClientInfo.from(http)));
+    }
+
+    @PostMapping("/set")
+    public ResponseEntity<Void> set(@AuthenticationPrincipal AuthenticatedUser user,
+                                    @Valid @RequestBody SetPasswordRequest request, HttpServletRequest http) {
+        passwordService.setInitialPassword(user, request.newPassword(), ClientInfo.from(http));
+        return ResponseEntity.noContent().build();
     }
 }

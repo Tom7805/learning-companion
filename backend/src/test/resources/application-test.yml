@@ -3,6 +3,8 @@ app:
     gateway: mock
   dev-tools:
     enabled: true
+  oauth:
+    mode: mock
   storage:
     local-root: ${java.io.tmpdir}/lc-test-storage
     encryption-key: dGVzdC1vbmx5LWVuY3J5cHRpb24ta2V5LTMyLWJ5dGU=

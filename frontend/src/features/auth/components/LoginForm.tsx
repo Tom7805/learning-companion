@@ -13,6 +13,7 @@ import { loginSchema, type LoginFormValues } from '../lib/loginSchema'
 import { pendingVerification } from '../lib/pendingVerification'
 import type { Account } from '../types'
 import { LockoutNotice } from './LockoutNotice'
+import { OAuthButtons } from './OAuthButtons'
 
 const WARN_WHEN_ATTEMPTS_LEFT = 2
 
@@ -21,10 +22,12 @@ interface LoginFormProps {
   notice?: ReactNode
   /** Địa chỉ điền sẵn, ví dụ khi vừa đặt lại mật khẩu; khi đó con trỏ đặt sẵn ở ô mật khẩu. */
   defaultEmail?: string
+  /** Trang quay về sau khi đăng nhập, kể cả khi đăng nhập qua nhà cung cấp định danh. */
+  returnTo?: string
   onLoggedIn: (account: Account) => void
 }
 
-export function LoginForm({ notice, defaultEmail = '', onLoggedIn }: LoginFormProps) {
+export function LoginForm({ notice, defaultEmail = '', returnTo, onLoggedIn }: LoginFormProps) {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const login = useLogin()
@@ -224,6 +227,8 @@ export function LoginForm({ notice, defaultEmail = '', onLoggedIn }: LoginFormPr
       <CtaButton type="submit" loading={pending} disabled={locked} hint={pending ? undefined : t('login.submitHint')}>
         {pending ? t('login.submitting') : t('login.submit')}
       </CtaButton>
+
+      <OAuthButtons rememberDevice={watch('rememberDevice')} returnTo={returnTo} />
 
       <p className="text-center text-sm text-muted">
         {t('login.noAccount')}{' '}

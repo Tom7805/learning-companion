@@ -9,6 +9,7 @@ import { usePageHeading } from '@/shared/hooks/usePageHeading'
 import { Alert, Button, ConfirmDialog, Skeleton } from '@/shared/ui'
 import { useDeviceSessions, useRevokeOtherSessions } from '../api/queries'
 import { ChangePasswordForm } from '../components/ChangePasswordForm'
+import { SetPasswordForm } from '../components/SetPasswordForm'
 import { useAuth } from '../hooks/useAuth'
 
 type Notice = { tone: 'success' | 'danger'; text: string } | null
@@ -24,6 +25,9 @@ export function SecurityPage() {
   const [confirming, setConfirming] = useState(false)
   const [notice, setNotice] = useState<Notice>(null)
 
+  // Tài khoản tạo qua nhà cung cấp định danh chưa có mật khẩu: đặt mật khẩu lần đầu thay cho đổi mật khẩu.
+  const noPassword = account?.hasPassword === false
+  const [passwordSet, setPasswordSet] = useState(false)
   const otherCount = sessions.data?.filter((session) => !session.current).length ?? 0
 
   const signOutEverywhere = async () => {
@@ -61,10 +65,12 @@ export function SecurityPage() {
             </span>
             <div className="flex min-w-0 flex-col gap-1">
               <h2 id="change-password-title" className="text-xl font-medium">
-                {t('security.change.title')}
+                {noPassword ? t('security.set.title') : t('security.change.title')}
               </h2>
-              <p className="text-sm leading-relaxed text-muted">{t('security.change.body')}</p>
-              <p className="text-[13px] text-ink-soft" data-testid="password-changed-at">
+              <p className="text-sm leading-relaxed text-muted">
+                {noPassword ? t('security.set.body') : t('security.change.body')}
+              </p>
+              <p className="text-[13px] text-ink-soft" data-testid="password-changed-at" hidden={noPassword}>
                 {account?.passwordChangedAt ? (
                   <time
                     dateTime={account.passwordChangedAt}
@@ -78,7 +84,17 @@ export function SecurityPage() {
               </p>
             </div>
           </div>
-          {account && <ChangePasswordForm email={account.email} />}
+          {passwordSet && (
+            <Alert tone="success" data-testid="set-password-success">
+              {t('security.set.done')}
+            </Alert>
+          )}
+          {account &&
+            (noPassword ? (
+              <SetPasswordForm email={account.email} onDone={() => setPasswordSet(true)} />
+            ) : (
+              <ChangePasswordForm email={account.email} />
+            ))}
         </section>
 
         <section

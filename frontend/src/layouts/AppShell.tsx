@@ -6,7 +6,7 @@ import { NavLink, Outlet, useLocation, useSearchParams } from 'react-router'
 import { routes } from '@/app/routes'
 import { TermsUpdateDialog, useAuth, useLogout } from '@/features/auth'
 import { usePageViewTracking, usePrivacyStatus } from '@/features/privacy'
-import { SettingsDialog, useProfile } from '@/features/settings'
+import { SettingsDialog, useProfile, type SettingsSection } from '@/features/settings'
 import { queryKeys } from '@/shared/api/queryKeys'
 import { cn } from '@/shared/lib/cn'
 import { setDisplayTimeZone } from '@/shared/lib/timezone'
@@ -43,11 +43,14 @@ export function AppShell() {
   // Cài đặt mở bằng tham số trên địa chỉ nên tải lại trang hay bấm Quay lại vẫn đúng trạng thái.
   const [params, setParams] = useSearchParams()
   const settingsOpen = params.has('settings')
-  const openSettings = () => setParams((current) => ({ ...Object.fromEntries(current), settings: 'profile' }))
+  const settingsSection: SettingsSection = params.get('settings') === 'accounts' ? 'accounts' : 'profile'
+  const openSettings = (section: SettingsSection = 'profile') =>
+    setParams((current) => ({ ...Object.fromEntries(current), settings: section }))
   const closeSettings = () =>
     setParams(
       (current) => {
         current.delete('settings')
+        current.delete('linked')
         return current
       },
       { replace: true },
@@ -99,7 +102,7 @@ export function AppShell() {
                 name={account.displayName}
                 email={account.email}
                 avatarUrl={profile.data?.avatarUrl}
-                onSettings={openSettings}
+                onSettings={() => openSettings()}
                 onLogout={handleLogout}
                 loggingOut={logout.isPending}
               />
@@ -117,7 +120,7 @@ export function AppShell() {
                   name={account.displayName}
                   email={account.email}
                   avatarUrl={profile.data?.avatarUrl}
-                  onSettings={openSettings}
+                  onSettings={() => openSettings()}
                   onLogout={handleLogout}
                   loggingOut={logout.isPending}
                 />
@@ -170,7 +173,12 @@ export function AppShell() {
           {acceptanceRequired && privacy.data && (
             <TermsUpdateDialog status={privacy.data} onLogout={handleLogout} loggingOut={logout.isPending} />
           )}
-          <SettingsDialog open={settingsOpen} onClose={closeSettings} />
+          <SettingsDialog
+            open={settingsOpen}
+            section={settingsSection}
+            onSection={(section) => openSettings(section)}
+            onClose={closeSettings}
+          />
         </div>
       </div>
     </div>

@@ -53,8 +53,14 @@ public class SecurityConfig {
                                 ApiPaths.AUTH + "/sessions/revoke-link",
                                 ApiPaths.AUTH + "/password/forgot",
                                 ApiPaths.AUTH + "/password/reset/check",
-                                ApiPaths.AUTH + "/password/reset").permitAll()
-                        .requestMatchers(HttpMethod.GET, ApiPaths.AUTH + "/session", ApiPaths.LEGAL + "/**")
+                                ApiPaths.AUTH + "/password/reset",
+                                // Đăng nhập qua nhà cung cấp định danh; liên kết từ cài đặt cần phiên, kiểm trong dịch vụ.
+                                ApiPaths.AUTH + "/oauth/*/start",
+                                ApiPaths.AUTH + "/oauth/*/callback",
+                                ApiPaths.AUTH + "/oauth/signup",
+                                ApiPaths.AUTH + "/oauth/link").permitAll()
+                        .requestMatchers(HttpMethod.GET, ApiPaths.AUTH + "/session", ApiPaths.AUTH + "/oauth/providers",
+                                ApiPaths.LEGAL + "/**")
                         .permitAll()
                         // Đường dẫn ký tự nó là quyền mở tệp, có hạn năm phút (NCL-01-CN-004).
                         .requestMatchers(HttpMethod.GET, ApiPaths.FILES + "/*").permitAll()

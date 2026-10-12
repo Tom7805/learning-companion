@@ -25,7 +25,8 @@ public class UserAccount {
     @Column(name = "display_name", nullable = false, length = 50)
     private String displayName;
 
-    @Column(name = "password_hash", nullable = false)
+    /** Trống khi tài khoản tạo qua nhà cung cấp định danh và người học chưa tự đặt mật khẩu. */
+    @Column(name = "password_hash")
     private String passwordHash;
 
     @Enumerated(EnumType.STRING)
@@ -66,6 +67,20 @@ public class UserAccount {
         account.createdAt = now;
         account.updatedAt = now;
         return account;
+    }
+
+    /**
+     * Tài khoản tạo qua nhà cung cấp định danh (NCL-01-CN-007): địa chỉ thư đã được nhà cung cấp xác thực
+     * nên hoạt động ngay, chưa có mật khẩu cho tới khi người học tự đặt.
+     */
+    public static UserAccount registerFromProvider(String email, String displayName, Instant now) {
+        UserAccount account = registerLearner(email, displayName, null, now);
+        account.markEmailVerified(now);
+        return account;
+    }
+
+    public boolean hasPassword() {
+        return passwordHash != null;
     }
 
     public void markEmailVerified(Instant now) {

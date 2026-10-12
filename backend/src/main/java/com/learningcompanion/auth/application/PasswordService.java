@@ -150,6 +150,26 @@ public class PasswordService {
         return revoked;
     }
 
+    /**
+     * Đặt mật khẩu lần đầu cho tài khoản tạo qua nhà cung cấp định danh (NCL-01-CN-007). Sau đó người học
+     * đăng nhập được bằng thư điện tử và gỡ được liên kết. Tài khoản đã có mật khẩu phải dùng "đổi mật khẩu".
+     */
+    @Transactional
+    public void setInitialPassword(AuthenticatedUser user, String newPassword, ClientInfo client) {
+        UserAccount account = accounts.findById(user.userId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHENTICATED));
+        if (account.hasPassword()) {
+            throw new BusinessException(ErrorCode.PASSWORD_ALREADY_SET);
+        }
+        passwordPolicy.validate(newPassword, "newPassword");
+        Instant now = Instant.now(clock);
+        account.changePassword(passwordHasher.hash(newPassword), now);
+        audit.byUser(account.getId(), AuditAction.PASSWORD_CHANGED, AuditObjectType.USER_ACCOUNT, account.getId(),
+                Map.of("initial", true), client);
+        events.publishEvent(new AuthMailNotifier.PasswordChangedNotice(account.getEmail(), account.getDisplayName(),
+                now, false));
+    }
+
     private PasswordResetToken openToken(String rawToken, Instant now, ClientInfo client) {
         PasswordResetToken token = resetTokens.findByTokenHash(tokens.hash(rawToken))
                 .filter(PasswordResetToken::isOpen)

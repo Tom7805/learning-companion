@@ -71,6 +71,10 @@ export const handlers = [
     HttpResponse.json({ url: '/api/v1/files/link-1', expiresAt: new Date(Date.now() + 300_000).toISOString() }),
   ),
   http.get('*/api/v1/profiles/me', () => HttpResponse.json(sampleProfile)),
+  // Mặc định không bật nhà cung cấp định danh; bài kiểm thử cần thì ghi đè.
+  http.get('*/api/v1/auth/oauth/providers', () => HttpResponse.json([])),
+  http.get('*/api/v1/accounts/:id/linked-identities', () => HttpResponse.json([])),
+  http.post('*/api/v1/auth/password/set', () => new HttpResponse(null, { status: 204 })),
   http.get('*/api/v1/accounts/:id/privacy', () => HttpResponse.json(privacyStatus)),
   http.put('*/api/v1/accounts/:id/consents/:purpose', async ({ params, request }) => {
     const { granted } = (await request.json()) as { granted: boolean }

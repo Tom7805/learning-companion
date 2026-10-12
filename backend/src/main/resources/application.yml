@@ -82,6 +82,12 @@ app:
     encryption-key: ${APP_STORAGE_ENCRYPTION_KEY:}
     signing-key: ${APP_STORAGE_SIGNING_KEY:}
     signed-url-ttl: 5m
+  oauth:
+    # disabled | google | mock. Môi trường thật đặt APP_OAUTH_MODE=google kèm mã ứng dụng Google.
+    mode: ${APP_OAUTH_MODE:disabled}
+    google-client-id: ${APP_OAUTH_GOOGLE_CLIENT_ID:}
+    google-client-secret: ${APP_OAUTH_GOOGLE_CLIENT_SECRET:}
+    flow-ttl: 10m
   mail:
     gateway: ${APP_MAIL_GATEWAY:mock}
     from-address: ${APP_MAIL_FROM:no-reply@learningcompanion.local}
