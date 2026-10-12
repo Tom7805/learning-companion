@@ -19,7 +19,7 @@ export function DevToolbar() {
   const queryClient = useQueryClient()
   const { account } = useAuth()
   const [creating, setCreating] = useState(false)
-  if (!import.meta.env.DEV || location.pathname === routes.devMailbox) return null
+  if (!import.meta.env.DEV || location.pathname.startsWith('/dev/')) return null
 
   const createSample = async () => {
     if (!account) return

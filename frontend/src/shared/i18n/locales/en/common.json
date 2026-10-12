@@ -126,7 +126,17 @@
     "AVATAR_INVALID_FORMAT": "Your avatar must be a JPG, PNG or WebP image.",
     "FILE_TOO_LARGE": "The file is too large.",
     "TERMS_ACCEPTANCE_REQUIRED": "The terms were just updated. Read and accept them to continue.",
-    "CONSENT_PURPOSE_REQUIRED": "This purpose is required to use the service and cannot be turned off."
+    "CONSENT_PURPOSE_REQUIRED": "This purpose is required to use the service and cannot be turned off.",
+    "OAUTH_STATE_INVALID": "We could not verify this sign-in request. Start again.",
+    "OAUTH_CANCELLED": "You cancelled signing in with the identity provider.",
+    "OAUTH_EMAIL_UNVERIFIED": "The email of this external account is not verified.",
+    "OAUTH_PROVIDER_ERROR": "The identity provider is having trouble. Try again later.",
+    "OAUTH_PENDING_INVALID": "This sign-in step expired. Start again.",
+    "OAUTH_DISABLED": "Signing in with this provider is not available.",
+    "EXTERNAL_IDENTITY_IN_USE": "This external account is already linked to another Learning Companion account.",
+    "EXTERNAL_IDENTITY_ALREADY_LINKED": "Your account is already linked to this provider.",
+    "PASSWORD_REQUIRED_TO_UNLINK": "Set a password before unlinking.",
+    "PASSWORD_ALREADY_SET": "Your account already has a password. Use change password instead."
   },
   "checkEmail": {
     "title": "Check your inbox",
@@ -425,6 +435,12 @@
       "count_other": "{{count}} other devices signed in",
       "cta": "Sign out of all devices",
       "manage": "See each device"
+    },
+    "set": {
+      "title": "Set a password",
+      "body": "You sign in through an external account. Set a password to also sign in with your email and to be able to unlink.",
+      "submit": "Set password",
+      "done": "Password set. You can now sign in with your email and unlink external accounts."
     }
   },
   "library": {
@@ -585,5 +601,72 @@
       "withdrawn": "Withdrew consent to {{purpose}}",
       "version": "version {{version}}"
     }
+  },
+  "oauth": {
+    "or": "or",
+    "continueWith": "Continue with {{provider}}",
+    "scopeHint": "We only read your name and email address.",
+    "processingTitle": "Finishing sign-in",
+    "processing": "Finishing sign-in with {{provider}}…",
+    "verifiedBy": "Verified by {{provider}}",
+    "cancel": "Cancel and go back to sign in",
+    "signup": {
+      "title": "Finish creating your account",
+      "body": "Your Learning Companion account will use the email {{provider}} verified. Check your display name and accept the terms to start learning.",
+      "submit": "Create account and start",
+      "hint": "No extra password to remember"
+    },
+    "link": {
+      "title": "This email already has an account",
+      "body": "<strong>{{email}}</strong> already has an account with a password. Enter that password once to link {{provider}} to it.",
+      "whyPassword": "We never merge accounts automatically, so nobody can take over your account with just an email address.",
+      "wrongPassword": "That password is not correct.",
+      "submit": "Link and sign in",
+      "hint": "Next time just continue with {{provider}}"
+    },
+    "failed": {
+      "title": "Could not sign you in",
+      "OAUTH_STATE_INVALID": "We could not verify this sign-in request. The link may be old, already used or opened in another browser. Try again from the sign-in screen.",
+      "OAUTH_CANCELLED": "You cancelled signing in with {{provider}}. Try again or sign in with your email.",
+      "OAUTH_EMAIL_UNVERIFIED": "The email of your {{provider}} account is not verified, so it cannot be used to sign in.",
+      "OAUTH_PENDING_INVALID": "This sign-in step took too long and expired. Start again from the sign-in screen.",
+      "retry": "Back to sign in",
+      "backToSettings": "Back to settings",
+      "safe": "Nothing changed on your account."
+    }
+  },
+  "linked": {
+    "nav": "Linked accounts",
+    "title": "Linked accounts",
+    "subtitle": "Sign in with one tap through an external account. We only read your name and email.",
+    "none": "Signing in with external accounts is not available.",
+    "loadFailed": "We could not load your linked accounts.",
+    "linkedAs": "Linked to {{email}}",
+    "since": "Linked {{time}}",
+    "notLinked": "Not linked",
+    "link": "Link {{provider}}",
+    "unlink": "Unlink",
+    "unlinkProvider": "Unlink {{provider}}",
+    "confirmTitle": "Unlink {{provider}}?",
+    "confirmBody": "You will no longer sign in with {{provider}}, but you can still sign in with your email and password.",
+    "needPasswordTitle": "Set a password first",
+    "needPasswordBody": "Your account only signs in with {{provider}}. Set a password first so you do not lose access when unlinking.",
+    "setPassword": "Set password",
+    "linkedNotice": "{{provider}} linked. Next time you can sign in with one tap.",
+    "unlinkedNotice": "{{provider}} unlinked."
+  },
+  "devOAuth": {
+    "provider": "Google",
+    "badge": "Test environment",
+    "title": "Sign in to Learning Companion",
+    "body": "A simulated provider to try Google sign-in on a development machine. Enter any account.",
+    "permissions": "Learning Companion wants to:",
+    "scopeProfile": "See your name",
+    "scopeEmail": "See your email address",
+    "email": "Google email",
+    "name": "Name",
+    "verified": "Email address is verified",
+    "allow": "Allow",
+    "deny": "Deny"
   }
 }

@@ -60,8 +60,13 @@ public class AuthenticationService {
         Optional<UserAccount> account = accounts.findByEmail(email);
         loginAttempts.ensureNotLocked(email, account.map(UserAccount::getId).orElse(null), CONTEXT, client);
 
+        // Tài khoản chưa có mật khẩu vẫn so với mã băm giả để thời gian phản hồi như mọi lần nhập sai.
         String hash = account.map(UserAccount::getPasswordHash).orElse(dummyHash);
-        boolean passwordMatches = passwordHasher.matches(command.password() == null ? "" : command.password(), hash);
+        if (hash == null) {
+            hash = dummyHash;
+        }
+        boolean passwordMatches = passwordHasher.matches(command.password() == null ? "" : command.password(), hash)
+                && account.map(UserAccount::hasPassword).orElse(false);
         if (account.isEmpty() || !passwordMatches) {
             throw loginAttempts.recordFailure(email, account, CONTEXT, ErrorCode.INVALID_CREDENTIALS, null, client);
         }

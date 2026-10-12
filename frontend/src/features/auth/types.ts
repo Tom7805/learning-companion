@@ -7,6 +7,8 @@ export interface Account {
   emailVerifiedAt?: string
   /** Lần đổi hoặc đặt lại mật khẩu gần nhất; trống nếu chưa từng đổi từ lúc tạo tài khoản. */
   passwordChangedAt?: string
+  /** Tài khoản tạo qua nhà cung cấp định danh chưa có mật khẩu cho tới khi người học tự đặt. */
+  hasPassword?: boolean
 }
 
 /** Lý do trình duyệt không còn đăng nhập, để màn hình đăng nhập báo đúng. */
@@ -88,4 +90,33 @@ export interface ChangePasswordPayload {
 export interface ForgotPasswordSent {
   email: string
   resendAvailableAt: number
+}
+
+/** Nhà cung cấp định danh đang bật, ví dụ Google (NCL-01-CN-007). */
+export interface OAuthProvider {
+  id: string
+  name: string
+}
+
+export type OAuthStatus = 'SIGNED_IN' | 'LINKED' | 'TERMS_REQUIRED' | 'LINK_REQUIRED'
+
+/** Kết quả sau khi nhà cung cấp chuyển về, hoặc sau bước đồng ý điều khoản / nhập mật khẩu. */
+export interface OAuthResult {
+  status: OAuthStatus
+  provider: string
+  account?: Account
+  /** Mã để tiếp tục bước còn dang dở, chỉ giữ trong bộ nhớ. */
+  pendingToken?: string
+  email?: string
+  displayName?: string
+  returnTo?: string
+}
+
+export interface LinkedIdentity {
+  id: string
+  provider: string
+  providerName: string
+  email: string
+  linkedAt: string
+  lastUsedAt?: string
 }

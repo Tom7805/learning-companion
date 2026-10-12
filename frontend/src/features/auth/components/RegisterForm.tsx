@@ -11,6 +11,7 @@ import { useRegister } from '../api/queries'
 import { registerSchema, type RegisterFormInput, type RegisterFormValues } from '../lib/registerSchema'
 import type { RegistrationAccepted } from '../types'
 import { useLegalCurrent } from '@/features/privacy/api/queries'
+import { OAuthButtons } from './OAuthButtons'
 import { PasswordStrengthMeter } from './PasswordStrengthMeter'
 
 type FieldName = keyof RegisterFormInput
@@ -252,6 +253,8 @@ export function RegisterForm({ prefill, onRegistered }: RegisterFormProps) {
       <CtaButton type="submit" loading={pending} hint={pending ? undefined : t('register.submitHint')}>
         {pending ? t('register.submitting') : t('register.submit')}
       </CtaButton>
+
+      <OAuthButtons />
 
       <p className="text-center text-sm text-muted">
         {t('register.haveAccount')}{' '}

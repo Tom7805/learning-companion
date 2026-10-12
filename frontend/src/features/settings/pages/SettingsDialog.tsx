@@ -1,4 +1,4 @@
-import { ChevronRight, Lock, MonitorSmartphone, ShieldCheck, UserRound, X } from 'lucide-react'
+import { ChevronRight, Link2, Lock, MonitorSmartphone, ShieldCheck, UserRound, X } from 'lucide-react'
 import { useEffect, useId, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -6,10 +6,15 @@ import { routes } from '@/app/routes'
 import { cn } from '@/shared/lib/cn'
 import { Alert, Button, Skeleton } from '@/shared/ui'
 import { useProfile } from '../api/queries'
+import { LinkedAccountsSection } from '../components/LinkedAccountsSection'
 import { ProfileSection } from '../components/ProfileSection'
+
+export type SettingsSection = 'profile' | 'accounts'
 
 interface SettingsDialogProps {
   open: boolean
+  section?: SettingsSection
+  onSection?: (section: SettingsSection) => void
   onClose: () => void
 }
 
@@ -17,7 +22,7 @@ interface SettingsDialogProps {
  * Cài đặt mở từ trình đơn tài khoản (NCL-01-CN-005). Mục Hồ sơ nằm ngay trong hộp thoại; Bảo mật và
  * Thiết bị đã có trang riêng nên ở đây là lối tắt sang trang đó.
  */
-export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
+export function SettingsDialog({ open, section = 'profile', onSection, onClose }: SettingsDialogProps) {
   const { t } = useTranslation()
   const dialog = useRef<HTMLDialogElement>(null)
   const heading = useRef<HTMLHeadingElement>(null)
@@ -37,6 +42,10 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
     }
   }, [open])
 
+  const sections: { id: SettingsSection; icon: typeof UserRound; label: string }[] = [
+    { id: 'profile', icon: UserRound, label: t('profile.nav') },
+    { id: 'accounts', icon: Link2, label: t('linked.nav') },
+  ]
   const shortcuts = [
     { to: routes.security, icon: ShieldCheck, label: t('security.nav') },
     { to: routes.devices, icon: MonitorSmartphone, label: t('devices.nav') },
@@ -73,13 +82,21 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
               />
             </div>
             <div className="flex gap-2 overflow-x-auto sm:flex-col sm:gap-1">
-              <span
-                aria-current="page"
-                className="inline-flex shrink-0 items-center gap-2.5 rounded-xl bg-ink px-3 py-2.5 text-sm font-medium text-white"
-              >
-                <UserRound className="size-4" aria-hidden="true" />
-                {t('profile.nav')}
-              </span>
+              {sections.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  aria-current={section === item.id ? 'page' : undefined}
+                  onClick={() => onSection?.(item.id)}
+                  className={cn(
+                    'inline-flex shrink-0 items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-medium',
+                    section === item.id ? 'bg-ink text-white' : 'text-ink-soft hover:bg-ink/5 hover:text-ink',
+                  )}
+                >
+                  <item.icon className="size-4" aria-hidden="true" />
+                  {item.label}
+                </button>
+              ))}
               {shortcuts.map((item) => (
                 <Link
                   key={item.to}
@@ -106,7 +123,8 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
               aria-label={t('common.close')}
               icon={<X className="size-5" aria-hidden="true" />}
             />
-            {profile.isPending && (
+            {section === 'accounts' && <LinkedAccountsSection onNavigate={onClose} />}
+            {section === 'profile' && profile.isPending && (
               <div className="flex flex-col gap-5" aria-busy="true">
                 <Skeleton className="h-8 w-48" />
                 <Skeleton className="h-24" />
@@ -114,7 +132,7 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
                 <Skeleton className="h-14" />
               </div>
             )}
-            {profile.isError && (
+            {section === 'profile' && profile.isError && (
               <Alert tone="danger">
                 <p>{t('profile.loadFailed')}</p>
                 <Button variant="outline" className="mt-3" onClick={() => void profile.refetch()}>
@@ -122,7 +140,7 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
                 </Button>
               </Alert>
             )}
-            {profile.data && <ProfileSection profile={profile.data} />}
+            {section === 'profile' && profile.data && <ProfileSection profile={profile.data} />}
           </div>
         </div>
       )}

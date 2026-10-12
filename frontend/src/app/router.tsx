@@ -1,11 +1,13 @@
 import { createBrowserRouter, Outlet } from 'react-router'
 import { DevMailboxPage } from '@/dev/DevMailboxPage'
+import { DevOAuthAuthorizePage } from '@/dev/DevOAuthAuthorizePage'
 import { DevToolbar } from '@/dev/DevToolbar'
 import {
   CheckEmailPage,
   DevicesPage,
   ForgotPasswordPage,
   LoginPage,
+  OAuthCallbackPage,
   RegisterPage,
   ResetPasswordPage,
   RevokeDevicePage,
@@ -59,13 +61,19 @@ export const router = createBrowserRouter([
           { path: routes.login, element: <LoginPage /> },
           { path: routes.forgotPassword, element: <ForgotPasswordPage /> },
           { path: routes.resetPassword, element: <ResetPasswordPage /> },
+          { path: routes.oauthCallback, element: <OAuthCallbackPage /> },
           { path: routes.revokeDevice, element: <RevokeDevicePage /> },
           { path: routes.terms, element: <LegalDocumentPage kind="terms" /> },
           { path: routes.privacy, element: <LegalDocumentPage kind="privacy" /> },
           { path: '*', element: <NotFoundPage /> },
         ],
       },
-      ...(import.meta.env.DEV ? [{ path: routes.devMailbox, element: <DevMailboxPage /> }] : []),
+      ...(import.meta.env.DEV
+        ? [
+            { path: routes.devMailbox, element: <DevMailboxPage /> },
+            { path: routes.devOAuthAuthorize, element: <DevOAuthAuthorizePage /> },
+          ]
+        : []),
     ],
   },
 ])

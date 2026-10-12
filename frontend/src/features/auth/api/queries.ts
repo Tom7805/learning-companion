@@ -93,3 +93,28 @@ export function useChangePassword() {
     },
   })
 }
+
+export function useOAuthProviders() {
+  return useQuery({ queryKey: queryKeys.oauthProviders, queryFn: authApi.oauthProviders, staleTime: 10 * 60_000 })
+}
+
+export function useLinkedIdentities(accountId: string) {
+  return useQuery({ queryKey: queryKeys.linkedIdentities(accountId), queryFn: () => authApi.linkedIdentities(accountId) })
+}
+
+export function useUnlinkIdentity(accountId: string) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (identityId: string) => authApi.unlinkIdentity(accountId, identityId),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.linkedIdentities(accountId) }),
+  })
+}
+
+/** Đặt mật khẩu lần đầu xong thì phiên (cờ hasPassword) cần tải lại. */
+export function useSetPassword() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: authApi.setPassword,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.session }),
+  })
+}

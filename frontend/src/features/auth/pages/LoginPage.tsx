@@ -55,5 +55,5 @@ export function LoginPage() {
     navigate(from, { replace: true })
   }
 
-  return <LoginForm notice={notice} defaultEmail={state.email} onLoggedIn={handleLoggedIn} />
+  return <LoginForm notice={notice} defaultEmail={state.email} returnTo={from} onLoggedIn={handleLoggedIn} />
 }

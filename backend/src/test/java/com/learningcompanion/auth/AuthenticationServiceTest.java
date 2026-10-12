@@ -63,7 +63,7 @@ class AuthenticationServiceTest {
                 new AppProperties.Auth(Duration.ofHours(24), Duration.ofSeconds(60), Duration.ofHours(2),
                         "lc_session", false, 10, 20, Duration.ofHours(1), Duration.ofDays(30), 5,
                         Duration.ofMinutes(15), 1000, "lc_device", Duration.ofMinutes(30), 20),
-                new AppProperties.Mail("mock", "no-reply@test", "Test"), null, null);
+                new AppProperties.Mail("mock", "no-reply@test", "Test"), null, null, null);
         when(passwordHasher.hash(anyString())).thenReturn("dummy-hash");
         when(passwordHasher.matches(anyString(), anyString())).thenReturn(false);
         when(passwordHasher.matches(PASSWORD, "real-hash")).thenReturn(true);

@@ -17,7 +17,11 @@ public class PasswordHasher {
         return encoder.encode(rawPassword);
     }
 
+    /** Tài khoản chưa có mật khẩu (chỉ đăng nhập qua nhà cung cấp định danh) không khớp với mật khẩu nào. */
     public boolean matches(String rawPassword, String hash) {
+        if (hash == null || rawPassword == null) {
+            return false;
+        }
         return encoder.matches(rawPassword, hash);
     }
 }

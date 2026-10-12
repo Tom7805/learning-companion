@@ -6,6 +6,9 @@ import type {
   RegisterPayload,
   RegistrationAccepted,
   ChangePasswordPayload,
+  LinkedIdentity,
+  OAuthProvider,
+  OAuthResult,
   ResendAccepted,
   ResetPasswordPayload,
   RevokedByLink,
@@ -62,6 +65,43 @@ export const authApi = {
   async resetPassword(payload: ResetPasswordPayload) {
     const { data } = await http.post<{ email: string }>('/auth/password/reset', payload)
     return data
+  },
+  /** Đặt mật khẩu lần đầu cho tài khoản chỉ đăng nhập qua nhà cung cấp định danh. */
+  async setPassword(newPassword: string) {
+    await http.post('/auth/password/set', { newPassword })
+  },
+  async oauthProviders() {
+    const { data } = await http.get<OAuthProvider[]>('/auth/oauth/providers')
+    return data
+  },
+  async oauthStart(provider: string, input: { mode: 'LOGIN' | 'LINK'; rememberDevice?: boolean; returnTo?: string }) {
+    const { data } = await http.post<{ authorizationUrl: string }>(`/auth/oauth/${provider}/start`, input)
+    return data.authorizationUrl
+  },
+  async oauthCallback(provider: string, input: { code?: string | null; state?: string | null; error?: string | null }) {
+    const { data } = await http.post<OAuthResult>(`/auth/oauth/${provider}/callback`, input)
+    return data
+  },
+  async oauthSignup(input: {
+    token: string
+    displayName: string
+    acceptTerms: boolean
+    termsVersion: string
+    privacyVersion: string
+  }) {
+    const { data } = await http.post<OAuthResult>('/auth/oauth/signup', input)
+    return data
+  },
+  async oauthLink(token: string, password: string) {
+    const { data } = await http.post<OAuthResult>('/auth/oauth/link', { token, password })
+    return data
+  },
+  async linkedIdentities(accountId: string) {
+    const { data } = await http.get<LinkedIdentity[]>(`/accounts/${encodeURIComponent(accountId)}/linked-identities`)
+    return data
+  },
+  async unlinkIdentity(accountId: string, identityId: string) {
+    await http.delete(`/accounts/${encodeURIComponent(accountId)}/linked-identities/${encodeURIComponent(identityId)}`)
   },
   async changePassword(payload: ChangePasswordPayload) {
     const { data } = await http.post<{ revokedSessions: number }>('/auth/password/change', payload)

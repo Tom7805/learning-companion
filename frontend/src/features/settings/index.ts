@@ -1,3 +1,3 @@
 export { useProfile } from './api/queries'
-export { SettingsDialog } from './pages/SettingsDialog'
+export { SettingsDialog, type SettingsSection } from './pages/SettingsDialog'
 export type { Profile } from './types'

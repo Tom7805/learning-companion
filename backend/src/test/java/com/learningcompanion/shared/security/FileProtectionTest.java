@@ -34,7 +34,7 @@ class FileProtectionTest {
 
     private AppProperties properties(String encryptionKey) {
         return new AppProperties("http://localhost:5173", null, null, null,
-                new AppProperties.Storage(root.toString(), encryptionKey, KEY_B, Duration.ofMinutes(5)));
+                new AppProperties.Storage(root.toString(), encryptionKey, KEY_B, Duration.ofMinutes(5)), null);
     }
 
     @Test

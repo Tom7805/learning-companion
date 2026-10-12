@@ -126,7 +126,17 @@
     "AVATAR_INVALID_FORMAT": "Ảnh đại diện cần là tệp ảnh JPG, PNG hoặc WebP.",
     "FILE_TOO_LARGE": "Tệp quá lớn.",
     "TERMS_ACCEPTANCE_REQUIRED": "Điều khoản vừa được cập nhật, hãy đọc và đồng ý để dùng tiếp.",
-    "CONSENT_PURPOSE_REQUIRED": "Mục đích này bắt buộc để dùng dịch vụ, không tắt được."
+    "CONSENT_PURPOSE_REQUIRED": "Mục đích này bắt buộc để dùng dịch vụ, không tắt được.",
+    "OAUTH_STATE_INVALID": "Không xác minh được yêu cầu đăng nhập, hãy thử lại từ đầu.",
+    "OAUTH_CANCELLED": "Bạn đã hủy đăng nhập qua nhà cung cấp định danh.",
+    "OAUTH_EMAIL_UNVERIFIED": "Địa chỉ thư của tài khoản bên ngoài chưa được xác thực.",
+    "OAUTH_PROVIDER_ERROR": "Nhà cung cấp định danh đang gặp sự cố, hãy thử lại sau.",
+    "OAUTH_PENDING_INVALID": "Phiên đăng nhập đã hết hạn, hãy bắt đầu lại.",
+    "OAUTH_DISABLED": "Chưa hỗ trợ đăng nhập bằng nhà cung cấp này.",
+    "EXTERNAL_IDENTITY_IN_USE": "Tài khoản bên ngoài này đã liên kết với một tài khoản Learning Companion khác.",
+    "EXTERNAL_IDENTITY_ALREADY_LINKED": "Tài khoản của bạn đã liên kết với nhà cung cấp này.",
+    "PASSWORD_REQUIRED_TO_UNLINK": "Hãy đặt mật khẩu trước khi gỡ liên kết.",
+    "PASSWORD_ALREADY_SET": "Tài khoản đã có mật khẩu, hãy dùng chức năng đổi mật khẩu."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -425,6 +435,12 @@
       "count_other": "{{count}} thiết bị khác đang đăng nhập",
       "cta": "Đăng xuất khỏi mọi thiết bị",
       "manage": "Xem từng thiết bị"
+    },
+    "set": {
+      "title": "Đặt mật khẩu",
+      "body": "Tài khoản của bạn đang đăng nhập qua tài khoản bên ngoài. Đặt mật khẩu để đăng nhập được bằng thư điện tử và gỡ liên kết khi cần.",
+      "submit": "Đặt mật khẩu",
+      "done": "Đã đặt mật khẩu. Giờ bạn đăng nhập được bằng thư điện tử và gỡ được liên kết."
     }
   },
   "library": {
@@ -585,5 +601,72 @@
       "withdrawn": "Rút lại đồng ý {{purpose}}",
       "version": "phiên bản {{version}}"
     }
+  },
+  "oauth": {
+    "or": "hoặc",
+    "continueWith": "Tiếp tục với {{provider}}",
+    "scopeHint": "Chúng tôi chỉ đọc tên và địa chỉ thư của bạn.",
+    "processingTitle": "Đang hoàn tất đăng nhập",
+    "processing": "Đang hoàn tất đăng nhập bằng {{provider}}…",
+    "verifiedBy": "Đã được {{provider}} xác thực",
+    "cancel": "Hủy và quay lại đăng nhập",
+    "signup": {
+      "title": "Hoàn tất tạo tài khoản",
+      "body": "Tài khoản Learning Companion sẽ dùng địa chỉ thư {{provider}} đã xác thực. Hãy kiểm tra tên hiển thị và đồng ý điều khoản để bắt đầu học.",
+      "submit": "Tạo tài khoản và vào học",
+      "hint": "Không cần nhớ thêm mật khẩu"
+    },
+    "link": {
+      "title": "Địa chỉ thư này đã có tài khoản",
+      "body": "<strong>{{email}}</strong> đã có tài khoản dùng mật khẩu. Nhập mật khẩu một lần để liên kết {{provider}} với tài khoản đó.",
+      "whyPassword": "Chúng tôi không tự gộp tài khoản để không ai chiếm được tài khoản của bạn chỉ bằng một địa chỉ thư.",
+      "wrongPassword": "Mật khẩu chưa đúng.",
+      "submit": "Liên kết và đăng nhập",
+      "hint": "Lần sau chỉ cần bấm tiếp tục với {{provider}}"
+    },
+    "failed": {
+      "title": "Chưa đăng nhập được",
+      "OAUTH_STATE_INVALID": "Không xác minh được yêu cầu đăng nhập này. Có thể đường dẫn đã cũ, đã dùng rồi hoặc được mở ở một trình duyệt khác. Hãy thử lại từ màn hình đăng nhập.",
+      "OAUTH_CANCELLED": "Bạn đã hủy đăng nhập bằng {{provider}}. Bạn có thể thử lại hoặc đăng nhập bằng thư điện tử.",
+      "OAUTH_EMAIL_UNVERIFIED": "Địa chỉ thư của tài khoản {{provider}} chưa được xác thực nên chưa dùng để đăng nhập được.",
+      "OAUTH_PENDING_INVALID": "Bước đăng nhập đã quá lâu nên hết hạn. Hãy bắt đầu lại từ màn hình đăng nhập.",
+      "retry": "Về màn hình đăng nhập",
+      "backToSettings": "Về cài đặt",
+      "safe": "Tài khoản của bạn không có gì thay đổi."
+    }
+  },
+  "linked": {
+    "nav": "Tài khoản liên kết",
+    "title": "Tài khoản liên kết",
+    "subtitle": "Đăng nhập bằng một chạm qua tài khoản bên ngoài. Chúng tôi chỉ đọc tên và địa chỉ thư.",
+    "none": "Chưa hỗ trợ đăng nhập bằng tài khoản bên ngoài.",
+    "loadFailed": "Chưa tải được danh sách tài khoản liên kết.",
+    "linkedAs": "Đã liên kết với {{email}}",
+    "since": "Liên kết lúc {{time}}",
+    "notLinked": "Chưa liên kết",
+    "link": "Liên kết {{provider}}",
+    "unlink": "Gỡ liên kết",
+    "unlinkProvider": "Gỡ liên kết {{provider}}",
+    "confirmTitle": "Gỡ liên kết {{provider}}?",
+    "confirmBody": "Bạn sẽ không đăng nhập bằng {{provider}} được nữa, nhưng vẫn đăng nhập bằng thư điện tử và mật khẩu.",
+    "needPasswordTitle": "Hãy đặt mật khẩu trước",
+    "needPasswordBody": "Tài khoản của bạn đang chỉ đăng nhập bằng {{provider}}. Đặt mật khẩu trước để không mất cách đăng nhập khi gỡ liên kết.",
+    "setPassword": "Đặt mật khẩu",
+    "linkedNotice": "Đã liên kết {{provider}}. Lần sau bạn có thể đăng nhập bằng một chạm.",
+    "unlinkedNotice": "Đã gỡ liên kết {{provider}}."
+  },
+  "devOAuth": {
+    "provider": "Google",
+    "badge": "Môi trường thử",
+    "title": "Đăng nhập vào Learning Companion",
+    "body": "Nhà cung cấp giả lập để thử đăng nhập bằng Google trên máy phát triển. Nhập một tài khoản bất kỳ.",
+    "permissions": "Learning Companion muốn được:",
+    "scopeProfile": "Xem tên của bạn",
+    "scopeEmail": "Xem địa chỉ thư của bạn",
+    "email": "Địa chỉ thư Google",
+    "name": "Tên",
+    "verified": "Địa chỉ thư đã được xác thực",
+    "allow": "Cho phép",
+    "deny": "Từ chối"
   }
 }
