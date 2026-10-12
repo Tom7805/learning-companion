@@ -49,6 +49,10 @@ public class ConsentHistory {
         return entry;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
     public UUID getUserId() {
         return userId;
     }

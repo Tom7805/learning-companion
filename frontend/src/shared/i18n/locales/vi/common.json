@@ -124,7 +124,9 @@
     "INVALID_TIME_ZONE": "Múi giờ này không hợp lệ, hãy chọn trong danh sách.",
     "INVALID_PREFERENCE": "Giá trị này không hợp lệ.",
     "AVATAR_INVALID_FORMAT": "Ảnh đại diện cần là tệp ảnh JPG, PNG hoặc WebP.",
-    "FILE_TOO_LARGE": "Tệp quá lớn."
+    "FILE_TOO_LARGE": "Tệp quá lớn.",
+    "TERMS_ACCEPTANCE_REQUIRED": "Điều khoản vừa được cập nhật, hãy đọc và đồng ý để dùng tiếp.",
+    "CONSENT_PURPOSE_REQUIRED": "Mục đích này bắt buộc để dùng dịch vụ, không tắt được."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -533,6 +535,55 @@
       "label": "Mốc đổi ngày học",
       "description": "Học trước {{time}} vẫn được tính cho ngày hôm trước, hợp với người hay học khuya.",
       "default": "(mặc định)"
+    }
+  },
+  "termsUpdate": {
+    "title": "Điều khoản đã được cập nhật",
+    "body": "Chúng tôi vừa cập nhật văn bản dưới đây. Hãy đọc các điểm thay đổi và đồng ý để dùng tiếp Learning Companion.",
+    "changes": "Điểm thay đổi:",
+    "dataKept": "Dữ liệu học tập của bạn vẫn được giữ nguyên. Nếu chưa muốn đồng ý, bạn có thể đăng xuất và quay lại sau.",
+    "accept": "Đồng ý và tiếp tục",
+    "waiting": "Đang chờ bạn đọc và đồng ý điều khoản mới."
+  },
+  "privacy": {
+    "nav": "Quyền riêng tư",
+    "title": "Quyền riêng tư",
+    "subtitle": "Chủ động quyết định dữ liệu của bạn được dùng vào việc gì. Mọi thay đổi có hiệu lực ngay.",
+    "loadFailed": "Chưa tải được thông tin quyền riêng tư.",
+    "purposesTitle": "Đồng ý theo mục đích",
+    "purposesBody": "Các mục đích không bắt buộc đều tắt sẵn. Bạn bật hoặc tắt bất cứ lúc nào.",
+    "required": "Bắt buộc",
+    "acceptedVersion": "Bạn đã đồng ý phiên bản {{version}}",
+    "notAccepted": "Bạn chưa đồng ý phiên bản đang áp dụng",
+    "read": "Đọc",
+    "readFull": "Đọc toàn văn",
+    "documentsTitle": "Văn bản đang áp dụng",
+    "historyTitle": "Lịch sử đồng ý",
+    "historyFailed": "Chưa tải được lịch sử đồng ý.",
+    "purpose": {
+      "ANONYMOUS_USAGE_ANALYTICS": {
+        "title": "Thống kê sử dụng ẩn danh",
+        "body": "Ghi lại trang nào được mở nhiều để cải thiện ứng dụng. Không gắn với tài khoản, không chứa nội dung học tập."
+      },
+      "PRODUCT_NEWS_EMAIL": {
+        "title": "Thư giới thiệu tính năng mới",
+        "body": "Thỉnh thoảng nhận thư giới thiệu tính năng mới. Tắt là ngừng gửi ngay."
+      },
+      "onSince": "Đang bật từ {{time}} · chính sách {{version}}",
+      "off": "Đang tắt",
+      "turnedOn": "Đã bật {{purpose}}",
+      "turnedOff": "Đã tắt {{purpose}}"
+    },
+    "purposeName": {
+      "ANONYMOUS_USAGE_ANALYTICS": "thống kê sử dụng ẩn danh",
+      "PRODUCT_NEWS_EMAIL": "thư giới thiệu tính năng mới",
+      "TERMS_OF_SERVICE": "điều khoản sử dụng",
+      "PRIVACY_POLICY": "chính sách quyền riêng tư"
+    },
+    "history": {
+      "granted": "Đồng ý {{purpose}}",
+      "withdrawn": "Rút lại đồng ý {{purpose}}",
+      "version": "phiên bản {{version}}"
     }
   }
 }

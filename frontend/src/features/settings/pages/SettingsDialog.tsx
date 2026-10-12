@@ -1,4 +1,4 @@
-import { ChevronRight, MonitorSmartphone, ShieldCheck, UserRound, X } from 'lucide-react'
+import { ChevronRight, Lock, MonitorSmartphone, ShieldCheck, UserRound, X } from 'lucide-react'
 import { useEffect, useId, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -40,6 +40,7 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   const shortcuts = [
     { to: routes.security, icon: ShieldCheck, label: t('security.nav') },
     { to: routes.devices, icon: MonitorSmartphone, label: t('devices.nav') },
+    { to: routes.privacySettings, icon: Lock, label: t('privacy.nav') },
   ]
 
   return (

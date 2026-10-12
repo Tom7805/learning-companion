@@ -124,7 +124,9 @@
     "INVALID_TIME_ZONE": "This time zone is not valid, pick one from the list.",
     "INVALID_PREFERENCE": "This value is not valid.",
     "AVATAR_INVALID_FORMAT": "Your avatar must be a JPG, PNG or WebP image.",
-    "FILE_TOO_LARGE": "The file is too large."
+    "FILE_TOO_LARGE": "The file is too large.",
+    "TERMS_ACCEPTANCE_REQUIRED": "The terms were just updated. Read and accept them to continue.",
+    "CONSENT_PURPOSE_REQUIRED": "This purpose is required to use the service and cannot be turned off."
   },
   "checkEmail": {
     "title": "Check your inbox",
@@ -533,6 +535,55 @@
       "label": "Study day starts at",
       "description": "Studying before {{time}} still counts for the previous day, handy for night owls.",
       "default": "(default)"
+    }
+  },
+  "termsUpdate": {
+    "title": "Our terms have been updated",
+    "body": "We just updated the documents below. Read what changed and accept to keep using Learning Companion.",
+    "changes": "What changed:",
+    "dataKept": "Your learning data stays exactly as it is. If you are not ready to accept, you can sign out and come back later.",
+    "accept": "Accept and continue",
+    "waiting": "Waiting for you to read and accept the new terms."
+  },
+  "privacy": {
+    "nav": "Privacy",
+    "title": "Privacy",
+    "subtitle": "Decide what your data is used for. Every change takes effect immediately.",
+    "loadFailed": "We could not load your privacy settings.",
+    "purposesTitle": "Consent by purpose",
+    "purposesBody": "Optional purposes are all off by default. Turn them on or off at any time.",
+    "required": "Required",
+    "acceptedVersion": "You accepted version {{version}}",
+    "notAccepted": "You have not accepted the current version",
+    "read": "Read",
+    "readFull": "Read the full text",
+    "documentsTitle": "Documents in effect",
+    "historyTitle": "Consent history",
+    "historyFailed": "We could not load your consent history.",
+    "purpose": {
+      "ANONYMOUS_USAGE_ANALYTICS": {
+        "title": "Anonymous usage statistics",
+        "body": "Records which pages are opened most to improve the app. Not linked to your account and never includes learning content."
+      },
+      "PRODUCT_NEWS_EMAIL": {
+        "title": "New feature emails",
+        "body": "Occasionally receive emails about new features. Turning it off stops them immediately."
+      },
+      "onSince": "On since {{time}} · policy {{version}}",
+      "off": "Off",
+      "turnedOn": "{{purpose}} turned on",
+      "turnedOff": "{{purpose}} turned off"
+    },
+    "purposeName": {
+      "ANONYMOUS_USAGE_ANALYTICS": "anonymous usage statistics",
+      "PRODUCT_NEWS_EMAIL": "new feature emails",
+      "TERMS_OF_SERVICE": "the terms of service",
+      "PRIVACY_POLICY": "the privacy policy"
+    },
+    "history": {
+      "granted": "Consented to {{purpose}}",
+      "withdrawn": "Withdrew consent to {{purpose}}",
+      "version": "version {{version}}"
     }
   }
 }

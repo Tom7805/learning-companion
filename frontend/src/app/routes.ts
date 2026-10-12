@@ -4,6 +4,7 @@ export const routes = {
   libraryDocument: '/library/:id',
   devices: '/devices',
   security: '/security',
+  privacySettings: '/privacy',
   register: '/register',
   checkEmail: '/register/check-email',
   verifyEmail: '/verify-email',

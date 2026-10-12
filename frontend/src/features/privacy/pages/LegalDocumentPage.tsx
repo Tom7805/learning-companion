@@ -43,6 +43,13 @@ export function LegalDocumentPage({ kind }: { kind: 'terms' | 'privacy' }) {
           <section className="rounded-card border-[1.5px] border-ink bg-sun-soft p-5">
             <h2 className="font-medium">{t('legal.summary')}</h2>
             <p className="mt-2 leading-relaxed text-ink-soft">{document.summary}</p>
+            {document.highlights && document.highlights.length > 0 && (
+              <ul className="mt-3 flex list-disc flex-col gap-1.5 pl-5 leading-relaxed" data-testid="legal-highlights">
+                {document.highlights.map((point) => (
+                  <li key={point}>{point}</li>
+                ))}
+              </ul>
+            )}
           </section>
           <p className="text-sm text-muted">{t('legal.draftNote')}</p>
         </>

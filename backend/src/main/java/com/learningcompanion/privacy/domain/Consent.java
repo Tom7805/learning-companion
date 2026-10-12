@@ -37,14 +37,30 @@ public class Consent {
     }
 
     public static Consent grant(UUID userId, ConsentPurpose purpose, String documentVersion, Instant now) {
+        return record(userId, purpose, true, documentVersion, now);
+    }
+
+    public static Consent record(UUID userId, ConsentPurpose purpose, boolean granted, String documentVersion,
+                                 Instant now) {
         Consent consent = new Consent();
         consent.id = UUID.randomUUID();
         consent.userId = userId;
         consent.purpose = purpose;
-        consent.granted = true;
+        consent.granted = granted;
         consent.documentVersion = documentVersion;
         consent.updatedAt = now;
         return consent;
+    }
+
+    /** Đổi trạng thái đồng ý; trả về false nếu không có gì thay đổi để khỏi ghi lịch sử thừa. */
+    public boolean change(boolean grantedNow, String version, Instant now) {
+        if (granted == grantedNow && documentVersion.equals(version)) {
+            return false;
+        }
+        granted = grantedNow;
+        documentVersion = version;
+        updatedAt = now;
+        return true;
     }
 
     public UUID getId() {
@@ -65,5 +81,9 @@ public class Consent {
 
     public String getDocumentVersion() {
         return documentVersion;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
     }
 }
