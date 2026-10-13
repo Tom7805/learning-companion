@@ -150,3 +150,17 @@ describe('SettingsDialog · hồ sơ', () => {
     expect(screen.getByTestId('save-status')).toHaveTextContent('Chưa lưu được')
   })
 })
+
+describe('SettingsDialog · tài khoản', () => {
+  it('mục Tài khoản gồm tài khoản liên kết và xuất toàn bộ dữ liệu', async () => {
+    const onSection = vi.fn()
+    renderWithProviders(<SettingsDialog open section="accounts" onSection={onSection} onClose={() => undefined} />)
+
+    const dialog = await screen.findByTestId('settings-dialog')
+    expect(within(dialog).getByRole('button', { name: 'Tài khoản' })).toHaveAttribute('aria-current', 'page')
+    expect(within(dialog).getByRole('heading', { level: 2, name: 'Tài khoản' })).toBeInTheDocument()
+    expect(within(dialog).getByRole('heading', { level: 3, name: 'Tài khoản liên kết' })).toBeInTheDocument()
+    expect(await within(dialog).findByRole('region', { name: 'Xuất toàn bộ dữ liệu' })).toBeInTheDocument()
+    expect(await within(dialog).findByRole('button', { name: /Yêu cầu xuất dữ liệu/ })).toBeEnabled()
+  })
+})

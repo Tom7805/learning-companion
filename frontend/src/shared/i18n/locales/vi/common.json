@@ -136,7 +136,11 @@
     "EXTERNAL_IDENTITY_IN_USE": "Tài khoản bên ngoài này đã liên kết với một tài khoản Learning Companion khác.",
     "EXTERNAL_IDENTITY_ALREADY_LINKED": "Tài khoản của bạn đã liên kết với nhà cung cấp này.",
     "PASSWORD_REQUIRED_TO_UNLINK": "Hãy đặt mật khẩu trước khi gỡ liên kết.",
-    "PASSWORD_ALREADY_SET": "Tài khoản đã có mật khẩu, hãy dùng chức năng đổi mật khẩu."
+    "PASSWORD_ALREADY_SET": "Tài khoản đã có mật khẩu, hãy dùng chức năng đổi mật khẩu.",
+    "EXPORT_DAILY_LIMIT": "Mỗi ngày chỉ yêu cầu xuất dữ liệu được một lần.",
+    "EXPORT_NOT_READY": "Gói dữ liệu đang được chuẩn bị, hãy chờ thêm ít phút.",
+    "EXPORT_EXPIRED": "Gói dữ liệu đã hết hạn tải, hãy yêu cầu xuất lại.",
+    "REAUTHENTICATION_REQUIRED": "Hãy xác nhận lại mật khẩu hoặc đăng nhập lại để tiếp tục."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -221,7 +225,8 @@
       "SESSION_EXPIRED": "Phiên đăng nhập đã hết hạn do lâu không thao tác. Hãy đăng nhập lại để tiếp tục.",
       "SESSION_REVOKED": "Thiết bị này đã bị đăng xuất từ một thiết bị khác. Hãy đăng nhập lại nếu đó là bạn.",
       "loggedOut": "Bạn đã đăng xuất. Hẹn gặp lại!",
-      "passwordReset": "Mật khẩu đã được đặt lại, mọi thiết bị đã được đăng xuất. Hãy đăng nhập bằng mật khẩu mới."
+      "passwordReset": "Mật khẩu đã được đặt lại, mọi thiết bị đã được đăng xuất. Hãy đăng nhập bằng mật khẩu mới.",
+      "REAUTHENTICATE": "Để bảo vệ dữ liệu, hãy đăng nhập lại rồi tải gói dữ liệu của bạn."
     },
     "forgot": "Quên mật khẩu?"
   },
@@ -636,7 +641,6 @@
     }
   },
   "linked": {
-    "nav": "Tài khoản liên kết",
     "title": "Tài khoản liên kết",
     "subtitle": "Đăng nhập bằng một chạm qua tài khoản bên ngoài. Chúng tôi chỉ đọc tên và địa chỉ thư.",
     "none": "Chưa hỗ trợ đăng nhập bằng tài khoản bên ngoài.",
@@ -668,5 +672,83 @@
     "verified": "Địa chỉ thư đã được xác thực",
     "allow": "Cho phép",
     "deny": "Từ chối"
+  },
+  "accountSettings": {
+    "nav": "Tài khoản",
+    "title": "Tài khoản",
+    "subtitle": "Cách bạn đăng nhập và quyền mang dữ liệu của mình đi bất cứ lúc nào."
+  },
+  "dataExport": {
+    "title": "Xuất toàn bộ dữ liệu",
+    "subtitle": "Nhận một gói .zip chứa mọi dữ liệu học tập của bạn ở định dạng mở, đọc được bằng phần mềm thông dụng mà không cần Learning Companion.",
+    "includesTitle": "Gói gồm",
+    "includes": {
+      "account": "Tài khoản và các lần đăng nhập",
+      "profile": "Hồ sơ, tùy chọn học tập, ảnh đại diện",
+      "privacy": "Lịch sử đồng ý theo từng mục đích",
+      "library": "Tài liệu kèm tệp gốc, theo thư mục thư viện"
+    },
+    "includesMore": "Dữ liệu của các chức năng bạn dùng sau này cũng tự có trong gói.",
+    "formats": "JSON, CSV, Markdown và tệp gốc, kèm tệp hướng dẫn đọc",
+    "facts": {
+      "daily": "Mỗi ngày một lần",
+      "quota": "Không tính vào hạn mức AI",
+      "validity": "Tải được trong 7 ngày"
+    },
+    "request": "Yêu cầu xuất dữ liệu",
+    "requestAgain": "Yêu cầu xuất lại",
+    "requestHint": "Gói sẵn sàng sau ít phút, có thư báo kèm đường dẫn tải",
+    "requested": "Đã nhận yêu cầu. Chúng tôi sẽ gửi thư tới {{email}} khi gói sẵn sàng.",
+    "preparing": "Đang chuẩn bị gói dữ liệu…",
+    "preparingHint": "Bạn có thể đóng cửa sổ này, chúng tôi sẽ gửi thư khi xong.",
+    "readyTitle": "Gói dữ liệu đã sẵn sàng",
+    "readyMeta": "{{files}} tệp · {{size}} · tạo lúc {{time}}",
+    "readyUntil": "Tải được tới {{time}}",
+    "download": "Tải gói dữ liệu",
+    "expiredTitle": "Gói tạo lúc {{time}} đã hết hạn tải",
+    "expiredBody": "Gói đã được xóa để bảo vệ dữ liệu của bạn.",
+    "failedTitle": "Chưa tạo được gói dữ liệu",
+    "failedBody": "Lần này không tính vào giới hạn mỗi ngày, bạn có thể yêu cầu lại ngay.",
+    "nextAt": "Bạn có thể yêu cầu lại sau {{time}}.",
+    "loadFailed": "Chưa tải được thông tin xuất dữ liệu.",
+    "page": {
+      "title": "Tải gói dữ liệu của bạn",
+      "subtitle": "Gói .zip chứa toàn bộ dữ liệu học tập của bạn ở định dạng mở, kèm tệp hướng dẫn đọc.",
+      "created": "Tạo lúc",
+      "size": "Dung lượng",
+      "files": "Số tệp",
+      "until": "Tải được tới",
+      "contents": "Nội dung gói",
+      "sectionFiles": "{{count}} tệp",
+      "reauthTitle": "Xác nhận đây là bạn",
+      "reauthBody": "Gói chứa dữ liệu cá nhân, nên mỗi lần tải bạn cần nhập lại mật khẩu.",
+      "reauthNoPassword": "Gói chứa dữ liệu cá nhân, nên mỗi lần tải bạn cần đăng nhập lại.",
+      "password": "Mật khẩu",
+      "remaining": "Còn {{count}} lần thử trước khi tạm khóa đăng nhập.",
+      "relogin": "Đăng nhập lại để tải",
+      "freshHint": "Bạn vừa đăng nhập nên tải được ngay.",
+      "downloading": "Đang tải {{file}} xuống máy của bạn.",
+      "downloadAgain": "Không thấy tệp? Bấm để tải lại",
+      "keepSafe": "Hãy cất gói ở nơi an toàn và xóa bản tải về khi không cần nữa.",
+      "notFoundTitle": "Không tìm thấy gói dữ liệu",
+      "notFoundBody": "Đường dẫn không đúng, hoặc gói này không thuộc tài khoản bạn đang đăng nhập.",
+      "expiredTitle": "Gói dữ liệu đã hết hạn",
+      "expiredBody": "Đường dẫn tải chỉ dùng được 7 ngày, sau đó gói được xóa để bảo vệ dữ liệu của bạn. Bạn có thể yêu cầu xuất lại.",
+      "failedTitle": "Chưa tạo được gói dữ liệu",
+      "preparingTitle": "Gói dữ liệu đang được chuẩn bị",
+      "requestedTitle": "Đã nhận yêu cầu xuất lại",
+      "requestedBody": "Chúng tôi sẽ gửi thư có đường dẫn tải mới tới {{email}} khi gói sẵn sàng.",
+      "openSettings": "Xem trong cài đặt tài khoản",
+      "home": "Về trang chủ",
+      "lockedTitle": "Tạm khóa xác nhận mật khẩu",
+      "lockedBody": "Mật khẩu đã bị nhập sai 5 lần liên tiếp. Để bảo vệ tài khoản, bạn có thể thử lại sau:",
+      "wrongPassword": "Mật khẩu chưa đúng."
+    },
+    "sections": {
+      "account": "Tài khoản",
+      "profile": "Hồ sơ và tùy chọn học tập",
+      "privacy": "Quyền riêng tư và đồng ý",
+      "library": "Thư viện tài liệu"
+    }
   }
 }

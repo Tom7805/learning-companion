@@ -12,6 +12,7 @@ public final class ApiPaths {
     public static final String PROFILES = V1 + "/profiles";
     public static final String ACCOUNTS = V1 + "/accounts";
     public static final String ANALYTICS = V1 + "/analytics";
+    public static final String EXPORTS = V1 + "/exports";
 
     private ApiPaths() {
     }

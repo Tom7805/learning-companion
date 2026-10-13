@@ -2,7 +2,7 @@ import { http, HttpResponse } from 'msw'
 import type { Account, DeviceSession } from '@/features/auth/types'
 import type { LearningDocument } from '@/features/library/types'
 import type { Profile } from '@/features/settings/types'
-import type { ConsentHistoryEntry, LegalCurrent, PrivacyStatus } from '@/features/privacy/types'
+import type { ConsentHistoryEntry, DataExport, LegalCurrent, PrivacyStatus } from '@/features/privacy/types'
 
 export const legalCurrent: LegalCurrent = {
   terms: { version: '2026-10-01', summary: 'Tóm tắt điều khoản', effectiveAt: '2026-09-30T17:00:00Z' },
@@ -102,7 +102,28 @@ export const handlers = [
   http.get('*/api/v1/files/:token', () =>
     new HttpResponse(sampleDocument.contentText, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } }),
   ),
+  http.get('*/api/v1/exports', () => HttpResponse.json({ canRequest: true })),
+  http.get('*/api/v1/exports/:id', () => HttpResponse.json(readyExport)),
 ]
+
+/** Gói dữ liệu đã sẵn sàng (NCL-01-CN-008); người học vừa đăng nhập nên tải được ngay. */
+export const readyExport: DataExport = {
+  id: '9e7d4c1a-3333-4c2b-8d4f-000000000001',
+  status: 'READY',
+  requestedAt: '2026-10-12T03:00:00Z',
+  completedAt: '2026-10-12T03:00:05Z',
+  expiresAt: '2026-10-19T03:00:05Z',
+  sizeBytes: 48_640,
+  fileCount: 12,
+  fileName: 'learning-companion-export-2026-10-12.zip',
+  sections: [
+    { id: 'account', title: 'Tài khoản', fileCount: 2 },
+    { id: 'profile', title: 'Hồ sơ và tùy chọn học tập', fileCount: 1 },
+    { id: 'privacy', title: 'Quyền riêng tư và đồng ý', fileCount: 2 },
+    { id: 'library', title: 'Thư viện tài liệu', fileCount: 5 },
+  ],
+  reauthenticationRequired: false,
+}
 
 export const sampleDocument: LearningDocument = {
   id: '5d1c0e6a-2222-4b1a-8c3e-000000000001',

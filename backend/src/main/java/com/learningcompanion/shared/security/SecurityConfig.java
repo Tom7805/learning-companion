@@ -64,6 +64,8 @@ public class SecurityConfig {
                         .permitAll()
                         // Đường dẫn ký tự nó là quyền mở tệp, có hạn năm phút (NCL-01-CN-004).
                         .requestMatchers(HttpMethod.GET, ApiPaths.FILES + "/*").permitAll()
+                        // Gói dữ liệu xuất: chỉ cấp đường dẫn ký sau khi người học xác nhận lại danh tính (NCL-01-CN-008).
+                        .requestMatchers(HttpMethod.GET, ApiPaths.EXPORTS + "/files/*").permitAll()
                         .requestMatchers(ApiPaths.ADMIN + "/**").hasRole("ADMIN")
                         .requestMatchers(ApiPaths.DEV + "/**").permitAll()
                         .requestMatchers("/actuator/health", "/error").permitAll()

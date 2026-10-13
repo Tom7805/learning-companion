@@ -1,5 +1,13 @@
 import { http } from '@/shared/api/httpClient'
-import type { ConsentHistoryEntry, LegalCurrent, OptionalPurpose, PrivacyStatus } from '../types'
+import type {
+  ConsentHistoryEntry,
+  DataExport,
+  DataExportLink,
+  DataExportOverview,
+  LegalCurrent,
+  OptionalPurpose,
+  PrivacyStatus,
+} from '../types'
 
 const account = (id: string) => `/accounts/${encodeURIComponent(id)}`
 
@@ -24,6 +32,25 @@ export const privacyApi = {
     const { data } = await http.post<PrivacyStatus>(`${account(accountId)}/terms/accept`, {
       termsVersion,
       privacyVersion,
+    })
+    return data
+  },
+  async exportOverview() {
+    const { data } = await http.get<DataExportOverview>('/exports')
+    return data
+  },
+  async requestExport() {
+    const { data } = await http.post<DataExportOverview>('/exports')
+    return data
+  },
+  async dataExport(id: string) {
+    const { data } = await http.get<DataExport>(`/exports/${encodeURIComponent(id)}`)
+    return data
+  },
+  /** Xác nhận lại danh tính rồi nhận đường dẫn tải sống năm phút. */
+  async downloadExport(id: string, password?: string) {
+    const { data } = await http.post<DataExportLink>(`/exports/${encodeURIComponent(id)}/download`, {
+      password: password || undefined,
     })
     return data
   },

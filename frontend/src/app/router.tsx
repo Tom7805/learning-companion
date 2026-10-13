@@ -16,7 +16,7 @@ import {
 } from '@/features/auth'
 import { DashboardPage } from '@/features/dashboard/pages/DashboardPage'
 import { DocumentPage, LibraryPage } from '@/features/library'
-import { LegalDocumentPage, PrivacyPage } from '@/features/privacy'
+import { DataExportDownloadPage, LegalDocumentPage, PrivacyPage } from '@/features/privacy'
 import { AppShell } from '@/layouts/AppShell'
 import { AuthLayout } from '@/layouts/AuthLayout'
 import { NotFoundPage } from '@/pages/NotFoundPage'
@@ -48,6 +48,7 @@ export const router = createBrowserRouter([
               { path: routes.devices, element: <DevicesPage /> },
               { path: routes.security, element: <SecurityPage /> },
               { path: routes.privacySettings, element: <PrivacyPage /> },
+              { path: routes.dataExport, element: <DataExportDownloadPage /> },
             ],
           },
         ],

@@ -46,6 +46,20 @@ export function useLogout(afterLogout?: () => void) {
   })
 }
 
+/**
+ * Đăng xuất để đăng nhập lại xác nhận danh tính: trang được bảo vệ tự chuyển sang màn hình đăng nhập kèm lý do và
+ * trang đang xem, nên đăng nhập xong người học quay về đúng chỗ.
+ */
+export function useSignOutToReauthenticate() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: authApi.logout,
+    onSuccess: () => {
+      queryClient.setQueryData<SessionStatus>(queryKeys.session, { authenticated: false, reason: 'REAUTHENTICATE' })
+    },
+  })
+}
+
 export function useDeviceSessions() {
   return useQuery({ queryKey: queryKeys.deviceSessions, queryFn: authApi.sessions, staleTime: 10_000 })
 }

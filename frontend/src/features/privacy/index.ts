@@ -1,5 +1,7 @@
 export { usePrivacyStatus } from './api/queries'
+export { DataExportSection } from './components/DataExportSection'
 export { usePageViewTracking } from './hooks/usePageViewTracking'
+export { DataExportDownloadPage } from './pages/DataExportDownloadPage'
 export { LegalDocumentPage } from './pages/LegalDocumentPage'
 export { PrivacyPage } from './pages/PrivacyPage'
 export type { PrivacyStatus } from './types'

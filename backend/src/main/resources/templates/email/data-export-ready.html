@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{email/layout :: layout(~{::section})}">
+<body>
+<section>
+    <h1 style="margin:0 0 12px 0;font-size:24px;line-height:1.3;color:#1d1d1f;">
+        Gói dữ liệu của bạn đã sẵn sàng
+    </h1>
+    <p style="margin:0 0 16px 0;">
+        Chào <strong th:text="${displayName}">bạn</strong>, gói chứa toàn bộ dữ liệu học tập của bạn
+        (<span th:text="${size}">1,2 MB</span>, định dạng mở) đã được tạo xong. Gói gồm:
+    </p>
+    <ul style="margin:0 0 16px 0;padding-left:20px;">
+        <li th:each="section : ${sections}" th:text="${section}">Thư viện tài liệu</li>
+    </ul>
+    <p style="margin:24px 0;">
+        <a th:href="${downloadUrl}" href="#"
+           style="display:inline-block;background:#ff5a36;color:#1d1d1f;text-decoration:none;font-weight:600;
+                  padding:14px 28px;border-radius:12px;border:1.5px solid #1d1d1f;">
+            Tải gói dữ liệu
+        </a>
+    </p>
+    <p style="margin:0 0 16px 0;">
+        Đường dẫn dùng được tới <strong th:text="${expiresAt}">10:00 ngày 20/10/2026</strong>. Để bảo vệ dữ liệu,
+        mỗi lần tải bạn sẽ được yêu cầu nhập lại mật khẩu hoặc đăng nhập lại.
+    </p>
+    <p style="margin:0;font-size:13px;color:#6b6b70;">
+        Nếu không phải bạn yêu cầu xuất dữ liệu, hãy đổi mật khẩu ngay trong mục bảo mật tài khoản.
+    </p>
+</section>
+</body>
+</html>

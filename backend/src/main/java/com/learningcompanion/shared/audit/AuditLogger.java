@@ -38,6 +38,12 @@ public class AuditLogger {
         save(AuditLog.ActorType.ANONYMOUS, null, action, objectType, objectId, details, client);
     }
 
+    /** Thao tác do hệ thống tự làm, ví dụ dọn gói dữ liệu quá hạn. */
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void bySystem(AuditAction action, AuditObjectType objectType, UUID objectId, Map<String, Object> details) {
+        save(AuditLog.ActorType.SYSTEM, null, action, objectType, objectId, details, null);
+    }
+
     private void save(AuditLog.ActorType actorType, UUID actorId, AuditAction action, AuditObjectType objectType,
                       UUID objectId, Map<String, Object> details, ClientInfo client) {
         repository.save(new AuditLog(Instant.now(clock), actorType, actorId, action, objectType, objectId,

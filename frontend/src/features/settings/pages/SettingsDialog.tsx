@@ -1,4 +1,4 @@
-import { ChevronRight, Link2, Lock, MonitorSmartphone, ShieldCheck, UserRound, X } from 'lucide-react'
+import { ChevronRight, Lock, MonitorSmartphone, ShieldCheck, UserCog, UserRound, X } from 'lucide-react'
 import { useEffect, useId, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -6,7 +6,7 @@ import { routes } from '@/app/routes'
 import { cn } from '@/shared/lib/cn'
 import { Alert, Button, Skeleton } from '@/shared/ui'
 import { useProfile } from '../api/queries'
-import { LinkedAccountsSection } from '../components/LinkedAccountsSection'
+import { AccountSection } from '../components/AccountSection'
 import { ProfileSection } from '../components/ProfileSection'
 
 export type SettingsSection = 'profile' | 'accounts'
@@ -19,8 +19,8 @@ interface SettingsDialogProps {
 }
 
 /**
- * Cài đặt mở từ trình đơn tài khoản (NCL-01-CN-005). Mục Hồ sơ nằm ngay trong hộp thoại; Bảo mật và
- * Thiết bị đã có trang riêng nên ở đây là lối tắt sang trang đó.
+ * Cài đặt mở từ trình đơn tài khoản (NCL-01-CN-005). Mục Hồ sơ và Tài khoản (liên kết đăng nhập, xuất dữ liệu)
+ * nằm ngay trong hộp thoại; Bảo mật và Thiết bị đã có trang riêng nên ở đây là lối tắt sang trang đó.
  */
 export function SettingsDialog({ open, section = 'profile', onSection, onClose }: SettingsDialogProps) {
   const { t } = useTranslation()
@@ -44,7 +44,7 @@ export function SettingsDialog({ open, section = 'profile', onSection, onClose }
 
   const sections: { id: SettingsSection; icon: typeof UserRound; label: string }[] = [
     { id: 'profile', icon: UserRound, label: t('profile.nav') },
-    { id: 'accounts', icon: Link2, label: t('linked.nav') },
+    { id: 'accounts', icon: UserCog, label: t('accountSettings.nav') },
   ]
   const shortcuts = [
     { to: routes.security, icon: ShieldCheck, label: t('security.nav') },
@@ -123,7 +123,7 @@ export function SettingsDialog({ open, section = 'profile', onSection, onClose }
               aria-label={t('common.close')}
               icon={<X className="size-5" aria-hidden="true" />}
             />
-            {section === 'accounts' && <LinkedAccountsSection onNavigate={onClose} />}
+            {section === 'accounts' && <AccountSection onNavigate={onClose} />}
             {section === 'profile' && profile.isPending && (
               <div className="flex flex-col gap-5" aria-busy="true">
                 <Skeleton className="h-8 w-48" />
