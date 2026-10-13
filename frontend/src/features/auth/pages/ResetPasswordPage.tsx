@@ -81,7 +81,7 @@ export function ResetPasswordPage() {
           <StatusIcon tone="lilac">
             <Spinner className="size-7" />
           </StatusIcon>
-          <h1 ref={heading} tabIndex={-1} className="text-[28px] leading-tight tracking-tight outline-none">
+          <h1 ref={heading} tabIndex={-1} className="text-[1.75rem] leading-tight tracking-tight outline-none">
             {t('reset.checking')}
           </h1>
         </>
@@ -153,10 +153,10 @@ function stateFor(code: string): State {
 function Heading({ headingRef, title, children }: { headingRef: HeadingRef; title: string; children?: ReactNode }) {
   return (
     <header className="flex flex-col gap-3">
-      <h1 ref={headingRef} tabIndex={-1} className="text-[28px] leading-tight tracking-tight outline-none sm:text-[32px]">
+      <h1 ref={headingRef} tabIndex={-1} className="text-[1.75rem] leading-tight tracking-tight outline-none sm:text-[2rem]">
         {title}
       </h1>
-      {children && <div className="text-[15px] leading-relaxed text-ink-soft">{children}</div>}
+      {children && <div className="text-[0.9375rem] leading-relaxed text-ink-soft">{children}</div>}
     </header>
   )
 }
@@ -237,10 +237,10 @@ function ResetForm({ token, headingRef, onDone, onTokenProblem }: ResetFormProps
         <KeyRound className="size-7" strokeWidth={2} />
       </StatusIcon>
       <header className="flex flex-col gap-3">
-        <h1 ref={headingRef} tabIndex={-1} className="text-[28px] leading-tight tracking-tight outline-none sm:text-[32px]">
+        <h1 ref={headingRef} tabIndex={-1} className="text-[1.75rem] leading-tight tracking-tight outline-none sm:text-[2rem]">
           {t('reset.title')}
         </h1>
-        <p id="reset-subtitle" className="text-[15px] leading-relaxed text-muted">
+        <p id="reset-subtitle" className="text-[0.9375rem] leading-relaxed text-muted">
           {t('reset.subtitle')}
         </p>
       </header>

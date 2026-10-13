@@ -224,7 +224,7 @@ function ReadyExport({ data, heading }: { data: DataExport; heading: Ref<HTMLHea
         <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {facts.map((fact) => (
             <div key={fact.label} className="flex flex-col gap-0.5">
-              <dt className="text-[13px] text-muted">{fact.label}</dt>
+              <dt className="text-[0.8125rem] text-muted">{fact.label}</dt>
               <dd className="font-medium">{fact.value}</dd>
             </div>
           ))}
@@ -238,7 +238,7 @@ function ReadyExport({ data, heading }: { data: DataExport; heading: Ref<HTMLHea
                 className="inline-flex items-center gap-2 rounded-xl border-[1.5px] border-ink bg-sky-soft px-3 py-1.5 text-sm"
               >
                 {t(`dataExport.sections.${section.id}`, { defaultValue: section.title })}
-                <span className="text-[13px] text-muted">
+                <span className="text-[0.8125rem] text-muted">
                   {t('dataExport.page.sectionFiles', { count: section.fileCount })}
                 </span>
               </li>
@@ -400,7 +400,7 @@ function DownloadForm({ data }: { data: DataExport }) {
           </span>
         </CtaButton>
       )}
-      <p className="text-[13px] leading-snug text-muted">{t('dataExport.page.keepSafe')}</p>
+      <p className="text-[0.8125rem] leading-snug text-muted">{t('dataExport.page.keepSafe')}</p>
     </form>
   )
 }

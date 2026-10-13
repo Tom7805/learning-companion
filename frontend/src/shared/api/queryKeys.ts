@@ -4,6 +4,7 @@ export const queryKeys = {
   legalCurrent: ['legal', 'current'] as const,
   documents: ['library', 'documents'] as const,
   profile: ['profile', 'me'] as const,
+  uiPreferences: ['ui-preferences'] as const,
   oauthProviders: ['auth', 'oauth', 'providers'] as const,
   linkedIdentities: (accountId: string) => ['auth', 'linked', accountId] as const,
   privacyStatus: (accountId: string) => ['privacy', accountId, 'status'] as const,

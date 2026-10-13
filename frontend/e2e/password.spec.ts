@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright'
 import type { Browser, Page } from '@playwright/test'
 import { createVerifiedAccount, expect, loginThroughUi, test } from './fixtures/auth'
 import { STRONG_PASSWORD, uniqueEmail } from './fixtures/testData'
+import { openAccountPage } from './fixtures/shell'
 
 /**
  * NCL-01-CN-003 — Quên mật khẩu, đổi mật khẩu và đăng xuất khỏi mọi thiết bị (Jira LC-17).
@@ -195,7 +196,7 @@ test.describe('NCL-01-CN-003 · Đổi mật khẩu và đăng xuất khỏi m�
     const laptop = await newDevice(browser, email)
 
     await page.goto('/')
-    await page.getByRole('link', { name: 'Bảo mật' }).first().click()
+    await openAccountPage(page, 'Bảo mật')
     await expect(page.getByRole('heading', { level: 1, name: 'Bảo mật tài khoản' })).toBeVisible()
     await expect(page.getByTestId('password-changed-at')).toHaveText('Chưa đổi mật khẩu kể từ khi tạo tài khoản')
     await expectNoSeriousA11yViolations(page)

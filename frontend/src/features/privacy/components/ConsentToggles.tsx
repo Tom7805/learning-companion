@@ -140,7 +140,7 @@ function PurposeRow({
         <p id={descriptionId} className="text-sm leading-relaxed text-ink-soft">
           {t(`privacy.purpose.${purpose}.body`)}
         </p>
-        <p className="text-[13px] text-muted" data-testid="purpose-meta">
+        <p className="text-[0.8125rem] text-muted" data-testid="purpose-meta">
           {meta}
         </p>
         {error && (

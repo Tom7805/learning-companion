@@ -20,13 +20,23 @@
   --color-accent-strong: #e8461f;
   --color-accent-ink: #b8371a;
   --color-sun: #ffd45c;
+  --color-sun-strong: #e9bf3f;
   --color-sun-soft: #ffe9a8;
   --color-lilac: #c9c2fb;
   --color-lilac-strong: #b6acf7;
   --color-lilac-soft: #e5e0fd;
   --color-sky: #bfe3f7;
+  --color-sky-strong: #8ec8e8;
   --color-sky-soft: #e1f2fc;
   --color-mint: #8fdccc;
+
+  /* Chữ và biểu tượng đặt trên một nền màu cố định; đổi theo chế độ sáng tối để luôn đủ tương phản. */
+  --color-on-ink: #ffffff;
+  --color-on-accent: #1d1d1f;
+  --color-on-danger: #ffffff;
+  --color-on-night: #ffffff;
+  /* Lớp phủ phía sau hộp thoại và ngăn kéo: luôn tối, ở cả chế độ tối. */
+  --color-scrim: #0b0b0c;
 
   --color-success: #1e7a43;
   --color-success-soft: #e3f5e8;
@@ -44,6 +54,26 @@
 
   --animate-fade-up: fade-up 0.35s ease-out both;
   --animate-pop: pop 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+  --animate-slide-in-left: slide-in-left 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-slide-in-right: slide-in-right 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+  @keyframes slide-in-left {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: none;
+    }
+  }
+
+  @keyframes slide-in-right {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: none;
+    }
+  }
 
   @keyframes fade-up {
     from {

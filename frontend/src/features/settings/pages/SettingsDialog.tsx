@@ -1,4 +1,4 @@
-import { ChevronRight, Lock, MonitorSmartphone, ShieldCheck, UserCog, UserRound, X } from 'lucide-react'
+import { ChevronRight, Lock, MonitorSmartphone, Palette, ShieldCheck, UserCog, UserRound, X } from 'lucide-react'
 import { useEffect, useId, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -7,9 +7,10 @@ import { cn } from '@/shared/lib/cn'
 import { Alert, Button, Skeleton } from '@/shared/ui'
 import { useProfile } from '../api/queries'
 import { AccountSection } from '../components/AccountSection'
+import { AppearanceSection } from '../components/AppearanceSection'
 import { ProfileSection } from '../components/ProfileSection'
 
-export type SettingsSection = 'profile' | 'accounts'
+export type SettingsSection = 'profile' | 'accounts' | 'appearance'
 
 interface SettingsDialogProps {
   open: boolean
@@ -19,8 +20,8 @@ interface SettingsDialogProps {
 }
 
 /**
- * Cài đặt mở từ trình đơn tài khoản (NCL-01-CN-005). Mục Hồ sơ và Tài khoản (liên kết đăng nhập, xuất dữ liệu)
- * nằm ngay trong hộp thoại; Bảo mật và Thiết bị đã có trang riêng nên ở đây là lối tắt sang trang đó.
+ * Cài đặt mở từ trình đơn tài khoản (NCL-01-CN-005). Mục Hồ sơ, Tài khoản (liên kết đăng nhập, xuất và xóa dữ liệu)
+ * và Giao diện (NCL-02-CN-001) nằm ngay trong hộp thoại; Bảo mật và Thiết bị đã có trang riêng nên ở đây là lối tắt.
  */
 export function SettingsDialog({ open, section = 'profile', onSection, onClose }: SettingsDialogProps) {
   const { t } = useTranslation()
@@ -45,6 +46,7 @@ export function SettingsDialog({ open, section = 'profile', onSection, onClose }
   const sections: { id: SettingsSection; icon: typeof UserRound; label: string }[] = [
     { id: 'profile', icon: UserRound, label: t('profile.nav') },
     { id: 'accounts', icon: UserCog, label: t('accountSettings.nav') },
+    { id: 'appearance', icon: Palette, label: t('appearance.nav') },
   ]
   const shortcuts = [
     { to: routes.security, icon: ShieldCheck, label: t('security.nav') },
@@ -61,7 +63,7 @@ export function SettingsDialog({ open, section = 'profile', onSection, onClose }
         event.preventDefault()
         onClose()
       }}
-      className="m-0 h-dvh max-h-none w-screen max-w-none bg-surface p-0 text-ink backdrop:bg-ink/45 sm:m-auto sm:h-[min(88dvh,760px)] sm:w-[min(94vw,980px)] sm:rounded-card sm:border-[1.5px] sm:border-ink sm:shadow-pop"
+      className="m-0 h-dvh max-h-none w-screen max-w-none bg-surface p-0 text-ink backdrop:bg-scrim/45 sm:m-auto sm:h-[min(88dvh,760px)] sm:w-[min(94vw,980px)] sm:rounded-card sm:border-[1.5px] sm:border-ink sm:shadow-pop"
     >
       {open && (
         <div className="flex h-full flex-col sm:flex-row">
@@ -90,7 +92,7 @@ export function SettingsDialog({ open, section = 'profile', onSection, onClose }
                   onClick={() => onSection?.(item.id)}
                   className={cn(
                     'inline-flex shrink-0 items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-medium',
-                    section === item.id ? 'bg-ink text-white' : 'text-ink-soft hover:bg-ink/5 hover:text-ink',
+                    section === item.id ? 'bg-ink text-on-ink' : 'text-ink-soft hover:bg-ink/5 hover:text-ink',
                   )}
                 >
                   <item.icon className="size-4" aria-hidden="true" />
@@ -124,6 +126,7 @@ export function SettingsDialog({ open, section = 'profile', onSection, onClose }
               icon={<X className="size-5" aria-hidden="true" />}
             />
             {section === 'accounts' && <AccountSection onNavigate={onClose} />}
+            {section === 'appearance' && <AppearanceSection />}
             {section === 'profile' && profile.isPending && (
               <div className="flex flex-col gap-5" aria-busy="true">
                 <Skeleton className="h-8 w-48" />

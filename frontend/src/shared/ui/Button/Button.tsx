@@ -16,16 +16,16 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variants: Record<Variant, string> = {
-  accent: 'bg-accent text-ink border-ink hover:bg-accent-strong',
-  dark: 'bg-ink text-white border-ink hover:bg-ink-soft',
+  accent: 'bg-accent text-on-accent border-ink hover:bg-accent-strong',
+  dark: 'bg-ink text-on-ink border-ink hover:bg-ink-soft',
   outline: 'bg-surface text-ink border-ink hover:bg-paper',
   ghost: 'bg-transparent text-ink border-transparent hover:bg-ink/5',
   /** Thao tác không hoàn tác được, ví dụ xóa tài khoản. */
-  danger: 'bg-danger text-white border-ink hover:bg-danger/90',
+  danger: 'bg-danger text-on-danger border-ink hover:bg-danger/90',
 }
 
 const sizes: Record<Size, string> = {
-  md: 'h-11 px-5 text-[15px]',
+  md: 'h-11 px-5 text-[0.9375rem]',
   lg: 'h-13 px-6 text-base',
 }
 

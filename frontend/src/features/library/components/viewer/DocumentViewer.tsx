@@ -98,7 +98,7 @@ export function DocumentViewer({ document }: { document: LearningDocument }) {
         </div>
       </div>
 
-      <p className="text-[13px] leading-relaxed text-ink-soft">{t('library.file.protected')}</p>
+      <p className="text-[0.8125rem] leading-relaxed text-ink-soft">{t('library.file.protected')}</p>
 
       {renewals > 0 && (
         <Alert tone="success" key={renewals} data-testid="link-renewed">

@@ -4,6 +4,9 @@ import { defineConfig, devices } from '@playwright/test'
 
 // Đổi được cổng để chạy song song với máy chủ đang dùng để phát triển, ví dụ E2E_BASE_URL=http://localhost:5174.
 const FRONTEND_URL = process.env.E2E_BASE_URL ?? 'http://localhost:5173'
+// Bản dựng thật (có service worker) để kiểm thử cài ứng dụng và mở lại khi mạng chập chờn (e2e/pwa.spec.ts).
+const PREVIEW_URL = process.env.E2E_PREVIEW_URL ?? 'http://localhost:4173'
+const PWA_SPEC = 'pwa.spec.ts'
 const API_URL = process.env.E2E_API_URL ?? 'http://127.0.0.1:8080'
 const BACKEND_HEALTH = `${API_URL}/actuator/health`
 
@@ -33,8 +36,17 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
   projects: [
-    { name: 'desktop-chrome', use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } } },
-    { name: 'mobile-chrome', use: { ...devices['Pixel 7'] } },
+    {
+      name: 'desktop-chrome',
+      testIgnore: PWA_SPEC,
+      use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
+    },
+    { name: 'mobile-chrome', testIgnore: PWA_SPEC, use: { ...devices['Pixel 7'] } },
+    {
+      name: 'pwa-chrome',
+      testMatch: PWA_SPEC,
+      use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 }, baseURL: PREVIEW_URL },
+    },
   ],
   webServer: [
     {
@@ -49,6 +61,12 @@ export default defineConfig({
       url: FRONTEND_URL,
       reuseExistingServer: true,
       timeout: 60_000,
+    },
+    {
+      command: 'npx vite build && npx vite preview',
+      url: PREVIEW_URL,
+      reuseExistingServer: true,
+      timeout: 180_000,
     },
   ],
 })

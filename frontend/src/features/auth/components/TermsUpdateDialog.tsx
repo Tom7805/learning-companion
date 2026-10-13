@@ -77,7 +77,7 @@ export function TermsUpdateDialog({ status, onLogout, loggingOut }: TermsUpdateD
       aria-describedby={descriptionId}
       data-testid="terms-update-dialog"
       onCancel={(event) => event.preventDefault()}
-      className="m-auto max-h-[92dvh] w-[min(94vw,560px)] overflow-y-auto rounded-card border-[1.5px] border-ink bg-surface p-0 text-ink shadow-pop backdrop:bg-ink/60"
+      className="m-auto max-h-[92dvh] w-[min(94vw,560px)] overflow-y-auto rounded-card border-[1.5px] border-ink bg-surface p-0 text-ink shadow-pop backdrop:bg-scrim/60"
     >
       <div className="flex flex-col gap-5 p-6 sm:p-7">
         <div className="flex flex-col gap-2">
@@ -99,7 +99,7 @@ export function TermsUpdateDialog({ status, onLogout, loggingOut }: TermsUpdateD
               <Icon className="size-4" aria-hidden="true" />
               {t(kind === 'terms' ? 'legal.terms' : 'legal.privacy')}
             </h3>
-            <p className="text-[13px] text-ink-soft">
+            <p className="text-[0.8125rem] text-ink-soft">
               {t('legal.version', { version: document.version, date: date(document.effectiveAt) })}
             </p>
             <p className="text-sm font-medium">{t('termsUpdate.changes')}</p>

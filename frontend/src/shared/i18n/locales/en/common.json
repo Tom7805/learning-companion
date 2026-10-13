@@ -293,7 +293,8 @@
     "loading": "Loading…",
     "back": "Back",
     "retry": "Try again",
-    "close": "Close"
+    "close": "Close",
+    "notifications": "Notifications"
   },
   "devices": {
     "nav": "Devices",
@@ -491,6 +492,11 @@
       "renewed": "The previous secure link had expired, so a new one was fetched to open the file.",
       "openFailed": "We could not open the original file. Try again in a few minutes.",
       "unsupported": "This file type cannot be previewed in the page yet. Download it to open."
+    },
+    "peek": {
+      "open": "View {{title}} side by side",
+      "action": "View side by side",
+      "openFull": "Open full page"
     }
   },
   "account": {
@@ -815,5 +821,96 @@
       "restoredBody": "The deletion request was cancelled and all learning data is intact. We sent you a confirmation email.",
       "continue": "Keep learning"
     }
+  },
+  "shell": {
+    "nav": "Features",
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar",
+    "openMenu": "Open sidebar",
+    "closeMenu": "Close sidebar",
+    "drawerLabel": "Sidebar",
+    "quickOpen": "Quick open",
+    "quickOpenHint": "Find a page or document",
+    "recent": "Recent",
+    "recentEmpty": "Documents you open will show up here for quick access.",
+    "install": "Install app",
+    "installed": "Learning Companion is installed on your device.",
+    "offline": "You're offline. Reconnecting — what's on screen is still available.",
+    "reconnected": "Back online.",
+    "reconnecting": "Reconnecting…",
+    "panel": {
+      "resize": "Drag to resize the side panel",
+      "fullscreen": "Full screen",
+      "exitFullscreen": "Back to side panel",
+      "close": "Close side panel"
+    }
+  },
+  "quickOpen": {
+    "label": "Find a page or document",
+    "placeholder": "Type a page or document name…",
+    "results": "Results",
+    "groups": {
+      "pages": "Pages",
+      "documents": "Documents"
+    },
+    "empty": "No matching page or document.",
+    "hint": "↑ ↓ to choose · Enter to open · Esc to close"
+  },
+  "help": {
+    "title": "Help",
+    "shellTitle": "Getting around",
+    "quickOpen": {
+      "title": "Quick open",
+      "body": "The top button of the sidebar: type a few letters to jump to a page or document, accents optional."
+    },
+    "sidebar": {
+      "title": "Collapse the sidebar",
+      "body": "Use the icon next to the app name to shrink the sidebar to an icon column and widen your workspace. It stays that way next time."
+    },
+    "panel": {
+      "title": "Side panel",
+      "body": "Open content next to your workspace (for example \"View side by side\" in the library). Drag the divider to resize, or go full screen."
+    },
+    "keyboard": {
+      "title": "Keyboard",
+      "body": "Ctrl K (⌘K on Apple devices) opens quick open from anywhere. Tab moves through every button and link; with the divider focused, left and right arrows resize the side panel; Esc closes dialogs and panels."
+    },
+    "appearance": {
+      "title": "Appearance",
+      "body": "Choose light, dark or system mode and a comfortable text size. Your choice is saved to your account.",
+      "action": "Open appearance settings"
+    },
+    "install": {
+      "title": "Install the app",
+      "available": "Install to open Learning Companion from your home screen in its own window.",
+      "installed": "The app is installed on this device.",
+      "manual": "This browser hasn't offered installation. On iPhone or iPad: tap Share, then \"Add to Home Screen\". On a computer: use Chrome or Edge and the install icon in the address bar."
+    }
+  },
+  "appearance": {
+    "nav": "Appearance",
+    "title": "Appearance",
+    "subtitle": "Color mode and text size apply right away on this device and are saved to your account.",
+    "theme": {
+      "label": "Color mode",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System",
+      "lightHint": "Light background, good for daytime study.",
+      "darkHint": "Dark background, easier on the eyes at night.",
+      "systemHint": "Follows your device's light or dark setting.",
+      "following": "Currently: {{mode}} (system)"
+    },
+    "font": {
+      "label": "Text size",
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large",
+      "preview": "Example: Ohm's law says current is proportional to voltage and inversely proportional to resistance."
+    },
+    "saveFailed": "Couldn't save to your account; the appearance still applies on this device."
+  },
+  "routeError": {
+    "title": "This page couldn't be opened"
   }
 }

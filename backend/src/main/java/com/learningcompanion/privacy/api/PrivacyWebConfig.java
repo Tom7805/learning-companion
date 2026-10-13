@@ -39,8 +39,9 @@ public class PrivacyWebConfig implements WebMvcConfigurer {
                         ApiPaths.ACCOUNTS + "/*/deletion",
                         // Người học luôn mang được dữ liệu của mình đi, kể cả khi chưa đồng ý điều khoản mới.
                         ApiPaths.EXPORTS + "/**",
-                        // Tên và ảnh đại diện ở đầu trang vẫn hiện trong lúc chờ đồng ý.
+                        // Tên, ảnh đại diện và giao diện đã chọn (sáng tối, cỡ chữ) vẫn đúng trong lúc chờ đồng ý.
                         ApiPaths.PROFILES + "/me",
+                        ApiPaths.UI_PREFERENCES,
                         ApiPaths.PROFILES + "/*/avatar");
     }
 }

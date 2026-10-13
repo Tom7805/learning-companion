@@ -1,2 +1,1 @@
-export { DocumentPage } from './pages/DocumentPage'
-export { LibraryPage } from './pages/LibraryPage'
+export { useDocuments } from './api/queries'

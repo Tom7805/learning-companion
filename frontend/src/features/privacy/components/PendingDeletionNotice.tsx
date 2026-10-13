@@ -62,10 +62,10 @@ export function PendingDeletionNotice({ account }: { account: Account }) {
                 <CircleCheck className="size-8 text-success" />
               </span>
               <header className="flex flex-col gap-3">
-                <h1 ref={heading} tabIndex={-1} className="text-[28px] leading-tight tracking-tight outline-none sm:text-[32px]">
+                <h1 ref={heading} tabIndex={-1} className="text-[1.75rem] leading-tight tracking-tight outline-none sm:text-[2rem]">
                   {t('accountDeletion.pending.restoredTitle')}
                 </h1>
-                <p className="text-[15px] leading-relaxed text-ink-soft">{t('accountDeletion.pending.restoredBody')}</p>
+                <p className="text-[0.9375rem] leading-relaxed text-ink-soft">{t('accountDeletion.pending.restoredBody')}</p>
               </header>
               <CtaButton onClick={() => void queryClient.invalidateQueries({ queryKey: queryKeys.session })}>
                 {t('accountDeletion.pending.continue')}
@@ -80,11 +80,11 @@ export function PendingDeletionNotice({ account }: { account: Account }) {
                 <Hourglass className="size-8" />
               </span>
               <header className="flex flex-col gap-3">
-                <h1 ref={heading} tabIndex={-1} className="text-[28px] leading-tight tracking-tight outline-none sm:text-[32px]">
+                <h1 ref={heading} tabIndex={-1} className="text-[1.75rem] leading-tight tracking-tight outline-none sm:text-[2rem]">
                   {t('accountDeletion.pending.title')}
                 </h1>
                 {deleteAt && (
-                  <p className="text-[15px] leading-relaxed text-ink-soft" data-testid="pending-deletion-date">
+                  <p className="text-[0.9375rem] leading-relaxed text-ink-soft" data-testid="pending-deletion-date">
                     <Trans
                       i18nKey="accountDeletion.pending.body"
                       values={{ date: format.dateTime(deleteAt) }}
@@ -114,7 +114,7 @@ export function PendingDeletionNotice({ account }: { account: Account }) {
                   {t('accountDeletion.pending.proceed')}
                 </Button>
               </div>
-              <p className="text-[13px] leading-snug text-muted">{t('accountDeletion.pending.locked')}</p>
+              <p className="text-[0.8125rem] leading-snug text-muted">{t('accountDeletion.pending.locked')}</p>
             </>
           )}
         </main>

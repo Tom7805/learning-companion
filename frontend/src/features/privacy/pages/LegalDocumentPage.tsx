@@ -20,7 +20,7 @@ export function LegalDocumentPage({ kind }: { kind: 'terms' | 'privacy' }) {
       >
         {kind === 'terms' ? <FileText className="size-7" /> : <ShieldCheck className="size-7" />}
       </div>
-      <h1 ref={heading} tabIndex={-1} className="text-[28px] leading-tight tracking-tight outline-none sm:text-[32px]">
+      <h1 ref={heading} tabIndex={-1} className="text-[1.75rem] leading-tight tracking-tight outline-none sm:text-[2rem]">
         {title}
       </h1>
       {legal.isPending && <Spinner label={t('common.loading')} />}

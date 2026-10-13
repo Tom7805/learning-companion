@@ -5,3 +5,8 @@
 export function reloadTo(path: string) {
   window.location.replace(path)
 }
+
+/** Tải lại trang đang xem, ví dụ khi gói mã của trang không còn sau khi có bản mới. */
+export function reloadPage() {
+  window.location.reload()
+}

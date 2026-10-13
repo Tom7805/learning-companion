@@ -87,7 +87,7 @@ export function VerifyEmailPage() {
           <StatusIcon tone="lilac">
             <Spinner className="size-7" />
           </StatusIcon>
-          <h1 ref={heading} tabIndex={-1} className="text-[28px] leading-tight tracking-tight outline-none">
+          <h1 ref={heading} tabIndex={-1} className="text-[1.75rem] leading-tight tracking-tight outline-none">
             {t('verify.verifying')}
           </h1>
         </>
@@ -156,10 +156,10 @@ type HeadingRef = RefObject<HTMLHeadingElement | null>
 function Heading({ headingRef, title, children }: { headingRef: HeadingRef; title: string; children?: ReactNode }) {
   return (
     <header className="flex flex-col gap-3">
-      <h1 ref={headingRef} tabIndex={-1} className="text-[28px] leading-tight tracking-tight outline-none sm:text-[32px]">
+      <h1 ref={headingRef} tabIndex={-1} className="text-[1.75rem] leading-tight tracking-tight outline-none sm:text-[2rem]">
         {title}
       </h1>
-      {children && <div className="text-[15px] leading-relaxed text-ink-soft">{children}</div>}
+      {children && <div className="text-[0.9375rem] leading-relaxed text-ink-soft">{children}</div>}
     </header>
   )
 }

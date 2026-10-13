@@ -82,7 +82,7 @@ export function RevokeDevicePage() {
         <StatusIcon tone="lilac">
           <Spinner className="size-7" />
         </StatusIcon>
-        <h1 ref={heading} tabIndex={-1} className="text-[28px] leading-tight tracking-tight outline-none">
+        <h1 ref={heading} tabIndex={-1} className="text-[1.75rem] leading-tight tracking-tight outline-none">
           {t('revokeLink.revoking')}
         </h1>
       </div>
@@ -97,10 +97,10 @@ export function RevokeDevicePage() {
           <MonitorX className="size-8 text-success" />
         </StatusIcon>
         <header className="flex flex-col gap-3">
-          <h1 ref={heading} tabIndex={-1} className="text-[28px] leading-tight tracking-tight outline-none sm:text-[32px]">
+          <h1 ref={heading} tabIndex={-1} className="text-[1.75rem] leading-tight tracking-tight outline-none sm:text-[2rem]">
             {state.result.alreadyRevoked ? t('revokeLink.alreadyTitle') : t('revokeLink.successTitle')}
           </h1>
-          <p className="text-[15px] leading-relaxed text-ink-soft" data-testid="revoke-result">
+          <p className="text-[0.9375rem] leading-relaxed text-ink-soft" data-testid="revoke-result">
             <Trans
               i18nKey={state.result.alreadyRevoked ? 'revokeLink.alreadyBody' : 'revokeLink.successBody'}
               values={{ device, time: format.dateTime(state.result.signedInAt) }}
@@ -129,10 +129,10 @@ export function RevokeDevicePage() {
           <Unlink className="size-8" />
         </StatusIcon>
         <header className="flex flex-col gap-3">
-          <h1 ref={heading} tabIndex={-1} className="text-[28px] leading-tight tracking-tight outline-none sm:text-[32px]">
+          <h1 ref={heading} tabIndex={-1} className="text-[1.75rem] leading-tight tracking-tight outline-none sm:text-[2rem]">
             {t('revokeLink.invalidTitle')}
           </h1>
-          <p className="text-[15px] leading-relaxed text-ink-soft">{t('revokeLink.invalidBody')}</p>
+          <p className="text-[0.9375rem] leading-relaxed text-ink-soft">{t('revokeLink.invalidBody')}</p>
         </header>
         {nextLink}
       </div>
@@ -144,7 +144,7 @@ export function RevokeDevicePage() {
       <StatusIcon tone="danger">
         <Unlink className="size-8" />
       </StatusIcon>
-      <h1 ref={heading} tabIndex={-1} className="text-[28px] leading-tight tracking-tight outline-none">
+      <h1 ref={heading} tabIndex={-1} className="text-[1.75rem] leading-tight tracking-tight outline-none">
         {t('revokeLink.failedTitle')}
       </h1>
       <Alert tone="danger">{t(`errors.${state.code}`, { defaultValue: t('errors.INTERNAL_ERROR') })}</Alert>

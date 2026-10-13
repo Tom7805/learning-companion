@@ -1,8 +1,9 @@
-import { screen } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
 import { documentPath, routes } from '@/app/routes'
-import { apiError, sampleDocument } from '@/test/mocks/handlers'
+import { recentStore } from '@/app/store/recentStore'
+import { apiError, sampleDocument, verifiedAccount } from '@/test/mocks/handlers'
 import { server } from '@/test/mocks/server'
 import { renderWithProviders } from '@/test/renderWithProviders'
 import { DocumentPage } from './DocumentPage'
@@ -94,5 +95,28 @@ describe('DocumentPage', () => {
 
     expect(await screen.findByTestId('file-error')).toHaveTextContent('Chưa mở được tệp gốc')
     expect(screen.getByRole('button', { name: 'Xem tệp gốc' })).toBeEnabled()
+  })
+
+  it('tài liệu vừa mở vào mục Gần đây của thanh bên; tài liệu không còn thì rời danh sách', async () => {
+    server.use(
+      http.get('*/api/v1/auth/session', () => HttpResponse.json({ authenticated: true, account: verifiedAccount })),
+    )
+    const recentKey = `lc:recent:${verifiedAccount.id}`
+    renderPage()
+
+    await waitFor(() =>
+      expect(JSON.parse(window.localStorage.getItem(recentKey) ?? '[]')).toMatchObject([
+        { kind: 'document', id: sampleDocument.id, title: 'Ghi chú: Định luật Ohm', to: documentPath(sampleDocument.id) },
+      ]),
+    )
+
+    recentStore.record(verifiedAccount.id, { kind: 'document', id: 'da-xoa', title: 'Đã xóa', to: documentPath('da-xoa') })
+    renderPage('da-xoa')
+    expect(await screen.findByTestId('document-not-found')).toBeInTheDocument()
+    await waitFor(() =>
+      expect(JSON.parse(window.localStorage.getItem(recentKey) ?? '[]').map((item: { id: string }) => item.id)).toEqual([
+        sampleDocument.id,
+      ]),
+    )
   })
 })

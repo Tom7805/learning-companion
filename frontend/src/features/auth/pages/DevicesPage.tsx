@@ -144,7 +144,7 @@ export function DevicesPage() {
                       <span className="truncate">{name}</span>
                       {session.current && <Badge tone="sun">{t('devices.current')}</Badge>}
                     </p>
-                    <p className="text-[13px] text-muted">
+                    <p className="text-[0.8125rem] text-muted">
                       {t(`devices.type.${type}`)} ·{' '}
                       {t('devices.signedInAt', { time: format.dateTime(session.signedInAt) })}
                       {session.rememberDevice && <> · {t('devices.remembered')}</>}

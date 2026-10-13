@@ -3,6 +3,7 @@ import { useCallback, useId, useRef, useState, type FormEvent, type ReactNode } 
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { routes } from '@/app/routes'
+import { recentStore } from '@/app/store/recentStore'
 import { useAuth, useSignOutToReauthenticate } from '@/features/auth'
 import { LockoutNotice } from '@/features/auth/components/LockoutNotice'
 import { PasswordVisibilityToggle } from '@/features/auth/components/PasswordVisibilityToggle'
@@ -70,7 +71,7 @@ export function DeleteAccountFlow() {
                 <li key={item}>{t(`accountDeletion.page.erased.${item}`)}</li>
               ))}
             </ul>
-            <span className="mt-1.5 block text-[13px] text-muted">{t('accountDeletion.page.auditNote')}</span>
+            <span className="mt-1.5 block text-[0.8125rem] text-muted">{t('accountDeletion.page.auditNote')}</span>
           </Step>
         </ol>
       </section>
@@ -169,6 +170,7 @@ function ConfirmForm({ date }: { date: string }) {
     }
     try {
       const status = await request.mutateAsync(hasPassword ? password : undefined)
+      recentStore.clear(accountId)
       const until = status.scheduledFor ? `?until=${encodeURIComponent(status.scheduledFor)}` : ''
       reloadTo(`${routes.deletionScheduled}${until}`)
     } catch (caught) {

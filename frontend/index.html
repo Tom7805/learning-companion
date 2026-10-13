@@ -3,10 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#f4f3ef" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#2a2a2c" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Learning" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="description" content="Learning Companion — người bạn đồng hành học tập cá nhân." />
     <title>Learning Companion</title>
+    <script>
+      // Áp chế độ sáng tối và cỡ chữ đã chọn trước khi ứng dụng tải xong, để trang không nháy màu (NCL-02-CN-001).
+      // Cùng cách tính với ThemeProvider; khóa lưu là UI_STORAGE_KEY trong src/app/store/uiStore.ts.
+      ;(function () {
+        var ui = {}
+        try {
+          ui = JSON.parse(window.localStorage.getItem('lc:ui') || '{}') || {}
+        } catch (error) {
+          ui = {}
+        }
+        var mode = ui.themeMode === 'light' || ui.themeMode === 'dark' ? ui.themeMode : 'system'
+        var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        var dark = mode === 'dark' || (mode === 'system' && systemDark)
+        var root = document.documentElement
+        root.dataset.theme = dark ? 'dark' : 'light'
+        root.dataset.fontSize = ui.fontSize === 'small' || ui.fontSize === 'large' ? ui.fontSize : 'medium'
+        var meta = document.querySelector('meta[name="theme-color"]')
+        if (meta) meta.setAttribute('content', dark ? '#09090a' : '#2a2a2c')
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

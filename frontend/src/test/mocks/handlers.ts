@@ -32,6 +32,9 @@ export function apiError(status: number, code: string, field?: string, details?:
   )
 }
 
+/** Tùy chọn giao diện lưu theo tài khoản (NCL-02-CN-001), đúng dạng máy chủ trả về: hằng viết hoa. */
+export const serverUiPreferences = { themeMode: 'SYSTEM', fontSize: 'MEDIUM', sidebarCollapsed: false }
+
 /** Phản hồi mặc định của API; từng bài kiểm thử ghi đè bằng server.use(...). */
 export const handlers = [
   http.get('*/api/v1/auth/session', () => HttpResponse.json({ authenticated: false })),
@@ -102,6 +105,15 @@ export const handlers = [
   http.get('*/api/v1/files/:token', () =>
     new HttpResponse(sampleDocument.contentText, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } }),
   ),
+  http.get('*/api/v1/ui-preferences', () => HttpResponse.json(serverUiPreferences)),
+  http.patch('*/api/v1/ui-preferences', async ({ request }) => {
+    const changes = (await request.json()) as Partial<typeof serverUiPreferences>
+    return HttpResponse.json({
+      themeMode: changes.themeMode ?? serverUiPreferences.themeMode,
+      fontSize: changes.fontSize ?? serverUiPreferences.fontSize,
+      sidebarCollapsed: changes.sidebarCollapsed ?? serverUiPreferences.sidebarCollapsed,
+    })
+  }),
   http.get('*/api/v1/exports', () => HttpResponse.json({ canRequest: true })),
   http.get('*/api/v1/exports/:id', () => HttpResponse.json(readyExport)),
 ]

@@ -100,7 +100,8 @@ class DataExportIT {
                 .andExpect(jsonPath("$.canRequest").value(false)), "$.latest.id");
         JsonNode ready = awaitReady(lan, id);
         assertThat(ready.get("fileName").asString()).matches("learning-companion-export-\\d{4}-\\d{2}-\\d{2}\\.zip");
-        assertThat(values(ready.get("sections"), "id")).containsExactly("account", "profile", "privacy", "library");
+        assertThat(values(ready.get("sections"), "id")).containsExactly("account", "profile", "appearance", "privacy",
+                "library");
 
         MockMailGateway.CapturedMail mail = awaitMail(lan.email(), "DATA_EXPORT_READY");
         assertThat(String.join(" ", mail.links())).contains("/exports/" + id);
@@ -117,7 +118,7 @@ class DataExportIT {
 
         assertThat(zip.keySet()).contains(root + "README.txt", root + "manifest.json",
                 root + "account/account.json", root + "account/sessions.csv",
-                root + "profile/profile.json",
+                root + "profile/profile.json", root + "appearance/appearance.json",
                 root + "privacy/consents.json", root + "privacy/consent-history.csv",
                 root + "library/documents.json",
                 root + "library/files/dinh-luat-ohm.txt", root + "library/files/dinh-luat-ohm (2).txt",
@@ -128,7 +129,8 @@ class DataExportIT {
                 .contains("ISO 8601").contains("7 ngày");
         JsonNode manifest = JSON.readTree(zip.get(root + "manifest.json"));
         assertThat(manifest.get("format").asString()).isEqualTo("learning-companion-export");
-        assertThat(manifest.get("sections").get(3).get("files").toString()).contains("library/files/dinh-luat-ohm.txt");
+        assertThat(sectionById(manifest.get("sections"), "library").get("files").toString())
+                .contains("library/files/dinh-luat-ohm.txt");
 
         JsonNode account = JSON.readTree(zip.get(root + "account/account.json"));
         assertThat(account.get("email").asString()).isEqualTo(lan.email());
@@ -398,6 +400,15 @@ class DataExportIT {
             values.add(array.get(i).get(field).asString());
         }
         return values;
+    }
+
+    private static JsonNode sectionById(JsonNode sections, String id) {
+        for (int i = 0; i < sections.size(); i++) {
+            if (id.equals(sections.get(i).get("id").asString())) {
+                return sections.get(i);
+            }
+        }
+        throw new AssertionError("Gói không có phần " + id);
     }
 
     private String storageKey(String id) {

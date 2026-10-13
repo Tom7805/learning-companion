@@ -117,7 +117,7 @@ export function LinkedAccountsSection({ onNavigate }: { onNavigate: () => void }
                   {identity ? (
                     <>
                       <p className="truncate text-sm text-ink-soft">{t('linked.linkedAs', { email: identity.email })}</p>
-                      <p className="text-[13px] text-muted">
+                      <p className="text-[0.8125rem] text-muted">
                         {t('linked.since', { time: format.dateTime(identity.linkedAt) })}
                       </p>
                     </>

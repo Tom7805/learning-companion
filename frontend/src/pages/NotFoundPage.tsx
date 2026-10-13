@@ -12,7 +12,7 @@ export function NotFoundPage() {
       <p className="text-6xl font-semibold text-accent" aria-hidden="true">
         404
       </p>
-      <h1 ref={heading} tabIndex={-1} className="text-[28px] tracking-tight outline-none">
+      <h1 ref={heading} tabIndex={-1} className="text-[1.75rem] tracking-tight outline-none">
         {t('notFound.title')}
       </h1>
       <p className="text-muted">{t('notFound.body')}</p>

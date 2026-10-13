@@ -2,9 +2,10 @@ import { screen, within } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
 import { documentPath, routes } from '@/app/routes'
-import { sampleDocument } from '@/test/mocks/handlers'
+import { apiError, sampleDocument } from '@/test/mocks/handlers'
 import { server } from '@/test/mocks/server'
 import { renderWithProviders } from '@/test/renderWithProviders'
+import { SidePanel } from '@/layouts/SidePanel'
 import { LibraryPage } from './LibraryPage'
 
 function renderPage() {
@@ -44,5 +45,42 @@ describe('LibraryPage', () => {
 
     await user.click(await screen.findByRole('button', { name: 'Thử lại' }))
     expect(await screen.findByTestId('library-empty')).toBeInTheDocument()
+  })
+
+  it('xem một tài liệu bên cạnh mà vẫn ở lại thư viện, rồi mở toàn trang nếu cần', async () => {
+    const { user, router } = renderWithProviders(
+      <>
+        <LibraryPage />
+        <SidePanel />
+      </>,
+      { path: routes.library, extraRoutes: [{ path: routes.libraryDocument, element: <p>Trang tài liệu</p> }] },
+    )
+
+    await user.click(await screen.findByRole('button', { name: 'Xem Ghi chú: Định luật Ohm bên cạnh' }))
+
+    const panel = screen.getByTestId('side-panel')
+    expect(panel).toHaveAccessibleName('Ghi chú: Định luật Ohm')
+    expect(await within(panel).findByTestId('document-peek')).toHaveTextContent('I = U / R')
+    expect(router.state.location.pathname).toBe(routes.library)
+
+    await user.click(within(panel).getByRole('link', { name: 'Mở toàn trang' }))
+    expect(router.state.location.pathname).toBe(documentPath(sampleDocument.id))
+    expect(screen.queryByTestId('side-panel')).not.toBeInTheDocument()
+  })
+
+  it('tài liệu vừa bị xóa ở nơi khác thì khung xem bên báo không tìm thấy', async () => {
+    const { user } = renderWithProviders(
+      <>
+        <LibraryPage />
+        <SidePanel />
+      </>,
+      { path: routes.library },
+    )
+    const button = await screen.findByRole('button', { name: 'Xem Ghi chú: Định luật Ohm bên cạnh' })
+    server.use(http.get('*/api/v1/library/documents/:id', () => apiError(404, 'NOT_FOUND')))
+
+    await user.click(button)
+
+    expect(await within(screen.getByTestId('side-panel')).findByRole('alert')).toHaveTextContent('Không tìm thấy tài liệu')
   })
 })

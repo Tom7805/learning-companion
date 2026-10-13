@@ -8,7 +8,7 @@ const tones: Record<Tone, string> = {
   sun: 'bg-sun text-ink',
   lilac: 'bg-lilac-soft text-ink',
   sky: 'bg-sky text-ink',
-  night: 'bg-night text-white border-night',
+  night: 'bg-night text-on-night border-night',
 }
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {

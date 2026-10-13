@@ -28,10 +28,10 @@ export function DeletionScheduledPage() {
         <Hourglass className="size-8" />
       </StatusIcon>
       <header className="flex flex-col gap-3">
-        <h1 ref={heading} tabIndex={-1} className="text-[28px] leading-tight tracking-tight outline-none sm:text-[32px]">
+        <h1 ref={heading} tabIndex={-1} className="text-[1.75rem] leading-tight tracking-tight outline-none sm:text-[2rem]">
           {t('accountDeletion.scheduled.title')}
         </h1>
-        <p className="text-[15px] leading-relaxed text-ink-soft">
+        <p className="text-[0.9375rem] leading-relaxed text-ink-soft">
           {until ? (
             <Trans
               i18nKey="accountDeletion.scheduled.body"

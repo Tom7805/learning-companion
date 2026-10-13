@@ -80,12 +80,12 @@ function RequestForm({ defaultEmail, onSent }: { defaultEmail: string; onSent: (
         <KeyRound className="size-7" strokeWidth={2} />
       </StatusIcon>
       <header className="flex flex-col gap-3">
-        <h1 className="text-[28px] leading-tight font-normal tracking-tight sm:text-[32px]">
+        <h1 className="text-[1.75rem] leading-tight font-normal tracking-tight sm:text-[2rem]">
           {t('forgot.titleLine1')}
           <br />
           <Trans i18nKey="forgot.titleLine2" components={{ strong: <strong className="font-semibold" /> }} />
         </h1>
-        <p id="forgot-subtitle" className="text-[15px] leading-relaxed text-muted">
+        <p id="forgot-subtitle" className="text-[0.9375rem] leading-relaxed text-muted">
           {t('forgot.subtitle')}
         </p>
       </header>
@@ -159,10 +159,10 @@ function SentView({ sent, onResent, onChangeEmail }: SentViewProps) {
       </StatusIcon>
 
       <header className="flex flex-col gap-3">
-        <h1 ref={heading} tabIndex={-1} className="text-[28px] leading-tight tracking-tight outline-none sm:text-[32px]">
+        <h1 ref={heading} tabIndex={-1} className="text-[1.75rem] leading-tight tracking-tight outline-none sm:text-[2rem]">
           {t('forgot.sent.title')}
         </h1>
-        <p className="text-[15px] leading-relaxed text-ink-soft" data-testid="forgot-sent-body">
+        <p className="text-[0.9375rem] leading-relaxed text-ink-soft" data-testid="forgot-sent-body">
           <Trans
             i18nKey="forgot.sent.body"
             values={{ email: sent.email }}

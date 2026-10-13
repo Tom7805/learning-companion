@@ -24,6 +24,8 @@ export default defineConfig((env) =>
       include: nonEmptyTestFiles('src'),
       css: false,
       restoreMocks: true,
+      // Nhiều bài gõ cả cụm mật khẩu dài từng phím; máy chạy pin hoặc máy CI yếu cần hơn 5 giây mặc định.
+      testTimeout: 15_000,
     },
   }),
 )

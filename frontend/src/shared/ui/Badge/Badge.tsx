@@ -4,7 +4,7 @@ import { cn } from '@/shared/lib/cn'
 type Tone = 'ink' | 'sun' | 'lilac' | 'sky' | 'outline'
 
 const tones: Record<Tone, string> = {
-  ink: 'bg-ink text-white border-ink',
+  ink: 'bg-ink text-on-ink border-ink',
   sun: 'bg-sun text-ink border-ink',
   lilac: 'bg-lilac text-ink border-ink',
   sky: 'bg-sky text-ink border-ink',
