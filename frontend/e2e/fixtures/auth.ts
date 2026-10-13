@@ -14,6 +14,7 @@ export interface CapturedMail {
     | 'PASSWORD_RESET'
     | 'PASSWORD_CHANGED'
     | 'PRODUCT_NEWS'
+    | 'DATA_EXPORT_READY'
   links: string[]
   sentAt: string
 }
@@ -55,6 +56,14 @@ export class DevApi {
     const mail = await this.waitForMail(to, 'PASSWORD_RESET', count)
     const link = mail.links.find((candidate) => candidate.includes('/reset-password?token='))
     expect(link, 'thư đặt lại mật khẩu phải chứa đường dẫn').toBeTruthy()
+    return link!
+  }
+
+  /** Đường dẫn tải gói dữ liệu trong thư báo gói đã sẵn sàng (NCL-01-CN-008). */
+  async exportLink(to: string, count = 1) {
+    const mail = await this.waitForMail(to, 'DATA_EXPORT_READY', count)
+    const link = mail.links.find((candidate) => /\/exports\/[0-9a-f-]{36}$/.test(candidate))
+    expect(link, 'thư báo gói dữ liệu phải chứa đường dẫn tải').toBeTruthy()
     return link!
   }
 

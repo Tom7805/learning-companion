@@ -43,3 +43,39 @@ export interface ConsentHistoryEntry {
   documentVersion: string
   recordedAt: string
 }
+
+export type DataExportStatus = 'QUEUED' | 'RUNNING' | 'READY' | 'FAILED' | 'EXPIRED'
+
+/** Một phần dữ liệu trong gói xuất, do chức năng sở hữu dữ liệu đó đăng ký với bộ xuất. */
+export interface DataExportSection {
+  id: string
+  title: string
+  fileCount: number
+}
+
+/** Một lần xuất toàn bộ dữ liệu (NCL-01-CN-008); kích thước và các phần chỉ có khi gói sẵn sàng. */
+export interface DataExport {
+  id: string
+  status: DataExportStatus
+  requestedAt: string
+  completedAt?: string | null
+  expiresAt?: string | null
+  sizeBytes?: number | null
+  fileCount?: number | null
+  fileName?: string | null
+  sections: DataExportSection[]
+  /** Chỉ có ở trang tải: lần tải tới cần nhập lại mật khẩu hoặc đăng nhập lại. */
+  reauthenticationRequired?: boolean | null
+}
+
+export interface DataExportOverview {
+  latest?: DataExport | null
+  canRequest: boolean
+  /** Mỗi ngày một yêu cầu: lúc được yêu cầu tiếp, trống khi yêu cầu được ngay. */
+  nextAvailableAt?: string | null
+}
+
+export interface DataExportLink {
+  url: string
+  expiresAt: string
+}

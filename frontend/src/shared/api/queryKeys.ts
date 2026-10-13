@@ -8,5 +8,7 @@ export const queryKeys = {
   linkedIdentities: (accountId: string) => ['auth', 'linked', accountId] as const,
   privacyStatus: (accountId: string) => ['privacy', accountId, 'status'] as const,
   consentHistory: (accountId: string) => ['privacy', accountId, 'history'] as const,
+  dataExports: ['exports'] as const,
+  dataExport: (id: string) => ['exports', id] as const,
   document: (id: string) => ['library', 'documents', id] as const,
 }

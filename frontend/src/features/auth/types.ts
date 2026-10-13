@@ -11,8 +11,11 @@ export interface Account {
   hasPassword?: boolean
 }
 
-/** Lý do trình duyệt không còn đăng nhập, để màn hình đăng nhập báo đúng. */
-export type SessionLostReason = 'SESSION_EXPIRED' | 'SESSION_REVOKED'
+/**
+ * Lý do trình duyệt không còn đăng nhập, để màn hình đăng nhập báo đúng. REAUTHENTICATE do giao diện tự đặt khi
+ * người học đăng xuất để đăng nhập lại xác nhận danh tính (ví dụ trước khi tải gói dữ liệu).
+ */
+export type SessionLostReason = 'SESSION_EXPIRED' | 'SESSION_REVOKED' | 'REAUTHENTICATE'
 
 export interface SessionStatus {
   authenticated: boolean

@@ -50,7 +50,7 @@ async function openLinkedAccounts(page: Page) {
   await page.getByRole('button', { name: /Trình đơn tài khoản/ }).first().click()
   await page.getByRole('menuitem', { name: 'Cài đặt' }).click()
   const dialog = page.getByRole('dialog', { name: 'Cài đặt' })
-  await dialog.getByRole('button', { name: 'Tài khoản liên kết' }).click()
+  await dialog.getByRole('button', { name: 'Tài khoản', exact: true }).click()
   await expect(dialog.getByRole('heading', { name: 'Tài khoản liên kết' })).toBeVisible()
   return dialog
 }

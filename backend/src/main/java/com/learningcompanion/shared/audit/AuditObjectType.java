@@ -7,5 +7,6 @@ public enum AuditObjectType {
     SESSION,
     DOCUMENT,
     PROFILE,
-    EXTERNAL_IDENTITY
+    EXTERNAL_IDENTITY,
+    DATA_EXPORT
 }

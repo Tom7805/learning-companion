@@ -49,6 +49,10 @@ public enum ErrorCode {
     INVALID_PREFERENCE(HttpStatus.BAD_REQUEST, "Giá trị tùy chọn không hợp lệ."),
     AVATAR_INVALID_FORMAT(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Ảnh đại diện cần là tệp JPG, PNG hoặc WebP."),
     FILE_TOO_LARGE(HttpStatus.PAYLOAD_TOO_LARGE, "Tệp quá lớn."),
+    EXPORT_DAILY_LIMIT(HttpStatus.TOO_MANY_REQUESTS, "Mỗi ngày chỉ yêu cầu xuất dữ liệu được một lần."),
+    EXPORT_NOT_READY(HttpStatus.CONFLICT, "Gói dữ liệu đang được chuẩn bị, hãy chờ thêm ít phút."),
+    EXPORT_EXPIRED(HttpStatus.GONE, "Gói dữ liệu đã hết hạn tải, hãy yêu cầu xuất lại."),
+    REAUTHENTICATION_REQUIRED(HttpStatus.FORBIDDEN, "Hãy xác nhận lại mật khẩu hoặc đăng nhập lại để tiếp tục."),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Hệ thống gặp sự cố, hãy thử lại sau.");
 
     private final HttpStatus status;

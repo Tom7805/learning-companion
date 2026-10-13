@@ -5,6 +5,7 @@ export const routes = {
   devices: '/devices',
   security: '/security',
   privacySettings: '/privacy',
+  dataExport: '/exports/:id',
   register: '/register',
   checkEmail: '/register/check-email',
   verifyEmail: '/verify-email',
@@ -20,3 +21,4 @@ export const routes = {
 } as const
 
 export const documentPath = (id: string) => `/library/${encodeURIComponent(id)}`
+export const dataExportPath = (id: string) => `/exports/${encodeURIComponent(id)}`

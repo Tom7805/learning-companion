@@ -136,7 +136,11 @@
     "EXTERNAL_IDENTITY_IN_USE": "This external account is already linked to another Learning Companion account.",
     "EXTERNAL_IDENTITY_ALREADY_LINKED": "Your account is already linked to this provider.",
     "PASSWORD_REQUIRED_TO_UNLINK": "Set a password before unlinking.",
-    "PASSWORD_ALREADY_SET": "Your account already has a password. Use change password instead."
+    "PASSWORD_ALREADY_SET": "Your account already has a password. Use change password instead.",
+    "EXPORT_DAILY_LIMIT": "You can request a data export once a day.",
+    "EXPORT_NOT_READY": "Your data package is still being prepared. Please wait a few minutes.",
+    "EXPORT_EXPIRED": "This data package has expired. Please request a new export.",
+    "REAUTHENTICATION_REQUIRED": "Please confirm your password or sign in again to continue."
   },
   "checkEmail": {
     "title": "Check your inbox",
@@ -221,7 +225,8 @@
       "SESSION_EXPIRED": "Your session expired after a period of inactivity. Please sign in again.",
       "SESSION_REVOKED": "This device was signed out from another device. Sign in again if that was you.",
       "loggedOut": "You have signed out. See you soon!",
-      "passwordReset": "Your password was reset and every device was signed out. Sign in with your new password."
+      "passwordReset": "Your password was reset and every device was signed out. Sign in with your new password.",
+      "REAUTHENTICATE": "To protect your data, sign in again and then download your data package."
     },
     "forgot": "Forgot password?"
   },
@@ -636,7 +641,6 @@
     }
   },
   "linked": {
-    "nav": "Linked accounts",
     "title": "Linked accounts",
     "subtitle": "Sign in with one tap through an external account. We only read your name and email.",
     "none": "Signing in with external accounts is not available.",
@@ -668,5 +672,83 @@
     "verified": "Email address is verified",
     "allow": "Allow",
     "deny": "Deny"
+  },
+  "accountSettings": {
+    "nav": "Account",
+    "title": "Account",
+    "subtitle": "How you sign in, and your right to take your data with you at any time."
+  },
+  "dataExport": {
+    "title": "Export all your data",
+    "subtitle": "Get a .zip package with all of your learning data in open formats, readable with everyday software without Learning Companion.",
+    "includesTitle": "The package includes",
+    "includes": {
+      "account": "Account and sign-in history",
+      "profile": "Profile, learning preferences, avatar",
+      "privacy": "Consent history for each purpose",
+      "library": "Documents with original files, by library folder"
+    },
+    "includesMore": "Data from features you start using later is included automatically.",
+    "formats": "JSON, CSV, Markdown and original files, plus a read-me guide",
+    "facts": {
+      "daily": "Once a day",
+      "quota": "Does not use AI quota",
+      "validity": "Downloadable for 7 days"
+    },
+    "request": "Request data export",
+    "requestAgain": "Request a new export",
+    "requestHint": "Ready in a few minutes; we email you a download link",
+    "requested": "Request received. We will email {{email}} when your package is ready.",
+    "preparing": "Preparing your data package…",
+    "preparingHint": "You can close this window; we will email you when it is done.",
+    "readyTitle": "Your data package is ready",
+    "readyMeta": "{{files}} files · {{size}} · created {{time}}",
+    "readyUntil": "Downloadable until {{time}}",
+    "download": "Download data package",
+    "expiredTitle": "The package created {{time}} has expired",
+    "expiredBody": "It was deleted to protect your data.",
+    "failedTitle": "We could not create your data package",
+    "failedBody": "This attempt does not count toward the daily limit, so you can try again now.",
+    "nextAt": "You can request again after {{time}}.",
+    "loadFailed": "Could not load your data export status.",
+    "page": {
+      "title": "Download your data package",
+      "subtitle": "A .zip package with all of your learning data in open formats, plus a read-me guide.",
+      "created": "Created",
+      "size": "Size",
+      "files": "Files",
+      "until": "Downloadable until",
+      "contents": "Package contents",
+      "sectionFiles": "{{count}} files",
+      "reauthTitle": "Confirm it is you",
+      "reauthBody": "The package contains personal data, so enter your password each time you download it.",
+      "reauthNoPassword": "The package contains personal data, so sign in again each time you download it.",
+      "password": "Password",
+      "remaining": "{{count}} attempts left before sign-in is temporarily locked.",
+      "relogin": "Sign in again to download",
+      "freshHint": "You just signed in, so you can download right away.",
+      "downloading": "Downloading {{file}} to your device.",
+      "downloadAgain": "No file? Click to download again",
+      "keepSafe": "Keep the package somewhere safe and delete the download when you no longer need it.",
+      "notFoundTitle": "Data package not found",
+      "notFoundBody": "The link is wrong, or this package does not belong to the account you are signed in with.",
+      "expiredTitle": "This data package has expired",
+      "expiredBody": "Download links work for 7 days; after that the package is deleted to protect your data. You can request a new export.",
+      "failedTitle": "We could not create your data package",
+      "preparingTitle": "Your data package is being prepared",
+      "requestedTitle": "New export requested",
+      "requestedBody": "We will email a new download link to {{email}} when the package is ready.",
+      "openSettings": "View in account settings",
+      "home": "Go to home",
+      "lockedTitle": "Password confirmation temporarily locked",
+      "lockedBody": "The password was entered incorrectly 5 times in a row. To protect your account, you can try again in:",
+      "wrongPassword": "Incorrect password."
+    },
+    "sections": {
+      "account": "Account",
+      "profile": "Profile and learning preferences",
+      "privacy": "Privacy and consents",
+      "library": "Document library"
+    }
   }
 }

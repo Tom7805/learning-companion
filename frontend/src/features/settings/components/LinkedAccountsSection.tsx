@@ -76,9 +76,9 @@ export function LinkedAccountsSection({ onNavigate }: { onNavigate: () => void }
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       <header className="flex flex-col gap-1">
-        <h2 className="text-2xl tracking-tight">{t('linked.title')}</h2>
+        <h3 className="text-lg font-semibold">{t('linked.title')}</h3>
         <p className="text-sm text-muted">{t('linked.subtitle')}</p>
       </header>
 
