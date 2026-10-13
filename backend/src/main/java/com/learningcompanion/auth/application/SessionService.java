@@ -1,6 +1,5 @@
 package com.learningcompanion.auth.application;
 
-import com.learningcompanion.auth.domain.AccountStatus;
 import com.learningcompanion.auth.domain.DeviceInfo;
 import com.learningcompanion.auth.domain.UserAccount;
 import com.learningcompanion.auth.domain.UserAccountRepository;
@@ -43,6 +42,7 @@ public class SessionService implements SessionResolver {
     public static final String REASON_REVOKED_FROM_EMAIL = "REVOKED_FROM_EMAIL";
     public static final String REASON_PASSWORD_CHANGED = "PASSWORD_CHANGED";
     public static final String REASON_PASSWORD_RESET = "PASSWORD_RESET";
+    public static final String REASON_ACCOUNT_DELETION = "ACCOUNT_DELETION";
 
     private final UserSessionRepository sessions;
     private final UserAccountRepository accounts;
@@ -86,7 +86,8 @@ public class SessionService implements SessionResolver {
         String rawToken = tokens.newToken();
         UserSession session = UserSession.start(account.getId(), tokens.hash(rawToken), now, rememberDevice, lifetime,
                 deviceIdHash, device, client.userAgent(), client.ipAddress());
-        boolean alert = hadSessions && !knownDevice;
+        // Tài khoản đang chờ xóa không nhận thông báo nào ngoài thư về yêu cầu xóa (NCL-01-CN-009).
+        boolean alert = hadSessions && !knownDevice && !account.isPendingDeletion();
         String revokeLink = null;
         if (alert) {
             revokeLink = tokens.newToken();
@@ -123,7 +124,7 @@ public class SessionService implements SessionResolver {
                 break;
         }
         return accounts.findById(session.getUserId())
-                .filter(account -> account.getStatus() == AccountStatus.ACTIVE)
+                .filter(UserAccount::canSignIn)
                 .map(account -> {
                     session.touch(now, settings.sessionIdleTimeout());
                     return SessionLookup.valid(new AuthenticatedUser(account.getId(), session.getId(),

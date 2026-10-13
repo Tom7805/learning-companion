@@ -77,7 +77,7 @@ public class AuthenticationService {
         if (owner.getStatus() == AccountStatus.PENDING_VERIFICATION) {
             throw new BusinessException(ErrorCode.EMAIL_NOT_VERIFIED);
         }
-        if (owner.getStatus() != AccountStatus.ACTIVE) {
+        if (!owner.canSignIn()) {
             throw new BusinessException(ErrorCode.ACCOUNT_UNAVAILABLE);
         }
         SessionService.StartedSession session = sessionService.start(owner, client, command.rememberDevice(),

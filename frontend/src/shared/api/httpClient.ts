@@ -41,11 +41,28 @@ export function onSessionLost(listener: SessionLostListener) {
   }
 }
 
+type AccountChangedListener = () => void
+const accountChangedListeners = new Set<AccountChangedListener>()
+
+/**
+ * Đăng ký nhận báo khi máy chủ cho biết trạng thái tài khoản đã đổi ở nơi khác, ví dụ vừa yêu cầu xóa tài khoản
+ * từ thẻ khác: cần tải lại phiên để giao diện chuyển đúng màn hình.
+ */
+export function onAccountChanged(listener: AccountChangedListener) {
+  accountChangedListeners.add(listener)
+  return () => {
+    accountChangedListeners.delete(listener)
+  }
+}
+
 http.interceptors.response.use(undefined, (error: unknown) => {
-  if (isAxiosError(error) && error.response?.status === 401) {
+  if (isAxiosError(error) && error.response) {
     const code = (error.response.data as { code?: string } | undefined)?.code
-    if (code && SESSION_LOST.has(code)) {
+    if (error.response.status === 401 && code && SESSION_LOST.has(code)) {
       sessionLostListeners.forEach((listener) => listener(code))
+    }
+    if (error.response.status === 403 && code === 'ACCOUNT_PENDING_DELETION') {
+      accountChangedListeners.forEach((listener) => listener())
     }
   }
   return Promise.reject(error)

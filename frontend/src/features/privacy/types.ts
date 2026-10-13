@@ -79,3 +79,11 @@ export interface DataExportLink {
   url: string
   expiresAt: string
 }
+
+/** Trạng thái xóa tài khoản (NCL-01-CN-009); scheduledFor là lúc tài khoản bị xóa vĩnh viễn. */
+export interface AccountDeletionStatus {
+  pending: boolean
+  requestedAt?: string | null
+  scheduledFor?: string | null
+  graceDays: number
+}

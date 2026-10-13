@@ -140,7 +140,8 @@
     "EXPORT_DAILY_LIMIT": "You can request a data export once a day.",
     "EXPORT_NOT_READY": "Your data package is still being prepared. Please wait a few minutes.",
     "EXPORT_EXPIRED": "This data package has expired. Please request a new export.",
-    "REAUTHENTICATION_REQUIRED": "Please confirm your password or sign in again to continue."
+    "REAUTHENTICATION_REQUIRED": "Please confirm your password or sign in again to continue.",
+    "ACCOUNT_PENDING_DELETION": "This account is scheduled for deletion. Cancel the deletion request to keep using it."
   },
   "checkEmail": {
     "title": "Check your inbox",
@@ -749,6 +750,70 @@
       "profile": "Profile and learning preferences",
       "privacy": "Privacy and consents",
       "library": "Document library"
+    }
+  },
+  "accountDeletion": {
+    "section": {
+      "title": "Delete account",
+      "body": "Delete your account and all learning data. You have 30 days to change your mind before data is permanently deleted.",
+      "action": "Delete account…"
+    },
+    "page": {
+      "title": "Delete account",
+      "subtitle": "Exercise your right to erase your data, no one else needed. You still have 30 days to change your mind.",
+      "exportTitle": "Take your data with you first",
+      "exportBody": "A data package in open formats keeps your documents, profile and learning history.",
+      "exportReady": "You already have a data package downloadable until {{until}}.",
+      "exportAction": "Open data export",
+      "timelineTitle": "What happens next",
+      "now": "Right now",
+      "nowBody": "Every device is signed out, all notifications stop and a confirmation email goes to {{email}}.",
+      "grace": "For 30 days, until {{date}}",
+      "graceBody": "Sign in again and cancel the request: your account comes back with all data intact.",
+      "after": "After {{date}}",
+      "afterBody": "Permanently deleted, cannot be restored:",
+      "erased": {
+        "account": "Account, profile and avatar",
+        "library": "Documents, original files and extracted text",
+        "learning": "All learning content and consent history",
+        "exports": "Exported data packages"
+      },
+      "auditNote": "System activity logs keep only an anonymous code that cannot be linked back to you.",
+      "confirmTitle": "Confirm account deletion",
+      "understand": "I understand my account and all data will be permanently deleted on {{date}} unless I cancel before then.",
+      "understandRequired": "Please tick to confirm you understand.",
+      "password": "Current password",
+      "passwordHint": "Enter your password again so we know it is you.",
+      "noPassword": "Your account signs in with Google. If you just signed in you can confirm right away; otherwise sign in again.",
+      "relogin": "Sign in again to confirm",
+      "submit": "Delete account",
+      "keep": "Keep account",
+      "wrongPassword": "Incorrect password.",
+      "remaining": "{{count}} attempts left before sign-in is temporarily locked.",
+      "lockedTitle": "Password confirmation temporarily locked",
+      "lockedBody": "The password was entered incorrectly 5 times in a row. To protect your account, you can try again in:"
+    },
+    "scheduled": {
+      "title": "Account deletion scheduled",
+      "body": "Your account will be permanently deleted on <strong>{{date}}</strong>. Every device was signed out and we sent you a confirmation email.",
+      "bodyNoDate": "Your account will be permanently deleted in 30 days. Every device was signed out and we sent you a confirmation email.",
+      "changeMind": "Changed your mind? Sign in before that date and choose “Cancel deletion”; your account comes back with all data intact.",
+      "toLogin": "Go to sign in",
+      "goodbye": "Thank you for learning with Learning Companion."
+    },
+    "pending": {
+      "title": "Your account is scheduled for deletion",
+      "body": "Your account and all learning data will be permanently deleted on <strong>{{date}}</strong>.",
+      "daysLeft_one": "{{count}} day left to change your mind",
+      "daysLeft_other": "{{count}} days left to change your mind",
+      "question": "Do you want to keep your account?",
+      "keep": "Cancel deletion and keep learning",
+      "keepHint": "Your account comes back with all data intact",
+      "proceed": "Still delete, sign out",
+      "locked": "While deletion is pending, other features are locked and you only receive emails about the deletion request.",
+      "restoredTitle": "Your account is active again",
+      "restoredBody": "The deletion request was cancelled and all learning data is intact. We sent you a confirmation email.",
+      "continue": "Keep learning"
     }
   }
 }

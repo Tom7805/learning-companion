@@ -1,5 +1,6 @@
 import { http } from '@/shared/api/httpClient'
 import type {
+  AccountDeletionStatus,
   ConsentHistoryEntry,
   DataExport,
   DataExportLink,
@@ -52,6 +53,17 @@ export const privacyApi = {
     const { data } = await http.post<DataExportLink>(`/exports/${encodeURIComponent(id)}/download`, {
       password: password || undefined,
     })
+    return data
+  },
+  /** Bắt đầu thời gian chờ xóa; mọi phiên, kể cả phiên này, bị đăng xuất ngay khi thành công. */
+  async requestDeletion(accountId: string, password?: string) {
+    const { data } = await http.post<AccountDeletionStatus>(`${account(accountId)}/deletion`, {
+      password: password || undefined,
+    })
+    return data
+  },
+  async cancelDeletion(accountId: string) {
+    const { data } = await http.delete<AccountDeletionStatus>(`${account(accountId)}/deletion`)
     return data
   },
   /** Chỉ được gọi khi người học đang bật thống kê ẩn danh; máy chủ cũng kiểm lại đồng ý. */

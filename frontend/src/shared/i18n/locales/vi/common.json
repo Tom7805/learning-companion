@@ -140,7 +140,8 @@
     "EXPORT_DAILY_LIMIT": "Mỗi ngày chỉ yêu cầu xuất dữ liệu được một lần.",
     "EXPORT_NOT_READY": "Gói dữ liệu đang được chuẩn bị, hãy chờ thêm ít phút.",
     "EXPORT_EXPIRED": "Gói dữ liệu đã hết hạn tải, hãy yêu cầu xuất lại.",
-    "REAUTHENTICATION_REQUIRED": "Hãy xác nhận lại mật khẩu hoặc đăng nhập lại để tiếp tục."
+    "REAUTHENTICATION_REQUIRED": "Hãy xác nhận lại mật khẩu hoặc đăng nhập lại để tiếp tục.",
+    "ACCOUNT_PENDING_DELETION": "Tài khoản đang chờ xóa. Hãy hủy yêu cầu xóa để dùng tiếp."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -749,6 +750,70 @@
       "profile": "Hồ sơ và tùy chọn học tập",
       "privacy": "Quyền riêng tư và đồng ý",
       "library": "Thư viện tài liệu"
+    }
+  },
+  "accountDeletion": {
+    "section": {
+      "title": "Xóa tài khoản",
+      "body": "Xóa tài khoản cùng toàn bộ dữ liệu học tập. Bạn có 30 ngày để đổi ý trước khi dữ liệu bị xóa vĩnh viễn.",
+      "action": "Xóa tài khoản…"
+    },
+    "page": {
+      "title": "Xóa tài khoản",
+      "subtitle": "Thực hiện quyền xóa dữ liệu của bạn mà không cần nhờ ai. Bạn vẫn có 30 ngày để đổi ý.",
+      "exportTitle": "Mang dữ liệu đi trước khi xóa",
+      "exportBody": "Gói dữ liệu ở định dạng mở giữ lại tài liệu, hồ sơ và lịch sử học tập của bạn.",
+      "exportReady": "Bạn đã có một gói dữ liệu tải được tới {{until}}.",
+      "exportAction": "Mở mục xuất dữ liệu",
+      "timelineTitle": "Điều gì sẽ xảy ra",
+      "now": "Ngay bây giờ",
+      "nowBody": "Mọi thiết bị bị đăng xuất, hệ thống ngừng gửi mọi thông báo và gửi thư xác nhận tới {{email}}.",
+      "grace": "Trong 30 ngày, tới {{date}}",
+      "graceBody": "Đăng nhập lại và chọn hủy yêu cầu: tài khoản hoạt động lại với nguyên dữ liệu.",
+      "after": "Sau {{date}}",
+      "afterBody": "Xóa vĩnh viễn, không thể khôi phục:",
+      "erased": {
+        "account": "Tài khoản, hồ sơ và ảnh đại diện",
+        "library": "Tài liệu, tệp gốc và nội dung đã trích",
+        "learning": "Mọi nội dung học tập và lịch sử đồng ý",
+        "exports": "Các gói dữ liệu đã xuất"
+      },
+      "auditNote": "Nhật ký thao tác của hệ thống chỉ còn mã đã ẩn danh, không liên kết được tới bạn.",
+      "confirmTitle": "Xác nhận xóa tài khoản",
+      "understand": "Tôi hiểu tài khoản và mọi dữ liệu sẽ bị xóa vĩnh viễn vào {{date}} nếu tôi không hủy trước đó.",
+      "understandRequired": "Hãy đánh dấu để xác nhận bạn đã hiểu.",
+      "password": "Mật khẩu hiện tại",
+      "passwordHint": "Nhập lại mật khẩu để chắc chắn đây là bạn.",
+      "noPassword": "Tài khoản của bạn đăng nhập bằng Google. Nếu bạn vừa đăng nhập thì xác nhận được ngay; nếu không, hãy đăng nhập lại.",
+      "relogin": "Đăng nhập lại để xác nhận",
+      "submit": "Xóa tài khoản",
+      "keep": "Giữ tài khoản",
+      "wrongPassword": "Mật khẩu chưa đúng.",
+      "remaining": "Còn {{count}} lần thử trước khi tạm khóa đăng nhập.",
+      "lockedTitle": "Tạm khóa xác nhận mật khẩu",
+      "lockedBody": "Mật khẩu đã bị nhập sai 5 lần liên tiếp. Để bảo vệ tài khoản, bạn có thể thử lại sau:"
+    },
+    "scheduled": {
+      "title": "Đã lên lịch xóa tài khoản",
+      "body": "Tài khoản của bạn sẽ bị xóa vĩnh viễn vào <strong>{{date}}</strong>. Mọi thiết bị đã được đăng xuất và chúng tôi đã gửi thư xác nhận.",
+      "bodyNoDate": "Tài khoản của bạn sẽ bị xóa vĩnh viễn sau 30 ngày. Mọi thiết bị đã được đăng xuất và chúng tôi đã gửi thư xác nhận.",
+      "changeMind": "Đổi ý? Đăng nhập lại trước hạn trên và chọn “Hủy yêu cầu xóa”, tài khoản sẽ hoạt động lại với nguyên dữ liệu.",
+      "toLogin": "Về màn hình đăng nhập",
+      "goodbye": "Cảm ơn bạn đã học cùng Learning Companion."
+    },
+    "pending": {
+      "title": "Tài khoản đang chờ xóa",
+      "body": "Tài khoản và mọi dữ liệu học tập của bạn sẽ bị xóa vĩnh viễn vào <strong>{{date}}</strong>.",
+      "daysLeft_one": "Còn {{count}} ngày để đổi ý",
+      "daysLeft_other": "Còn {{count}} ngày để đổi ý",
+      "question": "Bạn muốn giữ lại tài khoản?",
+      "keep": "Hủy yêu cầu xóa và học tiếp",
+      "keepHint": "Tài khoản hoạt động lại với nguyên dữ liệu",
+      "proceed": "Vẫn xóa, đăng xuất",
+      "locked": "Trong lúc chờ xóa, các chức năng khác tạm khóa và bạn không nhận thông báo nào ngoài thư về yêu cầu xóa.",
+      "restoredTitle": "Tài khoản đã hoạt động lại",
+      "restoredBody": "Yêu cầu xóa đã được hủy, mọi dữ liệu học tập vẫn nguyên vẹn. Chúng tôi đã gửi thư xác nhận.",
+      "continue": "Vào học tiếp"
     }
   }
 }

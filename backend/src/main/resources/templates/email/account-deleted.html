@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{email/layout :: layout(~{::section})}">
+<body>
+<section>
+    <h1 style="margin:0 0 12px 0;font-size:24px;line-height:1.3;color:#1d1d1f;">
+        Tài khoản của bạn đã được xóa
+    </h1>
+    <p style="margin:0 0 16px 0;">
+        Chào <strong th:text="${displayName}">bạn</strong>, thời gian chờ đã hết và tài khoản Learning Companion của bạn
+        đã bị xóa vĩnh viễn, cùng toàn bộ tài liệu, tệp gốc, hồ sơ và nội dung học tập.
+    </p>
+    <p style="margin:0 0 16px 0;">
+        Nhật ký thao tác của hệ thống chỉ còn mã đã ẩn danh, không còn gì liên kết được tới bạn. Đây là thư cuối cùng
+        chúng tôi gửi tới địa chỉ này.
+    </p>
+    <p style="margin:0 0 16px 0;">Cảm ơn bạn đã học cùng Learning Companion. Bạn luôn có thể quay lại bằng một tài khoản mới.</p>
+    <p style="margin:24px 0 0 0;">
+        <a th:href="${registerUrl}" href="#" style="color:#b8371a;font-weight:600;">Tạo tài khoản mới</a>
+    </p>
+</section>
+</body>
+</html>

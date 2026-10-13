@@ -1,6 +1,7 @@
 package com.learningcompanion.devtools;
 
 import com.learningcompanion.privacy.api.dto.TermsVersionResponse;
+import com.learningcompanion.privacy.application.AccountPurgeJob;
 import com.learningcompanion.privacy.application.ProductNewsMailer;
 import com.learningcompanion.privacy.application.TermsVersionService;
 import com.learningcompanion.privacy.domain.TermsVersion;
@@ -16,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Công cụ thử cho NCL-01-CN-006: đăng một phiên bản điều khoản mới (để thử hộp thoại đồng ý lại) và gửi
- * một bản tin tính năng mới (để thử việc chỉ gửi cho người đang đồng ý). Không bao giờ bật ở môi trường thật.
+ * một bản tin tính năng mới (để thử việc chỉ gửi cho người đang đồng ý). NCL-01-CN-009: chạy ngay tác vụ xóa
+ * tài khoản hằng ngày sau khi tua đồng hồ qua thời gian chờ. Không bao giờ bật ở môi trường thật.
  */
 @RestController
 @RequestMapping(ApiPaths.DEV)
@@ -25,11 +27,14 @@ public class DevPrivacyController {
 
     private final TermsVersionService terms;
     private final ProductNewsMailer news;
+    private final AccountPurgeJob purgeJob;
     private final Clock clock;
 
-    public DevPrivacyController(TermsVersionService terms, ProductNewsMailer news, Clock clock) {
+    public DevPrivacyController(TermsVersionService terms, ProductNewsMailer news, AccountPurgeJob purgeJob,
+                                Clock clock) {
         this.terms = terms;
         this.news = news;
+        this.purgeJob = purgeJob;
         this.clock = clock;
     }
 
@@ -50,6 +55,11 @@ public class DevPrivacyController {
         return new Sent(news.send(request.headline(), request.body()));
     }
 
+    @PostMapping("/jobs/account-purge")
+    public Purged runAccountPurge() {
+        return new Purged(purgeJob.run());
+    }
+
     public record PublishRequest(TermsVersion.DocumentType documentType, String version, String summary,
                                  List<String> highlights, List<String> changes, long effectiveInSeconds) {
     }
@@ -58,5 +68,8 @@ public class DevPrivacyController {
     }
 
     public record Sent(int recipients) {
+    }
+
+    public record Purged(int accounts) {
     }
 }

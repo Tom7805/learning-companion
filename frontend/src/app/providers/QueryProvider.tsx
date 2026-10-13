@@ -1,6 +1,6 @@
 import { QueryClientProvider } from '@tanstack/react-query'
 import { useEffect, useState, type ReactNode } from 'react'
-import { onSessionLost } from '@/shared/api/httpClient'
+import { onAccountChanged, onSessionLost } from '@/shared/api/httpClient'
 import { createQueryClient } from '@/shared/api/queryClient'
 import { queryKeys } from '@/shared/api/queryKeys'
 
@@ -20,6 +20,8 @@ export function QueryProvider({ children }: { children: ReactNode }) {
       }),
     [client],
   )
+
+  useEffect(() => onAccountChanged(() => void client.invalidateQueries({ queryKey: queryKeys.session })), [client])
 
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>
 }

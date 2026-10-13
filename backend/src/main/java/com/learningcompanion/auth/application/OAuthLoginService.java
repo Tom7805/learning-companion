@@ -145,7 +145,10 @@ public class OAuthLoginService {
         Optional<ExternalIdentity> known = identities.findByProviderAndSubject(provider.provider(), profile.subject());
         if (known.isPresent()) {
             ExternalIdentity identity = known.get();
-            UserAccount account = activeAccount(identity.getUserId());
+            // Tài khoản đang chờ xóa vẫn đăng nhập được để quyết định có hủy yêu cầu xóa không (NCL-01-CN-009).
+            UserAccount account = accounts.findById(identity.getUserId())
+                    .filter(UserAccount::canSignIn)
+                    .orElseThrow(() -> new BusinessException(ErrorCode.ACCOUNT_UNAVAILABLE));
             identity.markUsed(email, now);
             return signIn(account, flow.isRememberDevice(), deviceId, flow.getReturnTo(), provider.provider(), client);
         }
@@ -227,7 +230,7 @@ public class OAuthLoginService {
         pending.consume(now);
         // Nhà cung cấp đã xác thực địa chỉ thư và người học vừa chứng minh là chủ tài khoản.
         owner.markEmailVerified(now);
-        if (owner.getStatus() != AccountStatus.ACTIVE) {
+        if (!owner.canSignIn()) {
             throw new BusinessException(ErrorCode.ACCOUNT_UNAVAILABLE);
         }
         link(owner, pending.getProvider(), pending.getSubject(), email, "PASSWORD_CONFIRMED", now, client);

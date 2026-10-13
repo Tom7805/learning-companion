@@ -9,6 +9,8 @@ export interface Account {
   passwordChangedAt?: string
   /** Tài khoản tạo qua nhà cung cấp định danh chưa có mật khẩu cho tới khi người học tự đặt. */
   hasPassword?: boolean
+  /** Chỉ có khi tài khoản đang chờ xóa: thời điểm tài khoản bị xóa vĩnh viễn (NCL-01-CN-009). */
+  deletionScheduledFor?: string | null
 }
 
 /**

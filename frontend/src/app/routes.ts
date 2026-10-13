@@ -6,6 +6,8 @@ export const routes = {
   security: '/security',
   privacySettings: '/privacy',
   dataExport: '/exports/:id',
+  deleteAccount: '/account/delete',
+  deletionScheduled: '/account/deletion-scheduled',
   register: '/register',
   checkEmail: '/register/check-email',
   verifyEmail: '/verify-email',

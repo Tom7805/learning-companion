@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface OAuthPendingRepository extends JpaRepository<OAuthPending, UUID> {
 
     Optional<OAuthPending> findByTokenHash(String tokenHash);
+
+    void deleteByEmail(String email);
 }

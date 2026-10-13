@@ -1,5 +1,6 @@
 package com.learningcompanion.shared.mail;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -23,14 +24,20 @@ public class MailService {
 
     private final MailGateway gateway;
     private final ITemplateEngine templateEngine;
+    private final List<MailRecipientPolicy> policies;
 
-    public MailService(MailGateway gateway, ITemplateEngine templateEngine) {
+    public MailService(MailGateway gateway, ITemplateEngine templateEngine, List<MailRecipientPolicy> policies) {
         this.gateway = gateway;
         this.templateEngine = templateEngine;
+        this.policies = policies;
     }
 
     @Async
     public void send(String to, MailTemplate template, Map<String, Object> variables) {
+        if (!policies.stream().allMatch(policy -> policy.allows(to, template))) {
+            log.info("Skipped {}: recipient does not accept it right now", template);
+            return;
+        }
         Context context = new Context(VIETNAMESE, variables);
         context.setVariable("subject", template.subject());
         String html = templateEngine.process(template.view(), context);

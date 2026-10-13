@@ -15,6 +15,10 @@ export interface CapturedMail {
     | 'PASSWORD_CHANGED'
     | 'PRODUCT_NEWS'
     | 'DATA_EXPORT_READY'
+    | 'ACCOUNT_DELETION_SCHEDULED'
+    | 'ACCOUNT_DELETION_CANCELLED'
+    | 'ACCOUNT_DELETION_ATTEMPT'
+    | 'ACCOUNT_DELETED'
   links: string[]
   sentAt: string
 }
@@ -97,6 +101,13 @@ export class DevApi {
   async sendProductNews(headline: string) {
     const response = await this.request.post(`${API}/dev/product-news`, { data: { headline, body: 'Thử ngay.' } })
     expect(response.ok()).toBeTruthy()
+  }
+
+  /** Chạy ngay tác vụ xóa tài khoản hằng ngày (NCL-01-CN-009); trả về số tài khoản đã xóa vĩnh viễn. */
+  async runAccountPurge(): Promise<number> {
+    const response = await this.request.post(`${API}/dev/jobs/account-purge`)
+    expect(response.ok()).toBeTruthy()
+    return (await response.json()).accounts
   }
 
   async advanceClock(seconds: number) {

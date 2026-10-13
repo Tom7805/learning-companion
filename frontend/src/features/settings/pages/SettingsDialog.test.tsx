@@ -152,7 +152,7 @@ describe('SettingsDialog · hồ sơ', () => {
 })
 
 describe('SettingsDialog · tài khoản', () => {
-  it('mục Tài khoản gồm tài khoản liên kết và xuất toàn bộ dữ liệu', async () => {
+  it('mục Tài khoản gồm tài khoản liên kết, xuất toàn bộ dữ liệu và xóa tài khoản', async () => {
     const onSection = vi.fn()
     renderWithProviders(<SettingsDialog open section="accounts" onSection={onSection} onClose={() => undefined} />)
 
@@ -162,5 +162,8 @@ describe('SettingsDialog · tài khoản', () => {
     expect(within(dialog).getByRole('heading', { level: 3, name: 'Tài khoản liên kết' })).toBeInTheDocument()
     expect(await within(dialog).findByRole('region', { name: 'Xuất toàn bộ dữ liệu' })).toBeInTheDocument()
     expect(await within(dialog).findByRole('button', { name: /Yêu cầu xuất dữ liệu/ })).toBeEnabled()
+    const deletion = within(dialog).getByRole('region', { name: 'Xóa tài khoản' })
+    expect(deletion).toHaveTextContent('30 ngày để đổi ý')
+    expect(within(deletion).getByRole('link', { name: 'Xóa tài khoản…' })).toHaveAttribute('href', '/account/delete')
   })
 })

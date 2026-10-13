@@ -53,6 +53,7 @@ public enum ErrorCode {
     EXPORT_NOT_READY(HttpStatus.CONFLICT, "Gói dữ liệu đang được chuẩn bị, hãy chờ thêm ít phút."),
     EXPORT_EXPIRED(HttpStatus.GONE, "Gói dữ liệu đã hết hạn tải, hãy yêu cầu xuất lại."),
     REAUTHENTICATION_REQUIRED(HttpStatus.FORBIDDEN, "Hãy xác nhận lại mật khẩu hoặc đăng nhập lại để tiếp tục."),
+    ACCOUNT_PENDING_DELETION(HttpStatus.FORBIDDEN, "Tài khoản đang chờ xóa. Hãy hủy yêu cầu xóa để dùng tiếp."),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Hệ thống gặp sự cố, hãy thử lại sau.");
 
     private final HttpStatus status;
