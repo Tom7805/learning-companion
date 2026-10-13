@@ -121,7 +121,7 @@ export function DocumentViewer({ document }: { document: LearningDocument }) {
           data-testid="file-preview"
           tabIndex={0}
           aria-label={t('library.file.previewLabel', { name: document.originalFilename })}
-          className="max-h-96 overflow-auto whitespace-pre-wrap break-words rounded-field border-[1.5px] border-ink bg-surface p-4 font-sans text-sm leading-relaxed"
+          className="max-h-96 overflow-auto whitespace-pre-wrap rounded-field border-[1.5px] border-ink bg-surface p-4 font-sans text-sm leading-relaxed"
         >
           {preview.text}
         </pre>

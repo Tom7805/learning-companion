@@ -94,7 +94,7 @@ export function DevicesPage() {
         </div>
         <div
           aria-hidden="true"
-          className="hidden grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)_minmax(0,1fr)_120px] gap-4 border-b border-line pb-2 text-xs text-muted md:grid"
+          className="hidden grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)_minmax(0,1fr)_120px] gap-4 border-b border-line pb-2 text-xs text-muted lg:grid"
         >
           <span>{t('devices.columns.device')}</span>
           <span>{t('devices.columns.location')}</span>
@@ -127,7 +127,7 @@ export function DevicesPage() {
                 key={session.id}
                 data-testid="device-row"
                 data-current={session.current}
-                className="grid gap-3 py-4 md:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)_minmax(0,1fr)_120px] md:items-center md:gap-4"
+                className="grid gap-3 py-4 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)_minmax(0,1fr)_120px] lg:items-center lg:gap-4"
               >
                 <div className="flex min-w-0 items-center gap-3">
                   <span
@@ -152,13 +152,13 @@ export function DevicesPage() {
                   </div>
                 </div>
                 <p className="flex items-center gap-1.5 text-sm text-ink-soft">
-                  <MapPin className="size-4 shrink-0 text-muted md:hidden" aria-hidden="true" />
-                  <span className="sr-only md:hidden">{t('devices.columns.location')}: </span>
+                  <MapPin className="size-4 shrink-0 text-muted lg:hidden" aria-hidden="true" />
+                  <span className="sr-only lg:hidden">{t('devices.columns.location')}: </span>
                   {session.location ??
                     (session.localNetwork ? t('devices.location.local') : t('devices.location.unknown'))}
                 </p>
                 <p className="text-sm text-ink-soft">
-                  <span className="sr-only md:hidden">{t('devices.columns.lastActive')}: </span>
+                  <span className="sr-only lg:hidden">{t('devices.columns.lastActive')}: </span>
                   {session.current ? (
                     <span className="inline-flex items-center gap-1.5 font-medium text-success">
                       <span className="size-2 rounded-full bg-success" aria-hidden="true" />
@@ -170,7 +170,7 @@ export function DevicesPage() {
                     </time>
                   )}
                 </p>
-                <div className="md:text-right">
+                <div className="lg:text-right">
                   <Button
                     variant="outline"
                     className="h-9 px-3 text-sm"

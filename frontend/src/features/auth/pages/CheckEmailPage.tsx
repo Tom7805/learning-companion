@@ -84,7 +84,7 @@ export function CheckEmailPage() {
           <Trans
             i18nKey="checkEmail.body"
             values={{ email: pending.email }}
-            components={{ email: <strong className="font-semibold break-words text-ink" /> }}
+            components={{ email: <strong className="font-semibold text-ink" /> }}
           />
         </p>
         <p className="text-sm text-muted">{t('checkEmail.expires')}</p>

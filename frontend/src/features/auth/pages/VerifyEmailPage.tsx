@@ -283,7 +283,7 @@ function Invalid({ headingRef }: { headingRef: HeadingRef }) {
 function BackToRegister() {
   const { t } = useTranslation()
   return (
-    <Link to={routes.register} className="text-center text-sm text-muted underline-offset-4 hover:text-ink hover:underline">
+    <Link to={routes.register} className="-my-2 py-2 text-center text-sm text-muted underline-offset-4 hover:text-ink hover:underline">
       {t('verify.backToRegister')}
     </Link>
   )

@@ -166,7 +166,7 @@ function SentView({ sent, onResent, onChangeEmail }: SentViewProps) {
           <Trans
             i18nKey="forgot.sent.body"
             values={{ email: sent.email }}
-            components={{ email: <strong className="font-semibold break-words text-ink" /> }}
+            components={{ email: <strong className="font-semibold text-ink" /> }}
           />
         </p>
         <p className="text-sm text-muted">{t('forgot.sent.expires')}</p>
@@ -222,7 +222,7 @@ function SentView({ sent, onResent, onChangeEmail }: SentViewProps) {
         <Link
           to={routes.login}
           state={{ email: sent.email }}
-          className="inline-flex items-center gap-1.5 text-muted underline-offset-4 hover:text-ink hover:underline"
+          className="-my-2 inline-flex items-center gap-1.5 py-2 text-muted underline-offset-4 hover:text-ink hover:underline"
         >
           <ArrowLeft className="size-4" aria-hidden="true" />
           {t('forgot.backToLogin')}

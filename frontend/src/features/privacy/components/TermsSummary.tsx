@@ -37,7 +37,7 @@ export function TermsSummary({ terms, privacy }: { terms: LegalDocument; privacy
               </li>
             ))}
           </ul>
-          <Link to={to} target="_blank" className="self-start text-sm font-medium underline underline-offset-4">
+          <Link to={to} target="_blank" className="-my-2 self-start py-2 text-sm font-medium underline underline-offset-4">
             {t('privacy.readFull')}
             <span className="sr-only"> {t('register.opensInNewTab')}</span>
           </Link>
