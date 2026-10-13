@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright'
 import type { Page } from '@playwright/test'
 import { expect, fillRegisterForm, registerThroughUi, test } from './fixtures/auth'
 import { BREACHED_PASSWORD, DISPLAY_NAME, STRONG_PASSWORD, uniqueEmail } from './fixtures/testData'
+import { logoutThroughUi, openAccountMenu } from './fixtures/shell'
 
 /**
  * NCL-01-CN-001 — Đăng ký tài khoản và xác thực thư điện tử (Jira LC-15).
@@ -124,7 +125,10 @@ test.describe('NCL-01-CN-001 · Đăng ký và xác thực thư điện tử', (
 
     await expect(page).toHaveURL(/\/$/, { timeout: 10_000 })
     await expect(page.getByTestId('home-greeting')).toHaveText(`Chào ${DISPLAY_NAME}`)
-    await expect(page.getByText(email).first()).toBeVisible()
+    const menu = await openAccountMenu(page)
+    await expect(menu).toContainText(DISPLAY_NAME)
+    await expect(menu).toContainText(email)
+    await page.keyboard.press('Escape')
 
     // Phiên nằm trong cookie HttpOnly: tải lại trang vẫn đăng nhập.
     await page.reload()
@@ -133,8 +137,7 @@ test.describe('NCL-01-CN-001 · Đăng ký và xác thực thư điện tử', (
     expect(session?.httpOnly).toBe(true)
     expect(session?.sameSite).toBe('Lax')
 
-    await page.getByRole('button', { name: 'Đăng xuất' }).first().click()
-    await expect(page).toHaveURL(/\/login\?loggedOut=1$/)
+    await logoutThroughUi(page)
     await expect(page.getByTestId('session-notice')).toHaveText('Bạn đã đăng xuất. Hẹn gặp lại!')
     await page.goto('/')
     await expect(page).toHaveURL(/\/login$/)

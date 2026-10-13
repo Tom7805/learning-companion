@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright'
 import type { Page } from '@playwright/test'
 import { createVerifiedAccount, expect, loginThroughUi, test } from './fixtures/auth'
 import { uniqueEmail } from './fixtures/testData'
+import { navigateTo } from './fixtures/shell'
 
 /**
  * NCL-01-CN-006 — Điều khoản, chính sách quyền riêng tư và đồng ý theo mục đích (Jira LC-23).
@@ -59,7 +60,7 @@ test.describe('NCL-01-CN-006 · Đồng ý theo mục đích', () => {
     expect(events).toEqual([])
 
     // Thao tác kế tiếp: chuyển sang trang khác thì sự kiện ẩn danh đầu tiên được ghi.
-    await page.getByRole('link', { name: 'Thư viện' }).first().click()
+    await navigateTo(page, 'Thư viện')
     await expect.poll(() => events).toEqual([true])
   })
 

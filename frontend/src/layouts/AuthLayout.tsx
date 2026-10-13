@@ -1,8 +1,9 @@
 import { Bookmark, ShieldCheck } from 'lucide-react'
+import { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Outlet } from 'react-router'
 import { cn } from '@/shared/lib/cn'
-import { Badge, Brand } from '@/shared/ui'
+import { Badge, Brand, Skeleton } from '@/shared/ui'
 
 /**
  * Khung trang đăng ký và xác thực theo "first look": viền tối bao ngoài như khung ứng dụng của mẫu,
@@ -14,7 +15,7 @@ export function AuthLayout() {
     <div className="min-h-dvh bg-paper p-0 sm:p-5 lg:p-8">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-ink focus:px-4 focus:py-2 focus:text-white"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-ink focus:px-4 focus:py-2 focus:text-on-ink"
       >
         {t('app.skipToContent')}
       </a>
@@ -26,7 +27,17 @@ export function AuthLayout() {
         >
           <Brand className="mb-8 lg:mb-10" />
           <div className="mx-auto flex w-full max-w-[440px] flex-1 flex-col justify-center animate-fade-up">
-            <Outlet />
+            <Suspense
+              fallback={
+                <div className="flex flex-col gap-4" aria-busy="true">
+                  <Skeleton className="h-10 w-3/4" />
+                  <Skeleton className="h-14" />
+                  <Skeleton className="h-14" />
+                </div>
+              }
+            >
+              <Outlet />
+            </Suspense>
           </div>
         </main>
       </div>
@@ -35,9 +46,9 @@ export function AuthLayout() {
 }
 
 const cards = [
-  { key: 'library', tone: 'bg-sun', track: 'bg-[#e9bf3f]', fill: 0.66, rotate: '-rotate-2' },
-  { key: 'flashcards', tone: 'bg-lilac', track: 'bg-[#a99ff0]', fill: 0.45, rotate: 'rotate-1' },
-  { key: 'assistant', tone: 'bg-sky', track: 'bg-[#8ec8e8]', fill: 0.85, rotate: '-rotate-1' },
+  { key: 'library', tone: 'bg-sun', track: 'bg-sun-strong', fill: 0.66, rotate: '-rotate-2' },
+  { key: 'flashcards', tone: 'bg-lilac', track: 'bg-lilac-strong', fill: 0.45, rotate: 'rotate-1' },
+  { key: 'assistant', tone: 'bg-sky', track: 'bg-sky-strong', fill: 0.85, rotate: '-rotate-1' },
 ] as const
 
 function Showcase() {
@@ -46,8 +57,8 @@ function Showcase() {
     <aside className="hidden flex-col justify-between gap-10 px-8 py-10 text-white lg:flex xl:px-12">
       <div className="flex flex-col gap-4">
         <p className="text-sm text-white/60">{t('app.name')}</p>
-        <h2 className="max-w-md text-[34px] leading-[1.15] font-medium tracking-tight">{t('showcase.title')}</h2>
-        <p className="max-w-md text-[15px] leading-relaxed text-white/70">{t('showcase.subtitle')}</p>
+        <h2 className="max-w-md text-[2.125rem] leading-[1.15] font-medium tracking-tight">{t('showcase.title')}</h2>
+        <p className="max-w-md text-[0.9375rem] leading-relaxed text-white/70">{t('showcase.subtitle')}</p>
       </div>
 
       <ul className="flex flex-col gap-4" aria-label={t('showcase.title')}>

@@ -79,7 +79,7 @@ export function DataExportSection({ onNavigate }: { onNavigate: () => void }) {
             </li>
           ))}
         </ul>
-        <p className="text-[13px] leading-snug text-muted">
+        <p className="text-[0.8125rem] leading-snug text-muted">
           {t('dataExport.includesMore')} {t('dataExport.formats')}.
         </p>
       </div>
@@ -92,7 +92,7 @@ export function DataExportSection({ onNavigate }: { onNavigate: () => void }) {
         ].map((fact) => (
           <li
             key={fact.text}
-            className="inline-flex items-center gap-1.5 rounded-full border-[1.5px] border-ink/15 bg-surface px-3 py-1 text-[13px] text-ink-soft"
+            className="inline-flex items-center gap-1.5 rounded-full border-[1.5px] border-ink/15 bg-surface px-3 py-1 text-[0.8125rem] text-ink-soft"
           >
             <fact.icon className="size-3.5" aria-hidden="true" />
             {fact.text}
@@ -203,7 +203,7 @@ function LatestExport({
             })}
           </p>
           {latest.expiresAt && (
-            <p className="text-[13px] text-muted">{t('dataExport.readyUntil', { time: format.dateTime(latest.expiresAt) })}</p>
+            <p className="text-[0.8125rem] text-muted">{t('dataExport.readyUntil', { time: format.dateTime(latest.expiresAt) })}</p>
           )}
         </div>
         <Link to={dataExportPath(latest.id)} onClick={onNavigate} className={buttonClasses('dark', 'md', 'shrink-0')}>

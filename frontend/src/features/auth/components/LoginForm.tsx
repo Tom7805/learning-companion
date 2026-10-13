@@ -125,12 +125,12 @@ export function LoginForm({ notice, defaultEmail = '', returnTo, onLoggedIn }: L
   return (
     <form onSubmit={onSubmit} noValidate className="flex flex-col gap-6" aria-describedby="login-subtitle">
       <header className="flex flex-col gap-3">
-        <h1 className="text-[28px] leading-tight font-normal tracking-tight sm:text-[32px]">
+        <h1 className="text-[1.75rem] leading-tight font-normal tracking-tight sm:text-[2rem]">
           {t('login.titleLine1')}
           <br />
           <Trans i18nKey="login.titleLine2" components={{ strong: <strong className="font-semibold" /> }} />
         </h1>
-        <p id="login-subtitle" className="text-[15px] leading-relaxed text-muted">
+        <p id="login-subtitle" className="text-[0.9375rem] leading-relaxed text-muted">
           {t('login.subtitle')}
         </p>
       </header>
@@ -218,7 +218,7 @@ export function LoginForm({ notice, defaultEmail = '', returnTo, onLoggedIn }: L
             <Checkbox label={t('login.remember')} aria-describedby="remember-hint" {...register('rememberDevice')} />
             {forgotLink(t('login.forgot'), '-my-2 py-2 text-sm font-medium text-accent-ink underline-offset-4 hover:underline')}
           </div>
-          <p id="remember-hint" className="pl-9 text-[13px] leading-snug text-muted">
+          <p id="remember-hint" className="pl-9 text-[0.8125rem] leading-snug text-muted">
             {t('login.rememberHint')}
           </p>
         </div>

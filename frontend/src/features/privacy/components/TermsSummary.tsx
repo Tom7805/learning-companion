@@ -26,7 +26,7 @@ export function TermsSummary({ terms, privacy }: { terms: LegalDocument; privacy
             <Icon className="size-4" aria-hidden="true" />
             {t(kind === 'terms' ? 'legal.terms' : 'legal.privacy')}
           </h3>
-          <p className="text-[13px] text-ink-soft">
+          <p className="text-[0.8125rem] text-ink-soft">
             {t('legal.version', { version: document.version, date: date(document.effectiveAt) })}
           </p>
           <ul className="flex flex-col gap-1.5 text-sm leading-relaxed">

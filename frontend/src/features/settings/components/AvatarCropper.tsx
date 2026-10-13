@@ -119,7 +119,7 @@ export function AvatarCropper({ image, saving, onCancel, onConfirm }: AvatarCrop
         event.preventDefault()
         onCancel()
       }}
-      className="m-auto w-[min(94vw,400px)] rounded-card border-[1.5px] border-ink bg-surface p-0 text-ink shadow-pop backdrop:bg-ink/45"
+      className="m-auto w-[min(94vw,400px)] rounded-card border-[1.5px] border-ink bg-surface p-0 text-ink shadow-pop backdrop:bg-scrim/45"
     >
       {image && (
         <div className="flex flex-col gap-5 p-6">

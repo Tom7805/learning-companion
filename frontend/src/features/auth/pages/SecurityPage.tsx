@@ -70,7 +70,7 @@ export function SecurityPage() {
               <p className="text-sm leading-relaxed text-muted">
                 {noPassword ? t('security.set.body') : t('security.change.body')}
               </p>
-              <p className="text-[13px] text-ink-soft" data-testid="password-changed-at" hidden={noPassword}>
+              <p className="text-[0.8125rem] text-ink-soft" data-testid="password-changed-at" hidden={noPassword}>
                 {account?.passwordChangedAt ? (
                   <time
                     dateTime={account.passwordChangedAt}

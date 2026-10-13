@@ -17,7 +17,7 @@ const sizes = {
 /** Ảnh đại diện tròn viền mực; chưa có ảnh thì hiện chữ cái đầu trên nền vàng như mẫu. */
 export function Avatar({ name, src, size = 'md', className }: AvatarProps) {
   const base = cn(
-    'grid shrink-0 place-items-center overflow-hidden rounded-full border-[1.5px] border-ink bg-sun font-semibold',
+    'grid shrink-0 place-items-center overflow-hidden rounded-full border-[1.5px] border-ink bg-sun font-semibold text-ink',
     sizes[size],
     className,
   )

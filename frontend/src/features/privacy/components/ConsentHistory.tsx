@@ -48,7 +48,7 @@ export function ConsentHistory({ accountId }: { accountId: string }) {
                     purpose: t(`privacy.purposeName.${entry.purpose}`),
                   })}
                 </p>
-                <p className="text-[13px] text-muted">
+                <p className="text-[0.8125rem] text-muted">
                   <time dateTime={entry.recordedAt}>{format.dateTime(entry.recordedAt)}</time> ·{' '}
                   {t('privacy.history.version', { version: entry.documentVersion })}
                 </p>

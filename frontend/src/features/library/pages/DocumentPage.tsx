@@ -1,7 +1,10 @@
 import { ArrowLeft, FileQuestion, Lock } from 'lucide-react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router'
-import { routes } from '@/app/routes'
+import { documentPath, routes } from '@/app/routes'
+import { recentStore } from '@/app/store/recentStore'
+import { useAuth } from '@/features/auth'
 import { toApiError } from '@/shared/api/errors'
 import { useDateFormat } from '@/shared/hooks/useDateFormat'
 import { usePageHeading } from '@/shared/hooks/usePageHeading'
@@ -21,6 +24,19 @@ export function DocumentPage() {
   const { id = '' } = useParams()
   const document = useDocument(id)
   const notFound = document.isError && toApiError(document.error).status === 404
+  const { account } = useAuth()
+  const accountId = account?.id
+  const opened = document.data
+
+  // Mục "Gần đây" của thanh bên: ghi tài liệu vừa mở; tài liệu không còn mở được thì bỏ khỏi danh sách.
+  useEffect(() => {
+    if (!accountId) return
+    if (opened) {
+      recentStore.record(accountId, { kind: 'document', id: opened.id, title: opened.title, to: documentPath(opened.id) })
+    } else if (notFound) {
+      recentStore.forget(accountId, 'document', id)
+    }
+  }, [accountId, opened, notFound, id])
   const heading = usePageHeading(
     document.data?.title ?? (notFound ? t('library.notFound.title') : t('library.title')),
     document.status,
@@ -103,7 +119,7 @@ export function DocumentPage() {
             </h2>
             <div
               data-testid="document-content"
-              className="whitespace-pre-wrap text-[15px] leading-7 text-ink-soft"
+              className="whitespace-pre-wrap text-[0.9375rem] leading-7 text-ink-soft"
             >
               {doc.contentText || t('library.noContent')}
             </div>

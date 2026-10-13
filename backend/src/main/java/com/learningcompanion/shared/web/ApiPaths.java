@@ -13,6 +13,7 @@ public final class ApiPaths {
     public static final String ACCOUNTS = V1 + "/accounts";
     public static final String ANALYTICS = V1 + "/analytics";
     public static final String EXPORTS = V1 + "/exports";
+    public static final String UI_PREFERENCES = V1 + "/ui-preferences";
 
     private ApiPaths() {
     }

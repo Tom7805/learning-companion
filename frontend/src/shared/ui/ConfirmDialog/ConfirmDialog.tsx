@@ -53,14 +53,14 @@ export function ConfirmDialog({
         event.preventDefault()
         onCancel()
       }}
-      className="m-auto w-[min(92vw,440px)] rounded-card border-[1.5px] border-ink bg-surface p-0 text-ink shadow-pop backdrop:bg-ink/45"
+      className="m-auto w-[min(92vw,440px)] rounded-card border-[1.5px] border-ink bg-surface p-0 text-ink shadow-pop backdrop:bg-scrim/45"
     >
       {open && (
         <div className="flex flex-col gap-5 p-6">
           <h2 id={titleId} className="text-xl font-semibold leading-snug">
             {title}
           </h2>
-          <div id={descriptionId} className="text-[15px] leading-relaxed text-ink-soft">
+          <div id={descriptionId} className="text-[0.9375rem] leading-relaxed text-ink-soft">
             {description}
           </div>
           <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">

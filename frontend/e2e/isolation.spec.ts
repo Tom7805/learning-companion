@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright'
 import type { Browser, Page } from '@playwright/test'
 import { createVerifiedAccount, expect, test } from './fixtures/auth'
 import { uniqueEmail } from './fixtures/testData'
+import { navigateTo } from './fixtures/shell'
 
 /**
  * NCL-01-CN-004 — Cách ly dữ liệu học tập theo chủ sở hữu (Jira LC-21).
@@ -40,7 +41,7 @@ test.describe('NCL-01-CN-004 · Cách ly dữ liệu học tập theo chủ sở
     await dev.sampleDocument(email, 'Ghi chú: Định luật Ohm')
 
     await page.goto('/')
-    await page.getByRole('link', { name: 'Thư viện' }).first().click()
+    await navigateTo(page, 'Thư viện')
     await expect(page.getByRole('heading', { level: 1, name: 'Thư viện của tôi' })).toBeVisible()
     await expect(page.getByTestId('privacy-note')).toContainText('không bao giờ thấy nội dung')
     await expect(page.getByTestId('library-summary')).toContainText('1 tài liệu')

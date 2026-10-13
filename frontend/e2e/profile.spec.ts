@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright'
 import type { Page } from '@playwright/test'
 import { createVerifiedAccount, expect, test } from './fixtures/auth'
 import { uniqueEmail } from './fixtures/testData'
+import { accountMenuButton } from './fixtures/shell'
 
 /**
  * NCL-01-CN-005 — Hồ sơ và tùy chọn học tập cá nhân (Jira LC-22).
@@ -94,14 +95,14 @@ test.describe('NCL-01-CN-005 · Hồ sơ và tùy chọn học tập', () => {
     await expect(dialog.getByText('Tên hiển thị tối đa 50 ký tự.')).toBeVisible()
     await expect(dialog.getByTestId('name-count')).toHaveText('60/50 ký tự')
     await page.reload()
-    await expect(page.getByTestId('account-name')).toHaveText('Lan Anh')
+    await expect(accountMenuButton(page)).toHaveAccessibleName('Trình đơn tài khoản của Lan Anh')
 
     // Tên hợp lệ thì lưu ngay và đầu trang đổi theo.
     const again = page.getByRole('dialog', { name: 'Cài đặt' })
     await again.getByLabel('Tên hiển thị').fill('Nguyễn Lan Anh')
     await again.getByLabel('Tên hiển thị').press('Enter')
     await expect(again.getByTestId('save-status')).toHaveText('Đã lưu')
-    await expect(page.getByTestId('account-name')).toHaveText('Nguyễn Lan Anh')
+    await expect(accountMenuButton(page)).toHaveAccessibleName('Trình đơn tài khoản của Nguyễn Lan Anh')
   })
 
   test('TC-03: tệp văn bản đổi đuôi bị từ chối; ảnh thật được cắt vuông và hiện ngay', async ({ page, dev }) => {

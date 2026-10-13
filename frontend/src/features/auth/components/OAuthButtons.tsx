@@ -59,7 +59,7 @@ export function OAuthButtons({ rememberDevice, returnTo, className }: OAuthButto
           {t('oauth.continueWith', { provider: provider.name })}
         </button>
       ))}
-      <p id="oauth-scope-hint" className="text-center text-[13px] text-muted">
+      <p id="oauth-scope-hint" className="text-center text-[0.8125rem] text-muted">
         {t('oauth.scopeHint')}
       </p>
       {error && <Alert tone="danger">{error}</Alert>}

@@ -94,8 +94,9 @@ test.describe('NCL-01-CN-008 · Xuất toàn bộ dữ liệu', () => {
     await page.goto(link)
     await expect(page.getByRole('heading', { level: 1, name: 'Tải gói dữ liệu của bạn' })).toBeVisible()
     const sections = page.getByTestId('export-sections')
-    await expect(sections.getByRole('listitem')).toHaveCount(4)
+    await expect(sections.getByRole('listitem')).toHaveCount(5)
     await expect(sections).toContainText('Thư viện tài liệu')
+    await expect(sections).toContainText('Giao diện')
     await expect(page.getByText('Bạn vừa đăng nhập nên tải được ngay.')).toBeVisible()
     await expectNoSeriousA11yViolations(page)
 
@@ -109,6 +110,7 @@ test.describe('NCL-01-CN-008 · Xuất toàn bộ dữ liệu', () => {
       'account/account.json',
       'profile/profile.json',
       'privacy/consent-history.csv',
+      'appearance/appearance.json',
       'library/documents.json',
       'library/files/dinh-luat-ohm.txt',
       'library/text/Ghi chú_ Định luật Ohm.md',

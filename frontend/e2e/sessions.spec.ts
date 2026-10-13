@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright'
 import type { Page } from '@playwright/test'
 import { createVerifiedAccount, expect, loginThroughUi, test } from './fixtures/auth'
+import { logoutThroughUi, navigateTo } from './fixtures/shell'
 import { STRONG_PASSWORD, uniqueEmail } from './fixtures/testData'
 
 /**
@@ -24,8 +25,7 @@ async function expectNoSeriousA11yViolations(page: Page) {
 
 async function logout(page: Page) {
   await page.goto('/')
-  await page.getByRole('button', { name: 'Đăng xuất' }).first().click()
-  await expect(page).toHaveURL(/\/login\?loggedOut=1$/)
+  await logoutThroughUi(page)
 }
 
 test.describe('NCL-01-CN-002 · Đăng nhập và quản lý phiên', () => {
@@ -134,7 +134,7 @@ test.describe('NCL-01-CN-002 · Đăng nhập và quản lý phiên', () => {
     await expect(inbox).toHaveURL(/\/devices\/revoke$/)
 
     // Thiết bị ở thư viện bị đăng xuất ở lần thao tác kế tiếp, thiết bị gốc vẫn đăng nhập.
-    await library.getByRole('link', { name: 'Thiết bị' }).first().click()
+    await navigateTo(library, 'Thư viện')
     await expect(library).toHaveURL(/\/login$/)
     await expect(library.getByTestId('session-notice')).toContainText('đã bị đăng xuất từ một thiết bị khác')
     await page.goto('/devices')
@@ -179,7 +179,7 @@ test.describe('NCL-01-CN-002 · Đăng nhập và quản lý phiên', () => {
     await expect(page.getByTestId('devices-notice')).toContainText('Đã đăng xuất')
     await expect(rows).toHaveCount(1)
 
-    await library.getByRole('link', { name: 'Thiết bị' }).first().click()
+    await navigateTo(library, 'Thư viện')
     await expect(library).toHaveURL(/\/login$/)
     await expect(library.getByTestId('session-notice')).toContainText('đã bị đăng xuất từ một thiết bị khác')
   })
@@ -217,7 +217,7 @@ test.describe('NCL-01-CN-002 · Đăng nhập và quản lý phiên', () => {
     expect(cookie?.expires).toBe(-1)
 
     await dev.advanceClock(2 * 3600 + 60)
-    await page.getByRole('link', { name: 'Thiết bị' }).first().click()
+    await navigateTo(page, 'Thư viện')
 
     await expect(page).toHaveURL(/\/login$/)
     await expect(page.getByTestId('session-notice')).toContainText('Phiên đăng nhập đã hết hạn')
@@ -226,7 +226,7 @@ test.describe('NCL-01-CN-002 · Đăng nhập và quản lý phiên', () => {
     await page.getByLabel('Thư điện tử').fill(email)
     await page.getByLabel('Mật khẩu', { exact: true }).fill(STRONG_PASSWORD)
     await page.getByRole('button', { name: /Đăng nhập/ }).click()
-    await expect(page).toHaveURL(/\/devices$/)
+    await expect(page).toHaveURL(/\/library$/)
   })
 
   test('Chưa đăng nhập mà mở trang thiết bị thì đăng nhập xong quay lại đúng trang đó', async ({ page, dev }) => {

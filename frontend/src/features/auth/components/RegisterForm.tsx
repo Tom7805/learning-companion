@@ -138,12 +138,12 @@ export function RegisterForm({ prefill, onRegistered }: RegisterFormProps) {
   return (
     <form onSubmit={onSubmit} noValidate className="flex flex-col gap-6" aria-describedby="register-subtitle">
       <header className="flex flex-col gap-3">
-        <h1 className="text-[28px] leading-tight font-normal tracking-tight text-ink sm:text-[32px]" tabIndex={-1}>
+        <h1 className="text-[1.75rem] leading-tight font-normal tracking-tight text-ink sm:text-[2rem]" tabIndex={-1}>
           {t('register.titleLine1')}
           <br />
           <Trans i18nKey="register.titleLine2" components={{ strong: <strong className="font-semibold" /> }} />
         </h1>
-        <p id="register-subtitle" className="text-[15px] leading-relaxed text-muted">
+        <p id="register-subtitle" className="text-[0.9375rem] leading-relaxed text-muted">
           {t('register.subtitle')}
         </p>
       </header>

@@ -77,10 +77,10 @@ export function CheckEmailPage() {
       </StatusIcon>
 
       <header className="flex flex-col gap-3">
-        <h1 ref={heading} tabIndex={-1} className="text-[28px] leading-tight tracking-tight outline-none sm:text-[32px]">
+        <h1 ref={heading} tabIndex={-1} className="text-[1.75rem] leading-tight tracking-tight outline-none sm:text-[2rem]">
           {t('checkEmail.title')}
         </h1>
-        <p className="text-[15px] leading-relaxed text-ink-soft" data-testid="check-email-body">
+        <p className="text-[0.9375rem] leading-relaxed text-ink-soft" data-testid="check-email-body">
           <Trans
             i18nKey="checkEmail.body"
             values={{ email: pending.email }}

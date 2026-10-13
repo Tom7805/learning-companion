@@ -1,1 +1,1 @@
-export { Brand } from './Brand'
+export { AppMark, Brand } from './Brand'

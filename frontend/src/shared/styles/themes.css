@@ -1,0 +1,63 @@
+/*
+ * Chế độ tối và cỡ chữ (NCL-02-CN-001). ThemeProvider (và đoạn mã nhỏ trong index.html, chạy trước khi ứng dụng
+ * tải) đặt data-theme và data-font-size trên <html>. Mọi thành phần dùng token màu nên tự đổi theo; các cặp chữ
+ * trên nền đều đạt độ tương phản tối thiểu 4,5:1 (WCAG AA).
+ */
+:root {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-ink: #ededf0;
+  --color-ink-soft: #d0d0d8;
+  --color-muted: #a8a8b3;
+  --color-subtle: #9d9da8;
+  --color-paper: #121214;
+  --color-surface: #1c1c1f;
+  --color-field: #26262b;
+  --color-line: #3b3b42;
+  --color-night: #09090a;
+  --color-night-soft: #1f1f23;
+
+  --color-accent: #ff6e4f;
+  --color-accent-strong: #ff8a6e;
+  --color-accent-ink: #ff9a80;
+  /* Thẻ pastel thành tông trầm để chữ sáng đặt lên vẫn rõ. */
+  --color-sun: #5c4a10;
+  --color-sun-strong: #7a6318;
+  --color-sun-soft: #3b3112;
+  --color-lilac: #3d3670;
+  --color-lilac-strong: #4c4489;
+  --color-lilac-soft: #29243f;
+  --color-sky: #1f3e52;
+  --color-sky-strong: #2b5670;
+  --color-sky-soft: #172a37;
+  --color-mint: #8fdccc;
+
+  --color-success: #5fd28f;
+  --color-success-soft: #14301f;
+  --color-danger: #ff8077;
+  --color-danger-soft: #3a1b1b;
+  --color-warning: #f1b54f;
+  --color-warning-soft: #36290f;
+  --color-focus: #7fa9ff;
+
+  --color-on-ink: #141416;
+  --color-on-accent: #141416;
+  --color-on-danger: #141416;
+  --color-on-night: #f5f5f7;
+  --color-scrim: #000000;
+
+  --shadow-pop: 0 1px 0 rgb(0 0 0 / 0.4), 0 10px 28px -12px rgb(0 0 0 / 0.7);
+}
+
+/* Ba cỡ chữ: mọi cỡ chữ và khoảng cách tính theo rem nên cả giao diện co giãn cùng nhau. */
+:root[data-font-size='small'] {
+  font-size: 93.75%;
+}
+
+:root[data-font-size='large'] {
+  font-size: 112.5%;
+}

@@ -20,7 +20,7 @@ export function PasswordStrengthMeter({ password, breached = false, id }: Passwo
 
   return (
     <div id={id} className="flex flex-col gap-2.5 rounded-field bg-paper/70 px-3.5 py-3">
-      <div className="flex items-center justify-between gap-3 text-[13px]">
+      <div className="flex items-center justify-between gap-3 text-[0.8125rem]">
         <span className="text-muted">{t('register.strength.label')}</span>
         <span aria-live="polite" className="font-medium" data-testid="strength-label">
           {password ? levels[level] : '—'}
@@ -38,11 +38,11 @@ export function PasswordStrengthMeter({ password, breached = false, id }: Passwo
           />
         ))}
       </div>
-      <ul className="flex flex-col gap-1 text-[13px]">
+      <ul className="flex flex-col gap-1 text-[0.8125rem]">
         <Rule state={longEnough ? 'pass' : 'pending'}>{t('register.password.ruleLength')}</Rule>
         <Rule state={breached ? 'fail' : 'pending'}>{t('register.password.ruleCommon')}</Rule>
       </ul>
-      <p className="text-[13px] leading-snug text-muted">{t('register.password.tip')}</p>
+      <p className="text-[0.8125rem] leading-snug text-muted">{t('register.password.tip')}</p>
     </div>
   )
 }

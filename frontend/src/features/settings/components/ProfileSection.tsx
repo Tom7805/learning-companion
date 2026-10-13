@@ -358,7 +358,7 @@ function TimeZoneField({
         value={current ?? ''}
         onChange={(event) => onChange(event.target.value)}
         data-testid="time-zone"
-        className="h-12 w-full rounded-field border-[1.5px] border-ink bg-surface px-3 text-[15px] outline-none focus:border-focus focus:ring-4 focus:ring-focus/15"
+        className="h-12 w-full rounded-field border-[1.5px] border-ink bg-surface px-3 text-[0.9375rem] outline-none focus:border-focus focus:ring-4 focus:ring-focus/15"
       >
         {!current && <option value="">{t('profile.timeZone.notSet')}</option>}
         {options.map((option) => (
@@ -489,7 +489,7 @@ function DailyGoalField({
             }}
             className={cn(
               'h-10 rounded-full border-[1.5px] px-4 text-sm font-medium tabular-nums transition-colors',
-              value === minutes ? 'border-ink bg-ink text-white' : 'border-line bg-surface hover:border-ink',
+              value === minutes ? 'border-ink bg-ink text-on-ink' : 'border-line bg-surface hover:border-ink',
             )}
           >
             {t('profile.goal.minutes', { count: minutes })}
@@ -540,7 +540,7 @@ function RolloverField({ value, error, onChange }: { value: number; error?: stri
         value={value}
         onChange={(event) => onChange(Number(event.target.value))}
         data-testid="rollover"
-        className="h-12 w-full max-w-xs rounded-field border-[1.5px] border-ink bg-surface px-3 text-[15px] outline-none focus:border-focus focus:ring-4 focus:ring-focus/15"
+        className="h-12 w-full max-w-xs rounded-field border-[1.5px] border-ink bg-surface px-3 text-[0.9375rem] outline-none focus:border-focus focus:ring-4 focus:ring-focus/15"
       >
         {hours.map((hour) => (
           <option key={hour} value={hour}>

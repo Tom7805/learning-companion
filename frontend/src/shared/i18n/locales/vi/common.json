@@ -293,7 +293,8 @@
     "loading": "Đang tải…",
     "back": "Quay lại",
     "retry": "Thử lại",
-    "close": "Đóng"
+    "close": "Đóng",
+    "notifications": "Thông báo"
   },
   "devices": {
     "nav": "Thiết bị",
@@ -491,6 +492,11 @@
       "renewed": "Đường dẫn an toàn cũ đã hết hạn nên hệ thống đã tự lấy đường dẫn mới để mở tệp.",
       "openFailed": "Chưa mở được tệp gốc. Hãy thử lại sau ít phút.",
       "unsupported": "Chưa xem trước được loại tệp này ngay trong trang, hãy tải xuống để mở."
+    },
+    "peek": {
+      "open": "Xem {{title}} bên cạnh",
+      "action": "Xem bên cạnh",
+      "openFull": "Mở toàn trang"
     }
   },
   "account": {
@@ -815,5 +821,96 @@
       "restoredBody": "Yêu cầu xóa đã được hủy, mọi dữ liệu học tập vẫn nguyên vẹn. Chúng tôi đã gửi thư xác nhận.",
       "continue": "Vào học tiếp"
     }
+  },
+  "shell": {
+    "nav": "Chức năng",
+    "collapse": "Thu gọn thanh bên",
+    "expand": "Mở rộng thanh bên",
+    "openMenu": "Mở thanh bên",
+    "closeMenu": "Đóng thanh bên",
+    "drawerLabel": "Thanh bên",
+    "quickOpen": "Mở nhanh",
+    "quickOpenHint": "Tìm trang hoặc tài liệu",
+    "recent": "Gần đây",
+    "recentEmpty": "Tài liệu bạn mở sẽ hiện ở đây để quay lại nhanh.",
+    "install": "Cài ứng dụng",
+    "installed": "Đã cài Learning Companion lên máy của bạn.",
+    "offline": "Mất kết nối mạng. Đang thử kết nối lại, những gì đang hiện vẫn xem được.",
+    "reconnected": "Đã kết nối lại.",
+    "reconnecting": "Đang kết nối lại…",
+    "panel": {
+      "resize": "Kéo để đổi độ rộng khung xem bên",
+      "fullscreen": "Phóng toàn màn hình",
+      "exitFullscreen": "Thu nhỏ về khung bên",
+      "close": "Đóng khung xem bên"
+    }
+  },
+  "quickOpen": {
+    "label": "Tìm trang hoặc tài liệu",
+    "placeholder": "Gõ tên trang hoặc tài liệu…",
+    "results": "Kết quả",
+    "groups": {
+      "pages": "Trang",
+      "documents": "Tài liệu"
+    },
+    "empty": "Không thấy trang hay tài liệu nào khớp.",
+    "hint": "↑ ↓ để chọn · Enter để mở · Esc để đóng"
+  },
+  "help": {
+    "title": "Trợ giúp",
+    "shellTitle": "Làm quen với khung ứng dụng",
+    "quickOpen": {
+      "title": "Mở nhanh",
+      "body": "Nút trên cùng của thanh bên: gõ vài chữ để tới ngay một trang hay một tài liệu, không cần gõ dấu."
+    },
+    "sidebar": {
+      "title": "Thu gọn thanh bên",
+      "body": "Bấm biểu tượng cạnh tên ứng dụng để thu thanh bên thành cột biểu tượng, vùng làm việc rộng hơn. Lần sau mở lại vẫn giữ như vậy."
+    },
+    "panel": {
+      "title": "Khung xem bên",
+      "body": "Mở một nội dung cạnh vùng làm việc (ví dụ \"Xem bên cạnh\" ở thư viện). Kéo thanh chia để đổi độ rộng, hoặc phóng toàn màn hình."
+    },
+    "keyboard": {
+      "title": "Dùng bằng bàn phím",
+      "body": "Ctrl K (⌘K trên máy Apple) mở nhanh từ bất cứ đâu. Phím Tab đi qua mọi nút và liên kết; khi thanh chia có tiêu điểm, phím mũi tên trái phải đổi độ rộng khung xem bên; Esc đóng hộp thoại và khung."
+    },
+    "appearance": {
+      "title": "Giao diện",
+      "body": "Chọn chế độ sáng, tối hoặc theo hệ thống, và cỡ chữ vừa mắt. Tùy chọn được lưu theo tài khoản.",
+      "action": "Mở cài đặt giao diện"
+    },
+    "install": {
+      "title": "Cài ứng dụng lên máy",
+      "available": "Cài để mở Learning Companion từ biểu tượng trên màn hình chính, trong cửa sổ riêng.",
+      "installed": "Ứng dụng đã được cài trên máy này.",
+      "manual": "Trình duyệt này chưa mời cài. Trên iPhone, iPad: bấm Chia sẻ rồi \"Thêm vào MH chính\". Trên máy tính: dùng Chrome hoặc Edge và chọn biểu tượng cài ở thanh địa chỉ."
+    }
+  },
+  "appearance": {
+    "nav": "Giao diện",
+    "title": "Giao diện",
+    "subtitle": "Chế độ màu và cỡ chữ áp ngay trên máy này và được lưu theo tài khoản của bạn.",
+    "theme": {
+      "label": "Chế độ màu",
+      "light": "Sáng",
+      "dark": "Tối",
+      "system": "Theo hệ thống",
+      "lightHint": "Nền sáng, hợp khi học ban ngày.",
+      "darkHint": "Nền tối, dịu mắt khi học buổi tối.",
+      "systemHint": "Tự đổi theo cài đặt sáng tối của máy.",
+      "following": "Đang dùng: {{mode}} (theo hệ thống)"
+    },
+    "font": {
+      "label": "Cỡ chữ",
+      "small": "Nhỏ",
+      "medium": "Vừa",
+      "large": "Lớn",
+      "preview": "Ví dụ: Định luật Ohm cho biết cường độ dòng điện tỉ lệ thuận với hiệu điện thế và tỉ lệ nghịch với điện trở."
+    },
+    "saveFailed": "Chưa lưu được lên tài khoản, giao diện vẫn áp dụng trên máy này."
+  },
+  "routeError": {
+    "title": "Không mở được trang này"
   }
 }
