@@ -36,8 +36,11 @@ public class ProductNewsMailer {
     /** Gửi một bản tin; trả về số người nhận. */
     @Transactional(readOnly = true)
     public int send(String headline, String body) {
+        // Tài khoản đang chờ xóa không nhận bản tin (NCL-01-CN-009).
         List<UserAccount> recipients = accounts.findAllById(consents.findByPurposeAndGrantedTrue(
-                ConsentPurpose.PRODUCT_NEWS_EMAIL).stream().map(Consent::getUserId).toList());
+                ConsentPurpose.PRODUCT_NEWS_EMAIL).stream().map(Consent::getUserId).toList()).stream()
+                .filter(account -> !account.isPendingDeletion())
+                .toList();
         String settingsUrl = properties.frontendUrl() + "/privacy";
         recipients.forEach(account -> mail.send(account.getEmail(), MailTemplate.PRODUCT_NEWS, Map.of(
                 "displayName", account.getDisplayName(),

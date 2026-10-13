@@ -16,7 +16,13 @@ import {
 } from '@/features/auth'
 import { DashboardPage } from '@/features/dashboard/pages/DashboardPage'
 import { DocumentPage, LibraryPage } from '@/features/library'
-import { DataExportDownloadPage, LegalDocumentPage, PrivacyPage } from '@/features/privacy'
+import {
+  DataExportDownloadPage,
+  DeleteAccountFlow,
+  DeletionScheduledPage,
+  LegalDocumentPage,
+  PrivacyPage,
+} from '@/features/privacy'
 import { AppShell } from '@/layouts/AppShell'
 import { AuthLayout } from '@/layouts/AuthLayout'
 import { NotFoundPage } from '@/pages/NotFoundPage'
@@ -49,6 +55,7 @@ export const router = createBrowserRouter([
               { path: routes.security, element: <SecurityPage /> },
               { path: routes.privacySettings, element: <PrivacyPage /> },
               { path: routes.dataExport, element: <DataExportDownloadPage /> },
+              { path: routes.deleteAccount, element: <DeleteAccountFlow /> },
             ],
           },
         ],
@@ -64,6 +71,7 @@ export const router = createBrowserRouter([
           { path: routes.resetPassword, element: <ResetPasswordPage /> },
           { path: routes.oauthCallback, element: <OAuthCallbackPage /> },
           { path: routes.revokeDevice, element: <RevokeDevicePage /> },
+          { path: routes.deletionScheduled, element: <DeletionScheduledPage /> },
           { path: routes.terms, element: <LegalDocumentPage kind="terms" /> },
           { path: routes.privacy, element: <LegalDocumentPage kind="privacy" /> },
           { path: '*', element: <NotFoundPage /> },

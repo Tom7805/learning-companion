@@ -43,6 +43,10 @@ public class UserAccount {
     @Column(name = "password_changed_at")
     private Instant passwordChangedAt;
 
+    /** Chỉ có khi tài khoản đang chờ xóa: thời điểm tài khoản bị xóa vĩnh viễn (NCL-01-CN-009). */
+    @Column(name = "deletion_scheduled_for")
+    private Instant deletionScheduledFor;
+
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
@@ -108,6 +112,30 @@ public class UserAccount {
         return status == AccountStatus.PENDING_VERIFICATION;
     }
 
+    /**
+     * Đăng nhập được: tài khoản đang hoạt động, hoặc đang chờ xóa (đăng nhập lại để quyết định có hủy yêu cầu xóa
+     * không; mọi chức năng khác bị chặn cho tới khi hủy).
+     */
+    public boolean canSignIn() {
+        return status == AccountStatus.ACTIVE || status == AccountStatus.PENDING_DELETION;
+    }
+
+    public boolean isPendingDeletion() {
+        return status == AccountStatus.PENDING_DELETION;
+    }
+
+    public void scheduleDeletion(Instant deleteAt, Instant now) {
+        status = AccountStatus.PENDING_DELETION;
+        deletionScheduledFor = deleteAt;
+        updatedAt = now;
+    }
+
+    public void cancelDeletion(Instant now) {
+        status = AccountStatus.ACTIVE;
+        deletionScheduledFor = null;
+        updatedAt = now;
+    }
+
     public UUID getId() {
         return id;
     }
@@ -138,6 +166,10 @@ public class UserAccount {
 
     public Instant getPasswordChangedAt() {
         return passwordChangedAt;
+    }
+
+    public Instant getDeletionScheduledFor() {
+        return deletionScheduledFor;
     }
 
     public Instant getCreatedAt() {

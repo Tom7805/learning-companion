@@ -4,12 +4,14 @@ import com.learningcompanion.auth.domain.UserAccount;
 import java.time.Instant;
 import java.util.UUID;
 
+/** {@code deletionScheduledFor} chỉ có khi tài khoản đang chờ xóa (NCL-01-CN-009). */
 public record AccountResponse(UUID id, String email, String displayName, String role, String status,
-                              Instant emailVerifiedAt, Instant passwordChangedAt, boolean hasPassword) {
+                              Instant emailVerifiedAt, Instant passwordChangedAt, boolean hasPassword,
+                              Instant deletionScheduledFor) {
 
     public static AccountResponse of(UserAccount account) {
         return new AccountResponse(account.getId(), account.getEmail(), account.getDisplayName(),
                 account.getRole().name(), account.getStatus().name(), account.getEmailVerifiedAt(),
-                account.getPasswordChangedAt(), account.hasPassword());
+                account.getPasswordChangedAt(), account.hasPassword(), account.getDeletionScheduledFor());
     }
 }

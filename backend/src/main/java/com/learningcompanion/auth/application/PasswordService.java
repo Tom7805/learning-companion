@@ -1,6 +1,5 @@
 package com.learningcompanion.auth.application;
 
-import com.learningcompanion.auth.domain.AccountStatus;
 import com.learningcompanion.auth.domain.PasswordResetToken;
 import com.learningcompanion.auth.domain.PasswordResetTokenRepository;
 import com.learningcompanion.auth.domain.UserAccount;
@@ -68,12 +67,15 @@ public class PasswordService {
         this.settings = properties.auth();
     }
 
-    /** Gửi thư đặt lại nếu địa chỉ có tài khoản đang hoạt động; phản hồi như nhau trong mọi trường hợp. */
+    /**
+     * Gửi thư đặt lại nếu địa chỉ có tài khoản đăng nhập được (kể cả đang chờ xóa, để người quên mật khẩu vẫn vào
+     * hủy được yêu cầu xóa); phản hồi như nhau trong mọi trường hợp.
+     */
     @Transactional
     public void requestReset(String email, ClientInfo client) {
         throttle(client);
         accounts.findByEmail(EmailNormalizer.normalize(email))
-                .filter(account -> account.getStatus() == AccountStatus.ACTIVE)
+                .filter(UserAccount::canSignIn)
                 .ifPresent(account -> issueIfCooledDown(account, client, "BY_EMAIL"));
     }
 
@@ -83,7 +85,7 @@ public class PasswordService {
         throttle(client);
         resetTokens.findByTokenHash(tokens.hash(rawToken))
                 .flatMap(token -> accounts.findById(token.getUserId()))
-                .filter(account -> account.getStatus() == AccountStatus.ACTIVE)
+                .filter(UserAccount::canSignIn)
                 .ifPresent(account -> issueIfCooledDown(account, client, "BY_EXPIRED_LINK"));
     }
 
@@ -99,7 +101,7 @@ public class PasswordService {
         Instant now = Instant.now(clock);
         PasswordResetToken token = openToken(rawToken, now, client);
         UserAccount account = accounts.findById(token.getUserId())
-                .filter(found -> found.getStatus() == AccountStatus.ACTIVE)
+                .filter(UserAccount::canSignIn)
                 .orElseThrow(() -> new BusinessException(ErrorCode.RESET_TOKEN_INVALID));
         passwordPolicy.validate(newPassword, "password");
         if (passwordHasher.matches(newPassword, account.getPasswordHash())) {

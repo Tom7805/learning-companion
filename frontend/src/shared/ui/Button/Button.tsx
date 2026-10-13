@@ -3,7 +3,7 @@ import type { ButtonHTMLAttributes, ReactNode, Ref } from 'react'
 import { cn } from '@/shared/lib/cn'
 import { Spinner } from '../Spinner'
 
-type Variant = 'accent' | 'dark' | 'outline' | 'ghost'
+type Variant = 'accent' | 'dark' | 'outline' | 'ghost' | 'danger'
 type Size = 'md' | 'lg'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -20,6 +20,8 @@ const variants: Record<Variant, string> = {
   dark: 'bg-ink text-white border-ink hover:bg-ink-soft',
   outline: 'bg-surface text-ink border-ink hover:bg-paper',
   ghost: 'bg-transparent text-ink border-transparent hover:bg-ink/5',
+  /** Thao tác không hoàn tác được, ví dụ xóa tài khoản. */
+  danger: 'bg-danger text-white border-ink hover:bg-danger/90',
 }
 
 const sizes: Record<Size, string> = {

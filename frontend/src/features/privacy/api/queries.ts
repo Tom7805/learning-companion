@@ -80,3 +80,11 @@ export function useDownloadDataExport(id: string) {
     onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.dataExport(id) }),
   })
 }
+
+export function useRequestAccountDeletion(accountId: string) {
+  return useMutation({ mutationFn: (password?: string) => privacyApi.requestDeletion(accountId, password) })
+}
+
+export function useCancelAccountDeletion(accountId: string) {
+  return useMutation({ mutationFn: () => privacyApi.cancelDeletion(accountId) })
+}

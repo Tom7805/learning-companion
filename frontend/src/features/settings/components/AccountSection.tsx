@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
-import { DataExportSection } from '@/features/privacy'
+import { DataExportSection, DeleteAccountSection } from '@/features/privacy'
 import { LinkedAccountsSection } from './LinkedAccountsSection'
 
 /**
- * Mục Tài khoản trong cài đặt: cách đăng nhập (tài khoản liên kết, NCL-01-CN-007) và quyền mang dữ liệu đi
- * (xuất toàn bộ dữ liệu, NCL-01-CN-008).
+ * Mục Tài khoản trong cài đặt: cách đăng nhập (tài khoản liên kết, NCL-01-CN-007), quyền mang dữ liệu đi (xuất toàn
+ * bộ dữ liệu, NCL-01-CN-008) và quyền xóa dữ liệu (xóa tài khoản có thời gian chờ, NCL-01-CN-009).
  */
 export function AccountSection({ onNavigate }: { onNavigate: () => void }) {
   const { t } = useTranslation()
@@ -16,6 +16,7 @@ export function AccountSection({ onNavigate }: { onNavigate: () => void }) {
       </header>
       <LinkedAccountsSection onNavigate={onNavigate} />
       <DataExportSection onNavigate={onNavigate} />
+      <DeleteAccountSection onNavigate={onNavigate} />
     </div>
   )
 }
