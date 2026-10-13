@@ -147,7 +147,7 @@ export function SecurityPage() {
           </Button>
           <Link
             to={routes.devices}
-            className="inline-flex items-center gap-1.5 self-start text-sm font-medium underline-offset-4 hover:underline"
+            className="-my-2 inline-flex items-center gap-1.5 self-start py-2 text-sm font-medium underline-offset-4 hover:underline"
           >
             {t('security.sessions.manage')}
             <ArrowRight className="size-4" aria-hidden="true" />

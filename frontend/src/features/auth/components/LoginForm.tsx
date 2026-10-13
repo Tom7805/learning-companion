@@ -216,7 +216,7 @@ export function LoginForm({ notice, defaultEmail = '', returnTo, onLoggedIn }: L
         <div className="flex flex-col gap-1">
           <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
             <Checkbox label={t('login.remember')} aria-describedby="remember-hint" {...register('rememberDevice')} />
-            {forgotLink(t('login.forgot'), 'text-sm font-medium text-accent-ink underline-offset-4 hover:underline')}
+            {forgotLink(t('login.forgot'), '-my-2 py-2 text-sm font-medium text-accent-ink underline-offset-4 hover:underline')}
           </div>
           <p id="remember-hint" className="pl-9 text-[13px] leading-snug text-muted">
             {t('login.rememberHint')}

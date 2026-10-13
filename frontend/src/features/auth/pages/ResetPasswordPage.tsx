@@ -26,6 +26,24 @@ type State =
 
 type HeadingRef = RefObject<HTMLHeadingElement | null>
 
+/**
+ * Hai lần gắn hiệu ứng liền nhau (StrictMode) chỉ gửi một yêu cầu kiểm tra. Kết quả không được giữ lại sau khi xong,
+ * để mở lại đúng đường dẫn đó (ví dụ sau khi đã đặt mật khẩu) luôn được kiểm mới.
+ */
+const inflight = new Map<string, Promise<void>>()
+function checkOnce(token: string) {
+  let request = inflight.get(token)
+  if (!request) {
+    request = authApi.checkResetToken(token)
+    inflight.set(token, request)
+    request.then(
+      () => inflight.delete(token),
+      () => inflight.delete(token),
+    )
+  }
+  return request
+}
+
 /** Đặt mật khẩu mới từ đường dẫn trong thư (NCL-01-CN-003): dùng một lần, hiệu lực 30 phút. */
 export function ResetPasswordPage() {
   const { t } = useTranslation()
@@ -46,8 +64,7 @@ export function ResetPasswordPage() {
   const check = useCallback(() => {
     if (!token) return () => undefined
     let active = true
-    authApi
-      .checkResetToken(token)
+    checkOnce(token)
       .then(() => active && setState({ kind: 'form' }))
       .catch((error: unknown) => active && setState(stateFor(toApiError(error).code)))
     return () => {
@@ -301,7 +318,7 @@ function Success({ email, headingRef }: { email: string; headingRef: HeadingRef 
           <Trans
             i18nKey="reset.success.body"
             values={{ email }}
-            components={{ strong: <strong className="font-semibold break-words text-ink" /> }}
+            components={{ strong: <strong className="font-semibold text-ink" /> }}
           />
         </p>
       </Heading>
@@ -375,7 +392,7 @@ function Invalid({ headingRef }: { headingRef: HeadingRef }) {
 function BackToLogin() {
   const { t } = useTranslation()
   return (
-    <Link to={routes.login} className="text-center text-sm text-muted underline-offset-4 hover:text-ink hover:underline">
+    <Link to={routes.login} className="-my-2 py-2 text-center text-sm text-muted underline-offset-4 hover:text-ink hover:underline">
       {t('forgot.backToLogin')}
     </Link>
   )

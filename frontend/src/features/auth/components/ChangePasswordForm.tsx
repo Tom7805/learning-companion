@@ -206,7 +206,7 @@ export function ChangePasswordForm({ email }: { email: string }) {
         <Link
           to={routes.forgotPassword}
           state={{ email }}
-          className="text-center text-sm font-medium text-accent-ink underline-offset-4 hover:underline sm:text-left"
+          className="-my-2 py-2 text-center text-sm font-medium text-accent-ink underline-offset-4 hover:underline sm:text-left"
         >
           {t('security.change.forgot')}
         </Link>

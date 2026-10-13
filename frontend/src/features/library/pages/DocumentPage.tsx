@@ -69,7 +69,7 @@ export function DocumentPage() {
     <article className="flex flex-col gap-6">
       <Link
         to={routes.library}
-        className="inline-flex items-center gap-1.5 self-start text-sm font-medium text-ink-soft underline-offset-4 hover:text-ink hover:underline"
+        className="-my-2 inline-flex items-center gap-1.5 self-start py-2 text-sm font-medium text-ink-soft underline-offset-4 hover:text-ink hover:underline"
       >
         <ArrowLeft className="size-4" aria-hidden="true" />
         {t('library.backToLibrary')}
@@ -103,7 +103,7 @@ export function DocumentPage() {
             </h2>
             <div
               data-testid="document-content"
-              className="whitespace-pre-wrap break-words text-[15px] leading-7 text-ink-soft"
+              className="whitespace-pre-wrap text-[15px] leading-7 text-ink-soft"
             >
               {doc.contentText || t('library.noContent')}
             </div>

@@ -10,6 +10,9 @@
   body {
     @apply bg-paper font-sans text-ink antialiased;
     min-height: 100dvh;
+    /* Chuỗi dài không có chỗ ngắt (địa chỉ thư, tên tệp, tiêu đề do người học đặt) được xuống dòng thay vì
+       kéo giãn cả cột và làm trang tràn ngang trên điện thoại. Từ bình thường không bị cắt. */
+    overflow-wrap: anywhere;
   }
 
   :focus-visible {

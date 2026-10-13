@@ -357,7 +357,7 @@ function LinkWithPassword({ result, providerName, headingRef, onResult, onExpire
           <Trans
             i18nKey="oauth.link.body"
             values={{ email, provider: providerName }}
-            components={{ strong: <strong className="font-semibold break-words text-ink" /> }}
+            components={{ strong: <strong className="font-semibold text-ink" /> }}
           />
         </p>
       </Heading>
