@@ -2,7 +2,8 @@
   "app": {
     "name": "Learning Companion",
     "welcomeTo": "Chào mừng tới",
-    "skipToContent": "Bỏ qua tới nội dung chính"
+    "skipToContent": "Bỏ qua tới nội dung chính",
+    "shortName": "Learning"
   },
   "showcase": {
     "title": "Học sâu hơn với chính tài liệu của bạn",
@@ -141,7 +142,8 @@
     "EXPORT_NOT_READY": "Gói dữ liệu đang được chuẩn bị, hãy chờ thêm ít phút.",
     "EXPORT_EXPIRED": "Gói dữ liệu đã hết hạn tải, hãy yêu cầu xuất lại.",
     "REAUTHENTICATION_REQUIRED": "Hãy xác nhận lại mật khẩu hoặc đăng nhập lại để tiếp tục.",
-    "ACCOUNT_PENDING_DELETION": "Tài khoản đang chờ xóa. Hãy hủy yêu cầu xóa để dùng tiếp."
+    "ACCOUNT_PENDING_DELETION": "Tài khoản đang chờ xóa. Hãy hủy yêu cầu xóa để dùng tiếp.",
+    "CSRF_TOKEN_INVALID": "Trang đã cũ, hãy tải lại trang rồi thử lại."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -912,5 +914,60 @@
   },
   "routeError": {
     "title": "Không mở được trang này"
+  },
+  "notifications": {
+    "title": "Thông báo",
+    "bell": "Thông báo",
+    "bellUnread_one": "Thông báo, {{count}} chưa đọc",
+    "bellUnread_other": "Thông báo, {{count}} chưa đọc",
+    "unreadSummary_one": "{{count}} thông báo chưa đọc",
+    "unreadSummary_other": "{{count}} thông báo chưa đọc",
+    "allRead": "Bạn đã đọc hết thông báo.",
+    "markAllRead": "Đánh dấu tất cả đã đọc",
+    "markFailed": "Chưa đánh dấu được. Hãy thử lại.",
+    "loadMore": "Xem thông báo cũ hơn",
+    "loadFailed": "Không tải được thông báo.",
+    "openFailed": "Không mở được thông báo. Hãy thử lại.",
+    "opening": "Đang mở thông báo…",
+    "retention": "Thông báo được giữ trong 90 ngày.",
+    "unread": "Chưa đọc",
+    "empty": {
+      "title": "Chưa có thông báo nào",
+      "body": "Khi gói dữ liệu của bạn sẵn sàng hay có cảnh báo bảo mật, thông báo sẽ hiện ở đây."
+    },
+    "notFound": {
+      "title": "Không tìm thấy thông báo",
+      "body": "Thông báo này không có hoặc không thuộc tài khoản của bạn."
+    },
+    "category": {
+      "security": "Bảo mật",
+      "data": "Dữ liệu của bạn",
+      "general": "Hệ thống"
+    },
+    "types": {
+      "DATA_EXPORT_READY": {
+        "title": "Gói dữ liệu của bạn đã sẵn sàng",
+        "files_one": "{{count}} tệp",
+        "files_other": "{{count}} tệp",
+        "until": "tải được đến {{time}}"
+      },
+      "NEW_DEVICE_LOGIN": {
+        "title": "Đăng nhập từ thiết bị mới",
+        "device": "{{browser}} trên {{os}}"
+      },
+      "PASSWORD_CHANGED": {
+        "CHANGED": "Mật khẩu vừa được đổi",
+        "RESET": "Mật khẩu vừa được đặt lại",
+        "SET": "Đã đặt mật khẩu cho tài khoản",
+        "body": "Nếu không phải bạn, hãy đặt lại mật khẩu ngay."
+      },
+      "fallback": "Bạn có một thông báo mới"
+    }
+  },
+  "contentGone": {
+    "title": "Nội dung này không còn nữa",
+    "body": "Có thể nội dung đã bị xóa, đã hết hạn hoặc đã được thay bằng bản mới hơn. Các thông báo khác của bạn vẫn còn nguyên.",
+    "home": "Về trang chính",
+    "notifications": "Xem thông báo"
   }
 }

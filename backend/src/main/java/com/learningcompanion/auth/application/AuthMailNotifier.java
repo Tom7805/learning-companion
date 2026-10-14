@@ -8,6 +8,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.UUID;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -96,8 +97,8 @@ public class AuthMailNotifier {
     public record RegistrationAttemptNoticeRequested(String email, String displayName, Instant attemptedAt) {
     }
 
-    public record NewDeviceLoginAlert(String email, String displayName, DeviceInfo device, Instant signedInAt,
-                                      String rawRevokeToken) {
+    public record NewDeviceLoginAlert(UUID accountId, UUID sessionId, String email, String displayName,
+                                      DeviceInfo device, Instant signedInAt, String rawRevokeToken) {
     }
 
     public record AccountLockedNotice(String email, String displayName, Instant lockedUntil) {
@@ -106,6 +107,14 @@ public class AuthMailNotifier {
     public record PasswordResetRequested(String email, String displayName, String rawToken) {
     }
 
-    public record PasswordChangedNotice(String email, String displayName, Instant changedAt, boolean viaReset) {
+    public record PasswordChangedNotice(UUID accountId, String email, String displayName, Instant changedAt,
+                                        PasswordChange change) {
+
+        public boolean viaReset() {
+            return change == PasswordChange.RESET;
+        }
     }
+
+    /** Cách mật khẩu vừa đổi: tự đổi khi đang đăng nhập, đặt lại qua thư, hoặc đặt lần đầu. */
+    public enum PasswordChange { CHANGED, RESET, SET }
 }

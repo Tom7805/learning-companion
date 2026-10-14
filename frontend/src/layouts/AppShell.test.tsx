@@ -5,8 +5,9 @@ import { routes } from '@/app/routes'
 import { recentStore } from '@/app/store/recentStore'
 import { UI_STORAGE_KEY, uiStore } from '@/app/store/uiStore'
 import { reloadTo } from '@/shared/lib/navigation'
+import { FakeEventSource, installEventSource } from '@/test/eventSource'
 import { setMedia } from '@/test/media'
-import { serverUiPreferences, verifiedAccount } from '@/test/mocks/handlers'
+import { privacyStatus, sampleNotifications, serverUiPreferences, verifiedAccount } from '@/test/mocks/handlers'
 import { server } from '@/test/mocks/server'
 import { renderWithProviders } from '@/test/renderWithProviders'
 import { AppShell } from './AppShell'
@@ -238,5 +239,85 @@ describe('AppShell · mất mạng', () => {
     })
     expect(screen.queryByTestId('offline-banner')).not.toBeInTheDocument()
     expect(await screen.findByText('Đã kết nối lại.')).toBeInTheDocument()
+  })
+})
+
+describe('AppShell · thông báo', () => {
+  const unreadIs = (count: number) => {
+    server.use(
+      http.get('*/api/v1/notifications/unread-count', () => HttpResponse.json({ unreadCount: count })),
+      http.get('*/api/v1/notifications', () => HttpResponse.json({ ...sampleNotifications, unreadCount: count })),
+    )
+  }
+
+  it('chuông ở đầu thanh bên cho biết số chưa đọc; bấm mở ngăn thông báo, bấm lần nữa thì đóng', async () => {
+    unreadIs(2)
+    const { user } = renderShell()
+    await shell()
+
+    const bell = await screen.findByRole('button', { name: 'Thông báo, 2 chưa đọc' })
+    expect(within(screen.getByTestId('sidebar')).getByTestId('notification-bell')).toBe(bell)
+    await user.click(bell)
+
+    const panel = screen.getByTestId('side-panel')
+    expect(panel).toHaveAccessibleName('Thông báo')
+    expect(bell).toHaveAttribute('aria-expanded', 'true')
+    expect(await within(panel).findAllByTestId('notification-item')).toHaveLength(2)
+
+    await user.click(bell)
+    expect(screen.queryByTestId('side-panel')).not.toBeInTheDocument()
+  })
+
+  it('số chưa đọc cập nhật ngay qua kênh trực tiếp mà không cần tải lại trang', async () => {
+    installEventSource()
+    unreadIs(0)
+    renderShell()
+    await shell()
+    await screen.findByRole('button', { name: 'Thông báo' })
+
+    const stream = FakeEventSource.latest()!
+    expect(stream.url).toBe('/api/v1/notifications/stream')
+    expect(stream.withCredentials).toBe(true)
+    stream.open()
+    stream.emit('unread', { unreadCount: 3, created: true })
+
+    expect(await screen.findByRole('button', { name: 'Thông báo, 3 chưa đọc' })).toBeInTheDocument()
+    stream.emit('unread', { unreadCount: 0, created: false })
+    expect(await screen.findByRole('button', { name: 'Thông báo' })).toBeInTheDocument()
+  })
+
+  it('đang chờ đồng ý điều khoản mới thì chưa hỏi thông báo', async () => {
+    installEventSource()
+    const asked: string[] = []
+    server.use(
+      http.get('*/api/v1/accounts/:id/privacy', () => HttpResponse.json({ ...privacyStatus, acceptanceRequired: true })),
+      http.get('*/api/v1/notifications/unread-count', ({ request }) => {
+        asked.push(request.url)
+        return HttpResponse.json({ unreadCount: 1 })
+      }),
+    )
+    renderShell()
+    await shell()
+    await screen.findByTestId('terms-pending')
+
+    expect(asked).toEqual([])
+    expect(FakeEventSource.instances.filter((source) => source.readyState !== FakeEventSource.CLOSED)).toEqual([])
+  })
+
+  it('trên điện thoại, chuông ở thanh trên cùng và trong ngăn kéo; bấm trong ngăn kéo thì đóng ngăn kéo rồi mở thông báo', async () => {
+    setMedia({ width: 360 })
+    unreadIs(1)
+    const { user } = renderShell()
+    await shell()
+
+    expect(await screen.findByRole('button', { name: 'Thông báo, 1 chưa đọc' })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Mở thanh bên' }))
+    const drawer = screen.getByRole('dialog', { name: 'Thanh bên' })
+    await user.click(within(drawer).getByRole('button', { name: 'Thông báo, 1 chưa đọc' }))
+
+    expect(screen.queryByRole('dialog', { name: 'Thanh bên' })).not.toBeInTheDocument()
+    const panel = screen.getByTestId('side-panel')
+    expect(panel).toHaveAttribute('data-fullscreen', 'true')
+    expect(panel).toHaveAccessibleName('Thông báo')
   })
 })

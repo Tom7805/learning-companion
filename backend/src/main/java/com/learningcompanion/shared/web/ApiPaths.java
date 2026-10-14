@@ -14,6 +14,7 @@ public final class ApiPaths {
     public static final String ANALYTICS = V1 + "/analytics";
     public static final String EXPORTS = V1 + "/exports";
     public static final String UI_PREFERENCES = V1 + "/ui-preferences";
+    public static final String NOTIFICATIONS = V1 + "/notifications";
 
     private ApiPaths() {
     }

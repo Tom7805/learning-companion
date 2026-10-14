@@ -100,8 +100,8 @@ class DataExportIT {
                 .andExpect(jsonPath("$.canRequest").value(false)), "$.latest.id");
         JsonNode ready = awaitReady(lan, id);
         assertThat(ready.get("fileName").asString()).matches("learning-companion-export-\\d{4}-\\d{2}-\\d{2}\\.zip");
-        assertThat(values(ready.get("sections"), "id")).containsExactly("account", "profile", "appearance", "privacy",
-                "library");
+        assertThat(values(ready.get("sections"), "id")).containsExactly("account", "profile", "appearance",
+                "notifications", "privacy", "library");
 
         MockMailGateway.CapturedMail mail = awaitMail(lan.email(), "DATA_EXPORT_READY");
         assertThat(String.join(" ", mail.links())).contains("/exports/" + id);
@@ -119,6 +119,7 @@ class DataExportIT {
         assertThat(zip.keySet()).contains(root + "README.txt", root + "manifest.json",
                 root + "account/account.json", root + "account/sessions.csv",
                 root + "profile/profile.json", root + "appearance/appearance.json",
+                root + "notifications/notifications.json",
                 root + "privacy/consents.json", root + "privacy/consent-history.csv",
                 root + "library/documents.json",
                 root + "library/files/dinh-luat-ohm.txt", root + "library/files/dinh-luat-ohm (2).txt",

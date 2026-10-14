@@ -117,8 +117,8 @@ public class PasswordService {
         loginAttempts.reset(account.getEmail());
         audit.byUser(account.getId(), AuditAction.PASSWORD_RESET_COMPLETED, AuditObjectType.USER_ACCOUNT,
                 account.getId(), Map.of("revokedSessions", revoked), client);
-        events.publishEvent(new AuthMailNotifier.PasswordChangedNotice(account.getEmail(), account.getDisplayName(),
-                now, true));
+        events.publishEvent(new AuthMailNotifier.PasswordChangedNotice(account.getId(), account.getEmail(),
+                account.getDisplayName(), now, AuthMailNotifier.PasswordChange.RESET));
         return account.getEmail();
     }
 
@@ -148,7 +148,8 @@ public class PasswordService {
                 SessionService.REASON_PASSWORD_CHANGED, client);
         audit.byUser(account.getId(), AuditAction.PASSWORD_CHANGED, AuditObjectType.USER_ACCOUNT, account.getId(),
                 Map.of("revokedSessions", revoked), client);
-        events.publishEvent(new AuthMailNotifier.PasswordChangedNotice(email, account.getDisplayName(), now, false));
+        events.publishEvent(new AuthMailNotifier.PasswordChangedNotice(account.getId(), email, account.getDisplayName(),
+                now, AuthMailNotifier.PasswordChange.CHANGED));
         return revoked;
     }
 
@@ -168,8 +169,8 @@ public class PasswordService {
         account.changePassword(passwordHasher.hash(newPassword), now);
         audit.byUser(account.getId(), AuditAction.PASSWORD_CHANGED, AuditObjectType.USER_ACCOUNT, account.getId(),
                 Map.of("initial", true), client);
-        events.publishEvent(new AuthMailNotifier.PasswordChangedNotice(account.getEmail(), account.getDisplayName(),
-                now, false));
+        events.publishEvent(new AuthMailNotifier.PasswordChangedNotice(account.getId(), account.getEmail(),
+                account.getDisplayName(), now, AuthMailNotifier.PasswordChange.SET));
     }
 
     private PasswordResetToken openToken(String rawToken, Instant now, ClientInfo client) {

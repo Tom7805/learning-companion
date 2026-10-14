@@ -294,7 +294,8 @@ class AuthControllerIT {
         mvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body(uniqueEmail(), STRONG_PASSWORD, true)))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.code").value("CSRF_TOKEN_INVALID"));
     }
 
     @Test

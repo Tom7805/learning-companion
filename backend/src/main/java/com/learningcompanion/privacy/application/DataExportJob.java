@@ -2,6 +2,9 @@ package com.learningcompanion.privacy.application;
 
 import com.learningcompanion.auth.domain.UserAccount;
 import com.learningcompanion.auth.domain.UserAccountRepository;
+import com.learningcompanion.notification.application.NotificationService;
+import com.learningcompanion.notification.domain.NotificationTargetType;
+import com.learningcompanion.notification.domain.NotificationType;
 import com.learningcompanion.privacy.domain.DataExportRequest;
 import com.learningcompanion.privacy.domain.DataExportRequestRepository;
 import com.learningcompanion.privacy.domain.DataExportStatus;
@@ -58,6 +61,7 @@ public class DataExportJob {
     private final UserProfileRepository profiles;
     private final AuditLogger audit;
     private final MailService mail;
+    private final NotificationService notifications;
     private final AppProperties properties;
     private final EntityManager entityManager;
     private final TransactionTemplate tx;
@@ -65,8 +69,9 @@ public class DataExportJob {
 
     public DataExportJob(DataExportRequestRepository exports, DataExportService service, ExportPackager packager,
                          FileStorageService storage, UserAccountRepository accounts, UserProfileRepository profiles,
-                         AuditLogger audit, MailService mail, AppProperties properties, EntityManager entityManager,
-                         PlatformTransactionManager transactions, Clock clock) {
+                         AuditLogger audit, MailService mail, NotificationService notifications,
+                         AppProperties properties, EntityManager entityManager, PlatformTransactionManager transactions,
+                         Clock clock) {
         this.exports = exports;
         this.service = service;
         this.packager = packager;
@@ -75,6 +80,7 @@ public class DataExportJob {
         this.profiles = profiles;
         this.audit = audit;
         this.mail = mail;
+        this.notifications = notifications;
         this.properties = properties;
         this.entityManager = entityManager;
         this.tx = new TransactionTemplate(transactions);
@@ -167,6 +173,11 @@ public class DataExportJob {
         details.put("expiresAt", export.getExpiresAt().toString());
         audit.byUser(ownerId, AuditAction.DATA_EXPORT_COMPLETED, AuditObjectType.DATA_EXPORT, exportId, details,
                 null);
+        // Cùng giao dịch với lúc gói hoàn tất: tác vụ có chạy lại cũng chỉ một thông báo cho mỗi gói (QTN-10).
+        notifications.notify(ownerId, NotificationType.DATA_EXPORT_READY, NotificationTargetType.DATA_EXPORT, exportId,
+                Map.of("expiresAt", export.getExpiresAt().toString(), "sizeBytes", export.getSizeBytes(),
+                        "fileCount", export.getFileCount()),
+                "data-export-ready:" + exportId);
         return export;
     }
 

@@ -12,4 +12,6 @@ export const queryKeys = {
   dataExports: ['exports'] as const,
   dataExport: (id: string) => ['exports', id] as const,
   document: (id: string) => ['library', 'documents', id] as const,
+  notifications: ['notifications', 'list'] as const,
+  notificationsUnread: ['notifications', 'unread'] as const,
 }
