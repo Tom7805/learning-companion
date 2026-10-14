@@ -4,6 +4,7 @@ import com.learningcompanion.shared.config.AppProperties;
 import com.learningcompanion.shared.exception.BusinessException;
 import com.learningcompanion.shared.exception.ErrorCode;
 import com.learningcompanion.shared.web.ApiPaths;
+import jakarta.servlet.DispatcherType;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
+import org.springframework.security.web.csrf.CsrfException;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -45,6 +47,9 @@ public class SecurityConfig {
                 .logout(logout -> logout.disable())
                 .requestCache(cache -> cache.disable())
                 .authorizeHttpRequests(auth -> auth
+                        // Lượt xử lý tiếp của yêu cầu bất đồng bộ (kênh thông báo SSE) thuộc về yêu cầu gốc đã được
+                        // xác thực; phiên không lưu trong bộ nhớ nên không kiểm lại được ở lượt này.
+                        .dispatcherTypeMatchers(DispatcherType.ASYNC).permitAll()
                         .requestMatchers(HttpMethod.POST,
                                 ApiPaths.AUTH + "/register",
                                 ApiPaths.AUTH + "/login",
@@ -73,8 +78,11 @@ public class SecurityConfig {
                 .exceptionHandling(errors -> errors
                         .authenticationEntryPoint((request, response, ex) -> resolver.resolveException(
                                 request, response, null, new BusinessException(unauthenticatedCode(request))))
+                        // Lỗi mã chống giả mạo có mã riêng: thường chỉ do hai yêu cầu song song cùng nhận mã mới
+                        // khi trình duyệt chưa có cookie, giao diện gửi lại một lần là xong.
                         .accessDeniedHandler((request, response, ex) -> resolver.resolveException(
-                                request, response, null, new BusinessException(ErrorCode.FORBIDDEN))))
+                                request, response, null, new BusinessException(ex instanceof CsrfException
+                                        ? ErrorCode.CSRF_TOKEN_INVALID : ErrorCode.FORBIDDEN))))
                 .addFilterBefore(new SessionAuthenticationFilter(sessionResolver,
                         properties.auth().sessionCookieName(), properties.auth().secureCookies()),
                         AnonymousAuthenticationFilter.class)

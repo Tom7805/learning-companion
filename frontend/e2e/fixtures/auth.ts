@@ -78,6 +78,13 @@ export class DevApi {
     return (await response.json()).id
   }
 
+  /** Thông báo mẫu (NCL-02-CN-002) trỏ tới gói dữ liệu không tồn tại; trả về số thông báo đã tạo. */
+  async sampleNotifications(email: string, count: number): Promise<number> {
+    const response = await this.request.post(`${API}/dev/notifications/sample`, { data: { email, count } })
+    expect(response.ok()).toBeTruthy()
+    return (await response.json()).created
+  }
+
   async setRole(email: string, role: 'LEARNER' | 'ADMIN') {
     expect((await this.request.post(`${API}/dev/accounts/role`, { data: { email, role } })).ok()).toBeTruthy()
   }

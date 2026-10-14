@@ -2,7 +2,8 @@
   "app": {
     "name": "Learning Companion",
     "welcomeTo": "Welcome to",
-    "skipToContent": "Skip to main content"
+    "skipToContent": "Skip to main content",
+    "shortName": "Learning"
   },
   "showcase": {
     "title": "Learn deeper with your own materials",
@@ -141,7 +142,8 @@
     "EXPORT_NOT_READY": "Your data package is still being prepared. Please wait a few minutes.",
     "EXPORT_EXPIRED": "This data package has expired. Please request a new export.",
     "REAUTHENTICATION_REQUIRED": "Please confirm your password or sign in again to continue.",
-    "ACCOUNT_PENDING_DELETION": "This account is scheduled for deletion. Cancel the deletion request to keep using it."
+    "ACCOUNT_PENDING_DELETION": "This account is scheduled for deletion. Cancel the deletion request to keep using it.",
+    "CSRF_TOKEN_INVALID": "This page is out of date. Reload it and try again."
   },
   "checkEmail": {
     "title": "Check your inbox",
@@ -912,5 +914,60 @@
   },
   "routeError": {
     "title": "This page couldn't be opened"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "bell": "Notifications",
+    "bellUnread_one": "Notifications, {{count}} unread",
+    "bellUnread_other": "Notifications, {{count}} unread",
+    "unreadSummary_one": "{{count}} unread notification",
+    "unreadSummary_other": "{{count}} unread notifications",
+    "allRead": "You're all caught up.",
+    "markAllRead": "Mark all as read",
+    "markFailed": "Couldn't mark them as read. Please try again.",
+    "loadMore": "Show older notifications",
+    "loadFailed": "Couldn't load notifications.",
+    "openFailed": "Couldn't open the notification. Please try again.",
+    "opening": "Opening notification…",
+    "retention": "Notifications are kept for 90 days.",
+    "unread": "Unread",
+    "empty": {
+      "title": "No notifications yet",
+      "body": "When your data package is ready or there's a security alert, it will show up here."
+    },
+    "notFound": {
+      "title": "Notification not found",
+      "body": "This notification doesn't exist or doesn't belong to your account."
+    },
+    "category": {
+      "security": "Security",
+      "data": "Your data",
+      "general": "System"
+    },
+    "types": {
+      "DATA_EXPORT_READY": {
+        "title": "Your data package is ready",
+        "files_one": "{{count}} file",
+        "files_other": "{{count}} files",
+        "until": "available until {{time}}"
+      },
+      "NEW_DEVICE_LOGIN": {
+        "title": "Sign-in from a new device",
+        "device": "{{browser}} on {{os}}"
+      },
+      "PASSWORD_CHANGED": {
+        "CHANGED": "Your password was changed",
+        "RESET": "Your password was reset",
+        "SET": "A password was set for your account",
+        "body": "If this wasn't you, reset your password now."
+      },
+      "fallback": "You have a new notification"
+    }
+  },
+  "contentGone": {
+    "title": "This content is no longer available",
+    "body": "It may have been deleted, expired or replaced by a newer version. Your other notifications are still here.",
+    "home": "Back to home",
+    "notifications": "View notifications"
   }
 }

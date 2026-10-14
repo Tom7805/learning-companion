@@ -7,6 +7,8 @@ export const routes = {
   privacySettings: '/privacy',
   dataExport: '/exports/:id',
   deleteAccount: '/account/delete',
+  notification: '/notifications/:id',
+  contentGone: '/gone',
   deletionScheduled: '/account/deletion-scheduled',
   register: '/register',
   checkEmail: '/register/check-email',
@@ -24,3 +26,4 @@ export const routes = {
 
 export const documentPath = (id: string) => `/library/${encodeURIComponent(id)}`
 export const dataExportPath = (id: string) => `/exports/${encodeURIComponent(id)}`
+export const notificationPath = (id: string) => `/notifications/${encodeURIComponent(id)}`

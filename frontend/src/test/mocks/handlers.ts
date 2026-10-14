@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw'
 import type { Account, DeviceSession } from '@/features/auth/types'
 import type { LearningDocument } from '@/features/library/types'
+import type { NotificationPage } from '@/features/notifications/types'
 import type { Profile } from '@/features/settings/types'
 import type { ConsentHistoryEntry, DataExport, LegalCurrent, PrivacyStatus } from '@/features/privacy/types'
 
@@ -30,6 +31,27 @@ export function apiError(status: number, code: string, field?: string, details?:
     },
     { status },
   )
+}
+
+/** Hai thông báo chưa đọc (NCL-02-CN-002): gói dữ liệu sẵn sàng (mới nhất) và đăng nhập từ thiết bị mới. */
+export const sampleNotifications: NotificationPage = {
+  items: [
+    {
+      id: '7a3f0c11-4444-4d2e-9b1a-000000000002',
+      type: 'DATA_EXPORT_READY',
+      params: { expiresAt: '2026-10-19T03:00:05Z', sizeBytes: 48_640, fileCount: 12 },
+      targetType: 'DATA_EXPORT',
+      createdAt: '2026-10-12T03:00:05Z',
+    },
+    {
+      id: '7a3f0c11-4444-4d2e-9b1a-000000000001',
+      type: 'NEW_DEVICE_LOGIN',
+      params: { browser: 'Chrome', operatingSystem: 'Windows', deviceType: 'DESKTOP', location: 'Hà Nội, VN', localNetwork: false },
+      targetType: 'DEVICES',
+      createdAt: '2026-10-11T08:30:00Z',
+    },
+  ],
+  unreadCount: 2,
 }
 
 /** Tùy chọn giao diện lưu theo tài khoản (NCL-02-CN-001), đúng dạng máy chủ trả về: hằng viết hoa. */
@@ -114,6 +136,10 @@ export const handlers = [
       sidebarCollapsed: changes.sidebarCollapsed ?? serverUiPreferences.sidebarCollapsed,
     })
   }),
+  // Mặc định chưa có thông báo nào; bài kiểm thử cần thì ghi đè bằng sampleNotifications.
+  http.get('*/api/v1/notifications', () => HttpResponse.json({ items: [], unreadCount: 0 })),
+  http.get('*/api/v1/notifications/unread-count', () => HttpResponse.json({ unreadCount: 0 })),
+  http.post('*/api/v1/notifications/read-all', () => HttpResponse.json({ marked: 0, unreadCount: 0 })),
   http.get('*/api/v1/exports', () => HttpResponse.json({ canRequest: true })),
   http.get('*/api/v1/exports/:id', () => HttpResponse.json(readyExport)),
 ]

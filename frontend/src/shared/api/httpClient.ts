@@ -1,4 +1,4 @@
-import axios, { isAxiosError } from 'axios'
+import axios, { isAxiosError, type InternalAxiosRequestConfig } from 'axios'
 
 const XSRF_COOKIE = 'XSRF-TOKEN'
 const MUTATING = new Set(['post', 'put', 'patch', 'delete'])
@@ -55,9 +55,19 @@ export function onAccountChanged(listener: AccountChangedListener) {
   }
 }
 
+type RetriableConfig = InternalAxiosRequestConfig & { csrfRetried?: boolean }
+
 http.interceptors.response.use(undefined, (error: unknown) => {
   if (isAxiosError(error) && error.response) {
     const code = (error.response.data as { code?: string } | undefined)?.code
+    // Trình duyệt chưa có cookie CSRF mà hai yêu cầu chạy song song thì mỗi yêu cầu nhận một mã mới, cookie giữ mã
+    // về sau, tiêu đề có thể mang mã về trước. Lúc này cookie đã ổn định: gửi lại đúng một lần với mã trong cookie.
+    const config = error.config as RetriableConfig | undefined
+    if (error.response.status === 403 && code === 'CSRF_TOKEN_INVALID' && config && !config.csrfRetried) {
+      config.csrfRetried = true
+      config.headers.delete('X-XSRF-TOKEN')
+      return http.request(config)
+    }
     if (error.response.status === 401 && code && SESSION_LOST.has(code)) {
       sessionLostListeners.forEach((listener) => listener(code))
     }

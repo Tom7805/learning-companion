@@ -97,8 +97,8 @@ public class SessionService implements SessionResolver {
         audit.byUser(account.getId(), AuditAction.SESSION_CREATED, AuditObjectType.SESSION, session.getId(),
                 Map.of("reason", reason, "rememberDevice", rememberDevice, "newDevice", alert), client);
         if (alert) {
-            events.publishEvent(new AuthMailNotifier.NewDeviceLoginAlert(account.getEmail(),
-                    account.getDisplayName(), device, now, revokeLink));
+            events.publishEvent(new AuthMailNotifier.NewDeviceLoginAlert(account.getId(), session.getId(),
+                    account.getEmail(), account.getDisplayName(), device, now, revokeLink));
             audit.byUser(account.getId(), AuditAction.NEW_DEVICE_ALERT_SENT, AuditObjectType.SESSION,
                     session.getId(), Map.of("device", device.label()), client);
         }

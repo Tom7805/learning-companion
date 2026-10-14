@@ -26,6 +26,11 @@ const DataExportDownloadPage = page(
   'DataExportDownloadPage',
 )
 const DeleteAccountFlow = page(() => import('@/features/privacy/pages/DeleteAccountFlow'), 'DeleteAccountFlow')
+const NotificationOpenPage = page(
+  () => import('@/features/notifications/pages/NotificationOpenPage'),
+  'NotificationOpenPage',
+)
+const ContentGonePage = page(() => import('@/pages/ContentGonePage'), 'ContentGonePage')
 const RegisterPage = page(() => import('@/features/auth/pages/RegisterPage'), 'RegisterPage')
 const CheckEmailPage = page(() => import('@/features/auth/pages/CheckEmailPage'), 'CheckEmailPage')
 const VerifyEmailPage = page(() => import('@/features/auth/pages/VerifyEmailPage'), 'VerifyEmailPage')
@@ -88,6 +93,8 @@ export const router = createBrowserRouter([
                   { path: routes.privacySettings, element: <PrivacyPage /> },
                   { path: routes.dataExport, element: <DataExportDownloadPage /> },
                   { path: routes.deleteAccount, element: <DeleteAccountFlow /> },
+                  { path: routes.notification, element: <NotificationOpenPage /> },
+                  { path: routes.contentGone, element: <ContentGonePage /> },
                 ],
               },
             ],

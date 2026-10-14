@@ -8,5 +8,6 @@ public enum AuditObjectType {
     DOCUMENT,
     PROFILE,
     EXTERNAL_IDENTITY,
-    DATA_EXPORT
+    DATA_EXPORT,
+    NOTIFICATION
 }

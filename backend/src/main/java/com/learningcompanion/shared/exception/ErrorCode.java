@@ -29,6 +29,8 @@ public enum ErrorCode {
     PASSWORD_REUSED(HttpStatus.BAD_REQUEST, "Mật khẩu mới phải khác mật khẩu đang dùng."),
     UNAUTHENTICATED(HttpStatus.UNAUTHORIZED, "Bạn cần đăng nhập để tiếp tục."),
     FORBIDDEN(HttpStatus.FORBIDDEN, "Bạn không có quyền thực hiện thao tác này."),
+    /** Mã chống giả mạo yêu cầu thiếu hoặc không khớp cookie; giao diện lấy mã mới rồi gửi lại một lần. */
+    CSRF_TOKEN_INVALID(HttpStatus.FORBIDDEN, "Trang đã cũ, hãy tải lại trang rồi thử lại."),
     NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy dữ liệu."),
     FILE_LINK_EXPIRED(HttpStatus.GONE, "Đường dẫn mở tệp đã hết hạn."),
     OAUTH_STATE_INVALID(HttpStatus.BAD_REQUEST, "Không xác minh được yêu cầu đăng nhập, hãy thử lại từ đầu."),

@@ -10,6 +10,12 @@ import { routes } from '@/app/routes'
 import { recentStore } from '@/app/store/recentStore'
 import { useUiPreferences } from '@/app/store/uiStore'
 import { TermsUpdateDialog, useAuth, useLogout } from '@/features/auth'
+import {
+  NotificationBell,
+  useNotificationPanel,
+  useNotificationStream,
+  useUnreadCount,
+} from '@/features/notifications'
 import { usePageViewTracking, usePrivacyStatus } from '@/features/privacy'
 import { useProfile, type SettingsSection } from '@/features/settings'
 import { useUiPreferencesSync, useUpdateUiPreferences } from '@/features/settings/api/queries'
@@ -78,6 +84,12 @@ function AppShellFrame() {
     privacy.data?.purposes.some((item) => item.purpose === 'ANONYMOUS_USAGE_ANALYTICS' && item.granted) === true,
   )
   const timeZone = profile.data?.timeZone
+  // Thông báo (NCL-02-CN-002): số chưa đọc cập nhật ngay qua kênh trực tiếp; trong lúc chờ đồng ý điều khoản mới thì
+  // tạm không hỏi vì mọi chức năng đang bị chặn.
+  const notificationsEnabled = Boolean(account) && !privacy.isPending && !acceptanceRequired
+  const streaming = useNotificationStream(notificationsEnabled)
+  const unreadCount = useUnreadCount(notificationsEnabled, { poll: !streaming }).data ?? 0
+  const notificationPanel = useNotificationPanel()
   // Cài đặt mở bằng tham số trên địa chỉ nên tải lại trang hay bấm Quay lại vẫn đúng trạng thái.
   const [params, setParams] = useSearchParams()
   const settingsOpen = params.has('settings')
@@ -156,6 +168,17 @@ function AppShellFrame() {
     loggingOut: logout.isPending,
   }
   const collapsed = preferences.sidebarCollapsed
+  const bell = (variant: 'sidebar' | 'compact', beforeToggle?: () => void) => (
+    <NotificationBell
+      variant={variant}
+      unreadCount={unreadCount}
+      expanded={notificationPanel.isOpen}
+      onToggle={() => {
+        beforeToggle?.()
+        notificationPanel.toggle()
+      }}
+    />
+  )
   const toggleCollapsed = () => updatePreferences.mutate({ sidebarCollapsed: !collapsed })
 
   return (
@@ -177,6 +200,7 @@ function AppShellFrame() {
             variant={collapsed ? 'collapsed' : 'expanded'}
             onToggleCollapsed={toggleCollapsed}
             onQuickOpen={() => setQuickOpen(true)}
+            bell={bell(collapsed ? 'compact' : 'sidebar')}
             {...menu}
           />
         </div>
@@ -194,9 +218,17 @@ function AppShellFrame() {
               icon={<Menu className="size-5" />}
               onClick={() => setDrawerPath(location.pathname)}
             />
-            <Link to={routes.home} className="flex min-w-0 flex-1 items-center gap-2 rounded-xl px-1 outline-none focus-visible:ring-4 focus-visible:ring-sun/60">
+            <Link
+              to={routes.home}
+              aria-label={t('app.name')}
+              className="flex min-w-0 flex-1 items-center gap-2 rounded-xl px-1 outline-none focus-visible:ring-4 focus-visible:ring-sun/60"
+            >
               <AppMark className="size-8" />
-              <span className="truncate text-[0.9375rem] font-semibold tracking-tight">{t('app.name')}</span>
+              {/* Màn hình hẹp chỉ đủ chỗ cho tên ngắn (giống tên trên màn hình chính khi cài ứng dụng). */}
+              <span className="truncate text-[0.9375rem] font-semibold tracking-tight" aria-hidden="true">
+                <span className="sm:hidden">{t('app.shortName')}</span>
+                <span className="max-sm:hidden">{t('app.name')}</span>
+              </span>
             </Link>
             <IconButton
               tone="night"
@@ -204,6 +236,7 @@ function AppShellFrame() {
               icon={<Search className="size-5" />}
               onClick={() => setQuickOpen(true)}
             />
+            {bell('compact')}
             <AccountMenu placement="topbar" {...menu} />
           </header>
         )}
@@ -247,6 +280,7 @@ function AppShellFrame() {
               closeDrawer()
               setQuickOpen(true)
             }}
+            bell={bell('sidebar', closeDrawer)}
             {...menu}
           />
         </Drawer>

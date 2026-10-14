@@ -1,5 +1,5 @@
 import { FileText, PanelLeftClose, PanelLeftOpen, Search, X } from 'lucide-react'
-import { useId } from 'react'
+import { useId, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink } from 'react-router'
 import { navigation } from '@/app/navigation'
@@ -33,13 +33,23 @@ interface SidebarProps extends SidebarAccountProps {
   /** Gọi sau khi chọn một mục, để ngăn kéo tự đóng. */
   onNavigate?: () => void
   onQuickOpen: () => void
+  /** Chuông thông báo, đặt cạnh nút Mở nhanh ở đầu thanh bên. */
+  bell?: ReactNode
 }
 
 /**
  * Thanh bên (NCL-02-CN-001): trên cùng là nút hành động chính, tiếp theo là nhóm mục do từng chức năng đăng ký,
  * khu mục gần đây, và trình đơn tài khoản ở đáy. Thu gọn thì còn cột biểu tượng, rê chuột thấy tên mục.
  */
-export function Sidebar({ variant, onToggleCollapsed, onClose, onNavigate, onQuickOpen, ...account }: SidebarProps) {
+export function Sidebar({
+  variant,
+  onToggleCollapsed,
+  onClose,
+  onNavigate,
+  onQuickOpen,
+  bell,
+  ...account
+}: SidebarProps) {
   const { t } = useTranslation()
   const collapsed = variant === 'collapsed'
   const recent = useRecentItems(account.accountId)
@@ -81,38 +91,46 @@ export function Sidebar({ variant, onToggleCollapsed, onClose, onNavigate, onQui
       </div>
 
       {collapsed ? (
-        <Tooltip label={t('shell.quickOpen')}>
+        <div className="flex flex-col items-center gap-2">
+          <Tooltip label={t('shell.quickOpen')}>
+            <button
+              type="button"
+              onClick={onQuickOpen}
+              aria-label={t('shell.quickOpen')}
+              aria-keyshortcuts="Control+K Meta+K"
+              className="grid size-11 place-items-center rounded-xl bg-sun text-ink outline-none focus-visible:ring-4 focus-visible:ring-sun/60"
+            >
+              <Search className="size-5" aria-hidden="true" />
+            </button>
+          </Tooltip>
+          {bell && <Tooltip label={t('notifications.title')}>{bell}</Tooltip>}
+        </div>
+      ) : (
+        <div className="flex w-full items-stretch gap-2">
           <button
             type="button"
             onClick={onQuickOpen}
-            aria-label={t('shell.quickOpen')}
             aria-keyshortcuts="Control+K Meta+K"
-            className="grid size-11 place-items-center rounded-xl bg-sun text-ink outline-none focus-visible:ring-4 focus-visible:ring-sun/60"
+            className={cn(
+              'flex min-w-0 flex-1 items-center gap-3 rounded-2xl bg-sun px-3.5 py-3 text-left text-ink outline-none',
+              'transition-transform hover:-translate-y-px focus-visible:ring-4 focus-visible:ring-sun/60',
+            )}
           >
-            <Search className="size-5" aria-hidden="true" />
+            <Search className="size-5 shrink-0" aria-hidden="true" />
+            <span className="flex min-w-0 flex-1 flex-col gap-0.5 leading-tight">
+              <span className="flex items-center justify-between gap-2">
+                <span className="font-semibold">{t('shell.quickOpen')}</span>
+                {variant === 'expanded' && (
+                  <Kbd className="h-5 shrink-0 text-ink-soft">
+                    <span aria-hidden="true">{QUICK_OPEN_KEYS}</span>
+                  </Kbd>
+                )}
+              </span>
+              <span className="truncate text-xs text-ink-soft">{t('shell.quickOpenHint')}</span>
+            </span>
           </button>
-        </Tooltip>
-      ) : (
-        <button
-          type="button"
-          onClick={onQuickOpen}
-          aria-keyshortcuts="Control+K Meta+K"
-          className={cn(
-            'flex w-full items-center gap-3 rounded-2xl bg-sun px-3.5 py-3 text-left text-ink outline-none',
-            'transition-transform hover:-translate-y-px focus-visible:ring-4 focus-visible:ring-sun/60',
-          )}
-        >
-          <Search className="size-5 shrink-0" aria-hidden="true" />
-          <span className="flex min-w-0 flex-1 flex-col leading-tight">
-            <span className="font-semibold">{t('shell.quickOpen')}</span>
-            <span className="truncate text-xs text-ink-soft">{t('shell.quickOpenHint')}</span>
-          </span>
-          {variant === 'expanded' && (
-            <Kbd className="shrink-0 text-ink-soft">
-              <span aria-hidden="true">{QUICK_OPEN_KEYS}</span>
-            </Kbd>
-          )}
-        </button>
+          {bell}
+        </div>
       )}
 
       <nav aria-label={t('shell.nav')} className={cn(!collapsed && 'w-full')}>

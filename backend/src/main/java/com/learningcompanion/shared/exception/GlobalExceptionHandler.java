@@ -16,6 +16,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
@@ -87,6 +88,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleNotFound(Exception ex) {
         return ResponseEntity.status(ErrorCode.NOT_FOUND.status())
                 .body(body(ErrorCode.NOT_FOUND, ErrorCode.NOT_FOUND.defaultMessage(), List.of(), null));
+    }
+
+    /**
+     * Trình duyệt đã đóng kết nối (ví dụ đóng thẻ đang nghe kênh thông báo): không còn ai để trả lời, cũng không phải
+     * lỗi của hệ thống.
+     */
+    @ExceptionHandler(AsyncRequestNotUsableException.class)
+    public void handleClientGone(AsyncRequestNotUsableException ex) {
+        log.debug("Client disconnected: {}", ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
