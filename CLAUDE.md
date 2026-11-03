@@ -24,24 +24,33 @@ Jira: project `LC`, cloudId `44f5ab70-66fd-4932-bbd5-6141d0d938a8`. Sprint đang
 
 ## Thứ tự làm việc
 
-Người dùng đã chốt: làm các story của Epic 3 và Epic 4 mà Epic 2 cần trước, theo STT trên Jira, rồi mới quay lại Epic 2. Mỗi story làm trong **một session riêng**.
+Người dùng đã chốt: làm **theo đúng STT trên Jira** (STT ghi trong description của mỗi story, dòng `**STT**: n`, kèm dòng `**Phụ thuộc vào**`). STT đã được xếp sao cho phần phụ thuộc luôn làm trước, và các story của Epic 2 nằm rải trong thứ tự này, nên đi hết thứ tự là tự quay lại Epic 2. Mỗi story làm trong **một session riêng**.
 
-**"Làm story tiếp theo"** nghĩa là: lấy dòng đầu tiên trong bảng có trạng thái "Chưa làm", và kiểm tra trên Jira rằng các story nó phụ thuộc đã xong.
+**"Làm story tiếp theo"** nghĩa là: lấy story có STT nhỏ nhất mà chưa Done trên Jira (bảng dưới chỉ để tham khảo nhanh; Jira là nguồn chính), kiểm tra các story trong "Phụ thuộc vào" đã xong hoặc đã có PR.
 
 **Story phụ thuộc chưa được merge**: nếu story trước đã có PR nhưng chưa merge vào `develop`, merge branch của story đó vào branch hiện tại trước khi code. Ghi trong mô tả PR là PR này dựa trên PR kia. Khi người dùng merge PR trước, diff của PR sau sẽ tự gọn lại.
 
-Mọi branch đã có sẵn trên origin, chỉ cần checkout, không tạo branch mới.
+**Branch**: các story của Epic 2, 3, 4 đã có branch sẵn trên origin. Story của epic khác (LC-5 trở đi) thì tự tạo branch từ `develop` theo quy tắc đặt tên ở trên rồi push.
 
-| # | Story | Branch | Trạng thái |
-|---|-------|--------|------------|
-| 1 | LC-19 Nhật ký thao tác (Epic 3, STT 5) | `feature/LC-19-audit-log-recording-and-search` | PR mở, chờ merge |
-| 2 | LC-20 Tài khoản admin duy nhất + 2FA (Epic 3, STT 6) | `feature/LC-20-single-admin-account-with-two-factor-auth` | Đang làm |
-| 3 | LC-25 AI provider gateway (Epic 4, STT 11) | `feature/LC-25-swappable-ai-provider-gateway` | Chưa làm |
-| 4 | LC-26 Cấu hình model/prompt có phiên bản (Epic 4, STT 12) | `feature/LC-26-versioned-model-and-prompt-config` | Chưa làm |
-| 5 | LC-27 Quota AI và dung lượng (Epic 4, STT 13) | `feature/LC-27-fair-quotas-for-ai-and-storage` | Chưa làm |
-| 6 | LC-28 Lọc nội dung không an toàn, chống prompt injection (Epic 4, STT 14) | `feature/LC-28-unsafe-content-filter-and-prompt-injection-guard` | Chưa làm |
-| 7 | Các story còn lại của Epic 3 và 4, xếp theo STT trên Jira khi phần phụ thuộc đã có: LC-37, 90, 92, 93, 94, 95, 96, 97, 99, 100, 101 | `feature/LC-<key>-…` (xem `git branch -r`) | Chưa làm |
-| 8 | Quay lại Epic 2: LC-38, 44, 78, 86, 87, 88, 113, 116 | `feature/LC-<key>-…` | Chờ |
+| STT | Story | Epic | Branch | Trạng thái |
+|-----|-------|------|--------|------------|
+| 5 | LC-19 Nhật ký thao tác | LC-3 | `feature/LC-19-audit-log-recording-and-search` | PR #12 mở, chờ merge |
+| 6 | LC-20 Tài khoản admin duy nhất + 2FA | LC-3 | `feature/LC-20-single-admin-account-with-two-factor-auth` | Đang làm |
+| 11 | LC-25 Lớp kết nối dịch vụ AI thay được nhà cung cấp | LC-4 | `feature/LC-25-swappable-ai-provider-gateway` | Chưa làm |
+| 12 | LC-26 Cấu hình model/prompt theo phiên bản | LC-4 | `feature/LC-26-versioned-model-and-prompt-config` | Chưa làm |
+| 13 | LC-27 Hạn mức AI và dung lượng | LC-4 | `feature/LC-27-fair-quotas-for-ai-and-storage` | Chưa làm |
+| 14 | LC-28 Lọc nội dung không an toàn, chống prompt injection | LC-4 | `feature/LC-28-unsafe-content-filter-and-prompt-injection-guard` | Chưa làm |
+| 15 | LC-29 Kho tài liệu: thư mục nhiều cấp, nhãn, gắn sao | LC-5 | tạo mới | Chưa làm |
+| 16 | LC-30 Tải tài liệu lên kho | LC-5 | tạo mới | Chưa làm |
+| 17 | LC-31 Trích văn bản, OCR, chia đoạn, lập chỉ mục | LC-5 | tạo mới | Chưa làm |
+| 18 | LC-32 Thêm tài liệu từ trang web và văn bản dán | LC-5 | tạo mới | Chưa làm |
+| 19 | LC-33 Xem tài liệu ở khung xem bên, mở đúng đoạn | LC-5 | tạo mới | Chưa làm |
+| 20 | LC-34 Không gian học gắn tài liệu từ kho | LC-6 | tạo mới | Chưa làm |
+| 21 | LC-35 Hỏi đáp có căn cứ trên tài liệu | LC-7 | tạo mới | Chưa làm |
+| 22 | LC-36 Trích dẫn bấm mở đúng đoạn | LC-7 | tạo mới | Chưa làm |
+| 23 | LC-37 Gắn nhãn nội dung do AI sinh | LC-4 | `feature/LC-37-label-ai-generated-content` | Chưa làm |
+| 24 | LC-38 Hiển thị công thức toán, mã nguồn, bảng (**Epic 2**) | LC-2 | `feature/LC-38-render-math-code-and-tables-in-content` | Chưa làm |
+| 25… | Tiếp tục theo STT trên Jira (LC-44 Epic 2 ở STT 30, LC-78 ở 64, LC-86/87/88 ở 72–74, LC-113 ở 99, LC-116 ở 102) | | | |
 
 Đã xong: Epic LC-1 (NCL-01). Epic LC-2: LC-18 (PR #10), LC-24 (PR #11).
 
