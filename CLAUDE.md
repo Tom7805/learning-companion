@@ -17,17 +17,33 @@ Jira: project `LC`, cloudId `44f5ab70-66fd-4932-bbd5-6141d0d938a8`. Sprint đang
    - Playwright e2e (`npm run test:e2e`) trên desktop và mobile, có kiểm tra a11y bằng axe
    - Xem lại giao diện bằng screenshot, dùng script để trong thư mục scratchpad
 5. **Không tạo rác**: script dùng một lần để ngoài repo, không commit file tạm.
-6. **Commit, push, PR chỉ làm khi người dùng yêu cầu.** PR luôn nhắm vào `develop` (không phải `main`). Message commit theo dạng `feat(<module>): <mô tả> (LC-<key>, NCL-0x-CN-0yy)`.
-7. **Khi đã mở PR**: chuyển story sang **Done** (transition `31`) và thêm comment tiếng Việt tóm tắt thay đổi, kèm link PR. Người dùng sẽ tự review và merge. Các transition khác: `2` Reviewing, `11` To Do.
-8. Làm xong một story thì báo kết quả rồi chờ người dùng bảo "commit/push/PR".
+6. **Khi xong và test đã pass**: commit, push branch, rồi mở PR vào `develop` (KHÔNG phải `main`). Không cần hỏi lại người dùng. Commit message theo dạng `feat(<module>): <mô tả tiếng Anh> (LC-<key>, NCL-0x-CN-0yy)`, phần thân liệt kê thay đổi Backend/Frontend. Mô tả PR theo `.github/PULL_REQUEST_TEMPLATE.md`, ghi rõ test nào đã chạy và test nào không chạy được (ví dụ IT/e2e khi môi trường không có Docker).
+7. **Sau khi mở PR**: chuyển story sang **Done** (transition `31`) và thêm comment tiếng Việt tóm tắt thay đổi, kèm link PR. Các transition khác: `2` Reviewing, `11` To Do.
+8. **Người dùng tự review và merge PR.** Claude không bao giờ merge PR, không push thẳng vào `develop` hay `main` (trừ khi sửa file này), và không force-push.
+9. Cuối cùng cập nhật bảng trong mục "Thứ tự làm việc" ở dưới (cột Trạng thái: "PR #x mở") ngay trong PR của story, rồi báo người dùng: link PR, kết quả test, và những gì cần họ kiểm tra.
 
 ## Thứ tự làm việc
 
-- Epic LC-1 (NCL-01): **Done**.
-- Epic LC-2 (NCL-02): LC-18 (PR #10) và LC-24 (PR #11) đã merge. Còn LC-38, 44, 78, 86, 87, 88, 113, 116, đang **chờ** vì phụ thuộc story ở Epic 3 và 4.
-- Người dùng đã chốt: làm các story phụ thuộc trước, theo thứ tự STT trên Jira:
-  **LC-19** (STT 5, code đã commit + push trên branch, chờ mở PR) → **LC-20** (6) → **LC-25, 26, 27, 28** (11–14) → các story còn lại của Epic 3 (LC-94, 95, 96, 97, 99, 100, 101) và Epic 4 (LC-37, 90, 92, 93) khi phần phụ thuộc đã có → rồi mới quay lại Epic 2.
-- Cập nhật mục này mỗi khi một story được merge.
+Người dùng đã chốt: làm các story của Epic 3 và Epic 4 mà Epic 2 cần trước, theo STT trên Jira, rồi mới quay lại Epic 2. Mỗi story làm trong **một session riêng**.
+
+**"Làm story tiếp theo"** nghĩa là: lấy dòng đầu tiên trong bảng có trạng thái "Chưa làm", và kiểm tra trên Jira rằng các story nó phụ thuộc đã xong.
+
+**Story phụ thuộc chưa được merge**: nếu story trước đã có PR nhưng chưa merge vào `develop`, merge branch của story đó vào branch hiện tại trước khi code. Ghi trong mô tả PR là PR này dựa trên PR kia. Khi người dùng merge PR trước, diff của PR sau sẽ tự gọn lại.
+
+Mọi branch đã có sẵn trên origin, chỉ cần checkout, không tạo branch mới.
+
+| # | Story | Branch | Trạng thái |
+|---|-------|--------|------------|
+| 1 | LC-19 Nhật ký thao tác (Epic 3, STT 5) | `feature/LC-19-audit-log-recording-and-search` | PR mở, chờ merge |
+| 2 | LC-20 Tài khoản admin duy nhất + 2FA (Epic 3, STT 6) | `feature/LC-20-single-admin-account-with-two-factor-auth` | Đang làm |
+| 3 | LC-25 AI provider gateway (Epic 4, STT 11) | `feature/LC-25-swappable-ai-provider-gateway` | Chưa làm |
+| 4 | LC-26 Cấu hình model/prompt có phiên bản (Epic 4, STT 12) | `feature/LC-26-versioned-model-and-prompt-config` | Chưa làm |
+| 5 | LC-27 Quota AI và dung lượng (Epic 4, STT 13) | `feature/LC-27-fair-quotas-for-ai-and-storage` | Chưa làm |
+| 6 | LC-28 Lọc nội dung không an toàn, chống prompt injection (Epic 4, STT 14) | `feature/LC-28-unsafe-content-filter-and-prompt-injection-guard` | Chưa làm |
+| 7 | Các story còn lại của Epic 3 và 4, xếp theo STT trên Jira khi phần phụ thuộc đã có: LC-37, 90, 92, 93, 94, 95, 96, 97, 99, 100, 101 | `feature/LC-<key>-…` (xem `git branch -r`) | Chưa làm |
+| 8 | Quay lại Epic 2: LC-38, 44, 78, 86, 87, 88, 113, 116 | `feature/LC-<key>-…` | Chờ |
+
+Đã xong: Epic LC-1 (NCL-01). Epic LC-2: LC-18 (PR #10), LC-24 (PR #11).
 
 ## Quy ước code cần nhớ
 
