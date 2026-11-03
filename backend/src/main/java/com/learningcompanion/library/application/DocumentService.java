@@ -1,5 +1,6 @@
 package com.learningcompanion.library.application;
 
+import com.learningcompanion.ai.quota.application.StorageQuotaService;
 import com.learningcompanion.library.domain.Document;
 import com.learningcompanion.library.domain.DocumentRepository;
 import com.learningcompanion.library.domain.DocumentType;
@@ -27,15 +28,18 @@ public class DocumentService implements LearningDataUsage {
     private final OwnershipGuard guard;
     private final FileStorageService storage;
     private final SignedUrlService signedUrls;
+    private final StorageQuotaService storageQuota;
     private final Clock clock;
 
     public DocumentService(DocumentRepository documents, OwnerContext owner, OwnershipGuard guard,
-                           FileStorageService storage, SignedUrlService signedUrls, Clock clock) {
+                           FileStorageService storage, SignedUrlService signedUrls, StorageQuotaService storageQuota,
+                           Clock clock) {
         this.documents = documents;
         this.owner = owner;
         this.guard = guard;
         this.storage = storage;
         this.signedUrls = signedUrls;
+        this.storageQuota = storageQuota;
         this.clock = clock;
     }
 
@@ -68,10 +72,14 @@ public class DocumentService implements LearningDataUsage {
         return new OpenedFile(document, storage.read(document.getStorageKey()));
     }
 
-    /** Tạo tài liệu cho người học đang đăng nhập; dùng bởi dữ liệu mẫu và sau này bởi chức năng tải lên. */
+    /**
+     * Tạo tài liệu cho người học đang đăng nhập; dùng bởi dữ liệu mẫu và sau này bởi chức năng tải lên. Tệp làm vượt
+     * hạn mức dung lượng thì bị chặn trước khi ghi (NCL-04-CN-003).
+     */
     @Transactional
     public Document create(UUID ownerId, String title, DocumentType type, String contentText,
                            String originalFilename, String mimeType, byte[] file) {
+        storageQuota.requireRoom(ownerId, file.length);
         String key = storage.store(ownerId, file);
         return documents.save(Document.create(ownerId, title, type, contentText, originalFilename, mimeType,
                 file.length, key, clock.instant()));

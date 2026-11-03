@@ -10,5 +10,7 @@ public enum NotificationTargetType {
     /** Trang thiết bị đang đăng nhập; không có mã đối tượng. */
     DEVICES,
     /** Trang bảo mật tài khoản; không có mã đối tượng. */
-    SECURITY
+    SECURITY,
+    /** Trang lượt trí tuệ nhân tạo và dung lượng của người học; không có mã đối tượng. */
+    USAGE
 }

@@ -9,10 +9,13 @@ export const routes = {
   deleteAccount: '/account/delete',
   notification: '/notifications/:id',
   contentGone: '/gone',
+  /** Lượt trí tuệ nhân tạo và dung lượng của người học (NCL-04-CN-003). */
+  usage: '/usage',
   admin: '/admin',
   adminAudit: '/admin/audit',
   adminAi: '/admin/ai',
   adminAiConfig: '/admin/ai-config',
+  adminQuotas: '/admin/quotas',
   /** Bước mã xác thực thứ hai khi quản trị viên đăng nhập; chưa có phiên nên nằm ngoài khu quản trị. */
   adminTwoFactor: '/login/two-factor',
   deletionScheduled: '/account/deletion-scheduled',

@@ -5,6 +5,7 @@ import type { LearningDocument } from '@/features/library/types'
 import type { NotificationPage } from '@/features/notifications/types'
 import type { Profile } from '@/features/settings/types'
 import type { ConsentHistoryEntry, DataExport, LegalCurrent, PrivacyStatus } from '@/features/privacy/types'
+import type { QuotaStatus } from '@/features/quota/types'
 
 export const legalCurrent: LegalCurrent = {
   terms: { version: '2026-10-01', summary: 'Tóm tắt điều khoản', effectiveAt: '2026-09-30T17:00:00Z' },
@@ -173,12 +174,31 @@ export const handlers = [
   http.get('*/api/v1/notifications/unread-count', () => HttpResponse.json({ unreadCount: 0 })),
   http.post('*/api/v1/notifications/read-all', () => HttpResponse.json({ marked: 0, unreadCount: 0 })),
   http.get('*/api/v1/exports', () => HttpResponse.json({ canRequest: true })),
+  http.get('*/api/v1/quota', () => HttpResponse.json(sampleQuota)),
   http.get('*/api/v1/admin/me', () => apiError(403, 'FORBIDDEN')),
   http.get('*/api/v1/admin/audit-logs', () => HttpResponse.json(sampleAuditLogs)),
   http.get('*/api/v1/exports/:id', () => HttpResponse.json(readyExport)),
 ]
 
 /** Gói dữ liệu đã sẵn sàng (NCL-01-CN-008); người học vừa đăng nhập nên tải được ngay. */
+/** Đồng hồ lượt (NCL-04-CN-003): còn chín trên năm mươi lượt, hồi lúc nửa đêm giờ Việt Nam. */
+export const sampleQuota: QuotaStatus = {
+  ai: {
+    dailyUnits: 50,
+    usedUnits: 41,
+    reservedUnits: 0,
+    remainingUnits: 9,
+    studyDay: '2026-11-03',
+    timeZone: 'Asia/Ho_Chi_Minh',
+    resetsAt: '2026-11-03T17:00:00Z',
+  },
+  storage: { limitBytes: 1073741824, usedBytes: 52428800, remainingBytes: 1021313024 },
+  costs: [
+    { task: 'ASSISTANT_QUESTION', weight: 'LIGHT', units: 1 },
+    { task: 'QUIZ_GENERATION', weight: 'LONG', units: 5 },
+  ],
+}
+
 export const readyExport: DataExport = {
   id: '9e7d4c1a-3333-4c2b-8d4f-000000000001',
   status: 'READY',

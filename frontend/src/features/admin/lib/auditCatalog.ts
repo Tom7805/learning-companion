@@ -65,6 +65,8 @@ export const AUDIT_ACTIONS: Record<AuditCategory, string[]> = {
     'AI_CONFIG_SAVE_REJECTED',
     'AI_CONFIG_PUBLISHED',
     'AI_CONFIG_ROLLED_BACK',
+    'QUOTA_POLICY_CHANGED',
+    'QUOTA_TASK_COSTS_CHANGED',
   ],
 }
 
@@ -86,6 +88,7 @@ export const AUDIT_OBJECT_TYPES = [
   'AI_PROVIDER',
   'AI_ROUTE',
   'AI_CONFIG',
+  'QUOTA_POLICY',
 ]
 
 export function isAuditCategory(value: string | null | undefined): value is AuditCategory {

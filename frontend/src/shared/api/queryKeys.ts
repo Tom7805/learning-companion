@@ -19,6 +19,8 @@ export const queryKeys = {
   aiGateway: ['admin', 'ai', 'gateway'] as const,
   aiUsage: (days: number) => ['admin', 'ai', 'usage', days] as const,
   aiConfigs: ['admin', 'ai', 'configs'] as const,
+  quota: ['quota'] as const,
+  adminQuota: ['admin', 'quotas'] as const,
   aiConfigVersions: (feature: string) => ['admin', 'ai', 'configs', feature, 'versions'] as const,
   aiConfigDiff: (feature: string, from: number, to: number) =>
     ['admin', 'ai', 'configs', feature, 'diff', from, to] as const,

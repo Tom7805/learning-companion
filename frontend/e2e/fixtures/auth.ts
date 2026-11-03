@@ -113,6 +113,26 @@ export class DevApi {
     expect(response.ok()).toBeTruthy()
   }
 
+  /** Đặt số lượt trí tuệ nhân tạo đã dùng trong ngày học hiện tại của tài khoản (NCL-04-CN-003). */
+  async setQuotaUsage(email: string, usedUnits: number) {
+    const response = await this.request.post(`${API}/dev/quota/usage`, { data: { email, usedUnits } })
+    expect(response.ok()).toBeTruthy()
+  }
+
+  /**
+   * Chạy một tác vụ tốn lượt thật qua lớp kết nối (bản mô phỏng) cho tài khoản, như một chức năng học tập tốn lượt.
+   * Trả về phản hồi để kiểm cả trường hợp hết lượt hay tác vụ lỗi.
+   */
+  async runQuotaTask(email: string, task: string, cancel = false) {
+    return this.request.post(`${API}/dev/quota/tasks`, { data: { email, task, cancel } })
+  }
+
+  /** Xóa sổ lượt, đưa hạn mức chung và bảng quy đổi về mặc định. */
+  async resetQuota() {
+    const response = await this.request.post(`${API}/dev/quota/reset`)
+    expect(response.ok()).toBeTruthy()
+  }
+
   /** Giờ của máy chủ (đồng hồ tua được), để tính mã xác thực khớp với máy chủ. */
   async serverNow(): Promise<number> {
     const response = await this.request.get(`${API}/dev/clock`)

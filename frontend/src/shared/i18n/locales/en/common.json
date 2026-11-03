@@ -150,7 +150,9 @@
     "RECOVERY_CODE_INVALID": "The recovery code is wrong or already used.",
     "TWO_FACTOR_ENROLLMENT_NOT_STARTED": "Create a key for the authenticator app first.",
     "ADMIN_LOGIN_LOCKED": "Admin sign-in is locked after too many wrong verification codes.",
-    "ADMIN_ALREADY_EXISTS": "An administrator already exists and only one is allowed."
+    "ADMIN_ALREADY_EXISTS": "An administrator already exists and only one is allowed.",
+    "AI_QUOTA_EXHAUSTED": "You've used all of today's AI credits. They refill at midnight; every other learning feature keeps working.",
+    "STORAGE_QUOTA_EXCEEDED": "Your library doesn't have room for this file. Delete some old documents and try again."
   },
   "checkEmail": {
     "title": "Check your inbox",
@@ -968,7 +970,13 @@
         "SET": "A password was set for your account",
         "body": "If this wasn't you, reset your password now."
       },
-      "fallback": "You have a new notification"
+      "fallback": "You have a new notification",
+      "AI_TASK_REFUNDED": {
+        "title": "No credits charged",
+        "body_one": "{{task}} failed because of an outside service. The {{count}} held credit was fully refunded.",
+        "body_other": "{{task}} failed because of an outside service. The {{count}} held credits were fully refunded.",
+        "task": "An AI task"
+      }
     }
   },
   "contentGone": {
@@ -985,7 +993,8 @@
       "audit": "Audit log",
       "home": "Administration",
       "ai": "AI services",
-      "aiConfig": "AI configuration"
+      "aiConfig": "AI configuration",
+      "quotas": "Quotas"
     },
     "forbidden": {
       "title": "This page is for administrators only",
@@ -1087,7 +1096,8 @@
       "AUDIT_LOG": "Audit log",
       "AI_PROVIDER": "AI provider",
       "AI_ROUTE": "AI routing",
-      "AI_CONFIG": "AI configuration"
+      "AI_CONFIG": "AI configuration",
+      "QUOTA_POLICY": "Quota"
     },
     "actions": {
       "ACCOUNT_REGISTERED": "Account registered",
@@ -1149,7 +1159,9 @@
       "AI_CONFIG_DRAFT_SAVED": "AI configuration draft saved",
       "AI_CONFIG_SAVE_REJECTED": "AI configuration with personal data blocked",
       "AI_CONFIG_PUBLISHED": "AI configuration published",
-      "AI_CONFIG_ROLLED_BACK": "AI configuration rolled back"
+      "AI_CONFIG_ROLLED_BACK": "AI configuration rolled back",
+      "QUOTA_POLICY_CHANGED": "Changed shared quota",
+      "QUOTA_TASK_COSTS_CHANGED": "Changed credit costs"
     }
   },
   "adminLogin": {
@@ -1541,6 +1553,122 @@
       "trialLabel": "Try version {{version}}",
       "compare": "Compare with live",
       "compareLabel": "Compare version {{version}} with the running version"
+    }
+  },
+  "quota": {
+    "meter": {
+      "title": "AI credits today",
+      "label": "AI credits today: {{remaining}} of {{daily}} left. {{reset}}. See details",
+      "resetsAt": "Refills at {{time}}",
+      "resetsOn": "Refills at {{time}} on {{date}}",
+      "emptyHint": "All used · {{reset}}"
+    },
+    "page": {
+      "title": "AI credits and storage",
+      "subtitle": "Every learning feature is free. Only some AI tasks use credits, and credits refill every midnight in your time zone.",
+      "loadFailed": "Couldn't load your usage. Please try again."
+    },
+    "ai": {
+      "title": "AI credits today",
+      "remaining": "{{remaining}} / {{daily}} credits left",
+      "used": "Used",
+      "reserved": "Held for running tasks",
+      "resets": "Full refill",
+      "resetsAt": "at {{time}}",
+      "resetsOn": "at {{time}} on {{date}}",
+      "timeZone": "Counted in the {{zone}} time zone from your profile.",
+      "changeTimeZone": "Change time zone"
+    },
+    "storage": {
+      "title": "Storage",
+      "of": "of {{limit}}",
+      "remaining": "{{size}} free. A full library only blocks new uploads; existing documents stay open for study.",
+      "manage": "Manage your library"
+    },
+    "costs": {
+      "title": "What uses credits",
+      "subtitle": "Light tasks use one credit, long generated content uses more.",
+      "units_one": "{{count}} credit",
+      "units_other": "{{count}} credits",
+      "refund": "Credits are held when a task starts and only charged when it finishes. Failed or cancelled tasks are fully refunded."
+    },
+    "freeActions": {
+      "title": "Never uses credits",
+      "subtitle": "You can keep studying when credits run out.",
+      "read": "Reading and searching your library",
+      "review": "Reviewing existing flashcard decks",
+      "quiz": "Retaking quizzes you already generated",
+      "notes": "Notes, highlights and organising documents",
+      "history": "Looking back at earlier answers and results"
+    },
+    "exhausted": {
+      "title": "You've used all of today's AI credits",
+      "body": "New AI tasks pause until credits refill. Everything else keeps working.",
+      "partialTitle": "Not enough credits for this task",
+      "partialBody": "This task needs {{required}} credits and you have {{remaining}} left today. Lighter tasks still run.",
+      "resetsAt": "Credits refill at {{time}}",
+      "resetsOn": "Credits refill at {{time}} on {{date}}",
+      "neverBlocks": "Quotas keep costs sustainable; they never block learning."
+    },
+    "free": {
+      "title": "Keep learning without credits",
+      "library": "Open your library and reread a lesson",
+      "review": "Review your existing flashcard decks",
+      "notes": "Summarise in your own words in a note",
+      "explain": "Explain a hard concept as if teaching a friend"
+    },
+    "tasks": {
+      "ASSISTANT_QUESTION": "Question on a document",
+      "EXPLAIN_PASSAGE": "Explain a passage",
+      "IMAGE_TEXT_RECOGNITION": "Read text in an image",
+      "DOCUMENT_SUMMARY": "Summarise a document",
+      "FLASHCARD_GENERATION": "Generate flashcards",
+      "QUIZ_GENERATION": "Generate a quiz",
+      "STUDY_GUIDE": "Generate a study guide"
+    },
+    "weights": {
+      "LIGHT": "Light task",
+      "LONG": "Long content"
+    }
+  },
+  "adminQuota": {
+    "title": "Fair quotas",
+    "subtitle": "Set daily AI credits and shared storage for every learner, plus the credit cost of each task type. Changes apply right away to tasks that start afterwards.",
+    "loadFailed": "Couldn't load quotas. Please try again.",
+    "cancel": "Cancel",
+    "noChanges": "Nothing has changed.",
+    "defaultValues": "Using the default values from installation.",
+    "lastChange": "Last changed by {{name}} at {{time}}",
+    "unknownActor": "a deleted account",
+    "policy": {
+      "title": "Shared quota",
+      "subtitle": "Applies to every learner. Credits refill each midnight in each learner's time zone.",
+      "daily": "AI credits per day",
+      "dailyHint": "From 1 to 10,000 credits.",
+      "dailyInvalid": "Enter a whole number from 1 to 10,000.",
+      "storage": "Storage per learner (MB)",
+      "storageHint": "At least 10 MB; 1024 MB is 1 GB.",
+      "storageInvalid": "Enter a whole number from 10 to 1,048,576.",
+      "save": "Save quota",
+      "saved": "New quota saved."
+    },
+    "costs": {
+      "title": "Credit costs",
+      "subtitle": "Credits charged per run of each task type, from 1 to 100.",
+      "default_one": "default {{count}} credit",
+      "default_other": "default {{count}} credits",
+      "unitsFor": "Credits: {{task}}",
+      "invalid": "From 1 to 100.",
+      "save": "Save credit costs",
+      "saved": "New credit costs saved."
+    },
+    "confirm": {
+      "policyTitle": "Confirm quota change",
+      "policyBody": "The new quota applies right away to every learner:",
+      "costsTitle": "Confirm credit cost change",
+      "costsBody": "New costs apply right away to tasks that start afterwards:",
+      "change": "{{field}}: {{before}} → {{after}}",
+      "apply": "Apply"
     }
   }
 }

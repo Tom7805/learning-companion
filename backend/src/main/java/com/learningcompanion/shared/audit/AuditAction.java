@@ -98,7 +98,11 @@ public enum AuditAction {
     /** Phát hành một phiên bản; chi tiết ghi phiên bản mới và phiên bản bị thay. */
     AI_CONFIG_PUBLISHED(ADMIN, SUCCESS),
     /** Quay lại phiên bản phát hành trước; phiên bản đang chạy bị thu hồi. */
-    AI_CONFIG_ROLLED_BACK(ADMIN, SUCCESS);
+    AI_CONFIG_ROLLED_BACK(ADMIN, SUCCESS),
+    /** Đổi hạn mức chung (lượt mỗi ngày, dung lượng lưu trữ); chi tiết ghi giá trị trước và sau (NCL-04-CN-003). */
+    QUOTA_POLICY_CHANGED(ADMIN, SUCCESS),
+    /** Đổi bảng quy đổi lượt; chi tiết ghi số lượt trước và sau của từng loại tác vụ đã đổi. */
+    QUOTA_TASK_COSTS_CHANGED(ADMIN, SUCCESS);
 
     /** Nhóm thao tác để lọc nhật ký. */
     public enum Category { LOGIN, SESSION, ACCOUNT, PRIVACY, SETTINGS, ACCESS, ADMIN }

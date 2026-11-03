@@ -92,6 +92,15 @@ public enum ErrorCode {
     AI_CONFIG_NOT_PUBLISHABLE(HttpStatus.CONFLICT,
             "Phiên bản này đang phát hành hoặc đã bị thu hồi nên không phát hành được."),
     AI_CONFIG_NO_PREVIOUS_VERSION(HttpStatus.CONFLICT, "Chưa có phiên bản phát hành trước đó để quay lại."),
+    /**
+     * Không còn đủ lượt trí tuệ nhân tạo trong ngày cho tác vụ mới (NCL-04-CN-003, QTN-13). Chi tiết kèm thời điểm hồi
+     * lại; mọi thao tác đọc và học không tốn lượt vẫn chạy bình thường.
+     */
+    AI_QUOTA_EXHAUSTED(HttpStatus.TOO_MANY_REQUESTS,
+            "Bạn đã dùng hết lượt trí tuệ nhân tạo hôm nay. Lượt sẽ hồi lại vào nửa đêm; mọi chức năng học khác vẫn dùng bình thường."),
+    /** Tệp mới làm vượt dung lượng lưu trữ của người học; chi tiết kèm dung lượng đã dùng và hạn mức. */
+    STORAGE_QUOTA_EXCEEDED(HttpStatus.CONFLICT,
+            "Kho tài liệu đã gần đầy, không đủ chỗ cho tệp này. Hãy xóa bớt tài liệu cũ rồi thử lại."),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Hệ thống gặp sự cố, hãy thử lại sau.");
 
     private final HttpStatus status;

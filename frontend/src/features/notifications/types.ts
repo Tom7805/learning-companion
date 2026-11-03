@@ -1,7 +1,7 @@
 /** Loại thông báo; loại mới do chức năng sau thêm vẫn hiển thị được dưới dạng chung. */
-export type NotificationType = 'DATA_EXPORT_READY' | 'NEW_DEVICE_LOGIN' | 'PASSWORD_CHANGED'
+export type NotificationType = 'DATA_EXPORT_READY' | 'NEW_DEVICE_LOGIN' | 'PASSWORD_CHANGED' | 'AI_TASK_REFUNDED'
 
-export type NotificationTargetType = 'DATA_EXPORT' | 'DEVICES' | 'SECURITY'
+export type NotificationTargetType = 'DATA_EXPORT' | 'DEVICES' | 'SECURITY' | 'USAGE'
 
 /** Một thông báo trong ứng dụng (NCL-02-CN-002); tiêu đề được dựng từ loại và tham số theo ngôn ngữ đang dùng. */
 export interface AppNotification {

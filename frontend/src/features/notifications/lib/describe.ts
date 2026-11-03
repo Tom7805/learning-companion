@@ -55,6 +55,17 @@ export function describeNotification(notification: AppNotification, t: TFunction
         body: t('notifications.types.PASSWORD_CHANGED.body'),
       }
     }
+    case 'AI_TASK_REFUNDED': {
+      const task = text(params.task)
+      const units = number(params.units) ?? 0
+      return {
+        title: t('notifications.types.AI_TASK_REFUNDED.title'),
+        body: t('notifications.types.AI_TASK_REFUNDED.body', {
+          count: units,
+          task: task ? t(`quota.tasks.${task}`, { defaultValue: task }) : t('notifications.types.AI_TASK_REFUNDED.task'),
+        }),
+      }
+    }
     default:
       return { title: t('notifications.types.fallback'), body: '' }
   }

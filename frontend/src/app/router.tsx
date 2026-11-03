@@ -36,6 +36,8 @@ const ContentGonePage = page(() => import('@/pages/ContentGonePage'), 'ContentGo
 const AuditLogPage = page(() => import('@/features/admin/pages/AuditLogPage'), 'AuditLogPage')
 const AiProvidersPage = page(() => import('@/features/admin/pages/AiProvidersPage'), 'AiProvidersPage')
 const AiConfigPage = page(() => import('@/features/admin/pages/AiConfigPage'), 'AiConfigPage')
+const QuotasPage = page(() => import('@/features/admin/pages/QuotasPage'), 'QuotasPage')
+const UsagePage = page(() => import('@/features/quota/pages/UsagePage'), 'UsagePage')
 const AdminTwoFactorPage = page(() => import('@/features/admin/pages/AdminTwoFactorPage'), 'AdminTwoFactorPage')
 const RegisterPage = page(() => import('@/features/auth/pages/RegisterPage'), 'RegisterPage')
 const CheckEmailPage = page(() => import('@/features/auth/pages/CheckEmailPage'), 'CheckEmailPage')
@@ -101,6 +103,7 @@ export const router = createBrowserRouter([
                   { path: routes.deleteAccount, element: <DeleteAccountFlow /> },
                   { path: routes.notification, element: <NotificationOpenPage /> },
                   { path: routes.contentGone, element: <ContentGonePage /> },
+                  { path: routes.usage, element: <UsagePage /> },
                   {
                     // Quyền quản trị do máy chủ xét ở mỗi lần mở (NCL-03-CN-001 TC-05).
                     path: routes.admin,
@@ -113,6 +116,7 @@ export const router = createBrowserRouter([
                           { path: routes.adminAudit, element: <AuditLogPage /> },
                           { path: routes.adminAi, element: <AiProvidersPage /> },
                           { path: routes.adminAiConfig, element: <AiConfigPage /> },
+                          { path: routes.adminQuotas, element: <QuotasPage /> },
                         ],
                       },
                     ],

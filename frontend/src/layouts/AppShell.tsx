@@ -17,6 +17,7 @@ import {
   useUnreadCount,
 } from '@/features/notifications'
 import { usePageViewTracking, usePrivacyStatus } from '@/features/privacy'
+import { QuotaMeter, useQuotaStatus } from '@/features/quota'
 import { useProfile, type SettingsSection } from '@/features/settings'
 import { useUiPreferencesSync, useUpdateUiPreferences } from '@/features/settings/api/queries'
 import { queryKeys } from '@/shared/api/queryKeys'
@@ -103,6 +104,12 @@ function AppShellFrame() {
   const streaming = useNotificationStream(notificationsEnabled)
   const unreadCount = useUnreadCount(notificationsEnabled, { poll: !streaming }).data ?? 0
   const notificationPanel = useNotificationPanel()
+  // Đồng hồ lượt trí tuệ nhân tạo (NCL-04-CN-003): chỉ người học có lượt; quản trị viên không dùng chức năng học tập.
+  const quota = useQuotaStatus(Boolean(account) && !isAdmin && !privacy.isPending && !acceptanceRequired)
+  // Thông báo hoàn lượt vừa tới thì đồng hồ hỏi lại ngay.
+  useEffect(() => {
+    if (unreadCount > 0) void queryClient.invalidateQueries({ queryKey: queryKeys.quota })
+  }, [unreadCount, queryClient])
   // Cài đặt mở bằng tham số trên địa chỉ nên tải lại trang hay bấm Quay lại vẫn đúng trạng thái.
   const [params, setParams] = useSearchParams()
   const settingsOpen = params.has('settings')
@@ -193,6 +200,8 @@ function AppShellFrame() {
       }}
     />
   )
+  const meter = (variant: 'sidebar' | 'compact', onNavigate?: () => void) =>
+    quota.data && !isAdmin ? <QuotaMeter ai={quota.data.ai} variant={variant} onNavigate={onNavigate} /> : undefined
   const toggleCollapsed = () => updatePreferences.mutate({ sidebarCollapsed: !collapsed })
 
   return (
@@ -215,6 +224,7 @@ function AppShellFrame() {
             onToggleCollapsed={toggleCollapsed}
             onQuickOpen={() => setQuickOpen(true)}
             bell={bell(collapsed ? 'compact' : 'sidebar')}
+            meter={meter(collapsed ? 'compact' : 'sidebar')}
             {...menu}
           />
         </div>
@@ -250,6 +260,7 @@ function AppShellFrame() {
               icon={<Search className="size-5" />}
               onClick={() => setQuickOpen(true)}
             />
+            {meter('compact')}
             {bell('compact')}
             <AccountMenu placement="topbar" {...menu} />
           </header>
@@ -297,6 +308,7 @@ function AppShellFrame() {
               setQuickOpen(true)
             }}
             bell={bell('sidebar', closeDrawer)}
+            meter={meter('sidebar', closeDrawer)}
             {...menu}
           />
         </Drawer>
