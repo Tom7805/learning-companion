@@ -20,6 +20,7 @@ export interface CapturedMail {
     | 'ACCOUNT_DELETION_ATTEMPT'
     | 'ACCOUNT_DELETED'
     | 'ADMIN_LOGIN_LOCKED'
+    | 'AI_CIRCUIT_OPEN'
   links: string[]
   sentAt: string
 }
@@ -92,6 +93,18 @@ export class DevApi {
    */
   async setRole(email: string, role: 'LEARNER' | 'ADMIN', replaceExisting = true) {
     return this.request.post(`${API}/dev/accounts/role`, { data: { email, role, replaceExisting } })
+  }
+
+  /** Đưa lớp kết nối trí tuệ nhân tạo về ban đầu: hai bản mô phỏng, định tuyến mặc định, mạch đóng. */
+  async resetAiGateway() {
+    const response = await this.request.post(`${API}/dev/ai/reset`)
+    expect(response.ok()).toBeTruthy()
+  }
+
+  /** Cho một nhà cung cấp mô phỏng lỗi ngay (FAIL), treo (HANG) hoặc chạy bình thường (OK). */
+  async setAiMockMode(providerCode: string, mode: 'OK' | 'FAIL' | 'HANG') {
+    const response = await this.request.post(`${API}/dev/ai/mock/${providerCode}`, { params: { mode } })
+    expect(response.ok()).toBeTruthy()
   }
 
   /** Giờ của máy chủ (đồng hồ tua được), để tính mã xác thực khớp với máy chủ. */

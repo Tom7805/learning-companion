@@ -983,7 +983,8 @@
     "navLabel": "Admin pages",
     "nav": {
       "audit": "Audit log",
-      "home": "Administration"
+      "home": "Administration",
+      "ai": "AI services"
     },
     "forbidden": {
       "title": "This page is for administrators only",
@@ -1082,7 +1083,9 @@
       "NOTIFICATION": "Notification",
       "UI_PREFERENCES": "Display preferences",
       "ENDPOINT": "System page",
-      "AUDIT_LOG": "Audit log"
+      "AUDIT_LOG": "Audit log",
+      "AI_PROVIDER": "AI provider",
+      "AI_ROUTE": "AI routing"
     },
     "actions": {
       "ACCOUNT_REGISTERED": "Account registered",
@@ -1130,7 +1133,16 @@
       "ADMIN_TWO_FACTOR_LOCKED": "Admin sign-in locked",
       "ADMIN_RECOVERY_CODE_USED": "Used a recovery code",
       "ADMIN_ACCOUNT_CREATED": "Admin account created",
-      "ADMIN_CREATION_REJECTED": "Extra admin creation rejected"
+      "ADMIN_CREATION_REJECTED": "Extra admin creation rejected",
+      "AI_PROVIDER_CREATED": "AI provider added",
+      "AI_PROVIDER_UPDATED": "AI provider edited",
+      "AI_PROVIDER_ENABLED": "AI provider enabled",
+      "AI_PROVIDER_DISABLED": "AI provider disabled",
+      "AI_PROVIDER_ENABLE_REJECTED": "AI provider enable refused",
+      "AI_ROUTE_CHANGED": "AI routing changed",
+      "AI_FAILOVER_SWITCHED": "AI failover switched",
+      "AI_CIRCUIT_OPENED": "AI provider circuit opened",
+      "AI_ALERT_ACKNOWLEDGED": "AI alert acknowledged"
     }
   },
   "adminLogin": {
@@ -1199,6 +1211,190 @@
     "expired": {
       "title": "Verification step expired",
       "body": "For safety, the code step only lasts a few minutes after entering your password. Please sign in again."
+    }
+  },
+  "aiGateway": {
+    "title": "AI services",
+    "subtitle": "Every model call goes through one shared gateway: each capability has a primary and a fallback provider, a timeout, retries and a circuit breaker for repeated failures. Each call is metered for units, latency and cost, never its content.",
+    "loadFailed": "Could not load the gateway configuration.",
+    "cancel": "Cancel",
+    "alerts": {
+      "title": "Circuit breaker alerts",
+      "body": "{{provider}} failed repeatedly for {{capability}} and its circuit opened at {{time}}. Calls are going to {{fallback}}.",
+      "bodyNoFallback": "{{provider}} failed repeatedly for {{capability}} and its circuit opened at {{time}}. There is no fallback, so learners get a temporary error.",
+      "acknowledge": "Acknowledge"
+    },
+    "routes": {
+      "title": "Routing by capability",
+      "subtitle": "Features call a capability, never a provider directly. Changing providers or failing over here needs no feature changes."
+    },
+    "providers": {
+      "title": "Providers",
+      "subtitle": "Only providers confirmed not to train on learning data can be enabled. Secret keys live in the server's secret store; only the key name is declared here."
+    },
+    "capabilities": {
+      "TEXT_GENERATION": "Text generation",
+      "EMBEDDING": "Embeddings",
+      "VISION": "Image understanding",
+      "OCR": "Text recognition"
+    },
+    "capabilityHints": {
+      "TEXT_GENERATION": "Streamed answers for the assistant, summaries and questions.",
+      "EMBEDDING": "Vectors for semantic search in the library.",
+      "VISION": "Describe pictures, diagrams and photos of exercises.",
+      "OCR": "Extract text from photos and scanned documents."
+    },
+    "adapters": {
+      "MOCK": "Mock",
+      "OPENAI_COMPATIBLE": "OpenAI-compatible API",
+      "ANTHROPIC": "Anthropic Messages"
+    },
+    "circuit": {
+      "CLOSED": "Working normally",
+      "HALF_OPEN": "Trying again",
+      "OPEN": "Circuit open",
+      "retryAt": "retry at {{time}}",
+      "failures_one": "{{count}} recent failure",
+      "failures_other": "{{count}} recent failures"
+    },
+    "outcomes": {
+      "SUCCESS": "Succeeded",
+      "FAILURE": "Failed",
+      "TIMEOUT": "Timed out",
+      "UNAVAILABLE": "No provider"
+    },
+    "route": {
+      "primary": "Primary",
+      "fallback": "Fallback",
+      "noFallback": "No fallback",
+      "timeout": "Timeout",
+      "retries": "Retries",
+      "breaker": "Circuit breaker",
+      "seconds_one": "{{count}} second",
+      "seconds_other": "{{count}} seconds",
+      "retryCount_one": "{{count}} time",
+      "retryCount_other": "{{count}} times",
+      "breakerSummary": "{{failures}} failures within {{window}} s, open for {{open}} s",
+      "edit": "Edit",
+      "editLabel": "Edit {{capability}} routing",
+      "switch": "Fail over",
+      "switchLabel": "Fail over {{capability}}",
+      "switchTitle": "Fail over {{capability}}?",
+      "switchBody": "{{to}} becomes the primary provider and {{from}} becomes the fallback. New calls go to the new provider right away. This is recorded in the audit log.",
+      "switchConfirm": "Fail over now",
+      "switched": "{{capability}} now uses {{provider}}.",
+      "editTitle": "{{capability}} routing",
+      "dialogHint": "Only enabled providers that are confirmed not to train and support this capability can be chosen.",
+      "save": "Save routing",
+      "saved": "Saved {{capability}} routing.",
+      "fields": {
+        "timeoutSeconds": "Timeout (seconds)",
+        "maxRetries": "Retries",
+        "breakerFailureThreshold": "Consecutive failures",
+        "breakerWindowSeconds": "Within (seconds)",
+        "breakerOpenSeconds": "Open for (seconds)"
+      }
+    },
+    "provider": {
+      "add": "Add provider",
+      "addTitle": "Add a provider",
+      "editTitle": "Edit provider",
+      "dialogHint": "New providers start disabled. Enable one after its key is in the secret store and the commitment is confirmed.",
+      "edit": "Edit",
+      "editLabel": "Edit {{name}}",
+      "save": "Save changes",
+      "created": "Added {{name}}.",
+      "updated": "Saved {{name}}.",
+      "enabled": "Enabled {{name}}.",
+      "disabled": "Disabled {{name}}.",
+      "on": "On",
+      "off": "Off",
+      "toggleLabel": "Enable or disable {{name}}",
+      "displayName": "Display name",
+      "code": "Code",
+      "codeHint": "Lowercase letters, digits and hyphens; cannot be changed later.",
+      "adapter": "Connection type",
+      "baseUrl": "Service URL",
+      "baseUrlOptional": "Leave empty to use the default URL.",
+      "capabilities": "Capabilities",
+      "capabilitiesRequired": "Choose at least one capability.",
+      "textModel": "Text model",
+      "embeddingModel": "Embedding model",
+      "visionModel": "Vision model",
+      "secretName": "Secret store key name",
+      "secretHint": "For example LC_AI_OPENAI_KEY. The key value is set on the server, never entered here.",
+      "inputPrice": "Input price (USD / 1M units)",
+      "outputPrice": "Output price (USD / 1M units)",
+      "noTrainingTitle": "No-training commitment",
+      "noTrainingLabel": "I have checked the contract or terms: the provider commits not to use submitted data to train models.",
+      "noTrainingYes": "No-training confirmed",
+      "noTrainingNo": "No-training not confirmed",
+      "secretReady": "Secret store has {{name}}",
+      "secretMissing": "Secret store is missing {{name}}",
+      "price": "{{input}} / {{output}} USD per million units",
+      "primaryFor": "Primary for {{capability}}",
+      "fallbackFor": "Fallback for {{capability}}"
+    },
+    "requirements": {
+      "NO_TRAINING_CONFIRMATION": "no-training confirmation",
+      "SECRET": "a key in the secret store",
+      "BASE_URL": "a service URL",
+      "MODEL": "a model name for each capability"
+    },
+    "errors": {
+      "generic": "That did not work, please try again.",
+      "missingPrefix": "Missing:",
+      "VALIDATION_FAILED": "Some details are invalid. Check the code, the URL (must start with https://), the key name and the chosen capabilities.",
+      "AI_PROVIDER_TRAINING_NOT_CONFIRMED": "Cannot enable: the provider has not been confirmed to not train models on learning data. Edit the provider and tick the confirmation after checking its terms.",
+      "AI_PROVIDER_SECRET_MISSING": "Cannot enable: the server's secret store has no key with the declared name.",
+      "AI_PROVIDER_INCOMPLETE": "Cannot enable: the service URL or a model name is missing.",
+      "AI_PROVIDER_CODE_TAKEN": "This code is already used by another provider.",
+      "AI_PROVIDER_IN_USE": "This provider is a primary in the routing. Change the routing before disabling it or withdrawing the confirmation.",
+      "AI_ROUTE_INVALID": "Primary and fallback must differ, be enabled and support this capability.",
+      "AI_NO_FALLBACK": "This capability has no enabled fallback provider.",
+      "AI_TEMPORARILY_UNAVAILABLE": "The AI service is temporarily unavailable: retries failed. Try again in a few minutes.",
+      "NETWORK_ERROR": "Lost connection to the server."
+    },
+    "test": {
+      "title": "Test call",
+      "subtitle": "Send a text generation call through the gateway like any feature. It is metered as ADMIN_TEST.",
+      "prompt": "Prompt",
+      "defaultPrompt": "Explain Ohm's law in one sentence.",
+      "run": "Run test",
+      "waiting": "Waiting for the provider…",
+      "empty": "The streamed answer appears here.",
+      "done": "Answered by {{provider}} · {{input}} input units, {{output}} output units."
+    },
+    "usage": {
+      "title": "Usage",
+      "subtitle": "Calls, units and cost by capability and provider.",
+      "period": "Period",
+      "days_one": "{{count}} day",
+      "days_other": "{{count}} days",
+      "loadFailed": "Could not load usage.",
+      "totals": {
+        "calls": "Calls",
+        "failures": "Failed calls",
+        "units": "Units in / out",
+        "cost": "Cost"
+      },
+      "byProvider": "Usage by capability and provider",
+      "columns": {
+        "capability": "Capability",
+        "provider": "Provider",
+        "calls": "Calls",
+        "units": "Units in / out",
+        "latency": "Average latency",
+        "cost": "Cost"
+      },
+      "empty": "No calls in this period.",
+      "noProvider": "No provider",
+      "failed_one": "{{count}} failed",
+      "failed_other": "{{count}} failed",
+      "recent": "Recent calls",
+      "noContent": "Numbers only: the gateway never records prompts or answers.",
+      "viaFallback": "via fallback",
+      "callFacts": "{{input}}/{{output}} units · {{latency}} ms · {{attempts}} attempts"
     }
   }
 }

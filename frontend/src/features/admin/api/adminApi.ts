@@ -1,5 +1,18 @@
 import { http } from '@/shared/api/httpClient'
-import type { AdminIdentity, AuditLogPage, TotpSetup, TwoFactorChallenge, TwoFactorResult } from '../types'
+import type {
+  AdminIdentity,
+  AiCapability,
+  AiGatewayOverview,
+  AiProvider,
+  AiProviderInput,
+  AiRoute,
+  AiRouteInput,
+  AiUsage,
+  AuditLogPage,
+  TotpSetup,
+  TwoFactorChallenge,
+  TwoFactorResult,
+} from '../types'
 
 /** Điều kiện tra cứu gửi lên máy chủ: thời gian đã đổi sang mốc ISO (from gồm, to không gồm). */
 export interface AuditLogSearch {
@@ -42,5 +55,38 @@ export const adminApi = {
       params: { ...search, ...(before ? { before } : {}) },
     })
     return data
+  },
+  async aiGateway() {
+    const { data } = await http.get<AiGatewayOverview>('/admin/ai/gateway')
+    return data
+  },
+  async aiUsage(days: number) {
+    const { data } = await http.get<AiUsage>('/admin/ai/usage', { params: { days } })
+    return data
+  },
+  async createAiProvider(input: AiProviderInput) {
+    const { data } = await http.post<AiProvider>('/admin/ai/providers', input)
+    return data
+  },
+  async updateAiProvider(id: string, input: AiProviderInput) {
+    const { data } = await http.put<AiProvider>(`/admin/ai/providers/${encodeURIComponent(id)}`, input)
+    return data
+  },
+  async setAiProviderEnabled(id: string, enabled: boolean) {
+    const { data } = await http.post<AiProvider>(
+      `/admin/ai/providers/${encodeURIComponent(id)}/${enabled ? 'enable' : 'disable'}`,
+    )
+    return data
+  },
+  async updateAiRoute(capability: AiCapability, input: AiRouteInput) {
+    const { data } = await http.put<AiRoute>(`/admin/ai/routes/${capability}`, input)
+    return data
+  },
+  async switchAiFallback(capability: AiCapability) {
+    const { data } = await http.post<AiRoute>(`/admin/ai/routes/${capability}/switch`)
+    return data
+  },
+  async acknowledgeAiAlert(id: string) {
+    await http.post(`/admin/ai/alerts/${encodeURIComponent(id)}/acknowledge`)
   },
 }

@@ -76,3 +76,130 @@ export interface AuditLogFilters {
   from?: string
   to?: string
 }
+
+/** Khả năng của lớp kết nối dịch vụ trí tuệ nhân tạo (NCL-04-CN-001). */
+export type AiCapability = 'TEXT_GENERATION' | 'EMBEDDING' | 'VISION' | 'OCR'
+export type AiAdapter = 'MOCK' | 'OPENAI_COMPATIBLE' | 'ANTHROPIC'
+export type AiCircuitState = 'CLOSED' | 'OPEN' | 'HALF_OPEN'
+
+/** Nhà cung cấp như máy chủ trả về: chỉ có tên khóa trong kho bí mật, không bao giờ có giá trị khóa. */
+export interface AiProvider {
+  id: string
+  code: string
+  displayName: string
+  adapter: AiAdapter
+  baseUrl?: string | null
+  textModel?: string | null
+  embeddingModel?: string | null
+  visionModel?: string | null
+  capabilities: AiCapability[]
+  adapterCapabilities: AiCapability[]
+  secretName?: string | null
+  secretRequired: boolean
+  secretConfigured: boolean
+  inputPricePerMillion: number
+  outputPricePerMillion: number
+  noTrainingConfirmed: boolean
+  noTrainingConfirmedAt?: string | null
+  enabled: boolean
+  primaryFor: AiCapability[]
+  fallbackFor: AiCapability[]
+  updatedAt: string
+}
+
+export interface AiProviderInput {
+  code?: string
+  displayName: string
+  adapter: AiAdapter
+  baseUrl?: string
+  textModel?: string
+  embeddingModel?: string
+  visionModel?: string
+  capabilities: AiCapability[]
+  secretName?: string
+  inputPricePerMillion: number
+  outputPricePerMillion: number
+  noTrainingConfirmed: boolean
+}
+
+export interface AiRouteEndpoint {
+  id: string
+  code: string
+  displayName: string
+  enabled: boolean
+  circuit: AiCircuitState
+  recentFailures: number
+  openedAt?: string | null
+  retryAt?: string | null
+}
+
+export interface AiRoute {
+  capability: AiCapability
+  primary: AiRouteEndpoint
+  fallback?: AiRouteEndpoint | null
+  timeoutSeconds: number
+  maxRetries: number
+  breakerFailureThreshold: number
+  breakerWindowSeconds: number
+  breakerOpenSeconds: number
+  updatedAt: string
+}
+
+export interface AiRouteInput {
+  primaryProviderId: string
+  fallbackProviderId?: string | null
+  timeoutSeconds: number
+  maxRetries: number
+  breakerFailureThreshold: number
+  breakerWindowSeconds: number
+  breakerOpenSeconds: number
+}
+
+export interface AiGatewayAlert {
+  id: string
+  capability: AiCapability
+  providerCode: string
+  fallbackProviderCode?: string | null
+  openedAt: string
+}
+
+export interface AiGatewayOverview {
+  routes: AiRoute[]
+  providers: AiProvider[]
+  alerts: AiGatewayAlert[]
+}
+
+export interface AiUsageRow {
+  capability: AiCapability
+  providerCode?: string | null
+  calls: number
+  failures: number
+  fallbackCalls: number
+  inputUnits: number
+  outputUnits: number
+  costMicroUsd: number
+  averageLatencyMs: number
+}
+
+export interface AiUsageCall {
+  id: string
+  occurredAt: string
+  capability: AiCapability
+  feature: string
+  providerCode?: string | null
+  outcome: 'SUCCESS' | 'FAILURE' | 'TIMEOUT' | 'UNAVAILABLE'
+  usedFallback: boolean
+  attempts: number
+  inputUnits: number
+  outputUnits: number
+  latencyMs: number
+  costMicroUsd: number
+  errorCode?: string | null
+}
+
+export interface AiUsage {
+  since: string
+  totals: { calls: number; failures: number; inputUnits: number; outputUnits: number; costMicroUsd: number }
+  rows: AiUsageRow[]
+  recentCalls: AiUsageCall[]
+}

@@ -34,6 +34,7 @@ const NotificationOpenPage = page(
 )
 const ContentGonePage = page(() => import('@/pages/ContentGonePage'), 'ContentGonePage')
 const AuditLogPage = page(() => import('@/features/admin/pages/AuditLogPage'), 'AuditLogPage')
+const AiProvidersPage = page(() => import('@/features/admin/pages/AiProvidersPage'), 'AiProvidersPage')
 const AdminTwoFactorPage = page(() => import('@/features/admin/pages/AdminTwoFactorPage'), 'AdminTwoFactorPage')
 const RegisterPage = page(() => import('@/features/auth/pages/RegisterPage'), 'RegisterPage')
 const CheckEmailPage = page(() => import('@/features/auth/pages/CheckEmailPage'), 'CheckEmailPage')
@@ -109,6 +110,7 @@ export const router = createBrowserRouter([
                         children: [
                           { index: true, element: <Navigate to={routes.adminAudit} replace /> },
                           { path: routes.adminAudit, element: <AuditLogPage /> },
+                          { path: routes.adminAi, element: <AiProvidersPage /> },
                         ],
                       },
                     ],
