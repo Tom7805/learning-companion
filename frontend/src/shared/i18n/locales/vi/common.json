@@ -143,7 +143,8 @@
     "EXPORT_EXPIRED": "Gói dữ liệu đã hết hạn tải, hãy yêu cầu xuất lại.",
     "REAUTHENTICATION_REQUIRED": "Hãy xác nhận lại mật khẩu hoặc đăng nhập lại để tiếp tục.",
     "ACCOUNT_PENDING_DELETION": "Tài khoản đang chờ xóa. Hãy hủy yêu cầu xóa để dùng tiếp.",
-    "CSRF_TOKEN_INVALID": "Trang đã cũ, hãy tải lại trang rồi thử lại."
+    "CSRF_TOKEN_INVALID": "Trang đã cũ, hãy tải lại trang rồi thử lại.",
+    "AUDIT_LOG_IMMUTABLE": "Nhật ký thao tác chỉ được ghi thêm, không sửa hay xóa được."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -969,5 +970,152 @@
     "body": "Có thể nội dung đã bị xóa, đã hết hạn hoặc đã được thay bằng bản mới hơn. Các thông báo khác của bạn vẫn còn nguyên.",
     "home": "Về trang chính",
     "notifications": "Xem thông báo"
+  },
+  "admin": {
+    "menu": "Quản trị",
+    "area": "Khu quản trị",
+    "navLabel": "Các trang quản trị",
+    "nav": {
+      "audit": "Nhật ký thao tác"
+    },
+    "forbidden": {
+      "title": "Trang này chỉ dành cho quản trị viên",
+      "body": "Tài khoản của bạn không có quyền quản trị. Lần mở trang này đã được ghi vào nhật ký hệ thống.",
+      "home": "Về trang chính"
+    }
+  },
+  "audit": {
+    "title": "Nhật ký thao tác",
+    "subtitle": "Mọi thao tác nhạy cảm được ghi tự động: ai làm, làm gì, với đối tượng nào, lúc nào, từ thiết bị nào và kết quả ra sao. Nhật ký chỉ chứa siêu dữ liệu, không chứa nội dung học tập của ai.",
+    "results": "Kết quả tra cứu",
+    "shown_one": "{{count}} dòng",
+    "shown_other": "{{count}} dòng",
+    "shownMore_one": "{{count}} dòng mới nhất, còn dòng cũ hơn",
+    "shownMore_other": "{{count}} dòng mới nhất, còn dòng cũ hơn",
+    "loadMore": "Xem các dòng cũ hơn",
+    "loadFailed": "Không tải được nhật ký.",
+    "invalidFilters": "Bộ lọc chưa hợp lệ. Hãy kiểm tra lại khoảng ngày.",
+    "retention": "Nhật ký chỉ được ghi thêm, không ai sửa hay xóa được, và được lưu một năm. Mỗi lần tra cứu cũng được ghi lại.",
+    "empty": {
+      "title": "Chưa có dòng nhật ký nào",
+      "body": "Các thao tác như đăng nhập, đổi mật khẩu hay đổi cài đặt sẽ được ghi ở đây.",
+      "filteredTitle": "Không có dòng nào khớp bộ lọc",
+      "filteredBody": "Thử bỏ bớt điều kiện hoặc mở rộng khoảng ngày."
+    },
+    "filters": {
+      "label": "Lọc nhật ký",
+      "account": "Tài khoản",
+      "accountHint": "Thư điện tử hoặc mã tài khoản",
+      "category": "Nhóm thao tác",
+      "anyCategory": "Tất cả nhóm",
+      "action": "Loại thao tác",
+      "anyAction": "Tất cả loại thao tác",
+      "objectType": "Loại đối tượng",
+      "anyObject": "Tất cả loại đối tượng",
+      "from": "Từ ngày",
+      "to": "Đến ngày",
+      "apply": "Tra cứu",
+      "clear": "Xóa bộ lọc",
+      "rangeInvalid": "Ngày bắt đầu cần trước hoặc trùng ngày kết thúc."
+    },
+    "columns": {
+      "time": "Thời điểm",
+      "actor": "Người thực hiện",
+      "action": "Thao tác và kết quả",
+      "object": "Đối tượng",
+      "device": "Thiết bị"
+    },
+    "actor": {
+      "anonymous": "Chưa đăng nhập",
+      "system": "Hệ thống",
+      "removed": "Tài khoản đã xóa"
+    },
+    "device": "{{browser}} · {{os}}",
+    "noDevice": "Không rõ thiết bị",
+    "showDetails": "Xem chi tiết: {{action}}",
+    "hideDetails": "Ẩn chi tiết: {{action}}",
+    "facts": {
+      "id": "Mã dòng",
+      "actorId": "Mã người thực hiện",
+      "subject": "Tài khoản liên quan",
+      "objectId": "Mã đối tượng",
+      "ip": "Địa chỉ IP",
+      "deviceType": "Loại thiết bị",
+      "requestId": "Mã yêu cầu"
+    },
+    "changes": "Giá trị trước và sau",
+    "changeValue": "{{before}} → {{after}}",
+    "extra": "Chi tiết ghi kèm",
+    "removed": "Trường nội dung đã bị loại khỏi nhật ký: {{fields}}",
+    "noExtra": "Không có chi tiết ghi kèm.",
+    "categories": {
+      "LOGIN": "Đăng nhập",
+      "SESSION": "Phiên và thiết bị",
+      "ACCOUNT": "Tài khoản và mật khẩu",
+      "PRIVACY": "Quyền riêng tư và dữ liệu",
+      "SETTINGS": "Cài đặt",
+      "ACCESS": "Từ chối truy cập",
+      "ADMIN": "Quản trị"
+    },
+    "outcomes": {
+      "SUCCESS": "Thành công",
+      "FAILURE": "Thất bại",
+      "DENIED": "Bị từ chối"
+    },
+    "objectTypes": {
+      "USER_ACCOUNT": "Tài khoản",
+      "VERIFICATION_TOKEN": "Mã xác thực",
+      "CONSENT": "Đồng ý",
+      "SESSION": "Phiên đăng nhập",
+      "DOCUMENT": "Tài liệu",
+      "PROFILE": "Hồ sơ",
+      "EXTERNAL_IDENTITY": "Tài khoản liên kết",
+      "DATA_EXPORT": "Gói dữ liệu",
+      "NOTIFICATION": "Thông báo",
+      "UI_PREFERENCES": "Tùy chọn giao diện",
+      "ENDPOINT": "Trang của hệ thống",
+      "AUDIT_LOG": "Nhật ký thao tác"
+    },
+    "actions": {
+      "ACCOUNT_REGISTERED": "Đăng ký tài khoản",
+      "REGISTRATION_ATTEMPT_EXISTING_EMAIL": "Đăng ký bằng thư đã có tài khoản",
+      "VERIFICATION_EMAIL_SENT": "Gửi thư xác thực",
+      "VERIFICATION_EMAIL_RESENT": "Gửi lại thư xác thực",
+      "VERIFICATION_LINK_EXPIRED": "Đường dẫn xác thực hết hạn",
+      "EMAIL_VERIFIED": "Xác thực địa chỉ thư",
+      "CONSENT_GRANTED": "Đồng ý điều khoản",
+      "CONSENT_WITHDRAWN": "Rút lại đồng ý",
+      "LOGIN_SUCCEEDED": "Đăng nhập thành công",
+      "LOGIN_FAILED": "Đăng nhập thất bại",
+      "LOGIN_LOCKED": "Tạm khóa đăng nhập",
+      "NEW_DEVICE_ALERT_SENT": "Cảnh báo thiết bị mới",
+      "PASSWORD_RESET_REQUESTED": "Yêu cầu đặt lại mật khẩu",
+      "PASSWORD_RESET_LINK_EXPIRED": "Đường dẫn đặt lại mật khẩu hết hạn",
+      "PASSWORD_RESET_COMPLETED": "Đặt lại mật khẩu",
+      "PASSWORD_CHANGED": "Đổi mật khẩu",
+      "SESSION_CREATED": "Tạo phiên đăng nhập",
+      "SESSION_REVOKED": "Đăng xuất thiết bị",
+      "LEARNING_ACCESS_DENIED": "Bị chặn mở dữ liệu học tập của người khác",
+      "ADMIN_ACCOUNT_VIEWED": "Xem thông tin tài khoản",
+      "PROFILE_UPDATED": "Cập nhật hồ sơ",
+      "AVATAR_UPDATED": "Đổi ảnh đại diện",
+      "AVATAR_REMOVED": "Gỡ ảnh đại diện",
+      "OAUTH_LOGIN_REJECTED": "Từ chối đăng nhập qua tài khoản ngoài",
+      "EXTERNAL_IDENTITY_LINKED": "Liên kết tài khoản ngoài",
+      "EXTERNAL_IDENTITY_UNLINKED": "Gỡ liên kết tài khoản ngoài",
+      "DATA_EXPORT_REQUESTED": "Yêu cầu tải dữ liệu",
+      "DATA_EXPORT_COMPLETED": "Tạo xong gói dữ liệu",
+      "DATA_EXPORT_FAILED": "Tạo gói dữ liệu thất bại",
+      "DATA_EXPORT_DOWNLOADED": "Tải gói dữ liệu",
+      "DATA_EXPORT_EXPIRED": "Gói dữ liệu hết hạn",
+      "ACCOUNT_DELETION_REQUESTED": "Yêu cầu xóa tài khoản",
+      "ACCOUNT_DELETION_REJECTED": "Từ chối yêu cầu xóa tài khoản",
+      "ACCOUNT_DELETION_CANCELLED": "Hủy yêu cầu xóa tài khoản",
+      "ACCOUNT_DELETION_COMPLETED": "Xóa tài khoản",
+      "UI_PREFERENCES_CHANGED": "Đổi tùy chọn giao diện",
+      "ROLE_ACCESS_DENIED": "Bị chặn vào khu quản trị",
+      "AUDIT_LOG_SEARCHED": "Tra cứu nhật ký",
+      "AUDIT_LOG_TAMPER_ATTEMPTED": "Cố sửa hoặc xóa nhật ký"
+    }
   }
 }

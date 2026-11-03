@@ -1,5 +1,6 @@
 package com.learningcompanion.admin.application;
 
+import com.learningcompanion.admin.api.dto.AdminIdentity;
 import com.learningcompanion.admin.api.dto.AdminUserSummary;
 import com.learningcompanion.auth.domain.UserAccount;
 import com.learningcompanion.auth.domain.UserAccountRepository;
@@ -28,6 +29,13 @@ public class AdminUserService {
         this.accounts = accounts;
         this.usageSources = usageSources;
         this.audit = audit;
+    }
+
+    @Transactional(readOnly = true)
+    public AdminIdentity identity(UUID adminId) {
+        UserAccount admin = accounts.findById(adminId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND));
+        return new AdminIdentity(admin.getId(), admin.getEmail(), admin.getDisplayName());
     }
 
     @Transactional

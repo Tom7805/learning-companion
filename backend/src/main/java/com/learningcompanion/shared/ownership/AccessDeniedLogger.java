@@ -28,4 +28,14 @@ public class AccessDeniedLogger {
         audit.byUser(requesterId, AuditAction.LEARNING_ACCESS_DENIED, objectType, objectId,
                 Map.of("reason", "NOT_OWNER"), client);
     }
+
+    /**
+     * Người đã đăng nhập gọi một điểm cuối không thuộc vai trò của mình, ví dụ người học mở khu quản trị bằng đường
+     * dẫn trực tiếp (NCL-03-CN-001 TC-05). Chỉ ghi phương thức và đường dẫn.
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void wrongRole(UUID requesterId, String method, String path, ClientInfo client) {
+        audit.byUser(requesterId, AuditAction.ROLE_ACCESS_DENIED, AuditObjectType.ENDPOINT, null,
+                Map.of("method", method, "path", path), client);
+    }
 }

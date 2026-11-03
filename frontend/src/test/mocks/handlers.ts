@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw'
+import type { AdminIdentity, AuditLogEntry, AuditLogPage } from '@/features/admin/types'
 import type { Account, DeviceSession } from '@/features/auth/types'
 import type { LearningDocument } from '@/features/library/types'
 import type { NotificationPage } from '@/features/notifications/types'
@@ -52,6 +53,37 @@ export const sampleNotifications: NotificationPage = {
     },
   ],
   unreadCount: 2,
+}
+
+export const adminIdentity: AdminIdentity = {
+  id: '0b6f8d2e-1111-4f0a-9c1e-0000000000ad',
+  email: 'quan.tri@example.com',
+  displayName: 'Quản trị viên',
+}
+
+const chromeOnWindows = { browser: 'Chrome', operatingSystem: 'Windows', deviceType: 'DESKTOP' } as const
+const loginRow = (index: number, failed: boolean): AuditLogEntry => ({
+  id: `5c1d0e22-3333-4a1b-8c2d-00000000000${index}`,
+  occurredAt: `2026-10-14T0${index}:00:00Z`,
+  actorType: failed ? 'ANONYMOUS' : 'USER',
+  actorId: failed ? null : verifiedAccount.id,
+  actor: failed ? null : { id: verifiedAccount.id, email: verifiedAccount.email, displayName: verifiedAccount.displayName },
+  action: failed ? 'LOGIN_FAILED' : 'LOGIN_SUCCEEDED',
+  category: 'LOGIN',
+  outcome: failed ? 'FAILURE' : 'SUCCESS',
+  objectType: failed ? 'USER_ACCOUNT' : 'SESSION',
+  objectId: failed ? verifiedAccount.id : '9e8d7c6b-5555-4f0a-9c1e-000000000001',
+  subject: failed ? { id: verifiedAccount.id, email: verifiedAccount.email, displayName: verifiedAccount.displayName } : null,
+  device: chromeOnWindows,
+  ipAddress: '203.0.113.7',
+  details: failed ? { reason: 'INVALID_CREDENTIALS', context: 'PASSWORD_LOGIN', failedCount: index } : {},
+  requestId: `req-${index}`,
+})
+
+/** NCL-03-CN-001 TC-01: ba lần nhập sai rồi một lần đúng, mới nhất trước. */
+export const sampleAuditLogs: AuditLogPage = {
+  items: [loginRow(4, false), loginRow(3, true), loginRow(2, true), loginRow(1, true)],
+  nextCursor: null,
 }
 
 /** Tùy chọn giao diện lưu theo tài khoản (NCL-02-CN-001), đúng dạng máy chủ trả về: hằng viết hoa. */
@@ -141,6 +173,8 @@ export const handlers = [
   http.get('*/api/v1/notifications/unread-count', () => HttpResponse.json({ unreadCount: 0 })),
   http.post('*/api/v1/notifications/read-all', () => HttpResponse.json({ marked: 0, unreadCount: 0 })),
   http.get('*/api/v1/exports', () => HttpResponse.json({ canRequest: true })),
+  http.get('*/api/v1/admin/me', () => apiError(403, 'FORBIDDEN')),
+  http.get('*/api/v1/admin/audit-logs', () => HttpResponse.json(sampleAuditLogs)),
   http.get('*/api/v1/exports/:id', () => HttpResponse.json(readyExport)),
 ]
 

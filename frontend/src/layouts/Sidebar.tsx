@@ -17,6 +17,7 @@ export interface SidebarAccountProps {
   onSettings: () => void
   onAppearance: () => void
   onHelp: () => void
+  onAdmin?: () => void
   onInstall?: () => void
   onLogout: () => void
   loggingOut?: boolean
@@ -204,6 +205,7 @@ export function Sidebar({
           onSettings={account.onSettings}
           onAppearance={account.onAppearance}
           onHelp={account.onHelp}
+          onAdmin={account.onAdmin}
           onInstall={account.onInstall}
           onLogout={account.onLogout}
           loggingOut={account.loggingOut}

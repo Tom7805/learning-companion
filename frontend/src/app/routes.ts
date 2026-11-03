@@ -9,6 +9,8 @@ export const routes = {
   deleteAccount: '/account/delete',
   notification: '/notifications/:id',
   contentGone: '/gone',
+  admin: '/admin',
+  adminAudit: '/admin/audit',
   deletionScheduled: '/account/deletion-scheduled',
   register: '/register',
   checkEmail: '/register/check-email',

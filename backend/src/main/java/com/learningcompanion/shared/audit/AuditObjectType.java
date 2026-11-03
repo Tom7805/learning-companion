@@ -9,5 +9,9 @@ public enum AuditObjectType {
     PROFILE,
     EXTERNAL_IDENTITY,
     DATA_EXPORT,
-    NOTIFICATION
+    NOTIFICATION,
+    UI_PREFERENCES,
+    /** Một điểm cuối của hệ thống, ví dụ khu quản trị; mã đối tượng để trống, đường dẫn nằm trong chi tiết. */
+    ENDPOINT,
+    AUDIT_LOG
 }

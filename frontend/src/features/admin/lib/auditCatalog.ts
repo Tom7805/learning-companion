@@ -1,0 +1,61 @@
+import type { AuditCategory } from '../types'
+
+/**
+ * Các loại thao tác theo nhóm, giống AuditAction ở máy chủ, để bộ lọc chỉ gợi ý loại thao tác thuộc nhóm đã chọn.
+ * Máy chủ thêm loại mới mà ở đây chưa có thì dòng nhật ký vẫn hiện, chỉ là chưa chọn được trong bộ lọc.
+ */
+export const AUDIT_ACTIONS: Record<AuditCategory, string[]> = {
+  LOGIN: ['LOGIN_SUCCEEDED', 'LOGIN_FAILED', 'LOGIN_LOCKED', 'OAUTH_LOGIN_REJECTED'],
+  SESSION: ['SESSION_CREATED', 'SESSION_REVOKED', 'NEW_DEVICE_ALERT_SENT'],
+  ACCOUNT: [
+    'ACCOUNT_REGISTERED',
+    'REGISTRATION_ATTEMPT_EXISTING_EMAIL',
+    'VERIFICATION_EMAIL_SENT',
+    'VERIFICATION_EMAIL_RESENT',
+    'VERIFICATION_LINK_EXPIRED',
+    'EMAIL_VERIFIED',
+    'PASSWORD_RESET_REQUESTED',
+    'PASSWORD_RESET_LINK_EXPIRED',
+    'PASSWORD_RESET_COMPLETED',
+    'PASSWORD_CHANGED',
+    'EXTERNAL_IDENTITY_LINKED',
+    'EXTERNAL_IDENTITY_UNLINKED',
+  ],
+  PRIVACY: [
+    'CONSENT_GRANTED',
+    'CONSENT_WITHDRAWN',
+    'DATA_EXPORT_REQUESTED',
+    'DATA_EXPORT_COMPLETED',
+    'DATA_EXPORT_FAILED',
+    'DATA_EXPORT_DOWNLOADED',
+    'DATA_EXPORT_EXPIRED',
+    'ACCOUNT_DELETION_REQUESTED',
+    'ACCOUNT_DELETION_REJECTED',
+    'ACCOUNT_DELETION_CANCELLED',
+    'ACCOUNT_DELETION_COMPLETED',
+  ],
+  SETTINGS: ['PROFILE_UPDATED', 'AVATAR_UPDATED', 'AVATAR_REMOVED', 'UI_PREFERENCES_CHANGED'],
+  ACCESS: ['LEARNING_ACCESS_DENIED', 'ROLE_ACCESS_DENIED', 'AUDIT_LOG_TAMPER_ATTEMPTED'],
+  ADMIN: ['ADMIN_ACCOUNT_VIEWED', 'AUDIT_LOG_SEARCHED'],
+}
+
+export const AUDIT_CATEGORIES = Object.keys(AUDIT_ACTIONS) as AuditCategory[]
+
+export const AUDIT_OBJECT_TYPES = [
+  'USER_ACCOUNT',
+  'VERIFICATION_TOKEN',
+  'CONSENT',
+  'SESSION',
+  'DOCUMENT',
+  'PROFILE',
+  'EXTERNAL_IDENTITY',
+  'DATA_EXPORT',
+  'NOTIFICATION',
+  'UI_PREFERENCES',
+  'ENDPOINT',
+  'AUDIT_LOG',
+]
+
+export function isAuditCategory(value: string | null | undefined): value is AuditCategory {
+  return value != null && (AUDIT_CATEGORIES as string[]).includes(value)
+}
