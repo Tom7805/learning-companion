@@ -231,6 +231,14 @@ class QuotaIT {
     @Test
     @DisplayName("TC-04: người học ở múi giờ Việt Nam hết lượt, qua nửa đêm giờ Việt Nam thì lượt hồi đủ")
     void refillsAtLearnerMidnight() throws Exception {
+        // Đưa đồng hồ tới mười phút trước nửa đêm giờ Việt Nam rồi mới tạo tài khoản: chạy lúc rạng sáng mà tua gần
+        // một ngày thì phiên đăng nhập hết hạn trước khi kịp kiểm tra.
+        ZoneId vietnam = ZoneId.of("Asia/Ho_Chi_Minh");
+        Instant midnight = LocalDate.ofInstant(clock.instant(), vietnam).plusDays(1).atStartOfDay(vietnam).toInstant();
+        Duration untilMidnight = Duration.between(clock.instant(), midnight);
+        if (untilMidnight.compareTo(Duration.ofMinutes(10)) > 0) {
+            clock.advance(untilMidnight.minusMinutes(10));
+        }
         User learner = learner();
         setTimeZone(learner, "Asia/Ho_Chi_Minh");
         setUsage(learner, 50);
