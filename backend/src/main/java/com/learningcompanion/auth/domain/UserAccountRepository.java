@@ -1,5 +1,6 @@
 package com.learningcompanion.auth.domain;
 
+import com.learningcompanion.shared.security.Role;
 import jakarta.persistence.LockModeType;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,4 +18,8 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, UUID> 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select a from UserAccount a where a.id = :id")
     Optional<UserAccount> lockById(@Param("id") UUID id);
+
+    boolean existsByRole(Role role);
+
+    Optional<UserAccount> findFirstByRole(Role role);
 }

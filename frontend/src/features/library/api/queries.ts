@@ -2,8 +2,9 @@ import { useQuery } from '@tanstack/react-query'
 import { queryKeys } from '@/shared/api/queryKeys'
 import { libraryApi } from './libraryApi'
 
-export function useDocuments() {
-  return useQuery({ queryKey: queryKeys.documents, queryFn: libraryApi.documents, staleTime: 30_000 })
+/** {@code enabled} false: không hỏi máy chủ, ví dụ khi người đăng nhập là quản trị viên (không có thư viện). */
+export function useDocuments(enabled = true) {
+  return useQuery({ queryKey: queryKeys.documents, queryFn: libraryApi.documents, staleTime: 30_000, enabled })
 }
 
 export function useDocument(id: string) {

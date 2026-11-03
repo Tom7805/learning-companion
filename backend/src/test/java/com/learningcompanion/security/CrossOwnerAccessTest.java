@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
+import com.learningcompanion.admin.application.TotpService;
 import com.learningcompanion.shared.config.AppProperties;
 import com.learningcompanion.shared.mail.MockMailGateway;
 import com.learningcompanion.shared.time.AdjustableClock;
@@ -61,6 +62,9 @@ class CrossOwnerAccessTest {
 
     @Autowired
     private AdjustableClock clock;
+
+    @Autowired
+    private TotpService totp;
 
     @Autowired
     private JdbcTemplate jdbc;
@@ -216,7 +220,7 @@ class CrossOwnerAccessTest {
         String adminEmail = verifiedAccount(admin);
         promoteToAdmin(adminEmail);
         Browser adminSession = new Browser();
-        login(adminSession, adminEmail);
+        loginAsAdmin(adminSession, adminEmail);
 
         String body = mvc.perform(get("/api/v1/admin/users/" + lanId).cookie(adminSession.cookies())
                         .param("include", "content").param("fields", "contentText,title"))
@@ -230,9 +234,10 @@ class CrossOwnerAccessTest {
                 "emailVerifiedAt", "learningRecords", "storageBytesUsed");
         assertThat(body).doesNotContain("Bài tập riêng tư").doesNotContain("Ohm");
 
-        // Quản trị viên cũng không mở được tài liệu của người học qua điểm cuối của người học.
+        // Quản trị viên cũng không mở được tài liệu của người học qua điểm cuối của người học: tài khoản quản trị
+        // không dùng chức năng học tập (NCL-03-CN-002).
         mvc.perform(get("/api/v1/library/documents/" + document).cookie(adminSession.cookies()))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isForbidden());
         assertThat(jdbc.queryForObject("""
                 select count(*) from audit_log where action = 'ADMIN_ACCOUNT_VIEWED' and object_id = ?""",
                 Integer.class, lanId)).isEqualTo(1);
@@ -313,8 +318,44 @@ class CrossOwnerAccessTest {
 
     private void promoteToAdmin(String email) throws Exception {
         mvc.perform(post("/api/v1/dev/accounts/role").contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"%s\",\"role\":\"ADMIN\"}".formatted(email)))
+                        .content("{\"email\":\"%s\",\"role\":\"ADMIN\",\"replaceExisting\":true}"
+                                .formatted(email)))
                 .andExpect(status().isNoContent());
+    }
+
+    /** Quản trị viên đăng nhập đủ hai bước: mật khẩu, thiết lập ứng dụng sinh mã rồi nhập mã đầu tiên. */
+    private void loginAsAdmin(Browser browser, String email) throws Exception {
+        browser.absorb(mvc.perform(post("/api/v1/auth/login").with(csrf()).cookie(browser.cookies())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"%s\",\"password\":\"%s\",\"rememberDevice\":false}"
+                                .formatted(email, PASSWORD)))
+                .andExpect(status().isAccepted()).andReturn());
+        String setup = mvc.perform(post("/api/v1/auth/admin/two-factor/enrollment").with(csrf())
+                        .cookie(browser.cookies()))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        String uri = JSON.readTree(setup).get("otpauthUri").asString();
+        byte[] secret = base32(uri.replaceAll(".*secret=([A-Z2-7]+).*", "$1"));
+        String code = totp.codeAt(secret, TotpService.stepAt(clock.instant()));
+        browser.absorb(mvc.perform(post("/api/v1/auth/admin/two-factor/enrollment/confirm").with(csrf())
+                        .cookie(browser.cookies()).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"code\":\"" + code + "\"}"))
+                .andExpect(status().isOk()).andReturn());
+    }
+
+    private static byte[] base32(String text) {
+        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        int buffer = 0;
+        int bits = 0;
+        for (char c : text.toCharArray()) {
+            buffer = (buffer << 5) | alphabet.indexOf(c);
+            bits += 5;
+            if (bits >= 8) {
+                out.write((buffer >> (bits - 8)) & 0xff);
+                bits -= 8;
+            }
+        }
+        return out.toByteArray();
     }
 
     private UUID accountId(Browser browser) throws Exception {

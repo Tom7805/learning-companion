@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
+import { adminNavigation } from '@/features/admin/navigation'
 import { dashboardNavigation } from '@/features/dashboard/navigation'
 import { libraryNavigation } from '@/features/library/navigation'
 
@@ -20,3 +21,8 @@ export interface NavigationEntry {
 export const navigation: NavigationEntry[] = [...dashboardNavigation, ...libraryNavigation].sort(
   (left, right) => left.order - right.order,
 )
+
+/** Mục thanh bên theo vai trò: quản trị viên chỉ thấy khu quản trị, người học thấy các chức năng học tập (QTN-01). */
+export function navigationFor(role: 'LEARNER' | 'ADMIN' | undefined): NavigationEntry[] {
+  return role === 'ADMIN' ? adminNavigation : navigation
+}

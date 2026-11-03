@@ -55,5 +55,19 @@ export function LoginPage() {
     navigate(from, { replace: true })
   }
 
-  return <LoginForm notice={notice} defaultEmail={state.email} returnTo={from} onLoggedIn={handleLoggedIn} />
+  // Quản trị viên: sang bước mã xác thực; trang quản trị là đích sau khi qua bước này.
+  const handleTwoFactor = () => {
+    pendingVerification.clear()
+    navigate(routes.adminTwoFactor, { replace: true, state: { from: from.startsWith(routes.admin) ? from : undefined } })
+  }
+
+  return (
+    <LoginForm
+      notice={notice}
+      defaultEmail={state.email}
+      returnTo={from}
+      onLoggedIn={handleLoggedIn}
+      onTwoFactorRequired={handleTwoFactor}
+    />
+  )
 }

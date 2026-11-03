@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Menu, Search, WifiOff } from 'lucide-react'
 import { lazy, Suspense, useEffect, useId, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router'
+import { Link, Navigate, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router'
 import { useSidePanel } from '@/app/providers/sidePanel'
 import { SidePanelProvider } from '@/app/providers/SidePanelProvider'
 import { installPrompt, useInstallState } from '@/app/pwa'
@@ -33,6 +33,16 @@ import { SidePanel } from './SidePanel'
 import { Sidebar, type SidebarAccountProps } from './Sidebar'
 
 const SETTINGS_SECTIONS: SettingsSection[] = ['profile', 'accounts', 'appearance']
+
+/**
+ * Trang quản trị viên mở được: khu quản trị và các trang về chính tài khoản, phiên đăng nhập. Mọi trang học tập khác
+ * đưa về khu quản trị, vì tài khoản quản trị không mở chức năng học tập (NCL-03-CN-002, QTN-07).
+ */
+const ADMIN_PAGES = [routes.admin, routes.devices, routes.security, '/notifications/', routes.contentGone]
+
+function adminMayOpen(pathname: string) {
+  return ADMIN_PAGES.some((page) => pathname === page || pathname.startsWith(page.endsWith('/') ? page : `${page}/`))
+}
 
 // Cài đặt chỉ tải mã khi mở lần đầu, để phần khung mở nhanh hơn.
 const SettingsDialog = lazy(async () => ({
@@ -78,8 +88,10 @@ function AppShellFrame() {
     logout.mutate()
   }
   const profile = useProfile()
-  // Điều khoản hoặc chính sách có bản mới chưa đồng ý thì chưa cho dùng tiếp (NCL-01-CN-006).
-  const privacy = usePrivacyStatus(account?.id)
+  const isAdmin = account?.role === 'ADMIN'
+  // Điều khoản hoặc chính sách có bản mới chưa đồng ý thì chưa cho dùng tiếp (NCL-01-CN-006). Điều khoản là thỏa
+  // thuận với người học; quản trị viên không phải đồng ý.
+  const privacy = usePrivacyStatus(isAdmin ? undefined : account?.id)
   const acceptanceRequired = privacy.data?.acceptanceRequired === true
   usePageViewTracking(
     privacy.data?.purposes.some((item) => item.purpose === 'ANONYMOUS_USAGE_ANALYTICS' && item.granted) === true,
@@ -87,7 +99,7 @@ function AppShellFrame() {
   const timeZone = profile.data?.timeZone
   // Thông báo (NCL-02-CN-002): số chưa đọc cập nhật ngay qua kênh trực tiếp; trong lúc chờ đồng ý điều khoản mới thì
   // tạm không hỏi vì mọi chức năng đang bị chặn.
-  const notificationsEnabled = Boolean(account) && !privacy.isPending && !acceptanceRequired
+  const notificationsEnabled = Boolean(account) && (isAdmin || !privacy.isPending) && !acceptanceRequired
   const streaming = useNotificationStream(notificationsEnabled)
   const unreadCount = useUnreadCount(notificationsEnabled, { poll: !streaming }).data ?? 0
   const notificationPanel = useNotificationPanel()
@@ -164,7 +176,7 @@ function AppShellFrame() {
     onSettings: () => openSettings(),
     onAppearance: () => openSettings('appearance'),
     onHelp: openHelp,
-    onAdmin: account.role === 'ADMIN' ? () => void navigate(routes.adminAudit) : undefined,
+    onAdmin: isAdmin ? () => void navigate(routes.adminAudit) : undefined,
     onInstall: installState === 'available' ? () => void install() : undefined,
     onLogout: handleLogout,
     loggingOut: logout.isPending,
@@ -260,6 +272,8 @@ function AppShellFrame() {
                 <p className="text-muted" data-testid="terms-pending">
                   {t('termsUpdate.waiting')}
                 </p>
+              ) : isAdmin && !adminMayOpen(location.pathname) ? (
+                <Navigate to={routes.admin} replace />
               ) : (
                 <Suspense fallback={<PageSkeleton />}>
                   <Outlet />

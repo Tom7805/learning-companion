@@ -5,6 +5,7 @@ import com.learningcompanion.auth.api.dto.LoginRequest;
 import com.learningcompanion.auth.api.dto.RegisterRequest;
 import com.learningcompanion.auth.api.dto.RegistrationAcceptedResponse;
 import com.learningcompanion.auth.api.dto.SessionStatusResponse;
+import com.learningcompanion.auth.api.dto.TwoFactorRequiredResponse;
 import com.learningcompanion.auth.application.AuthenticationService;
 import com.learningcompanion.auth.application.RegistrationService;
 import com.learningcompanion.auth.application.SessionService;
@@ -57,10 +58,18 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AccountResponse> login(@Valid @RequestBody LoginRequest request, HttpServletRequest http) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request, HttpServletRequest http) {
         SessionCookies.DeviceCookie device = sessionCookies.device(http);
         AuthenticationService.LoginResult result = authenticationService.login(new AuthenticationService.LoginCommand(
                 request.email(), request.password(), request.rememberDevice(), device.id()), ClientInfo.from(http));
+        if (result.challenge() != null) {
+            // Quản trị viên: mật khẩu đúng, còn bước mã xác thực thứ hai (NCL-03-CN-002). Chưa có phiên.
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
+                    .header(HttpHeaders.SET_COOKIE, sessionCookies.issueAdminChallenge(result.challenge().rawToken(),
+                            result.challenge().lifetime()).toString())
+                    .header(HttpHeaders.SET_COOKIE, device.cookie().toString())
+                    .body(new TwoFactorRequiredResponse(true, result.challenge().stage().name()));
+        }
         SessionService.StartedSession session = result.session();
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, sessionCookies.issue(session.rawToken(), session.rememberDevice(),

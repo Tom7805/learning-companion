@@ -315,6 +315,12 @@ public class OAuthLoginService {
 
     private Result signIn(UserAccount account, boolean rememberDevice, String deviceId, String returnTo,
                           IdentityProvider provider, ClientInfo client) {
+        // Quản trị viên chỉ đăng nhập bằng mật khẩu kèm mã hai bước, không qua nhà cung cấp định danh (NCL-03-CN-002).
+        if (account.getRole() == com.learningcompanion.shared.security.Role.ADMIN) {
+            audit.byAnonymous(AuditAction.OAUTH_LOGIN_REJECTED, AuditObjectType.USER_ACCOUNT, account.getId(),
+                    Map.of("reason", "ADMIN_REQUIRES_TWO_FACTOR", "provider", provider.name()), client);
+            throw new BusinessException(ErrorCode.ACCOUNT_UNAVAILABLE);
+        }
         SessionService.StartedSession session = sessions.start(account, client, rememberDevice, deviceId,
                 "OAUTH_" + provider.name());
         audit.byUser(account.getId(), AuditAction.LOGIN_SUCCEEDED, AuditObjectType.SESSION, session.sessionId(),

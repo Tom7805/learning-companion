@@ -57,6 +57,14 @@ public enum ErrorCode {
     EXPORT_EXPIRED(HttpStatus.GONE, "Gói dữ liệu đã hết hạn tải, hãy yêu cầu xuất lại."),
     REAUTHENTICATION_REQUIRED(HttpStatus.FORBIDDEN, "Hãy xác nhận lại mật khẩu hoặc đăng nhập lại để tiếp tục."),
     ACCOUNT_PENDING_DELETION(HttpStatus.FORBIDDEN, "Tài khoản đang chờ xóa. Hãy hủy yêu cầu xóa để dùng tiếp."),
+    /** Bước mã xác thực thứ hai của quản trị viên không còn: hết hạn, đã xong, hoặc chưa qua bước mật khẩu. */
+    TWO_FACTOR_CHALLENGE_INVALID(HttpStatus.UNAUTHORIZED, "Bước xác thực đã hết hạn, hãy đăng nhập lại từ đầu."),
+    TWO_FACTOR_CODE_INVALID(HttpStatus.BAD_REQUEST, "Mã xác thực chưa đúng hoặc đã hết hạn."),
+    RECOVERY_CODE_INVALID(HttpStatus.BAD_REQUEST, "Mã khôi phục chưa đúng hoặc đã được dùng."),
+    TWO_FACTOR_ENROLLMENT_NOT_STARTED(HttpStatus.CONFLICT, "Hãy tạo khóa cho ứng dụng sinh mã trước."),
+    ADMIN_LOGIN_LOCKED(HttpStatus.LOCKED, "Đăng nhập quản trị đang tạm khóa do nhập sai mã xác thực nhiều lần."),
+    /** Hệ thống chỉ có một quản trị viên (NCL-03-CN-002 TC-04). */
+    ADMIN_ALREADY_EXISTS(HttpStatus.CONFLICT, "Hệ thống đã có quản trị viên và chỉ cho phép một quản trị viên."),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Hệ thống gặp sự cố, hãy thử lại sau.");
 
     private final HttpStatus status;

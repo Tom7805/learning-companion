@@ -70,7 +70,10 @@ public class SecurityConfig {
                                 ApiPaths.AUTH + "/oauth/*/start",
                                 ApiPaths.AUTH + "/oauth/*/callback",
                                 ApiPaths.AUTH + "/oauth/signup",
-                                ApiPaths.AUTH + "/oauth/link").permitAll()
+                                ApiPaths.AUTH + "/oauth/link",
+                                // Bước mã xác thực thứ hai của quản trị viên: chưa có phiên, có cookie của bước này.
+                                ApiPaths.AUTH + "/admin/two-factor/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, ApiPaths.AUTH + "/admin/two-factor").permitAll()
                         .requestMatchers(HttpMethod.GET, ApiPaths.AUTH + "/session", ApiPaths.AUTH + "/oauth/providers",
                                 ApiPaths.LEGAL + "/**")
                         .permitAll()
@@ -79,6 +82,9 @@ public class SecurityConfig {
                         // Gói dữ liệu xuất: chỉ cấp đường dẫn ký sau khi người học xác nhận lại danh tính (NCL-01-CN-008).
                         .requestMatchers(HttpMethod.GET, ApiPaths.EXPORTS + "/files/*").permitAll()
                         .requestMatchers(ApiPaths.ADMIN + "/**").hasRole("ADMIN")
+                        // Tài khoản quản trị viên không mở được chức năng học tập (NCL-03-CN-002, QTN-07): lần gọi bị
+                        // từ chối và ghi nhật ký như mọi lần sai vai trò.
+                        .requestMatchers(ApiPaths.LEARNING_FEATURES).hasRole("LEARNER")
                         .requestMatchers(ApiPaths.DEV + "/**").permitAll()
                         .requestMatchers("/actuator/health", "/error").permitAll()
                         .anyRequest().authenticated())

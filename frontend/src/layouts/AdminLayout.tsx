@@ -1,7 +1,10 @@
-import { ScrollText, ShieldCheck } from 'lucide-react'
+import { Clock, ScrollText, ShieldCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, Outlet } from 'react-router'
 import { routes } from '@/app/routes'
+import { useAdminIdentity } from '@/features/admin'
+import { formatDateTime } from '@/shared/lib/date'
+import { useDisplayTimeZone } from '@/shared/lib/timezone'
 import { cn } from '@/shared/lib/cn'
 
 /** Các trang của khu quản trị; story quản trị sau chỉ cần thêm mục vào đây. */
@@ -9,7 +12,9 @@ const sections = [{ id: 'audit', to: routes.adminAudit, label: 'admin.nav.audit'
 
 /** Khung chung của khu quản trị, nằm trong vùng nội dung của ứng dụng: nhãn khu vực và các trang quản trị. */
 export function AdminLayout() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const timeZone = useDisplayTimeZone()
+  const identity = useAdminIdentity().data
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center gap-x-4 gap-y-3 border-b border-line pb-4">
@@ -35,6 +40,13 @@ export function AdminLayout() {
             </NavLink>
           ))}
         </nav>
+        {identity?.sessionExpiresAt && (
+          // Phiên quản trị có hạn cứng tám giờ (NCL-03-CN-002): báo trước giờ phải đăng nhập lại.
+          <p className="flex items-center gap-1.5 text-sm text-muted sm:ml-auto" data-testid="admin-session-expiry">
+            <Clock className="size-4" aria-hidden="true" />
+            {t('admin.sessionExpiresAt', { time: formatDateTime(identity.sessionExpiresAt, i18n.language, timeZone) })}
+          </p>
+        )}
       </div>
       <Outlet />
     </div>

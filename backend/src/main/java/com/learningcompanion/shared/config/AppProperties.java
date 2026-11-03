@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "app")
 public record AppProperties(String frontendUrl, Auth auth, Mail mail, DevTools devTools, Storage storage,
-                            OAuth oauth) {
+                            OAuth oauth, Admin admin) {
 
     public AppProperties {
         if (devTools == null) {
@@ -13,6 +13,9 @@ public record AppProperties(String frontendUrl, Auth auth, Mail mail, DevTools d
         }
         if (oauth == null) {
             oauth = new OAuth("disabled", null, null, Duration.ofMinutes(10));
+        }
+        if (admin == null) {
+            admin = Admin.defaults();
         }
     }
 
@@ -55,6 +58,20 @@ public record AppProperties(String frontendUrl, Auth auth, Mail mail, DevTools d
 
         public boolean enabled() {
             return mode != null && !"disabled".equals(mode);
+        }
+    }
+
+    /**
+     * Tài khoản quản trị viên (NCL-03-CN-002): phiên hết hạn sau {@code sessionMaxLifetime} kể từ lúc đăng nhập hoặc
+     * sau {@code sessionIdleTimeout} không thao tác; nhập sai mã hai bước {@code maxFailedCodes} lần liên tiếp thì khóa
+     * đăng nhập quản trị trong {@code lockoutDuration}.
+     */
+    public record Admin(Duration sessionIdleTimeout, Duration sessionMaxLifetime, Duration challengeTtl,
+                        int maxFailedCodes, Duration lockoutDuration, String totpIssuer) {
+
+        static Admin defaults() {
+            return new Admin(Duration.ofMinutes(30), Duration.ofHours(8), Duration.ofMinutes(10), 5,
+                    Duration.ofMinutes(15), "Learning Companion");
         }
     }
 }

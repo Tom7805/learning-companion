@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright'
 import type { Browser, Page } from '@playwright/test'
 import { createVerifiedAccount, expect, loginThroughUi, test, type DevApi } from './fixtures/auth'
+import { becomeAdmin } from './fixtures/admin'
 import { openAccountMenu } from './fixtures/shell'
 import { STRONG_PASSWORD, uniqueEmail } from './fixtures/testData'
 
@@ -30,11 +31,14 @@ async function signUp(page: Page, dev: DevApi, tag: string) {
   return email
 }
 
-/** Quản trị viên mở khu quản trị như người dùng thật: từ trình đơn tài khoản. */
+/**
+ * Quản trị viên duy nhất (NCL-03-CN-002) đăng nhập đủ hai bước, rồi mở khu quản trị như người dùng thật: từ trình đơn
+ * tài khoản.
+ */
 async function signUpAdmin(page: Page, dev: DevApi) {
   const email = await signUp(page, dev, 'quan-tri')
-  await dev.setRole(email, 'ADMIN')
-  await page.reload()
+  await becomeAdmin(page, dev, email)
+  await page.goto('/admin')
   const menu = await openAccountMenu(page)
   await menu.getByRole('menuitem', { name: 'Quản trị' }).click()
   await expect(page).toHaveURL(/\/admin\/audit$/)

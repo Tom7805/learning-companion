@@ -19,6 +19,7 @@ export interface CapturedMail {
     | 'ACCOUNT_DELETION_CANCELLED'
     | 'ACCOUNT_DELETION_ATTEMPT'
     | 'ACCOUNT_DELETED'
+    | 'ADMIN_LOGIN_LOCKED'
   links: string[]
   sentAt: string
 }
@@ -85,8 +86,19 @@ export class DevApi {
     return (await response.json()).created
   }
 
-  async setRole(email: string, role: 'LEARNER' | 'ADMIN') {
-    expect((await this.request.post(`${API}/dev/accounts/role`, { data: { email, role } })).ok()).toBeTruthy()
+  /**
+   * Cấp vai trò. Hệ thống chỉ có một quản trị viên (NCL-03-CN-002): mặc định hạ quản trị viên của bài kiểm thử trước
+   * xuống người học; {@code replaceExisting: false} để thử yêu cầu tạo thêm quản trị viên (bị từ chối).
+   */
+  async setRole(email: string, role: 'LEARNER' | 'ADMIN', replaceExisting = true) {
+    return this.request.post(`${API}/dev/accounts/role`, { data: { email, role, replaceExisting } })
+  }
+
+  /** Giờ của máy chủ (đồng hồ tua được), để tính mã xác thực khớp với máy chủ. */
+  async serverNow(): Promise<number> {
+    const response = await this.request.get(`${API}/dev/clock`)
+    expect(response.ok()).toBeTruthy()
+    return Date.parse((await response.json()).now)
   }
 
   /** Đăng phiên bản điều khoản mới có hiệu lực sau ngần ấy giây theo đồng hồ máy chủ. */

@@ -11,6 +11,8 @@ export const routes = {
   contentGone: '/gone',
   admin: '/admin',
   adminAudit: '/admin/audit',
+  /** Bước mã xác thực thứ hai khi quản trị viên đăng nhập; chưa có phiên nên nằm ngoài khu quản trị. */
+  adminTwoFactor: '/login/two-factor',
   deletionScheduled: '/account/deletion-scheduled',
   register: '/register',
   checkEmail: '/register/check-email',

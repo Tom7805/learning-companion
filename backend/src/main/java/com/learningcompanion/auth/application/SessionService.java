@@ -14,6 +14,7 @@ import com.learningcompanion.shared.config.AppProperties;
 import com.learningcompanion.shared.exception.BusinessException;
 import com.learningcompanion.shared.exception.ErrorCode;
 import com.learningcompanion.shared.security.AuthenticatedUser;
+import com.learningcompanion.shared.security.Role;
 import com.learningcompanion.shared.security.SessionResolver;
 import com.learningcompanion.shared.security.SessionTokenService;
 import com.learningcompanion.shared.web.ClientInfo;
@@ -53,6 +54,7 @@ public class SessionService implements SessionResolver {
     private final ApplicationEventPublisher events;
     private final Clock clock;
     private final AppProperties.Auth settings;
+    private final AppProperties.Admin adminSettings;
 
     public SessionService(UserSessionRepository sessions, UserAccountRepository accounts, SessionTokenService tokens,
                           UserAgentParser userAgentParser, GeoIpLocator geoIpLocator, AuditLogger audit,
@@ -66,6 +68,7 @@ public class SessionService implements SessionResolver {
         this.events = events;
         this.clock = clock;
         this.settings = properties.auth();
+        this.adminSettings = properties.admin();
     }
 
     /**
@@ -75,17 +78,37 @@ public class SessionService implements SessionResolver {
     @Transactional(propagation = Propagation.MANDATORY)
     public StartedSession start(UserAccount account, ClientInfo client, boolean rememberDevice, String rawDeviceId,
                                 String reason) {
+        Duration lifetime = rememberDevice ? settings.rememberDeviceDuration() : settings.sessionIdleTimeout();
+        return open(account, client, rawDeviceId, reason, lifetime, (rawToken, deviceIdHash, device, now) ->
+                UserSession.start(account.getId(), tokens.hash(rawToken), now, rememberDevice, lifetime,
+                        deviceIdHash, device, client.userAgent(), client.ipAddress()));
+    }
+
+    /**
+     * Mở phiên quản trị sau khi quản trị viên qua bước mã xác thực thứ hai (NCL-03-CN-002): không ghi nhớ thiết bị,
+     * hết hạn sau ba mươi phút không thao tác hoặc tám giờ kể từ lúc đăng nhập. Thiết bị lạ vẫn nhận thư cảnh báo.
+     */
+    @Transactional(propagation = Propagation.MANDATORY)
+    public StartedSession startTwoFactor(UserAccount account, ClientInfo client, String rawDeviceId, String reason) {
+        return open(account, client, rawDeviceId, reason, adminSettings.sessionIdleTimeout(),
+                (rawToken, deviceIdHash, device, now) -> UserSession.startTwoFactor(account.getId(),
+                        tokens.hash(rawToken), now, adminSettings.sessionIdleTimeout(),
+                        adminSettings.sessionMaxLifetime(), deviceIdHash, device, client.userAgent(),
+                        client.ipAddress()));
+    }
+
+    private StartedSession open(UserAccount account, ClientInfo client, String rawDeviceId, String reason,
+                                Duration lifetime, SessionFactory factory) {
         Instant now = Instant.now(clock);
         String deviceIdHash = rawDeviceId == null ? null : tokens.hash(rawDeviceId);
         boolean hadSessions = sessions.existsByUserId(account.getId());
         boolean knownDevice = deviceIdHash != null
                 && sessions.existsByUserIdAndDeviceIdHash(account.getId(), deviceIdHash);
         DeviceInfo device = describe(client);
-        Duration lifetime = rememberDevice ? settings.rememberDeviceDuration() : settings.sessionIdleTimeout();
 
         String rawToken = tokens.newToken();
-        UserSession session = UserSession.start(account.getId(), tokens.hash(rawToken), now, rememberDevice, lifetime,
-                deviceIdHash, device, client.userAgent(), client.ipAddress());
+        UserSession session = factory.create(rawToken, deviceIdHash, device, now);
+        boolean rememberDevice = session.isRememberDevice();
         // Tài khoản đang chờ xóa không nhận thông báo nào ngoài thư về yêu cầu xóa (NCL-01-CN-009).
         boolean alert = hadSessions && !knownDevice && !account.isPendingDeletion();
         String revokeLink = null;
@@ -103,6 +126,11 @@ public class SessionService implements SessionResolver {
                     session.getId(), Map.of("device", device.label()), client);
         }
         return new StartedSession(session.getId(), rawToken, rememberDevice, lifetime);
+    }
+
+    @FunctionalInterface
+    private interface SessionFactory {
+        UserSession create(String rawToken, String deviceIdHash, DeviceInfo device, Instant now);
     }
 
     @Override
@@ -125,8 +153,12 @@ public class SessionService implements SessionResolver {
         }
         return accounts.findById(session.getUserId())
                 .filter(UserAccount::canSignIn)
+                // Quyền quản trị chỉ đi kèm phiên đã qua bước hai: phiên mở bằng mật khẩu trước khi tài khoản thành
+                // quản trị viên, hay mở bằng cách khác, không còn dùng được (NCL-03-CN-002).
+                .filter(account -> account.getRole() != Role.ADMIN || session.isTwoFactorVerified())
                 .map(account -> {
-                    session.touch(now, settings.sessionIdleTimeout());
+                    session.touch(now, account.getRole() == Role.ADMIN
+                            ? adminSettings.sessionIdleTimeout() : settings.sessionIdleTimeout());
                     return SessionLookup.valid(new AuthenticatedUser(account.getId(), session.getId(),
                             account.getRole()));
                 })

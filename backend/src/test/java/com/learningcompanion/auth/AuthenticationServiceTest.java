@@ -11,6 +11,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.learningcompanion.admin.application.AdminTwoFactorService;
+import com.learningcompanion.admin.domain.AdminLoginChallenge;
 import com.learningcompanion.auth.application.AuthMailNotifier;
 import com.learningcompanion.auth.application.AuthenticationService;
 import com.learningcompanion.auth.application.LoginAttemptService;
@@ -51,6 +53,7 @@ class AuthenticationServiceTest {
     private final SessionService sessionService = mock(SessionService.class);
     private final AuditLogger audit = mock(AuditLogger.class);
     private final ApplicationEventPublisher events = mock(ApplicationEventPublisher.class);
+    private final AdminTwoFactorService adminTwoFactor = mock(AdminTwoFactorService.class);
     private final AdjustableClock clock = new AdjustableClock(Clock.fixed(Instant.parse("2026-10-10T03:00:00Z"),
             ZoneOffset.UTC));
     private final Map<String, LoginThrottle> throttleStore = new HashMap<>();
@@ -63,7 +66,7 @@ class AuthenticationServiceTest {
                 new AppProperties.Auth(Duration.ofHours(24), Duration.ofSeconds(60), Duration.ofHours(2),
                         "lc_session", false, 10, 20, Duration.ofHours(1), Duration.ofDays(30), 5,
                         Duration.ofMinutes(15), 1000, "lc_device", Duration.ofMinutes(30), 20),
-                new AppProperties.Mail("mock", "no-reply@test", "Test"), null, null, null);
+                new AppProperties.Mail("mock", "no-reply@test", "Test"), null, null, null, null);
         when(passwordHasher.hash(anyString())).thenReturn("dummy-hash");
         when(passwordHasher.matches(anyString(), anyString())).thenReturn(false);
         when(passwordHasher.matches(PASSWORD, "real-hash")).thenReturn(true);
@@ -86,7 +89,7 @@ class AuthenticationServiceTest {
 
         LoginAttemptService loginAttempts = new LoginAttemptService(throttles, audit, events, clock, properties);
         service = new AuthenticationService(accounts, loginAttempts, passwordHasher, sessionService,
-                new RateLimiter(clock), audit, properties);
+                new RateLimiter(clock), audit, adminTwoFactor, properties);
     }
 
     @Test
@@ -100,6 +103,23 @@ class AuthenticationServiceTest {
         assertThat(result.session().lifetime()).isEqualTo(Duration.ofDays(30));
         verify(sessionService).start(account, CLIENT, true, "device-1", "LOGIN");
         assertThat(throttleStore).doesNotContainKey(EMAIL);
+    }
+
+    @Test
+    void adminPasswordOnlyOpensTheSecondStepWithoutASession() {
+        UserAccount admin = UserAccount.createAdmin("quan.tri@example.com", "Quản trị", "hash", Instant.EPOCH);
+        when(accounts.findByEmail("quan.tri@example.com")).thenReturn(Optional.of(admin));
+        when(passwordHasher.matches(PASSWORD, "hash")).thenReturn(true);
+        AdminTwoFactorService.OpenedChallenge challenge = new AdminTwoFactorService.OpenedChallenge("raw",
+                AdminLoginChallenge.Stage.VERIFY, Duration.ofMinutes(10));
+        when(adminTwoFactor.open(admin, CLIENT)).thenReturn(challenge);
+
+        AuthenticationService.LoginResult result = service.login(command("quan.tri@example.com", PASSWORD, true),
+                CLIENT);
+
+        assertThat(result.session()).isNull();
+        assertThat(result.challenge()).isSameAs(challenge);
+        verify(sessionService, never()).start(any(), any(), anyBoolean(), any(), anyString());
     }
 
     @Test

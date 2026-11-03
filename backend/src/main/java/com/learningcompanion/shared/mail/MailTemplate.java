@@ -8,6 +8,7 @@ public enum MailTemplate {
     /** Người học chờ xóa quên mật khẩu vẫn cần đặt lại được để vào hủy yêu cầu xóa. */
     PASSWORD_RESET("email/password-reset", "Đặt lại mật khẩu Learning Companion", true),
     PASSWORD_CHANGED("email/password-changed", "Mật khẩu tài khoản của bạn vừa được thay đổi", false),
+    ADMIN_LOGIN_LOCKED("email/admin-login-locked", "Đăng nhập quản trị tạm khóa do nhập sai mã xác thực", false),
     PRODUCT_NEWS("email/product-news", "Có gì mới ở Learning Companion", false),
     DATA_EXPORT_READY("email/data-export-ready", "Gói dữ liệu của bạn đã sẵn sàng để tải", false),
     ACCOUNT_DELETION_SCHEDULED("email/account-deletion-scheduled",

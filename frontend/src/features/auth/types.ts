@@ -19,6 +19,16 @@ export interface Account {
  */
 export type SessionLostReason = 'SESSION_EXPIRED' | 'SESSION_REVOKED' | 'REAUTHENTICATE'
 
+/** Mật khẩu quản trị viên đã đúng, còn bước mã xác thực (NCL-03-CN-002): nhập mã hoặc thiết lập ứng dụng sinh mã. */
+export interface TwoFactorRequired {
+  twoFactorRequired: true
+  stage: 'VERIFY' | 'ENROLL'
+}
+
+export function isTwoFactorRequired(result: Account | TwoFactorRequired): result is TwoFactorRequired {
+  return 'twoFactorRequired' in result && result.twoFactorRequired === true
+}
+
 export interface SessionStatus {
   authenticated: boolean
   account?: Account

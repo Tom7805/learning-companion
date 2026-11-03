@@ -2,7 +2,8 @@ import { FileText, Search } from 'lucide-react'
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { navigation } from '@/app/navigation'
+import { navigationFor } from '@/app/navigation'
+import { useAuth } from '@/features/auth'
 import { documentPath } from '@/app/routes'
 import { useDocuments } from '@/features/library'
 import { cn } from '@/shared/lib/cn'
@@ -71,10 +72,12 @@ function QuickOpenSearch({ onClose }: { onClose: () => void }) {
   const [query, setQuery] = useState('')
   const [active, setActive] = useState(0)
   const listId = useId()
-  const documents = useDocuments()
+  const role = useAuth().account?.role
+  // Quản trị viên không mở chức năng học tập nên Mở nhanh chỉ tìm trong các trang quản trị (NCL-03-CN-002).
+  const documents = useDocuments(role !== 'ADMIN')
 
   const results = useMemo<Result[]>(() => {
-    const pages = navigation
+    const pages = navigationFor(role)
       .map((entry) => ({ key: `page:${entry.id}`, group: 'pages' as const, label: t(entry.label), to: entry.to, icon: entry.icon }))
       .filter((entry) => matchesSearch(entry.label, query))
     const docs = (documents.data ?? [])
@@ -88,7 +91,7 @@ function QuickOpenSearch({ onClose }: { onClose: () => void }) {
         icon: FileText,
       }))
     return [...pages, ...docs]
-  }, [documents.data, query, t])
+  }, [documents.data, query, role, t])
 
   const activeIndex = Math.min(active, Math.max(results.length - 1, 0))
   const go = (result: Result | undefined) => {
