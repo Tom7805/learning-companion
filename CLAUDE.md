@@ -38,8 +38,8 @@ Người dùng đã chốt: làm **theo đúng STT trên Jira** (STT ghi trong d
 | 5 | LC-19 Nhật ký thao tác | LC-3 | `feature/LC-19-audit-log-recording-and-search` | Đã merge (PR #12) |
 | 6 | LC-20 Tài khoản admin duy nhất + 2FA | LC-3 | `feature/LC-20-single-admin-account-with-two-factor-auth` | Đã merge (PR #13) |
 | 11 | LC-25 Lớp kết nối dịch vụ AI thay được nhà cung cấp | LC-4 | `feature/LC-25-swappable-ai-provider-gateway` | Đã merge (PR #14) |
-| 12 | LC-26 Cấu hình model/prompt theo phiên bản | LC-4 | `feature/LC-26-versioned-model-and-prompt-config` | PR #15 mở |
-| 13 | LC-27 Hạn mức AI và dung lượng | LC-4 | `feature/LC-27-fair-quotas-for-ai-and-storage` | PR #17 mở (dựa trên PR #15) |
+| 12 | LC-26 Cấu hình model/prompt theo phiên bản | LC-4 | `feature/LC-26-versioned-model-and-prompt-config` | Đã merge (PR #15) |
+| 13 | LC-27 Hạn mức AI và dung lượng | LC-4 | `feature/LC-27-fair-quotas-for-ai-and-storage` | Đã merge (PR #17) |
 | 14 | LC-28 Lọc nội dung không an toàn, chống prompt injection | LC-4 | `feature/LC-28-unsafe-content-filter-and-prompt-injection-guard` | Chưa làm |
 | 15 | LC-29 Kho tài liệu: thư mục nhiều cấp, nhãn, gắn sao | LC-5 | tạo mới | Chưa làm |
 | 16 | LC-30 Tải tài liệu lên kho | LC-5 | tạo mới | Chưa làm |
