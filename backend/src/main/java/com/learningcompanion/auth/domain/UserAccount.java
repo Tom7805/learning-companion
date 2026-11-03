@@ -83,6 +83,17 @@ public class UserAccount {
         return account;
     }
 
+    /**
+     * Quản trị viên duy nhất, chỉ tạo bằng câu lệnh cài đặt trên máy chủ (NCL-03-CN-002): hoạt động ngay, địa chỉ thư
+     * coi như đã xác thực vì người cài đặt máy chủ tự nhập.
+     */
+    public static UserAccount createAdmin(String email, String displayName, String passwordHash, Instant now) {
+        UserAccount account = registerLearner(email, displayName, passwordHash, now);
+        account.role = Role.ADMIN;
+        account.markEmailVerified(now);
+        return account;
+    }
+
     public boolean hasPassword() {
         return passwordHash != null;
     }

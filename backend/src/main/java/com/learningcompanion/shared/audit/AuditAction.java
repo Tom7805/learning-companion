@@ -58,7 +58,19 @@ public enum AuditAction {
     /** Quản trị viên tra cứu nhật ký; chi tiết ghi các điều kiện lọc. */
     AUDIT_LOG_SEARCHED(ADMIN, SUCCESS),
     /** Có yêu cầu sửa hoặc xóa một dòng nhật ký; luôn bị từ chối. */
-    AUDIT_LOG_TAMPER_ATTEMPTED(ACCESS, DENIED);
+    AUDIT_LOG_TAMPER_ATTEMPTED(ACCESS, DENIED),
+    /** Quản trị viên nhập đúng mật khẩu, chờ mã xác thực bước hai; chi tiết ghi bước đang chờ (nhập mã, thiết lập). */
+    ADMIN_TWO_FACTOR_CHALLENGED(LOGIN, SUCCESS),
+    /** Thiết lập (hoặc thiết lập lại) ứng dụng sinh mã và nhận bộ mười mã khôi phục mới. */
+    ADMIN_TWO_FACTOR_ENROLLED(LOGIN, SUCCESS),
+    ADMIN_TWO_FACTOR_FAILED(LOGIN, FAILURE),
+    /** Nhập sai mã bước hai đủ số lần: khóa đăng nhập quản trị một thời gian và gửi thư cảnh báo. */
+    ADMIN_TWO_FACTOR_LOCKED(LOGIN, FAILURE),
+    ADMIN_RECOVERY_CODE_USED(LOGIN, SUCCESS),
+    /** Câu lệnh cài đặt trên máy chủ tạo tài khoản quản trị viên. */
+    ADMIN_ACCOUNT_CREATED(ADMIN, SUCCESS),
+    /** Yêu cầu tạo thêm quản trị viên khi đã có một người; luôn bị từ chối. */
+    ADMIN_CREATION_REJECTED(ADMIN, DENIED);
 
     /** Nhóm thao tác để lọc nhật ký. */
     public enum Category { LOGIN, SESSION, ACCOUNT, PRIVACY, SETTINGS, ACCESS, ADMIN }

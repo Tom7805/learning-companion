@@ -23,7 +23,7 @@ import org.springframework.web.client.RestClient;
 class GoogleOidcProviderClientTest {
 
     private final AppProperties properties = new AppProperties("https://app.example", null, null, null, null,
-            new AppProperties.OAuth("google", "client-123", "secret-456", Duration.ofMinutes(10)));
+            new AppProperties.OAuth("google", "client-123", "secret-456", Duration.ofMinutes(10)), null);
 
     @Test
     void authorizationUrlAsksOnlyForNameAndEmailWithPkce() {
@@ -77,7 +77,7 @@ class GoogleOidcProviderClientTest {
     @Test
     void missingCredentialsStopStartup() {
         AppProperties incomplete = new AppProperties("https://app.example", null, null, null, null,
-                new AppProperties.OAuth("google", "", null, Duration.ofMinutes(10)));
+                new AppProperties.OAuth("google", "", null, Duration.ofMinutes(10)), null);
         assertThatThrownBy(() -> new GoogleOidcProviderClient(incomplete, RestClient.create()))
                 .hasMessageContaining("google-client-id");
     }

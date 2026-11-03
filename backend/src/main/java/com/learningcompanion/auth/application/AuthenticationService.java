@@ -1,5 +1,6 @@
 package com.learningcompanion.auth.application;
 
+import com.learningcompanion.admin.application.AdminTwoFactorService;
 import com.learningcompanion.auth.domain.AccountStatus;
 import com.learningcompanion.auth.domain.UserAccount;
 import com.learningcompanion.auth.domain.UserAccountRepository;
@@ -11,6 +12,7 @@ import com.learningcompanion.shared.exception.BusinessException;
 import com.learningcompanion.shared.exception.ErrorCode;
 import com.learningcompanion.shared.security.PasswordHasher;
 import com.learningcompanion.shared.security.RateLimiter;
+import com.learningcompanion.shared.security.Role;
 import com.learningcompanion.shared.web.ClientInfo;
 import java.time.Duration;
 import java.util.Map;
@@ -35,18 +37,21 @@ public class AuthenticationService {
     private final SessionService sessionService;
     private final RateLimiter rateLimiter;
     private final AuditLogger audit;
+    private final AdminTwoFactorService adminTwoFactor;
     private final AppProperties.Auth settings;
     private final String dummyHash;
 
     public AuthenticationService(UserAccountRepository accounts, LoginAttemptService loginAttempts,
                                  PasswordHasher passwordHasher, SessionService sessionService,
-                                 RateLimiter rateLimiter, AuditLogger audit, AppProperties properties) {
+                                 RateLimiter rateLimiter, AuditLogger audit, AdminTwoFactorService adminTwoFactor,
+                                 AppProperties properties) {
         this.accounts = accounts;
         this.loginAttempts = loginAttempts;
         this.passwordHasher = passwordHasher;
         this.sessionService = sessionService;
         this.rateLimiter = rateLimiter;
         this.audit = audit;
+        this.adminTwoFactor = adminTwoFactor;
         this.settings = properties.auth();
         // Băm sẵn một mật khẩu giả để địa chỉ chưa đăng ký cũng tốn cùng thời gian kiểm tra.
         this.dummyHash = passwordHasher.hash(UUID.randomUUID().toString());
@@ -80,16 +85,26 @@ public class AuthenticationService {
         if (!owner.canSignIn()) {
             throw new BusinessException(ErrorCode.ACCOUNT_UNAVAILABLE);
         }
+        // Quản trị viên: mật khẩu đúng mới chỉ qua bước một, phiên được cấp sau khi nhập mã hai bước (NCL-03-CN-002).
+        if (owner.getRole() == Role.ADMIN) {
+            return LoginResult.challenged(owner, adminTwoFactor.open(owner, client));
+        }
         SessionService.StartedSession session = sessionService.start(owner, client, command.rememberDevice(),
                 command.deviceId(), "LOGIN");
         audit.byUser(owner.getId(), AuditAction.LOGIN_SUCCEEDED, AuditObjectType.SESSION, session.sessionId(),
                 Map.of("rememberDevice", command.rememberDevice()), client);
-        return new LoginResult(owner, session);
+        return new LoginResult(owner, session, null);
     }
 
     public record LoginCommand(String email, String password, boolean rememberDevice, String deviceId) {
     }
 
-    public record LoginResult(UserAccount account, SessionService.StartedSession session) {
+    /** Có phiên ngay (người học), hoặc còn bước mã xác thực thứ hai (quản trị viên): đúng một trong hai khác null. */
+    public record LoginResult(UserAccount account, SessionService.StartedSession session,
+                              AdminTwoFactorService.OpenedChallenge challenge) {
+
+        static LoginResult challenged(UserAccount account, AdminTwoFactorService.OpenedChallenge challenge) {
+            return new LoginResult(account, null, challenge);
+        }
     }
 }

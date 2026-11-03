@@ -34,6 +34,7 @@ const NotificationOpenPage = page(
 )
 const ContentGonePage = page(() => import('@/pages/ContentGonePage'), 'ContentGonePage')
 const AuditLogPage = page(() => import('@/features/admin/pages/AuditLogPage'), 'AuditLogPage')
+const AdminTwoFactorPage = page(() => import('@/features/admin/pages/AdminTwoFactorPage'), 'AdminTwoFactorPage')
 const RegisterPage = page(() => import('@/features/auth/pages/RegisterPage'), 'RegisterPage')
 const CheckEmailPage = page(() => import('@/features/auth/pages/CheckEmailPage'), 'CheckEmailPage')
 const VerifyEmailPage = page(() => import('@/features/auth/pages/VerifyEmailPage'), 'VerifyEmailPage')
@@ -128,6 +129,7 @@ export const router = createBrowserRouter([
               { path: routes.checkEmail, element: <CheckEmailPage /> },
               { path: routes.verifyEmail, element: <VerifyEmailPage /> },
               { path: routes.login, element: <LoginPage /> },
+              { path: routes.adminTwoFactor, element: <AdminTwoFactorPage /> },
               { path: routes.forgotPassword, element: <ForgotPasswordPage /> },
               { path: routes.resetPassword, element: <ResetPasswordPage /> },
               { path: routes.oauthCallback, element: <OAuthCallbackPage /> },

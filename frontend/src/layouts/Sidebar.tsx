@@ -2,7 +2,8 @@ import { FileText, PanelLeftClose, PanelLeftOpen, Search, X } from 'lucide-react
 import { useId, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink } from 'react-router'
-import { navigation } from '@/app/navigation'
+import { navigationFor } from '@/app/navigation'
+import { useAuth } from '@/features/auth'
 import { routes } from '@/app/routes'
 import { useRecentItems } from '@/app/store/recentStore'
 import { cn } from '@/shared/lib/cn'
@@ -54,6 +55,7 @@ export function Sidebar({
   const { t } = useTranslation()
   const collapsed = variant === 'collapsed'
   const recent = useRecentItems(account.accountId)
+  const entries = navigationFor(useAuth().account?.role)
   const recentId = useId()
 
   const item = (active: boolean) =>
@@ -136,7 +138,7 @@ export function Sidebar({
 
       <nav aria-label={t('shell.nav')} className={cn(!collapsed && 'w-full')}>
         <ul className="flex flex-col gap-1">
-          {navigation.map((entry) => (
+          {entries.map((entry) => (
             <li key={entry.id}>
               {collapsed ? (
                 <Tooltip label={t(entry.label)}>

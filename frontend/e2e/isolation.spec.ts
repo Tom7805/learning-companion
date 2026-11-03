@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright'
 import type { Browser, Page } from '@playwright/test'
+import { becomeAdmin } from './fixtures/admin'
 import { createVerifiedAccount, expect, test } from './fixtures/auth'
 import { uniqueEmail } from './fixtures/testData'
 import { navigateTo } from './fixtures/shell'
@@ -129,8 +130,8 @@ test.describe('NCL-01-CN-004 · Cách ly dữ liệu học tập theo chủ sở
     expect((await page.request.get(`/api/v1/admin/users/${learnerId}`)).status()).toBe(403)
 
     const { page: adminPage, email: adminEmail } = await otherLearner(browser, dev, 'quan-tri')
-    // Vai trò được đọc lại ở mỗi yêu cầu nên phiên đang mở có quyền quản trị ngay.
-    await dev.setRole(adminEmail, 'ADMIN')
+    // Quản trị viên duy nhất phải đăng nhập lại đủ hai bước (NCL-03-CN-002).
+    await becomeAdmin(adminPage, dev, adminEmail)
 
     const response = await adminPage.request.get(
       `/api/v1/admin/users/${learnerId}?include=content&fields=contentText,title`,

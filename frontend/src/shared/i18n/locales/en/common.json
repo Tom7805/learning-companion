@@ -144,7 +144,13 @@
     "REAUTHENTICATION_REQUIRED": "Please confirm your password or sign in again to continue.",
     "ACCOUNT_PENDING_DELETION": "This account is scheduled for deletion. Cancel the deletion request to keep using it.",
     "CSRF_TOKEN_INVALID": "This page is out of date. Reload it and try again.",
-    "AUDIT_LOG_IMMUTABLE": "The audit log is append-only and can't be edited or deleted."
+    "AUDIT_LOG_IMMUTABLE": "The audit log is append-only and can't be edited or deleted.",
+    "TWO_FACTOR_CHALLENGE_INVALID": "The verification step expired, please sign in again.",
+    "TWO_FACTOR_CODE_INVALID": "The verification code is wrong or has expired.",
+    "RECOVERY_CODE_INVALID": "The recovery code is wrong or already used.",
+    "TWO_FACTOR_ENROLLMENT_NOT_STARTED": "Create a key for the authenticator app first.",
+    "ADMIN_LOGIN_LOCKED": "Admin sign-in is locked after too many wrong verification codes.",
+    "ADMIN_ALREADY_EXISTS": "An administrator already exists and only one is allowed."
   },
   "checkEmail": {
     "title": "Check your inbox",
@@ -976,13 +982,15 @@
     "area": "Admin area",
     "navLabel": "Admin pages",
     "nav": {
-      "audit": "Audit log"
+      "audit": "Audit log",
+      "home": "Administration"
     },
     "forbidden": {
       "title": "This page is for administrators only",
       "body": "Your account has no admin rights. This visit has been recorded in the system audit log.",
       "home": "Back to home"
-    }
+    },
+    "sessionExpiresAt": "Admin session ends at {{time}}"
   },
   "audit": {
     "title": "Audit log",
@@ -1115,7 +1123,82 @@
       "UI_PREFERENCES_CHANGED": "Display preferences changed",
       "ROLE_ACCESS_DENIED": "Blocked from the admin area",
       "AUDIT_LOG_SEARCHED": "Audit log searched",
-      "AUDIT_LOG_TAMPER_ATTEMPTED": "Attempt to edit or delete the audit log"
+      "AUDIT_LOG_TAMPER_ATTEMPTED": "Attempt to edit or delete the audit log",
+      "ADMIN_TWO_FACTOR_CHALLENGED": "Admin passed the password step",
+      "ADMIN_TWO_FACTOR_ENROLLED": "Set up two-step verification",
+      "ADMIN_TWO_FACTOR_FAILED": "Wrong verification code",
+      "ADMIN_TWO_FACTOR_LOCKED": "Admin sign-in locked",
+      "ADMIN_RECOVERY_CODE_USED": "Used a recovery code",
+      "ADMIN_ACCOUNT_CREATED": "Admin account created",
+      "ADMIN_CREATION_REJECTED": "Extra admin creation rejected"
+    }
+  },
+  "adminLogin": {
+    "badge": "Administrator",
+    "backToLogin": "Back to sign in",
+    "attemptsLeft_one": "{{count}} attempt left before admin sign-in is locked for 15 minutes.",
+    "attemptsLeft_other": "{{count}} attempts left before admin sign-in is locked for 15 minutes.",
+    "verify": {
+      "title": "Enter your verification code",
+      "body": "Open your authenticator app and enter the six-digit code for {{email}}.",
+      "codeLabel": "Six-digit code",
+      "codeFormat": "The code is exactly six digits.",
+      "invalid": "That code is wrong or has expired. Enter the code currently shown in the app.",
+      "submit": "Verify and open administration",
+      "submitting": "Verifying…"
+    },
+    "recovery": {
+      "use": "Lost your phone? Use a recovery code",
+      "back": "Use a code from the app",
+      "title": "Use a recovery code",
+      "body": "Enter one of the ten recovery codes you saved during setup. Each code works once, then you must set up your authenticator app again.",
+      "label": "Recovery code",
+      "hint": "Looks like abcde-fghjk, not case sensitive.",
+      "format": "A recovery code has ten letters and digits.",
+      "invalid": "That recovery code is wrong or already used.",
+      "used": "The recovery code has been used and cannot be used again. Set up the authenticator app on your new phone."
+    },
+    "enroll": {
+      "title": "Set up two-step verification",
+      "body": "The admin account always needs a code from an authenticator app, so a leaked password alone is never enough.",
+      "resetTitle": "Set up two-step verification again",
+      "resetBody": "Your old authenticator app stops working once you finish. You will get ten new recovery codes.",
+      "stepsLabel": "Setup steps",
+      "step1Title": "Install an authenticator app",
+      "step1Body": "For example Google Authenticator, Microsoft Authenticator, 2FAS, or a password manager that supports TOTP codes.",
+      "step2Title": "Add an account with this key",
+      "step2Body": "Choose to enter a key manually, name it {{email}}, and pick time-based.",
+      "copy": "Copy key",
+      "copied": "Key copied.",
+      "openApp": "Open in an authenticator app on this device",
+      "step3Title": "Enter the first code",
+      "step3Body": "The app shows a six-digit code that changes every 30 seconds. Enter the current code to finish.",
+      "codeLabel": "Six-digit code from the app",
+      "invalid": "That code does not match. Check the key you entered and your phone's clock, then enter the current code.",
+      "submit": "Finish setup",
+      "submitting": "Checking…"
+    },
+    "codes": {
+      "title": "Save your ten recovery codes",
+      "body": "If you lose your authenticator phone, each code below lets you sign in once instead of a six-digit code.",
+      "once": "These codes are shown only once. Copy or download them and keep them somewhere safe, away from your phone.",
+      "listLabel": "Recovery codes",
+      "copy": "Copy all",
+      "copied": "Ten recovery codes copied.",
+      "copyFailed": "The browser blocked copying; select and copy them manually.",
+      "download": "Download .txt",
+      "fileHeader": "Learning Companion admin recovery codes for {{email}}. Each code works once.",
+      "confirm": "I have saved these codes somewhere safe",
+      "continue": "Open administration",
+      "continueHint": "Admin sessions last eight hours"
+    },
+    "locked": {
+      "title": "Admin sign-in is temporarily locked",
+      "body": "The verification code was wrong 5 times in a row. A warning email was sent to the admin address. You can try again in:"
+    },
+    "expired": {
+      "title": "Verification step expired",
+      "body": "For safety, the code step only lasts a few minutes after entering your password. Please sign in again."
     }
   }
 }

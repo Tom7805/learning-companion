@@ -25,6 +25,6 @@ public class AdminAuthController {
 
     @GetMapping("/me")
     public AdminIdentity me(@AuthenticationPrincipal AuthenticatedUser admin) {
-        return users.identity(admin.userId());
+        return users.identity(admin.userId(), admin.sessionId());
     }
 }

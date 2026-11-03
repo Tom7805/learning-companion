@@ -2,6 +2,7 @@ package com.learningcompanion.auth.api;
 
 import com.learningcompanion.shared.config.AppProperties;
 import com.learningcompanion.shared.security.SessionTokenService;
+import com.learningcompanion.shared.web.ApiPaths;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Duration;
@@ -19,6 +20,9 @@ import org.springframework.stereotype.Component;
 public class SessionCookies {
 
     private static final Duration DEVICE_COOKIE_LIFETIME = Duration.ofDays(400);
+    /** Bước mã xác thực thứ hai của quản trị viên; chỉ gửi kèm các yêu cầu của bước này. */
+    public static final String ADMIN_CHALLENGE_COOKIE = "lc_admin_challenge";
+    private static final String ADMIN_CHALLENGE_PATH = ApiPaths.AUTH + "/admin";
 
     private final AppProperties.Auth settings;
     private final SessionTokenService tokens;
@@ -38,6 +42,23 @@ public class SessionCookies {
 
     public ResponseCookie clear() {
         return base(settings.sessionCookieName(), "").maxAge(Duration.ZERO).build();
+    }
+
+    public ResponseCookie issueAdminChallenge(String rawToken, Duration lifetime) {
+        return base(ADMIN_CHALLENGE_COOKIE, rawToken).path(ADMIN_CHALLENGE_PATH).maxAge(lifetime).build();
+    }
+
+    public ResponseCookie clearAdminChallenge() {
+        return base(ADMIN_CHALLENGE_COOKIE, "").path(ADMIN_CHALLENGE_PATH).maxAge(Duration.ZERO).build();
+    }
+
+    public Optional<String> adminChallenge(HttpServletRequest request) {
+        return Optional.ofNullable(request.getCookies())
+                .flatMap(cookies -> Arrays.stream(cookies)
+                        .filter(cookie -> ADMIN_CHALLENGE_COOKIE.equals(cookie.getName()))
+                        .map(Cookie::getValue)
+                        .filter(value -> !value.isBlank())
+                        .findFirst());
     }
 
     /** Mã thiết bị hiện có, hoặc mã mới nếu trình duyệt chưa có. */

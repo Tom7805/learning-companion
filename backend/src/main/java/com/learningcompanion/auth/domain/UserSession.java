@@ -75,6 +75,14 @@ public class UserSession {
     @Column(name = "revoke_link_hash", length = 64)
     private String revokeLinkHash;
 
+    /** Hạn cứng của phiên quản trị (tám giờ kể từ lúc đăng nhập); thao tác không kéo dài quá mốc này. */
+    @Column(name = "max_expires_at")
+    private Instant maxExpiresAt;
+
+    /** Phiên đã qua bước mã xác thực thứ hai; chỉ phiên như vậy mới mang quyền quản trị (NCL-03-CN-002). */
+    @Column(name = "two_factor_verified", nullable = false)
+    private boolean twoFactorVerified;
+
     protected UserSession() {
     }
 
@@ -100,6 +108,23 @@ public class UserSession {
         return session;
     }
 
+    /**
+     * Phiên quản trị sau khi qua bước hai: không ghi nhớ thiết bị, hết hạn khi không thao tác một khoảng
+     * {@code idleTimeout} hoặc khi tới hạn cứng {@code maxLifetime} kể từ lúc đăng nhập.
+     */
+    public static UserSession startTwoFactor(UUID userId, String tokenHash, Instant now, Duration idleTimeout,
+                                             Duration maxLifetime, String deviceIdHash, DeviceInfo device,
+                                             String userAgent, String ipAddress) {
+        UserSession session = start(userId, tokenHash, now, false, idleTimeout, deviceIdHash, device, userAgent,
+                ipAddress);
+        session.maxExpiresAt = now.plus(maxLifetime);
+        if (session.expiresAt.isAfter(session.maxExpiresAt)) {
+            session.expiresAt = session.maxExpiresAt;
+        }
+        session.twoFactorVerified = true;
+        return session;
+    }
+
     public State state(Instant now) {
         if (revokedAt != null) {
             return State.REVOKED;
@@ -122,6 +147,9 @@ public class UserSession {
         lastActiveAt = now;
         if (!rememberDevice) {
             expiresAt = now.plus(idleTimeout);
+            if (maxExpiresAt != null && expiresAt.isAfter(maxExpiresAt)) {
+                expiresAt = maxExpiresAt;
+            }
         }
     }
 
@@ -162,6 +190,14 @@ public class UserSession {
 
     public Instant getExpiresAt() {
         return expiresAt;
+    }
+
+    public Instant getMaxExpiresAt() {
+        return maxExpiresAt;
+    }
+
+    public boolean isTwoFactorVerified() {
+        return twoFactorVerified;
     }
 
     public Instant getRevokedAt() {

@@ -13,6 +13,7 @@ import type {
   ResetPasswordPayload,
   RevokedByLink,
   SessionStatus,
+  TwoFactorRequired,
 } from '../types'
 
 export const authApi = {
@@ -29,7 +30,8 @@ export const authApi = {
     return data
   },
   async login(payload: LoginPayload) {
-    const { data } = await http.post<Account>('/auth/login', payload)
+    // Quản trị viên: máy chủ trả 202 kèm bước mã xác thực thay vì mở phiên ngay.
+    const { data } = await http.post<Account | TwoFactorRequired>('/auth/login', payload)
     return data
   },
   async session() {

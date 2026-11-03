@@ -4,6 +4,8 @@ import com.learningcompanion.admin.api.dto.AdminIdentity;
 import com.learningcompanion.admin.api.dto.AdminUserSummary;
 import com.learningcompanion.auth.domain.UserAccount;
 import com.learningcompanion.auth.domain.UserAccountRepository;
+import com.learningcompanion.auth.domain.UserSession;
+import com.learningcompanion.auth.domain.UserSessionRepository;
 import com.learningcompanion.shared.audit.AuditAction;
 import com.learningcompanion.shared.audit.AuditLogger;
 import com.learningcompanion.shared.audit.AuditObjectType;
@@ -11,6 +13,7 @@ import com.learningcompanion.shared.exception.BusinessException;
 import com.learningcompanion.shared.exception.ErrorCode;
 import com.learningcompanion.shared.ownership.LearningDataUsage;
 import com.learningcompanion.shared.web.ClientInfo;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -24,18 +27,25 @@ public class AdminUserService {
     private final UserAccountRepository accounts;
     private final List<LearningDataUsage> usageSources;
     private final AuditLogger audit;
+    private final UserSessionRepository sessions;
+    private final RecoveryCodeService recoveryCodes;
 
-    public AdminUserService(UserAccountRepository accounts, List<LearningDataUsage> usageSources, AuditLogger audit) {
+    public AdminUserService(UserAccountRepository accounts, List<LearningDataUsage> usageSources, AuditLogger audit,
+                            UserSessionRepository sessions, RecoveryCodeService recoveryCodes) {
         this.accounts = accounts;
         this.usageSources = usageSources;
         this.audit = audit;
+        this.sessions = sessions;
+        this.recoveryCodes = recoveryCodes;
     }
 
     @Transactional(readOnly = true)
-    public AdminIdentity identity(UUID adminId) {
+    public AdminIdentity identity(UUID adminId, UUID sessionId) {
         UserAccount admin = accounts.findById(adminId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND));
-        return new AdminIdentity(admin.getId(), admin.getEmail(), admin.getDisplayName());
+        Instant sessionExpiresAt = sessions.findById(sessionId).map(UserSession::getMaxExpiresAt).orElse(null);
+        return new AdminIdentity(admin.getId(), admin.getEmail(), admin.getDisplayName(), sessionExpiresAt,
+                recoveryCodes.remaining(adminId));
     }
 
     @Transactional

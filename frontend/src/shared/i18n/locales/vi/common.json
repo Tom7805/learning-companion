@@ -144,7 +144,13 @@
     "REAUTHENTICATION_REQUIRED": "Hãy xác nhận lại mật khẩu hoặc đăng nhập lại để tiếp tục.",
     "ACCOUNT_PENDING_DELETION": "Tài khoản đang chờ xóa. Hãy hủy yêu cầu xóa để dùng tiếp.",
     "CSRF_TOKEN_INVALID": "Trang đã cũ, hãy tải lại trang rồi thử lại.",
-    "AUDIT_LOG_IMMUTABLE": "Nhật ký thao tác chỉ được ghi thêm, không sửa hay xóa được."
+    "AUDIT_LOG_IMMUTABLE": "Nhật ký thao tác chỉ được ghi thêm, không sửa hay xóa được.",
+    "TWO_FACTOR_CHALLENGE_INVALID": "Bước xác thực đã hết hạn, hãy đăng nhập lại từ đầu.",
+    "TWO_FACTOR_CODE_INVALID": "Mã xác thực chưa đúng hoặc đã hết hạn.",
+    "RECOVERY_CODE_INVALID": "Mã khôi phục chưa đúng hoặc đã được dùng.",
+    "TWO_FACTOR_ENROLLMENT_NOT_STARTED": "Hãy tạo khóa cho ứng dụng sinh mã trước.",
+    "ADMIN_LOGIN_LOCKED": "Đăng nhập quản trị đang tạm khóa do nhập sai mã xác thực nhiều lần.",
+    "ADMIN_ALREADY_EXISTS": "Hệ thống đã có quản trị viên và chỉ cho phép một quản trị viên."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -976,13 +982,15 @@
     "area": "Khu quản trị",
     "navLabel": "Các trang quản trị",
     "nav": {
-      "audit": "Nhật ký thao tác"
+      "audit": "Nhật ký thao tác",
+      "home": "Khu quản trị"
     },
     "forbidden": {
       "title": "Trang này chỉ dành cho quản trị viên",
       "body": "Tài khoản của bạn không có quyền quản trị. Lần mở trang này đã được ghi vào nhật ký hệ thống.",
       "home": "Về trang chính"
-    }
+    },
+    "sessionExpiresAt": "Phiên quản trị hết hạn lúc {{time}}"
   },
   "audit": {
     "title": "Nhật ký thao tác",
@@ -1115,7 +1123,82 @@
       "UI_PREFERENCES_CHANGED": "Đổi tùy chọn giao diện",
       "ROLE_ACCESS_DENIED": "Bị chặn vào khu quản trị",
       "AUDIT_LOG_SEARCHED": "Tra cứu nhật ký",
-      "AUDIT_LOG_TAMPER_ATTEMPTED": "Cố sửa hoặc xóa nhật ký"
+      "AUDIT_LOG_TAMPER_ATTEMPTED": "Cố sửa hoặc xóa nhật ký",
+      "ADMIN_TWO_FACTOR_CHALLENGED": "Quản trị viên qua bước mật khẩu",
+      "ADMIN_TWO_FACTOR_ENROLLED": "Thiết lập xác thực hai bước",
+      "ADMIN_TWO_FACTOR_FAILED": "Nhập sai mã xác thực",
+      "ADMIN_TWO_FACTOR_LOCKED": "Khóa đăng nhập quản trị",
+      "ADMIN_RECOVERY_CODE_USED": "Dùng mã khôi phục",
+      "ADMIN_ACCOUNT_CREATED": "Tạo tài khoản quản trị viên",
+      "ADMIN_CREATION_REJECTED": "Từ chối tạo thêm quản trị viên"
+    }
+  },
+  "adminLogin": {
+    "badge": "Quản trị viên",
+    "backToLogin": "Quay lại đăng nhập",
+    "attemptsLeft_one": "Còn {{count}} lần thử trước khi đăng nhập quản trị bị khóa 15 phút.",
+    "attemptsLeft_other": "Còn {{count}} lần thử trước khi đăng nhập quản trị bị khóa 15 phút.",
+    "verify": {
+      "title": "Nhập mã xác thực",
+      "body": "Mở ứng dụng sinh mã trên điện thoại và nhập mã sáu chữ số của tài khoản {{email}}.",
+      "codeLabel": "Mã sáu chữ số",
+      "codeFormat": "Mã gồm đúng sáu chữ số.",
+      "invalid": "Mã chưa đúng hoặc đã hết hạn. Hãy nhập mã đang hiện trong ứng dụng.",
+      "submit": "Xác thực và vào trang quản trị",
+      "submitting": "Đang xác thực…"
+    },
+    "recovery": {
+      "use": "Mất điện thoại? Dùng mã khôi phục",
+      "back": "Dùng mã từ ứng dụng",
+      "title": "Dùng mã khôi phục",
+      "body": "Nhập một trong mười mã khôi phục bạn đã lưu khi thiết lập. Mỗi mã chỉ dùng được một lần, sau đó bạn cần thiết lập lại ứng dụng sinh mã.",
+      "label": "Mã khôi phục",
+      "hint": "Dạng abcde-fghjk, không phân biệt chữ hoa chữ thường.",
+      "format": "Mã khôi phục gồm mười chữ và số.",
+      "invalid": "Mã khôi phục chưa đúng hoặc đã được dùng.",
+      "used": "Mã khôi phục đã được dùng và không dùng lại được. Hãy thiết lập ứng dụng sinh mã trên điện thoại mới."
+    },
+    "enroll": {
+      "title": "Thiết lập xác thực hai bước",
+      "body": "Tài khoản quản trị luôn cần thêm mã từ ứng dụng sinh mã, để một mật khẩu bị lộ không đủ để chiếm quyền.",
+      "resetTitle": "Thiết lập lại xác thực hai bước",
+      "resetBody": "Ứng dụng sinh mã cũ sẽ hết hiệu lực khi bạn hoàn tất. Bạn sẽ nhận bộ mười mã khôi phục mới.",
+      "stepsLabel": "Các bước thiết lập",
+      "step1Title": "Cài ứng dụng sinh mã",
+      "step1Body": "Ví dụ Google Authenticator, Microsoft Authenticator, 2FAS hoặc ứng dụng quản lý mật khẩu có hỗ trợ mã TOTP.",
+      "step2Title": "Thêm tài khoản bằng khóa này",
+      "step2Body": "Chọn nhập khóa thủ công, đặt tên {{email}}, chọn loại theo thời gian.",
+      "copy": "Chép khóa",
+      "copied": "Đã chép khóa.",
+      "openApp": "Mở trong ứng dụng sinh mã trên máy này",
+      "step3Title": "Nhập mã đầu tiên",
+      "step3Body": "Ứng dụng hiện mã sáu chữ số đổi mỗi 30 giây. Nhập mã đang hiện để hoàn tất.",
+      "codeLabel": "Mã sáu chữ số từ ứng dụng",
+      "invalid": "Mã chưa khớp. Hãy kiểm tra khóa đã nhập và giờ trên điện thoại, rồi nhập mã đang hiện.",
+      "submit": "Hoàn tất thiết lập",
+      "submitting": "Đang kiểm tra…"
+    },
+    "codes": {
+      "title": "Lưu mười mã khôi phục",
+      "body": "Khi mất điện thoại sinh mã, mỗi mã dưới đây cho bạn đăng nhập thay mã sáu chữ số một lần.",
+      "once": "Mã chỉ hiện một lần này. Hãy chép hoặc tải về và cất ở nơi an toàn, tách khỏi điện thoại.",
+      "listLabel": "Mã khôi phục",
+      "copy": "Chép tất cả",
+      "copied": "Đã chép mười mã khôi phục.",
+      "copyFailed": "Trình duyệt không cho chép, hãy chọn và chép thủ công.",
+      "download": "Tải tệp .txt",
+      "fileHeader": "Mã khôi phục quản trị Learning Companion cho {{email}}. Mỗi mã dùng một lần.",
+      "confirm": "Tôi đã lưu các mã ở nơi an toàn",
+      "continue": "Vào trang quản trị",
+      "continueHint": "Phiên quản trị có hạn tám giờ"
+    },
+    "locked": {
+      "title": "Đăng nhập quản trị đang tạm khóa",
+      "body": "Mã xác thực đã bị nhập sai 5 lần liên tiếp. Thư cảnh báo đã được gửi tới địa chỉ quản trị. Bạn có thể thử lại sau:"
+    },
+    "expired": {
+      "title": "Bước xác thực đã hết hạn",
+      "body": "Vì an toàn, bước nhập mã chỉ có hiệu lực vài phút sau khi nhập mật khẩu. Hãy đăng nhập lại từ đầu."
     }
   }
 }

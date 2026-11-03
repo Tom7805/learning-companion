@@ -1,5 +1,6 @@
 package com.learningcompanion.devtools;
 
+import com.learningcompanion.admin.application.AdminProvisioningService;
 import com.learningcompanion.auth.domain.UserAccount;
 import com.learningcompanion.auth.domain.UserAccountRepository;
 import com.learningcompanion.library.api.dto.DocumentCardResponse;
@@ -14,6 +15,7 @@ import java.util.Locale;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,11 +47,14 @@ public class DevSampleDataController {
     private final UserAccountRepository accounts;
     private final DocumentService documents;
     private final JdbcTemplate jdbc;
+    private final AdminProvisioningService adminProvisioning;
 
-    public DevSampleDataController(UserAccountRepository accounts, DocumentService documents, JdbcTemplate jdbc) {
+    public DevSampleDataController(UserAccountRepository accounts, DocumentService documents, JdbcTemplate jdbc,
+                                   AdminProvisioningService adminProvisioning) {
         this.accounts = accounts;
         this.documents = documents;
         this.jdbc = jdbc;
+        this.adminProvisioning = adminProvisioning;
     }
 
     @PostMapping("/library/sample")
@@ -61,9 +66,22 @@ public class DevSampleDataController {
                 "dinh-luat-ohm.txt", "text/plain; charset=utf-8", SAMPLE_TEXT.getBytes(StandardCharsets.UTF_8)));
     }
 
+    /**
+     * Cấp hoặc bỏ vai trò. Hệ thống chỉ có một quản trị viên (NCL-03-CN-002): cấp quyền khi đã có quản trị viên khác bị
+     * từ chối như mọi yêu cầu tạo thêm quản trị viên, trừ khi {@code replaceExisting} (chỉ dành cho kiểm thử) hạ quản
+     * trị viên cũ xuống người học trước.
+     */
     @PostMapping("/accounts/role")
+    @Transactional(noRollbackFor = BusinessException.class)
     public ResponseEntity<Void> setRole(@RequestBody RoleRequest request) {
         UserAccount account = account(request.email());
+        if (request.role() == Role.ADMIN && account.getRole() != Role.ADMIN) {
+            if (Boolean.TRUE.equals(request.replaceExisting())) {
+                jdbc.update("update user_accounts set role = 'LEARNER' where role = 'ADMIN'");
+            } else {
+                adminProvisioning.rejectIfAdminExists(account.getEmail(), "DEV_TOOLS");
+            }
+        }
         jdbc.update("update user_accounts set role = ? where id = ?", request.role().name(), account.getId());
         return ResponseEntity.noContent().build();
     }
@@ -76,6 +94,6 @@ public class DevSampleDataController {
     public record SampleRequest(String email, String title) {
     }
 
-    public record RoleRequest(String email, Role role) {
+    public record RoleRequest(String email, Role role, Boolean replaceExisting) {
     }
 }

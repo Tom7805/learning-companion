@@ -17,10 +17,14 @@ function apiError(status: number, code: string, details?: Record<string, unknown
 
 function setup(notice?: ReactNode) {
   const onLoggedIn = vi.fn()
-  const utils = renderWithProviders(<LoginForm notice={notice} onLoggedIn={onLoggedIn} />, {
+  const onTwoFactorRequired = vi.fn()
+  const utils = renderWithProviders(
+    <LoginForm notice={notice} onLoggedIn={onLoggedIn} onTwoFactorRequired={onTwoFactorRequired} />,
+    {
     path: routes.login,
-    extraRoutes: [{ path: routes.checkEmail, element: <p>kiểm tra hộp thư</p> }],
-  })
+      extraRoutes: [{ path: routes.checkEmail, element: <p>kiểm tra hộp thư</p> }],
+    },
+  )
   const fields = {
     email: () => screen.getByLabelText('Thư điện tử'),
     password: () => screen.getByLabelText('Mật khẩu', { exact: true }),
@@ -31,10 +35,38 @@ function setup(notice?: ReactNode) {
     await utils.user.type(fields.email(), email)
     await utils.user.type(fields.password(), password)
   }
-  return { ...utils, fields, fill, onLoggedIn }
+  return { ...utils, fields, fill, onLoggedIn, onTwoFactorRequired }
 }
 
 describe('LoginForm', () => {
+  it('NCL-03-CN-002: mật khẩu quản trị viên đúng thì chuyển sang bước mã xác thực, chưa đăng nhập', async () => {
+    server.use(
+      http.post('*/api/v1/auth/login', () =>
+        HttpResponse.json({ twoFactorRequired: true, stage: 'VERIFY' }, { status: 202 }),
+      ),
+    )
+    const { user, fields, fill, onLoggedIn, onTwoFactorRequired } = setup()
+    await fill('quan.tri@example.com')
+    await user.click(fields.submit())
+
+    await waitFor(() => expect(onTwoFactorRequired).toHaveBeenCalledWith({ twoFactorRequired: true, stage: 'VERIFY' }))
+    expect(onLoggedIn).not.toHaveBeenCalled()
+  })
+
+  it('NCL-03-CN-002 TC-02: đăng nhập quản trị đang khóa vì sai mã thì báo khóa riêng, không gợi ý đặt lại mật khẩu', async () => {
+    server.use(
+      http.post('*/api/v1/auth/login', () => apiError(423, 'ADMIN_LOGIN_LOCKED', { retryAfterSeconds: 600 })),
+    )
+    const { user, fields, fill } = setup()
+    await fill('quan.tri@example.com')
+    await user.click(fields.submit())
+
+    const notice = await screen.findByTestId('lockout-notice')
+    expect(notice).toHaveTextContent('Đăng nhập quản trị đang tạm khóa')
+    expect(notice).toHaveTextContent('10:00')
+    expect(notice).not.toHaveTextContent('Đặt lại')
+  })
+
   it('đăng nhập thành công gửi lựa chọn ghi nhớ thiết bị', async () => {
     let body: unknown
     server.use(

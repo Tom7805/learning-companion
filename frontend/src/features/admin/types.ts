@@ -1,8 +1,35 @@
+import type { Account } from '@/features/auth'
+
 /** Quản trị viên đang đăng nhập (GET /admin/me). */
 export interface AdminIdentity {
   id: string
   email: string
   displayName: string
+  /** Hạn cứng của phiên quản trị: tám giờ kể từ lúc đăng nhập (NCL-03-CN-002). */
+  sessionExpiresAt?: string | null
+  recoveryCodesRemaining?: number
+}
+
+/** Bước mã xác thực khi quản trị viên đăng nhập: nhập mã (VERIFY) hay thiết lập ứng dụng sinh mã (ENROLL). */
+export type TwoFactorStage = 'VERIFY' | 'ENROLL'
+
+export interface TwoFactorChallenge {
+  stage: TwoFactorStage
+  email: string
+  expiresAt: string
+}
+
+export interface TotpSetup {
+  secret: string
+  otpauthUri: string
+}
+
+export interface TwoFactorResult {
+  signedIn: boolean
+  stage?: TwoFactorStage | null
+  account?: Account | null
+  sessionExpiresAt?: string | null
+  recoveryCodes: string[]
 }
 
 export type AuditCategory = 'LOGIN' | 'SESSION' | 'ACCOUNT' | 'PRIVACY' | 'SETTINGS' | 'ACCESS' | 'ADMIN'

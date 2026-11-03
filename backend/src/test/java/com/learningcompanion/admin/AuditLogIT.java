@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.jayway.jsonpath.JsonPath;
+import com.learningcompanion.admin.application.TotpService;
 import com.learningcompanion.shared.audit.AuditAction;
 import com.learningcompanion.shared.audit.AuditLogger;
 import com.learningcompanion.shared.audit.AuditObjectType;
@@ -25,6 +26,7 @@ import com.learningcompanion.shared.audit.AuditRetentionJob;
 import com.learningcompanion.shared.mail.MockMailGateway;
 import com.learningcompanion.support.PostgresTestConfiguration;
 import jakarta.servlet.http.Cookie;
+import java.time.Clock;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +79,12 @@ class AuditLogIT {
 
     @Autowired
     private TransactionTemplate transactions;
+
+    @Autowired
+    private TotpService totp;
+
+    @Autowired
+    private Clock clock;
 
     @Test
     @DisplayName("TC-01: ba lần sai một lần đúng, lọc theo tài khoản ra đúng bốn dòng đăng nhập kèm thiết bị, thời điểm, kết quả")
@@ -360,12 +368,47 @@ class AuditLogIT {
         }
     }
 
+    /**
+     * Quản trị viên duy nhất (NCL-03-CN-002): hạ quản trị viên cũ, cấp vai trò rồi đăng nhập đủ hai bước, vì phiên mở
+     * bằng mật khẩu khi còn là người học không mang quyền quản trị.
+     */
     private User admin() throws Exception {
-        User user = learner();
-        jdbc.update("update user_accounts set role = 'ADMIN' where id = ?::uuid", user.id());
+        User learner = learner();
+        jdbc.update("update user_accounts set role = 'LEARNER' where role = 'ADMIN'");
+        jdbc.update("update user_accounts set role = 'ADMIN' where id = ?::uuid", learner.id());
+        List<Cookie> jar = new ArrayList<>();
+        absorb(jar, mvc.perform(withBrowser(post("/api/v1/auth/login")).with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON).content(credentials(learner.email(), PASSWORD)))
+                .andExpect(status().isAccepted()).andReturn());
+        String setup = mvc.perform(post("/api/v1/auth/admin/two-factor/enrollment").with(csrf())
+                        .cookie(jar.toArray(Cookie[]::new)))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        byte[] secret = base32(JsonPath.read(setup, "$.secret"));
+        String code = totp.codeAt(secret, TotpService.stepAt(clock.instant()));
+        absorb(jar, mvc.perform(withBrowser(post("/api/v1/auth/admin/two-factor/enrollment/confirm")).with(csrf())
+                        .cookie(jar.toArray(Cookie[]::new)).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"code\":\"" + code + "\"}"))
+                .andExpect(status().isOk()).andReturn());
+        User user = new User(learner.id(), learner.email(), jar);
         mvc.perform(get("/api/v1/admin/me").cookie(user.cookies())).andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value(user.email()));
         return user;
+    }
+
+    private static byte[] base32(String text) {
+        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        int buffer = 0;
+        int bits = 0;
+        for (char c : text.toCharArray()) {
+            buffer = (buffer << 5) | alphabet.indexOf(c);
+            bits += 5;
+            if (bits >= 8) {
+                out.write((buffer >> (bits - 8)) & 0xff);
+                bits -= 8;
+            }
+        }
+        return out.toByteArray();
     }
 
     private User learner() throws Exception {

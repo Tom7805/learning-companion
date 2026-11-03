@@ -11,7 +11,7 @@ import { Alert, Button, Checkbox, CtaButton, TextField } from '@/shared/ui'
 import { useLogin, useResendVerification } from '../api/queries'
 import { loginSchema, type LoginFormValues } from '../lib/loginSchema'
 import { pendingVerification } from '../lib/pendingVerification'
-import type { Account } from '../types'
+import { isTwoFactorRequired, type Account, type TwoFactorRequired } from '../types'
 import { LockoutNotice } from './LockoutNotice'
 import { OAuthButtons } from './OAuthButtons'
 
@@ -25,15 +25,19 @@ interface LoginFormProps {
   /** Trang quay về sau khi đăng nhập, kể cả khi đăng nhập qua nhà cung cấp định danh. */
   returnTo?: string
   onLoggedIn: (account: Account) => void
+  /** Tài khoản quản trị viên: mật khẩu đúng, chuyển sang bước mã xác thực (NCL-03-CN-002). */
+  onTwoFactorRequired?: (challenge: TwoFactorRequired) => void
 }
 
-export function LoginForm({ notice, defaultEmail = '', returnTo, onLoggedIn }: LoginFormProps) {
+export function LoginForm({ notice, defaultEmail = '', returnTo, onLoggedIn, onTwoFactorRequired }: LoginFormProps) {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const login = useLogin()
   const resend = useResendVerification()
   const [error, setError] = useState<ApiError | null>(null)
   const [lockedUntil, setLockedUntil] = useState<number | null>(null)
+  // Khóa do nhập sai mã xác thực quản trị, khác lời nhắn với khóa do sai mật khẩu.
+  const [adminLocked, setAdminLocked] = useState(false)
   const [unlocked, setUnlocked] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   // Mỗi lần cần đưa tiêu điểm về ô mật khẩu (sau lỗi, hết thời gian khóa) thì tăng bộ đếm;
@@ -80,12 +84,17 @@ export function LoginForm({ notice, defaultEmail = '', returnTo, onLoggedIn }: L
     setError(null)
     setUnlocked(false)
     try {
-      const account = await login.mutateAsync(values)
-      onLoggedIn(account)
+      const result = await login.mutateAsync(values)
+      if (isTwoFactorRequired(result)) {
+        onTwoFactorRequired?.(result)
+        return
+      }
+      onLoggedIn(result)
     } catch (caught) {
       const apiError = toApiError(caught)
       setValue('password', '')
-      if (apiError.code === 'ACCOUNT_LOCKED') {
+      if (apiError.code === 'ACCOUNT_LOCKED' || apiError.code === 'ADMIN_LOGIN_LOCKED') {
+        setAdminLocked(apiError.code === 'ADMIN_LOGIN_LOCKED')
         setLockedUntil(deadlineIn(detailNumber(apiError, 'retryAfterSeconds') ?? 900))
         return
       }
@@ -140,7 +149,9 @@ export function LoginForm({ notice, defaultEmail = '', returnTo, onLoggedIn }: L
         <LockoutNotice
           lockedUntil={lockedUntil}
           onUnlocked={handleUnlocked}
-          action={forgotLink(t('login.locked.resetLink'), 'font-medium text-accent-ink underline underline-offset-4')}
+          title={adminLocked ? t('adminLogin.locked.title') : undefined}
+          body={adminLocked ? t('adminLogin.locked.body') : undefined}
+          action={adminLocked ? undefined : forgotLink(t('login.locked.resetLink'), 'font-medium text-accent-ink underline underline-offset-4')}
         />
       )}
       {unlocked && <Alert tone="success">{t('login.locked.unlocked')}</Alert>}
