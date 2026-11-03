@@ -2,6 +2,7 @@ import { Send } from 'lucide-react'
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
+import { SafetyNotice, type SafetyOutcome } from '@/features/safety'
 import { Alert, Button } from '@/shared/ui'
 import { streamAiTestCall, type AiTestCallDone } from '../lib/aiTestCall'
 import { aiErrorMessage } from './aiErrors'
@@ -15,6 +16,7 @@ export function AiTestCallPanel() {
   const [output, setOutput] = useState('')
   const [done, setDone] = useState<AiTestCallDone | null>(null)
   const [errorCode, setErrorCode] = useState<string | null>(null)
+  const [safety, setSafety] = useState<SafetyOutcome | null>(null)
   const [running, setRunning] = useState(false)
   const abort = useRef<AbortController | null>(null)
 
@@ -28,6 +30,7 @@ export function AiTestCallPanel() {
     setOutput('')
     setDone(null)
     setErrorCode(null)
+    setSafety(null)
     setRunning(true)
     try {
       await streamAiTestCall(
@@ -36,6 +39,11 @@ export function AiTestCallPanel() {
           onChunk: (text) => setOutput((current) => current + text),
           onDone: setDone,
           onError: setErrorCode,
+          onSafety: (outcome) => {
+            // Nội dung sinh ra bị thay: bỏ phần đã hiện, chỉ còn thông báo chặn (NCL-04-CN-004 TC-04).
+            setOutput('')
+            setSafety(outcome)
+          },
         },
         abort.current.signal,
       )
@@ -81,17 +89,21 @@ export function AiTestCallPanel() {
           </Button>
         </div>
       </form>
-      <div
-        aria-live="polite"
-        aria-busy={running || undefined}
-        className="min-h-16 whitespace-pre-wrap rounded-field border border-line bg-paper px-4 py-3 text-[0.9375rem] leading-relaxed"
-        data-testid="ai-test-output"
-      >
-        {output || (
-          <span className="text-muted">{t(running ? 'aiGateway.test.waiting' : 'aiGateway.test.empty')}</span>
-        )}
-      </div>
-      {done && (
+      {safety ? (
+        <SafetyNotice outcome={safety} />
+      ) : (
+        <div
+          aria-live="polite"
+          aria-busy={running || undefined}
+          className="min-h-16 whitespace-pre-wrap rounded-field border border-line bg-paper px-4 py-3 text-[0.9375rem] leading-relaxed"
+          data-testid="ai-test-output"
+        >
+          {output || (
+            <span className="text-muted">{t(running ? 'aiGateway.test.waiting' : 'aiGateway.test.empty')}</span>
+          )}
+        </div>
+      )}
+      {done?.providerCode && (
         <p className="text-sm text-ink-soft" data-testid="ai-test-done">
           {t('aiGateway.test.done', {
             provider: done.providerCode,

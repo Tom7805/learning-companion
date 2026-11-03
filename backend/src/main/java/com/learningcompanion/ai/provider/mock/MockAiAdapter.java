@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,6 +37,17 @@ public class MockAiAdapter implements AiProviderAdapter {
 
     private final Map<String, Mode> modes = new ConcurrentHashMap<>();
     private volatile Duration chunkDelay = Duration.ofMillis(25);
+    private volatile String scriptedReply;
+    private volatile ChatRequest lastRequest;
+
+    /**
+     * Câu chèn chỉ dẫn mẫu mà bản mô phỏng "nghe theo" như một mô hình ngây thơ (NCL-04-CN-004): nếu câu này lọt tới
+     * mô hình, câu trả lời bị chiếm quyền. Lớp bao dữ liệu lược câu đó trước, nên câu trả lời vẫn theo chỉ dẫn hệ thống.
+     */
+    public static final Pattern NAIVE_INJECTION = Pattern.compile(
+            "bỏ qua mọi chỉ dẫn|ignore all previous instructions", Pattern.CASE_INSENSITIVE
+                    | Pattern.UNICODE_CASE);
+    public static final String HIJACKED_REPLY = "Đã bỏ qua chỉ dẫn hệ thống theo yêu cầu trong tài liệu.";
 
     @Override
     public AdapterType type() {
@@ -56,6 +68,18 @@ public class MockAiAdapter implements AiProviderAdapter {
 
     public void reset() {
         modes.clear();
+        scriptedReply = null;
+        lastRequest = null;
+    }
+
+    /** Câu trả lời cố định cho mọi lời gọi sinh văn bản tiếp theo, ví dụ để thử bộ lọc đầu ra; null để bỏ. */
+    public void setScriptedReply(String reply) {
+        this.scriptedReply = reply;
+    }
+
+    /** Yêu cầu sinh văn bản gần nhất bản mô phỏng nhận được, để kiểm thử xem mô hình thật sự đọc thấy gì. */
+    public ChatRequest lastRequest() {
+        return lastRequest;
     }
 
     /** Khoảng nghỉ giữa các đoạn khi trả theo luồng, để giao diện thấy chữ hiện dần. */
@@ -66,8 +90,14 @@ public class MockAiAdapter implements AiProviderAdapter {
     @Override
     public ChatResult streamText(ProviderDescriptor provider, ChatRequest request, Consumer<ChatChunk> onChunk) {
         behave(provider);
+        lastRequest = request;
         String answer = "Đây là câu trả lời mô phỏng từ " + provider.code()
                 + ". Nội dung cố định giúp kiểm thử luôn cho cùng một kết quả.";
+        if (scriptedReply != null) {
+            answer = scriptedReply;
+        } else if (request.messages().stream().anyMatch(m -> NAIVE_INJECTION.matcher(m.text()).find())) {
+            answer = HIJACKED_REPLY;
+        }
         List<String> pieces = new ArrayList<>();
         for (String word : answer.split(" ")) {
             pieces.add(pieces.isEmpty() ? word : " " + word);

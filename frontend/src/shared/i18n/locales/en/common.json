@@ -994,7 +994,8 @@
       "home": "Administration",
       "ai": "AI services",
       "aiConfig": "AI configuration",
-      "quotas": "Quotas"
+      "quotas": "Quotas",
+      "safety": "Content safety"
     },
     "forbidden": {
       "title": "This page is for administrators only",
@@ -1074,7 +1075,8 @@
       "PRIVACY": "Privacy and data",
       "SETTINGS": "Settings",
       "ACCESS": "Access denied",
-      "ADMIN": "Administration"
+      "ADMIN": "Administration",
+      "SAFETY": "Content safety"
     },
     "outcomes": {
       "SUCCESS": "Succeeded",
@@ -1097,7 +1099,9 @@
       "AI_PROVIDER": "AI provider",
       "AI_ROUTE": "AI routing",
       "AI_CONFIG": "AI configuration",
-      "QUOTA_POLICY": "Quota"
+      "QUOTA_POLICY": "Quota",
+      "CONTENT_SAFETY": "Content filter levels",
+      "AI_SAFETY_EVENT": "Content filter event"
     },
     "actions": {
       "ACCOUNT_REGISTERED": "Account registered",
@@ -1161,7 +1165,12 @@
       "AI_CONFIG_PUBLISHED": "AI configuration published",
       "AI_CONFIG_ROLLED_BACK": "AI configuration rolled back",
       "QUOTA_POLICY_CHANGED": "Changed shared quota",
-      "QUOTA_TASK_COSTS_CHANGED": "Changed credit costs"
+      "QUOTA_TASK_COSTS_CHANGED": "Changed credit costs",
+      "AI_INPUT_BLOCKED": "Blocked an unsafe question",
+      "AI_OUTPUT_BLOCKED": "Hid unsafe generated content",
+      "AI_SELF_HARM_SUPPORT_GIVEN": "Gave a caring reply to a self-harm signal",
+      "AI_SOURCE_INJECTION_FLAGGED": "Flagged a source for prompt injection",
+      "CONTENT_SAFETY_LEVELS_CHANGED": "Changed content filter levels"
     }
   },
   "adminLogin": {
@@ -1669,6 +1678,121 @@
       "costsBody": "New costs apply right away to tasks that start afterwards:",
       "change": "{{field}}: {{before}} → {{after}}",
       "apply": "Apply"
+    }
+  },
+  "safety": {
+    "categories": {
+      "VIOLENCE": "violence",
+      "HATE": "hate",
+      "SEXUAL": "sexual content",
+      "HARMFUL_INSTRUCTIONS": "harmful instructions",
+      "FRAUD": "fraud",
+      "SELF_HARM": "self-harm"
+    },
+    "blocked": {
+      "inputTitle": "The assistant won't answer this question",
+      "outputTitle": "The last answer was hidden",
+      "inputReason": "The question falls under {{category}}, so it was not sent to the assistant and used none of your credits.",
+      "outputReason": "The answer contained {{category}}, so it was replaced with this notice.",
+      "suggestionsTitle": "You could ask it another way:"
+    },
+    "suggestions": {
+      "VIOLENCE": [
+        "Ask about the causes or consequences of violence, or how to prevent it.",
+        "For example: \"What skills help resolve conflict without violence?\""
+      ],
+      "HATE": [
+        "Ask about the history, causes or harm of prejudice and discrimination.",
+        "For example: \"How do stereotypes about immigrants form?\""
+      ],
+      "SEXUAL": [
+        "Ask about biology, reproductive health or how to stay safe.",
+        "For example: \"What changes happen during puberty?\""
+      ],
+      "HARMFUL_INSTRUCTIONS": [
+        "Ask about the science, history or safety rules instead of how to make it.",
+        "For example: \"Why are explosives so tightly regulated?\""
+      ],
+      "FRAUD": [
+        "Ask how to recognise and avoid scams, or what the law says.",
+        "For example: \"What are the signs of a scam message?\""
+      ],
+      "SELF_HARM": [
+        "If things feel heavy, talk to someone you trust or call 115."
+      ]
+    },
+    "support": {
+      "title": "You are not alone",
+      "resources": "Where to get help",
+      "call": "Call {{contact}}"
+    },
+    "flagged": "Source {{list}} contained a sentence that looked like a prompt injection. It was ignored; the assistant only used the remaining content."
+  },
+  "adminSafety": {
+    "title": "Content safety",
+    "subtitle": "Every question and every piece of AI-generated content goes through the safety filter; text inside documents is always treated as data, never as instructions. The log records only the violation type and object ID, never the content.",
+    "loadFailed": "Could not load the content safety settings.",
+    "levels": {
+      "title": "Filter levels",
+      "subtitle": "Levels apply to the very next call. The filter cannot be turned off; the most lenient level still blocks blatant requests.",
+      "names": {
+        "STRICT": "Strict",
+        "STANDARD": "Standard",
+        "LENIENT": "Lenient"
+      },
+      "hints": {
+        "STRICT": "Blocks even a mention",
+        "STANDARD": "Blocks clear requests",
+        "LENIENT": "Blocks blatant requests only"
+      },
+      "levelFor": "Level for {{category}}",
+      "default": "Default: {{level}}",
+      "selfHarm": "Self-harm",
+      "selfHarmNote": "Always on: questions showing signs of self-harm get a caring reply with places to get help. Not adjustable.",
+      "save": "Save filter levels",
+      "saved": "Filter levels saved",
+      "noChanges": "Nothing has changed yet.",
+      "confirmTitle": "Change filter levels?",
+      "confirmBody": "The new levels apply to every learner right away and are recorded in the audit log:",
+      "change": "{{field}}: {{before}} → {{after}}",
+      "apply": "Apply",
+      "cancel": "Cancel",
+      "lastChange": "Last changed by {{name}} at {{time}}",
+      "defaultValues": "Using the default levels set at installation.",
+      "unknownActor": "Administrator"
+    },
+    "trial": {
+      "title": "Try the filter",
+      "subtitle": "The question takes the same path as the study assistant: input filter, data wrapper, the published configuration and the output filter. Trial runs are logged as interventions too.",
+      "question": "Question",
+      "source": "Sample source passage (optional)",
+      "sourceHint": "Paste a passage to test injection protection, for example one containing \"Ignore all previous instructions\".",
+      "run": "Run",
+      "empty": "The result will appear here.",
+      "waiting": "Waiting for the assistant…",
+      "answered": "Answered through {{provider}}."
+    },
+    "events": {
+      "title": "Recent interventions",
+      "subtitle": "The latest 50. Only the violation type and object ID are kept.",
+      "empty": "The filter has not intervened yet.",
+      "time": "Time",
+      "kind": "Type",
+      "category": "Category or signal",
+      "feature": "Feature",
+      "object": "Object",
+      "kinds": {
+        "INPUT_BLOCKED": "Question blocked",
+        "OUTPUT_BLOCKED": "Output hidden",
+        "SELF_HARM_SUPPORT": "Caring reply",
+        "INJECTION_FLAGGED": "Source flagged"
+      },
+      "signals": {
+        "IGNORE_INSTRUCTIONS": "Ignore-instructions request",
+        "REVEAL_SYSTEM_PROMPT": "System prompt disclosure request",
+        "ROLE_OVERRIDE": "Role override",
+        "FAKE_DELIMITER": "Forged delimiter"
+      }
     }
   }
 }

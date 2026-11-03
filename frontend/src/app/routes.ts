@@ -16,6 +16,8 @@ export const routes = {
   adminAi: '/admin/ai',
   adminAiConfig: '/admin/ai-config',
   adminQuotas: '/admin/quotas',
+  /** Ngưỡng lọc nội dung, chạy thử bộ lọc và sổ can thiệp (NCL-04-CN-004). */
+  adminSafety: '/admin/safety',
   /** Bước mã xác thực thứ hai khi quản trị viên đăng nhập; chưa có phiên nên nằm ngoài khu quản trị. */
   adminTwoFactor: '/login/two-factor',
   deletionScheduled: '/account/deletion-scheduled',

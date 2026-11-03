@@ -1,14 +1,23 @@
-/** Kết quả cuối của lời gọi thử: nhà cung cấp đã trả lời và số đơn vị được đo. */
+import type { SafetyOutcome } from '@/features/safety'
+
+/**
+ * Kết quả cuối của lời gọi thử: nhà cung cấp đã trả lời và số đơn vị được đo. Câu hỏi bị bộ lọc an toàn chặn thì mô
+ * hình không được gọi nên không có nhà cung cấp.
+ */
 export interface AiTestCallDone {
-  providerCode: string
-  inputUnits: number
-  outputUnits: number
+  status?: 'ANSWERED' | 'BLOCKED' | 'SUPPORT'
+  flaggedSources?: number[]
+  providerCode?: string
+  inputUnits?: number
+  outputUnits?: number
 }
 
 export interface StreamHandlers<TDone> {
   onChunk: (text: string) => void
   onDone: (done: TDone) => void
   onError: (code: string) => void
+  /** Bộ lọc an toàn chặn câu hỏi, thay nội dung sinh ra hoặc trả lời ân cần (NCL-04-CN-004). */
+  onSafety?: (outcome: SafetyOutcome) => void
 }
 
 export type AiTestCallHandlers = StreamHandlers<AiTestCallDone>
@@ -40,7 +49,7 @@ export function parseEvents(buffer: string): { events: { name: string; data: str
 }
 
 /**
- * Gửi một yêu cầu POST trả về luồng sự kiện "chunk", rồi "done" hoặc "error" (POST nên không dùng được EventSource):
+ * Gửi một yêu cầu POST trả về luồng sự kiện "chunk" (có thể kèm "safety"), rồi "done" hoặc "error" (POST nên không dùng được EventSource):
  * đọc thân phản hồi theo luồng và đưa từng đoạn chữ cho giao diện ngay khi tới.
  */
 export async function streamTextEvents<TDone>(
@@ -86,6 +95,7 @@ export async function streamTextEvents<TDone>(
     for (const event of parsed.events) {
       const data = JSON.parse(event.data) as Record<string, unknown>
       if (event.name === 'chunk') handlers.onChunk(String(data.text ?? ''))
+      else if (event.name === 'safety') handlers.onSafety?.(data as unknown as SafetyOutcome)
       else if (event.name === 'done') {
         handlers.onDone(data as unknown as TDone)
         finished = true

@@ -4,9 +4,12 @@ import { streamTextEvents, type StreamHandlers } from './aiTestCall'
 /** Kết quả cuối của một lần thử phiên bản cấu hình. */
 export interface PromptTrialDone {
   version: number
-  providerCode: string
-  inputUnits: number
-  outputUnits: number
+  /** Trống khi câu hỏi bị bộ lọc an toàn chặn: mô hình không được gọi (NCL-04-CN-004). */
+  providerCode?: string
+  inputUnits?: number
+  outputUnits?: number
+  /** Số các nguồn mẫu bị gắn cờ nghi chèn chỉ dẫn. */
+  flaggedSources?: number[]
 }
 
 /**

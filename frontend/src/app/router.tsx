@@ -37,6 +37,7 @@ const AuditLogPage = page(() => import('@/features/admin/pages/AuditLogPage'), '
 const AiProvidersPage = page(() => import('@/features/admin/pages/AiProvidersPage'), 'AiProvidersPage')
 const AiConfigPage = page(() => import('@/features/admin/pages/AiConfigPage'), 'AiConfigPage')
 const QuotasPage = page(() => import('@/features/admin/pages/QuotasPage'), 'QuotasPage')
+const ContentSafetyPage = page(() => import('@/features/admin/pages/ContentSafetyPage'), 'ContentSafetyPage')
 const UsagePage = page(() => import('@/features/quota/pages/UsagePage'), 'UsagePage')
 const AdminTwoFactorPage = page(() => import('@/features/admin/pages/AdminTwoFactorPage'), 'AdminTwoFactorPage')
 const RegisterPage = page(() => import('@/features/auth/pages/RegisterPage'), 'RegisterPage')
@@ -117,6 +118,7 @@ export const router = createBrowserRouter([
                           { path: routes.adminAi, element: <AiProvidersPage /> },
                           { path: routes.adminAiConfig, element: <AiConfigPage /> },
                           { path: routes.adminQuotas, element: <QuotasPage /> },
+                          { path: routes.adminSafety, element: <ContentSafetyPage /> },
                         ],
                       },
                     ],

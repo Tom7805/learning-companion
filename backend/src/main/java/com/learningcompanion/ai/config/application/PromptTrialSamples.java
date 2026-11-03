@@ -1,5 +1,6 @@
 package com.learningcompanion.ai.config.application;
 
+import com.learningcompanion.ai.safety.application.SourcePassage;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,14 +51,8 @@ public final class PromptTrialSamples {
         return SETS.stream().filter(set -> set.id().equals(id)).findFirst();
     }
 
-    /** Câu hỏi kèm nguồn đánh số, đúng cách chức năng hỏi đáp gửi tài liệu của người học. */
-    public static String userMessage(SampleSet set, String question) {
-        StringBuilder text = new StringBuilder("Nguồn:\n");
-        for (int i = 0; i < set.sources().size(); i++) {
-            Source source = set.sources().get(i);
-            text.append('[').append(i + 1).append("] ").append(source.title()).append(": ")
-                    .append(source.excerpt()).append('\n');
-        }
-        return text.append("\nCâu hỏi: ").append(question).toString();
+    /** Nguồn mẫu dưới dạng đoạn nguồn, để đi qua lớp bao dữ liệu như tài liệu của người học (NCL-04-CN-004). */
+    public static List<SourcePassage> passages(SampleSet set) {
+        return set.sources().stream().map(source -> SourcePassage.of(source.title(), source.excerpt())).toList();
     }
 }

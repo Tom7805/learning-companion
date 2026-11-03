@@ -133,6 +133,28 @@ export class DevApi {
     expect(response.ok()).toBeTruthy()
   }
 
+  /** Câu trả lời cố định của bản mô phỏng cho các lời gọi sinh văn bản tiếp theo; chuỗi rỗng để bỏ (NCL-04-CN-004). */
+  async setAiMockReply(text: string) {
+    const response = await this.request.post(`${API}/dev/ai/mock-reply`, { data: { text } })
+    expect(response.ok()).toBeTruthy()
+  }
+
+  /**
+   * Hỏi một câu như người học qua lối sinh nội dung chung (bộ lọc an toàn, lớp bao dữ liệu), khi chưa có trang hỏi
+   * đáp. Trả về kết quả: ANSWERED, BLOCKED hay SUPPORT.
+   */
+  async askSafely(email: string, question: string, sources: { title: string; text: string }[] = []) {
+    const response = await this.request.post(`${API}/dev/safety/ask`, { data: { email, question, sources } })
+    expect(response.ok()).toBeTruthy()
+    return response.json()
+  }
+
+  /** Đưa ngưỡng lọc nội dung về mặc định và xóa sổ can thiệp. */
+  async resetSafety() {
+    const response = await this.request.post(`${API}/dev/safety/reset`)
+    expect(response.ok()).toBeTruthy()
+  }
+
   /** Giờ của máy chủ (đồng hồ tua được), để tính mã xác thực khớp với máy chủ. */
   async serverNow(): Promise<number> {
     const response = await this.request.get(`${API}/dev/clock`)

@@ -5,6 +5,7 @@ import static com.learningcompanion.shared.audit.AuditAction.Category.ACCOUNT;
 import static com.learningcompanion.shared.audit.AuditAction.Category.ADMIN;
 import static com.learningcompanion.shared.audit.AuditAction.Category.LOGIN;
 import static com.learningcompanion.shared.audit.AuditAction.Category.PRIVACY;
+import static com.learningcompanion.shared.audit.AuditAction.Category.SAFETY;
 import static com.learningcompanion.shared.audit.AuditAction.Category.SESSION;
 import static com.learningcompanion.shared.audit.AuditAction.Category.SETTINGS;
 import static com.learningcompanion.shared.audit.AuditAction.Outcome.DENIED;
@@ -102,10 +103,23 @@ public enum AuditAction {
     /** Đổi hạn mức chung (lượt mỗi ngày, dung lượng lưu trữ); chi tiết ghi giá trị trước và sau (NCL-04-CN-003). */
     QUOTA_POLICY_CHANGED(ADMIN, SUCCESS),
     /** Đổi bảng quy đổi lượt; chi tiết ghi số lượt trước và sau của từng loại tác vụ đã đổi. */
-    QUOTA_TASK_COSTS_CHANGED(ADMIN, SUCCESS);
+    QUOTA_TASK_COSTS_CHANGED(ADMIN, SUCCESS),
+    /**
+     * Bộ lọc an toàn chặn một câu hỏi trước khi gửi cho mô hình (NCL-04-CN-004); chi tiết chỉ ghi nhóm vi phạm và
+     * chức năng, không bao giờ ghi nội dung câu hỏi.
+     */
+    AI_INPUT_BLOCKED(SAFETY, DENIED),
+    /** Nội dung sinh ra vi phạm bị thay bằng thông báo chặn trước khi hiển thị; chỉ ghi nhóm vi phạm. */
+    AI_OUTPUT_BLOCKED(SAFETY, DENIED),
+    /** Câu hỏi có dấu hiệu tự gây hại nhận câu trả lời ân cần kèm nguồn trợ giúp thay vì câu trả lời của mô hình. */
+    AI_SELF_HARM_SUPPORT_GIVEN(SAFETY, SUCCESS),
+    /** Một đoạn nguồn chứa câu nghi chèn chỉ dẫn: câu đó bị lược khỏi ngữ cảnh; chi tiết ghi kiểu dấu hiệu. */
+    AI_SOURCE_INJECTION_FLAGGED(SAFETY, DENIED),
+    /** Đổi ngưỡng lọc nội dung; chi tiết ghi ngưỡng trước và sau của từng nhóm đã đổi. */
+    CONTENT_SAFETY_LEVELS_CHANGED(ADMIN, SUCCESS);
 
     /** Nhóm thao tác để lọc nhật ký. */
-    public enum Category { LOGIN, SESSION, ACCOUNT, PRIVACY, SETTINGS, ACCESS, ADMIN }
+    public enum Category { LOGIN, SESSION, ACCOUNT, PRIVACY, SETTINGS, ACCESS, ADMIN, SAFETY }
 
     public enum Outcome { SUCCESS, FAILURE, DENIED }
 

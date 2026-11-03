@@ -67,6 +67,13 @@ export const AUDIT_ACTIONS: Record<AuditCategory, string[]> = {
     'AI_CONFIG_ROLLED_BACK',
     'QUOTA_POLICY_CHANGED',
     'QUOTA_TASK_COSTS_CHANGED',
+    'CONTENT_SAFETY_LEVELS_CHANGED',
+  ],
+  SAFETY: [
+    'AI_INPUT_BLOCKED',
+    'AI_OUTPUT_BLOCKED',
+    'AI_SELF_HARM_SUPPORT_GIVEN',
+    'AI_SOURCE_INJECTION_FLAGGED',
   ],
 }
 
@@ -89,6 +96,8 @@ export const AUDIT_OBJECT_TYPES = [
   'AI_ROUTE',
   'AI_CONFIG',
   'QUOTA_POLICY',
+  'CONTENT_SAFETY',
+  'AI_SAFETY_EVENT',
 ]
 
 export function isAuditCategory(value: string | null | undefined): value is AuditCategory {
