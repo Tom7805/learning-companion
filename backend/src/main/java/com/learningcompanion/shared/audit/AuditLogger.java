@@ -12,8 +12,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Ghi nhật ký thao tác trong cùng giao dịch với thao tác: thao tác thất bại thì nhật ký cũng không được ghi.
- * Chi tiết chỉ chứa mã và trạng thái, không bao giờ chứa mật khẩu, đường dẫn bí mật hay nội dung học tập.
+ * Ghi nhật ký thao tác trong cùng giao dịch với thao tác (NCL-03-CN-001): thao tác thất bại thì nhật ký cũng không
+ * được ghi, và ngược lại không ghi được nhật ký thì thao tác bị hủy (TC-02). Chi tiết chỉ chứa mã và trạng thái;
+ * {@link ContentFieldStripper} bỏ mọi trường có thể mang nội dung trước khi lưu (TC-04).
  */
 @Component
 public class AuditLogger {
@@ -47,7 +48,7 @@ public class AuditLogger {
     private void save(AuditLog.ActorType actorType, UUID actorId, AuditAction action, AuditObjectType objectType,
                       UUID objectId, Map<String, Object> details, ClientInfo client) {
         repository.save(new AuditLog(Instant.now(clock), actorType, actorId, action, objectType, objectId,
-                details == null ? Map.of() : details,
+                ContentFieldStripper.strip(details),
                 client == null ? null : client.ipAddress(),
                 client == null ? null : client.userAgent(),
                 MDC.get(RequestIdFilter.MDC_KEY)));

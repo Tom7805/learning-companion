@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Menu, Search, WifiOff } from 'lucide-react'
 import { lazy, Suspense, useEffect, useId, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, Outlet, useLocation, useSearchParams } from 'react-router'
+import { Link, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router'
 import { useSidePanel } from '@/app/providers/sidePanel'
 import { SidePanelProvider } from '@/app/providers/SidePanelProvider'
 import { installPrompt, useInstallState } from '@/app/pwa'
@@ -55,6 +55,7 @@ function AppShellFrame() {
   const { t } = useTranslation()
   const { account } = useAuth()
   const location = useLocation()
+  const navigate = useNavigate()
   const queryClient = useQueryClient()
   const panel = useSidePanel()
   const preferences = useUiPreferences()
@@ -163,6 +164,7 @@ function AppShellFrame() {
     onSettings: () => openSettings(),
     onAppearance: () => openSettings('appearance'),
     onHelp: openHelp,
+    onAdmin: account.role === 'ADMIN' ? () => void navigate(routes.adminAudit) : undefined,
     onInstall: installState === 'available' ? () => void install() : undefined,
     onLogout: handleLogout,
     loggingOut: logout.isPending,

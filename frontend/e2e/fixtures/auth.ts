@@ -143,6 +143,8 @@ export async function registerThroughUi(page: Page, email: string, password = ST
   await fillRegisterForm(page, { email, password })
   await page.getByRole('button', { name: /Tạo tài khoản/ }).click()
   await expect(page).toHaveURL(/\/register\/check-email$/)
+  // Đường dẫn đổi trước khi trang mới kịp hiện (trang tải riêng): chờ tiêu đề để chắc đang ở màn hình kiểm tra thư.
+  await expect(page.getByRole('heading', { name: 'Kiểm tra hộp thư của bạn' })).toBeVisible()
 }
 
 /** Tạo tài khoản đã xác thực trên trình duyệt của `page`; trình duyệt đó được đăng nhập luôn. */

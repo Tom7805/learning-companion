@@ -1,4 +1,4 @@
-import { ChevronsUpDown, Download, LifeBuoy, LogOut, Palette, Settings } from 'lucide-react'
+import { ChevronsUpDown, Download, LifeBuoy, LogOut, Palette, Settings, ShieldCheck } from 'lucide-react'
 import { Fragment, useEffect, useId, useRef, useState, type KeyboardEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/shared/lib/cn'
@@ -17,6 +17,8 @@ interface AccountMenuProps {
   onSettings: () => void
   onAppearance: () => void
   onHelp: () => void
+  /** Chỉ có với quản trị viên: mở khu quản trị. */
+  onAdmin?: () => void
   /** Chỉ có khi trình duyệt cho cài ứng dụng. */
   onInstall?: () => void
   onLogout: () => void
@@ -33,7 +35,8 @@ interface MenuItem {
 }
 
 /**
- * Trình đơn tài khoản ở đáy thanh bên (NCL-02-CN-001): cài đặt, giao diện, trợ giúp, cài ứng dụng và đăng xuất.
+ * Trình đơn tài khoản ở đáy thanh bên (NCL-02-CN-001): khu quản trị (chỉ quản trị viên), cài đặt, giao diện, trợ
+ * giúp, cài ứng dụng và đăng xuất.
  * Mở bằng chuột hoặc bàn phím, phím mũi tên chuyển mục, Esc hoặc bấm ra ngoài thì đóng và trả tiêu điểm về nút mở.
  */
 export function AccountMenu({
@@ -44,6 +47,7 @@ export function AccountMenu({
   onSettings,
   onAppearance,
   onHelp,
+  onAdmin,
   onInstall,
   onLogout,
   loggingOut,
@@ -56,6 +60,7 @@ export function AccountMenu({
   const menuId = useId()
 
   const items: MenuItem[] = [
+    ...(onAdmin ? [{ key: 'admin', label: t('admin.menu'), icon: ShieldCheck, action: onAdmin }] : []),
     { key: 'settings', label: t('settings.title'), icon: Settings, action: onSettings },
     { key: 'appearance', label: t('appearance.nav'), icon: Palette, action: onAppearance },
     { key: 'help', label: t('help.title'), icon: LifeBuoy, action: onHelp },

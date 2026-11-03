@@ -4,9 +4,14 @@ import com.learningcompanion.appshell.domain.ThemeMode;
 import com.learningcompanion.appshell.domain.UiPreferences;
 import com.learningcompanion.appshell.domain.UiPreferencesRepository;
 import com.learningcompanion.auth.domain.UserAccountRepository;
+import com.learningcompanion.shared.audit.AuditAction;
+import com.learningcompanion.shared.audit.AuditChanges;
+import com.learningcompanion.shared.audit.AuditLogger;
+import com.learningcompanion.shared.audit.AuditObjectType;
 import com.learningcompanion.shared.exception.BusinessException;
 import com.learningcompanion.shared.exception.ErrorCode;
 import com.learningcompanion.shared.ownership.OwnerContext;
+import com.learningcompanion.shared.web.ClientInfo;
 import java.time.Clock;
 import java.util.Locale;
 import java.util.UUID;
@@ -23,13 +28,15 @@ public class UiPreferencesService {
     private final UiPreferencesRepository preferences;
     private final UserAccountRepository accounts;
     private final OwnerContext owner;
+    private final AuditLogger audit;
     private final Clock clock;
 
     public UiPreferencesService(UiPreferencesRepository preferences, UserAccountRepository accounts,
-                                OwnerContext owner, Clock clock) {
+                                OwnerContext owner, AuditLogger audit, Clock clock) {
         this.preferences = preferences;
         this.accounts = accounts;
         this.owner = owner;
+        this.audit = audit;
         this.clock = clock;
     }
 
@@ -41,18 +48,29 @@ public class UiPreferencesService {
 
     /**
      * Đổi một hoặc vài tùy chọn; trường để trống giữ nguyên. Dòng tài khoản được khóa tới hết giao dịch để hai lần
-     * đổi đầu tiên gửi cùng lúc (ví dụ bấm thu gọn thanh bên rồi đổi chế độ tối ngay) không tạo hai bản ghi.
+     * đổi đầu tiên gửi cùng lúc (ví dụ bấm thu gọn thanh bên rồi đổi chế độ tối ngay) không tạo hai bản ghi. Mỗi lần
+     * đổi thật sự được ghi nhật ký kèm giá trị trước và sau (NCL-03-CN-001).
      */
     @Transactional
-    public View update(String themeMode, String fontSize, Boolean sidebarCollapsed) {
+    public View update(String themeMode, String fontSize, Boolean sidebarCollapsed, ClientInfo client) {
         UUID ownerId = owner.requireOwnerId();
         ThemeMode theme = parse(ThemeMode.class, themeMode, "themeMode");
         UiPreferences.FontSize font = parse(UiPreferences.FontSize.class, fontSize, "fontSize");
         accounts.lockById(ownerId).orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHENTICATED));
         UiPreferences current = preferences.findByOwnerId(ownerId)
                 .orElseGet(() -> UiPreferences.withDefaults(ownerId, clock.instant()));
+        View before = View.of(current);
         current.change(theme, font, sidebarCollapsed, clock.instant());
-        return View.of(preferences.save(current));
+        View after = View.of(preferences.save(current));
+        AuditChanges changes = AuditChanges.of()
+                .field("themeMode", before.themeMode().name(), after.themeMode().name())
+                .field("fontSize", before.fontSize().name(), after.fontSize().name())
+                .field("sidebarCollapsed", before.sidebarCollapsed(), after.sidebarCollapsed());
+        if (!changes.isEmpty()) {
+            audit.byUser(ownerId, AuditAction.UI_PREFERENCES_CHANGED, AuditObjectType.UI_PREFERENCES, current.getId(),
+                    changes.toDetails(), client);
+        }
+        return after;
     }
 
     private static <E extends Enum<E>> E parse(Class<E> type, String value, String field) {

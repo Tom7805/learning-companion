@@ -114,4 +114,25 @@ describe('AccountMenu', () => {
     expect(trigger()).not.toHaveTextContent('lan.anh@example.com')
     expect(screen.getByTestId('account-menu-topbar')).toBe(trigger())
   })
+
+  it('quản trị viên có thêm mục Quản trị ở đầu trình đơn', async () => {
+    const onAdmin = vi.fn()
+    const { user } = renderWithProviders(
+      <AccountMenu
+        placement="sidebar"
+        name="Lan Anh"
+        email="lan.anh@example.com"
+        onAdmin={onAdmin}
+        onSettings={vi.fn()}
+        onAppearance={vi.fn()}
+        onHelp={vi.fn()}
+        onLogout={vi.fn()}
+      />,
+    )
+
+    await user.click(trigger())
+    expect(screen.getAllByRole('menuitem')[0]).toHaveTextContent('Quản trị')
+    await user.click(screen.getByRole('menuitem', { name: 'Quản trị' }))
+    expect(onAdmin).toHaveBeenCalledOnce()
+  })
 })

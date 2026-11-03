@@ -143,7 +143,8 @@
     "EXPORT_EXPIRED": "This data package has expired. Please request a new export.",
     "REAUTHENTICATION_REQUIRED": "Please confirm your password or sign in again to continue.",
     "ACCOUNT_PENDING_DELETION": "This account is scheduled for deletion. Cancel the deletion request to keep using it.",
-    "CSRF_TOKEN_INVALID": "This page is out of date. Reload it and try again."
+    "CSRF_TOKEN_INVALID": "This page is out of date. Reload it and try again.",
+    "AUDIT_LOG_IMMUTABLE": "The audit log is append-only and can't be edited or deleted."
   },
   "checkEmail": {
     "title": "Check your inbox",
@@ -969,5 +970,152 @@
     "body": "It may have been deleted, expired or replaced by a newer version. Your other notifications are still here.",
     "home": "Back to home",
     "notifications": "View notifications"
+  },
+  "admin": {
+    "menu": "Admin",
+    "area": "Admin area",
+    "navLabel": "Admin pages",
+    "nav": {
+      "audit": "Audit log"
+    },
+    "forbidden": {
+      "title": "This page is for administrators only",
+      "body": "Your account has no admin rights. This visit has been recorded in the system audit log.",
+      "home": "Back to home"
+    }
+  },
+  "audit": {
+    "title": "Audit log",
+    "subtitle": "Every sensitive action is recorded automatically: who did what, to which object, when, from which device and with what result. The log holds metadata only, never anyone's learning content.",
+    "results": "Search results",
+    "shown_one": "{{count}} entry",
+    "shown_other": "{{count}} entries",
+    "shownMore_one": "Latest {{count}} entry, older ones available",
+    "shownMore_other": "Latest {{count}} entries, older ones available",
+    "loadMore": "Show older entries",
+    "loadFailed": "Couldn't load the audit log.",
+    "invalidFilters": "The filters aren't valid. Check the date range.",
+    "retention": "The log is append-only: nobody can edit or delete it, and entries are kept for one year. Every search is recorded too.",
+    "empty": {
+      "title": "No entries yet",
+      "body": "Actions such as sign-ins, password changes and settings changes will be recorded here.",
+      "filteredTitle": "No entries match these filters",
+      "filteredBody": "Try removing a condition or widening the date range."
+    },
+    "filters": {
+      "label": "Filter the audit log",
+      "account": "Account",
+      "accountHint": "Email or account ID",
+      "category": "Action group",
+      "anyCategory": "All groups",
+      "action": "Action",
+      "anyAction": "All actions",
+      "objectType": "Object type",
+      "anyObject": "All object types",
+      "from": "From",
+      "to": "To",
+      "apply": "Search",
+      "clear": "Clear filters",
+      "rangeInvalid": "The start date must be on or before the end date."
+    },
+    "columns": {
+      "time": "Time",
+      "actor": "Performed by",
+      "action": "Action and result",
+      "object": "Object",
+      "device": "Device"
+    },
+    "actor": {
+      "anonymous": "Not signed in",
+      "system": "System",
+      "removed": "Deleted account"
+    },
+    "device": "{{browser}} · {{os}}",
+    "noDevice": "Unknown device",
+    "showDetails": "Show details: {{action}}",
+    "hideDetails": "Hide details: {{action}}",
+    "facts": {
+      "id": "Entry ID",
+      "actorId": "Performer ID",
+      "subject": "Related account",
+      "objectId": "Object ID",
+      "ip": "IP address",
+      "deviceType": "Device type",
+      "requestId": "Request ID"
+    },
+    "changes": "Before and after",
+    "changeValue": "{{before}} → {{after}}",
+    "extra": "Recorded details",
+    "removed": "Content fields removed from the log: {{fields}}",
+    "noExtra": "No recorded details.",
+    "categories": {
+      "LOGIN": "Sign-in",
+      "SESSION": "Sessions and devices",
+      "ACCOUNT": "Account and password",
+      "PRIVACY": "Privacy and data",
+      "SETTINGS": "Settings",
+      "ACCESS": "Access denied",
+      "ADMIN": "Administration"
+    },
+    "outcomes": {
+      "SUCCESS": "Succeeded",
+      "FAILURE": "Failed",
+      "DENIED": "Denied"
+    },
+    "objectTypes": {
+      "USER_ACCOUNT": "Account",
+      "VERIFICATION_TOKEN": "Verification code",
+      "CONSENT": "Consent",
+      "SESSION": "Session",
+      "DOCUMENT": "Document",
+      "PROFILE": "Profile",
+      "EXTERNAL_IDENTITY": "Linked account",
+      "DATA_EXPORT": "Data export",
+      "NOTIFICATION": "Notification",
+      "UI_PREFERENCES": "Display preferences",
+      "ENDPOINT": "System page",
+      "AUDIT_LOG": "Audit log"
+    },
+    "actions": {
+      "ACCOUNT_REGISTERED": "Account registered",
+      "REGISTRATION_ATTEMPT_EXISTING_EMAIL": "Sign-up with an email already in use",
+      "VERIFICATION_EMAIL_SENT": "Verification email sent",
+      "VERIFICATION_EMAIL_RESENT": "Verification email resent",
+      "VERIFICATION_LINK_EXPIRED": "Verification link expired",
+      "EMAIL_VERIFIED": "Email verified",
+      "CONSENT_GRANTED": "Terms accepted",
+      "CONSENT_WITHDRAWN": "Consent withdrawn",
+      "LOGIN_SUCCEEDED": "Successful sign-in",
+      "LOGIN_FAILED": "Failed sign-in",
+      "LOGIN_LOCKED": "Sign-in locked",
+      "NEW_DEVICE_ALERT_SENT": "New device alert",
+      "PASSWORD_RESET_REQUESTED": "Password reset requested",
+      "PASSWORD_RESET_LINK_EXPIRED": "Password reset link expired",
+      "PASSWORD_RESET_COMPLETED": "Password reset",
+      "PASSWORD_CHANGED": "Password changed",
+      "SESSION_CREATED": "Session started",
+      "SESSION_REVOKED": "Device signed out",
+      "LEARNING_ACCESS_DENIED": "Blocked from someone else's learning data",
+      "ADMIN_ACCOUNT_VIEWED": "Account details viewed",
+      "PROFILE_UPDATED": "Profile updated",
+      "AVATAR_UPDATED": "Avatar changed",
+      "AVATAR_REMOVED": "Avatar removed",
+      "OAUTH_LOGIN_REJECTED": "External account sign-in rejected",
+      "EXTERNAL_IDENTITY_LINKED": "External account linked",
+      "EXTERNAL_IDENTITY_UNLINKED": "External account unlinked",
+      "DATA_EXPORT_REQUESTED": "Data export requested",
+      "DATA_EXPORT_COMPLETED": "Data export ready",
+      "DATA_EXPORT_FAILED": "Data export failed",
+      "DATA_EXPORT_DOWNLOADED": "Data export downloaded",
+      "DATA_EXPORT_EXPIRED": "Data export expired",
+      "ACCOUNT_DELETION_REQUESTED": "Account deletion requested",
+      "ACCOUNT_DELETION_REJECTED": "Account deletion request rejected",
+      "ACCOUNT_DELETION_CANCELLED": "Account deletion cancelled",
+      "ACCOUNT_DELETION_COMPLETED": "Account deleted",
+      "UI_PREFERENCES_CHANGED": "Display preferences changed",
+      "ROLE_ACCESS_DENIED": "Blocked from the admin area",
+      "AUDIT_LOG_SEARCHED": "Audit log searched",
+      "AUDIT_LOG_TAMPER_ATTEMPTED": "Attempt to edit or delete the audit log"
+    }
   }
 }

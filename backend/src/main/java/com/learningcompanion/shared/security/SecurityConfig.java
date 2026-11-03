@@ -3,19 +3,24 @@ package com.learningcompanion.shared.security;
 import com.learningcompanion.shared.config.AppProperties;
 import com.learningcompanion.shared.exception.BusinessException;
 import com.learningcompanion.shared.exception.ErrorCode;
+import com.learningcompanion.shared.ownership.AccessDeniedLogger;
 import com.learningcompanion.shared.web.ApiPaths;
+import com.learningcompanion.shared.web.ClientInfo;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.SecurityFilterChain;
@@ -29,9 +34,11 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @Configuration
 public class SecurityConfig {
 
+    private static final Logger LOG = LoggerFactory.getLogger(SecurityConfig.class);
+
     @Bean
     public SecurityFilterChain apiSecurity(HttpSecurity http, SessionResolver sessionResolver,
-                                           AppProperties properties,
+                                           AppProperties properties, AccessDeniedLogger deniedLogger,
                                            @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver)
             throws Exception {
         http
@@ -80,9 +87,27 @@ public class SecurityConfig {
                                 request, response, null, new BusinessException(unauthenticatedCode(request))))
                         // Lỗi mã chống giả mạo có mã riêng: thường chỉ do hai yêu cầu song song cùng nhận mã mới
                         // khi trình duyệt chưa có cookie, giao diện gửi lại một lần là xong.
-                        .accessDeniedHandler((request, response, ex) -> resolver.resolveException(
-                                request, response, null, new BusinessException(ex instanceof CsrfException
-                                        ? ErrorCode.CSRF_TOKEN_INVALID : ErrorCode.FORBIDDEN))))
+                        .accessDeniedHandler((request, response, ex) -> {
+                            if (ex instanceof CsrfException) {
+                                resolver.resolveException(request, response, null,
+                                        new BusinessException(ErrorCode.CSRF_TOKEN_INVALID));
+                                return;
+                            }
+                            // Đã đăng nhập mà sai vai trò (người học mở khu quản trị): ghi nhật ký lần từ chối.
+                            if (SecurityContextHolder.getContext().getAuthentication() != null
+                                    && SecurityContextHolder.getContext().getAuthentication().getPrincipal()
+                                    instanceof AuthenticatedUser user) {
+                                try {
+                                    deniedLogger.wrongRole(user.userId(), request.getMethod(),
+                                            request.getRequestURI(), ClientInfo.from(request));
+                                } catch (RuntimeException failure) {
+                                    // Vẫn từ chối dù không ghi được nhật ký; lỗi ghi được báo trong nhật ký máy chủ.
+                                    LOG.error("Could not audit a role denial", failure);
+                                }
+                            }
+                            resolver.resolveException(request, response, null,
+                                    new BusinessException(ErrorCode.FORBIDDEN));
+                        }))
                 .addFilterBefore(new SessionAuthenticationFilter(sessionResolver,
                         properties.auth().sessionCookieName(), properties.auth().secureCookies()),
                         AnonymousAuthenticationFilter.class)

@@ -1,8 +1,10 @@
 import { lazy, Suspense, type ComponentType } from 'react'
-import { createBrowserRouter } from 'react-router'
+import { createBrowserRouter, Navigate } from 'react-router'
+import { AdminLayout } from '@/layouts/AdminLayout'
 import { AppShell } from '@/layouts/AppShell'
 import { AuthLayout } from '@/layouts/AuthLayout'
 import { ErrorPage } from '@/pages/ErrorPage'
+import { AdminRoute } from './AdminRoute'
 import { ProtectedRoute } from './ProtectedRoute'
 import { Root } from './Root'
 import { routes } from './routes'
@@ -31,6 +33,7 @@ const NotificationOpenPage = page(
   'NotificationOpenPage',
 )
 const ContentGonePage = page(() => import('@/pages/ContentGonePage'), 'ContentGonePage')
+const AuditLogPage = page(() => import('@/features/admin/pages/AuditLogPage'), 'AuditLogPage')
 const RegisterPage = page(() => import('@/features/auth/pages/RegisterPage'), 'RegisterPage')
 const CheckEmailPage = page(() => import('@/features/auth/pages/CheckEmailPage'), 'CheckEmailPage')
 const VerifyEmailPage = page(() => import('@/features/auth/pages/VerifyEmailPage'), 'VerifyEmailPage')
@@ -95,6 +98,20 @@ export const router = createBrowserRouter([
                   { path: routes.deleteAccount, element: <DeleteAccountFlow /> },
                   { path: routes.notification, element: <NotificationOpenPage /> },
                   { path: routes.contentGone, element: <ContentGonePage /> },
+                  {
+                    // Quyền quản trị do máy chủ xét ở mỗi lần mở (NCL-03-CN-001 TC-05).
+                    path: routes.admin,
+                    element: <AdminRoute />,
+                    children: [
+                      {
+                        element: <AdminLayout />,
+                        children: [
+                          { index: true, element: <Navigate to={routes.adminAudit} replace /> },
+                          { path: routes.adminAudit, element: <AuditLogPage /> },
+                        ],
+                      },
+                    ],
+                  },
                 ],
               },
             ],

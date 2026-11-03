@@ -58,6 +58,17 @@ function offsetMinutes(offset: string) {
   return match[1] === '-' ? -minutes : minutes
 }
 
+/**
+ * Thời điểm 0 giờ của một ngày (YYYY-MM-DD) theo múi giờ cho trước, dạng ISO. Ví dụ 2026-10-14 ở Hồ Chí Minh là
+ * 2026-10-13T17:00:00.000Z. Độ lệch được tính lại tại chính thời điểm đó nên đúng cả ngày đổi giờ mùa hè.
+ */
+export function zonedDayStart(date: string, timeZone: string) {
+  const [year, month, day] = date.split('-').map(Number)
+  const midnightUtc = Date.UTC(year, month - 1, day)
+  const guess = midnightUtc - offsetMinutes(timeZoneOffset(timeZone, new Date(midnightUtc))) * 60_000
+  return new Date(midnightUtc - offsetMinutes(timeZoneOffset(timeZone, new Date(guess))) * 60_000).toISOString()
+}
+
 const CITY_NAMES: Record<string, string> = {
   'Asia/Ho_Chi_Minh': 'Hồ Chí Minh (Việt Nam)',
 }

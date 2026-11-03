@@ -14,4 +14,6 @@ export const queryKeys = {
   document: (id: string) => ['library', 'documents', id] as const,
   notifications: ['notifications', 'list'] as const,
   notificationsUnread: ['notifications', 'unread'] as const,
+  adminMe: ['admin', 'me'] as const,
+  auditLogs: (search: object) => ['admin', 'audit-logs', search] as const,
 }

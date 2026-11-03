@@ -3,6 +3,8 @@ package com.learningcompanion.appshell.api;
 import com.learningcompanion.appshell.api.dto.UiPreferencesRequest;
 import com.learningcompanion.appshell.application.UiPreferencesService;
 import com.learningcompanion.shared.web.ApiPaths;
+import com.learningcompanion.shared.web.ClientInfo;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +28,8 @@ public class UiPreferencesController {
     }
 
     @PatchMapping
-    public UiPreferencesService.View update(@RequestBody UiPreferencesRequest request) {
-        return preferences.update(request.themeMode(), request.fontSize(), request.sidebarCollapsed());
+    public UiPreferencesService.View update(@RequestBody UiPreferencesRequest request, HttpServletRequest http) {
+        return preferences.update(request.themeMode(), request.fontSize(), request.sidebarCollapsed(),
+                ClientInfo.from(http));
     }
 }
