@@ -123,6 +123,11 @@ test('TC-01, TC-02, TC-05: sửa lời nhắc, thử câu hỏi mẫu, phát hà
   // Trang nhật ký giữ kết quả tra cứu lúc đăng nhập trong 30 giây; tải lại để máy chủ tra cứu mới.
   await expect(page.getByRole('heading', { level: 1, name: 'Nhật ký thao tác' })).toBeVisible()
   await page.reload()
+  // Lọc theo đối tượng "Cấu hình AI": trang chỉ hiện 50 dòng mới nhất, và khi chạy cả bộ e2e, các test tua đồng hồ
+  // để lại dòng ở năm sau, chiếm hết chỗ của dòng hôm nay.
+  const filters = page.getByRole('search', { name: 'Lọc nhật ký' })
+  await filters.getByLabel('Loại đối tượng').selectOption('AI_CONFIG')
+  await filters.getByRole('button', { name: 'Tra cứu' }).click()
   const list = page.getByTestId('audit-list')
   for (const action of ['AI_CONFIG_DRAFT_SAVED', 'AI_CONFIG_PUBLISHED', 'AI_CONFIG_ROLLED_BACK']) {
     await expect(list.locator(`[data-testid="audit-row"][data-action="${action}"]`).first()).toBeVisible()
