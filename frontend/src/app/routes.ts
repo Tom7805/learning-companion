@@ -12,6 +12,7 @@ export const routes = {
   admin: '/admin',
   adminAudit: '/admin/audit',
   adminAi: '/admin/ai',
+  adminAiConfig: '/admin/ai-config',
   /** Bước mã xác thực thứ hai khi quản trị viên đăng nhập; chưa có phiên nên nằm ngoài khu quản trị. */
   adminTwoFactor: '/login/two-factor',
   deletionScheduled: '/account/deletion-scheduled',

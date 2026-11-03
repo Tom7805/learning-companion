@@ -203,3 +203,84 @@ export interface AiUsage {
   rows: AiUsageRow[]
   recentCalls: AiUsageCall[]
 }
+
+/** Chức năng trí tuệ nhân tạo có cấu hình theo phiên bản (NCL-04-CN-002), giống enum AiFeature ở máy chủ. */
+export type AiFeature = 'ASSISTANT_CHAT' | 'ADMIN_TEST'
+export type AiConfigStatus = 'DRAFT' | 'PUBLISHED' | 'SUPERSEDED' | 'REVOKED'
+
+/** Người thực hiện; trống nghĩa là hệ thống (phiên bản 1 đăng ký khi chức năng được xây dựng). */
+export interface AiConfigActor {
+  id: string
+  displayName?: string | null
+}
+
+export interface AiConfigVersion {
+  id: string
+  feature: AiFeature
+  versionNumber: number
+  status: AiConfigStatus
+  providerCode?: string | null
+  model?: string | null
+  temperature: number
+  maxOutputTokens: number
+  systemPrompt: string
+  basedOnVersion?: number | null
+  createdAt: string
+  createdBy?: AiConfigActor | null
+  lastTrialAt?: string | null
+  publishedAt?: string | null
+  publishedBy?: AiConfigActor | null
+  revokedAt?: string | null
+  revokedBy?: AiConfigActor | null
+}
+
+export interface AiConfigVersionInput {
+  providerCode: string | null
+  model: string | null
+  temperature: number
+  maxOutputTokens: number
+  systemPrompt: string
+  basedOnVersion: number | null
+}
+
+export interface AiTrialSource {
+  title: string
+  excerpt: string
+}
+
+/** Bộ nguồn mẫu để thử nhanh: kiến thức phổ thông viết sẵn, không lấy từ tài liệu của người học. */
+export interface AiTrialSampleSet {
+  id: string
+  title: string
+  suggestedQuestion: string
+  sources: AiTrialSource[]
+}
+
+export interface AiConfigFeatureSummary {
+  feature: AiFeature
+  capability: AiCapability
+  published?: AiConfigVersion | null
+  latestVersion: number
+  draftCount: number
+}
+
+export interface AiConfigOverview {
+  features: AiConfigFeatureSummary[]
+  sampleSets: AiTrialSampleSet[]
+}
+
+export type AiConfigLineChange = 'SAME' | 'ADDED' | 'REMOVED'
+
+export interface AiConfigDiff {
+  fromVersion: number
+  toVersion: number
+  fields: { field: 'providerCode' | 'model' | 'temperature' | 'maxOutputTokens'; before: unknown; after: unknown }[]
+  promptLines: { change: AiConfigLineChange; text: string }[]
+}
+
+/** Đoạn chứa dữ liệu cá nhân máy chủ tìm thấy trong lời nhắc: vị trí theo đơn vị UTF-16 như chuỗi JavaScript. */
+export interface PiiFinding {
+  kind: 'EMAIL' | 'PHONE'
+  start: number
+  end: number
+}

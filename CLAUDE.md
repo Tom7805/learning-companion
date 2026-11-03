@@ -37,8 +37,8 @@ Người dùng đã chốt: làm **theo đúng STT trên Jira** (STT ghi trong d
 |-----|-------|------|--------|------------|
 | 5 | LC-19 Nhật ký thao tác | LC-3 | `feature/LC-19-audit-log-recording-and-search` | Đã merge (PR #12) |
 | 6 | LC-20 Tài khoản admin duy nhất + 2FA | LC-3 | `feature/LC-20-single-admin-account-with-two-factor-auth` | Đã merge (PR #13) |
-| 11 | LC-25 Lớp kết nối dịch vụ AI thay được nhà cung cấp | LC-4 | `feature/LC-25-swappable-ai-provider-gateway` | PR #14 mở, chờ merge |
-| 12 | LC-26 Cấu hình model/prompt theo phiên bản | LC-4 | `feature/LC-26-versioned-model-and-prompt-config` | Chưa làm |
+| 11 | LC-25 Lớp kết nối dịch vụ AI thay được nhà cung cấp | LC-4 | `feature/LC-25-swappable-ai-provider-gateway` | Đã merge (PR #14) |
+| 12 | LC-26 Cấu hình model/prompt theo phiên bản | LC-4 | `feature/LC-26-versioned-model-and-prompt-config` | PR #15 mở |
 | 13 | LC-27 Hạn mức AI và dung lượng | LC-4 | `feature/LC-27-fair-quotas-for-ai-and-storage` | Chưa làm |
 | 14 | LC-28 Lọc nội dung không an toàn, chống prompt injection | LC-4 | `feature/LC-28-unsafe-content-filter-and-prompt-injection-guard` | Chưa làm |
 | 15 | LC-29 Kho tài liệu: thư mục nhiều cấp, nhãn, gắn sao | LC-5 | tạo mới | Chưa làm |
@@ -60,6 +60,7 @@ Người dùng đã chốt: làm **theo đúng STT trên Jira** (STT ghi trong d
 - LC-19 dựng sẵn khu vực admin dùng chung: `AdminRoute` (gọi `GET /admin/me`, nếu 403 thì hiện trang forbidden, server ghi log `ROLE_ACCESS_DENIED`), danh sách `sections` trong `AdminLayout`, và mục "Quản trị" trong account menu cho role ADMIN. Các story admin sau cứ gắn vào đây.
 - `frontend/src/features/admin/lib/auditCatalog.ts` phải luôn khớp với enum `AuditAction` ở backend, mỗi action có Category và Outcome tương ứng.
 - LC-25 dựng lớp kết nối AI dùng chung (`ai/gateway/AiGateway`): mọi chức năng AI sau chỉ gọi `streamText`, `embed`, `describeImage`, `recognizeText` với một mã chức năng chữ in hoa (ví dụ `ASSISTANT_CHAT`); không gọi thẳng nhà cung cấp. Môi trường thử dùng bản mô phỏng `mock-primary`/`mock-backup`; e2e đặt lại bằng `dev.resetAiGateway()`.
+- LC-26 thêm cấu hình theo phiên bản (`ai/config`): chức năng AI mới thêm một giá trị vào enum `AiFeature` (kèm lời nhắc, nhiệt độ, độ dài gốc; phiên bản 1 tự được đăng ký khi khởi động), rồi dựng yêu cầu bằng `AiConfigResolver.chatRequest(AiFeature.X, ...)` trước khi gọi `AiGateway.streamText(AiFeature.X.name(), ...)`. Không viết cứng lời nhắc hệ thống trong code chức năng. Lời gọi được ghi số phiên bản cấu hình ở cột `ai_call_records.config_version`. E2e đặt lại bằng `dev.resetAiConfigs()`.
 - Viết code theo phong cách của code xung quanh. i18n đặt trong `frontend/src/shared/i18n/locales/{vi,en}`.
 
 ## Bẫy khi chạy test

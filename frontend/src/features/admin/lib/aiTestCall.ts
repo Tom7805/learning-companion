@@ -5,11 +5,13 @@ export interface AiTestCallDone {
   outputUnits: number
 }
 
-export interface AiTestCallHandlers {
+export interface StreamHandlers<TDone> {
   onChunk: (text: string) => void
-  onDone: (done: AiTestCallDone) => void
+  onDone: (done: TDone) => void
   onError: (code: string) => void
 }
+
+export type AiTestCallHandlers = StreamHandlers<AiTestCallDone>
 
 function xsrfToken() {
   const match = document.cookie
@@ -38,14 +40,19 @@ export function parseEvents(buffer: string): { events: { name: string; data: str
 }
 
 /**
- * Lời gọi thử sinh văn bản qua lớp kết nối (POST nên không dùng được EventSource): đọc thân phản hồi theo luồng và
- * đưa từng đoạn chữ cho giao diện ngay khi tới.
+ * Gửi một yêu cầu POST trả về luồng sự kiện "chunk", rồi "done" hoặc "error" (POST nên không dùng được EventSource):
+ * đọc thân phản hồi theo luồng và đưa từng đoạn chữ cho giao diện ngay khi tới.
  */
-export async function streamAiTestCall(prompt: string, handlers: AiTestCallHandlers, signal?: AbortSignal) {
+export async function streamTextEvents<TDone>(
+  url: string,
+  body: unknown,
+  handlers: StreamHandlers<TDone>,
+  signal?: AbortSignal,
+) {
   if (!xsrfToken()) {
     await fetch('/api/v1/auth/session', { credentials: 'include' })
   }
-  const response = await fetch('/api/v1/admin/ai/test-call', {
+  const response = await fetch(url, {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -53,7 +60,7 @@ export async function streamAiTestCall(prompt: string, handlers: AiTestCallHandl
       Accept: 'text/event-stream',
       ...(xsrfToken() ? { 'X-XSRF-TOKEN': xsrfToken() as string } : {}),
     },
-    body: JSON.stringify({ prompt }),
+    body: JSON.stringify(body),
     signal,
   })
   if (!response.ok || !response.body) {
@@ -80,7 +87,7 @@ export async function streamAiTestCall(prompt: string, handlers: AiTestCallHandl
       const data = JSON.parse(event.data) as Record<string, unknown>
       if (event.name === 'chunk') handlers.onChunk(String(data.text ?? ''))
       else if (event.name === 'done') {
-        handlers.onDone(data as unknown as AiTestCallDone)
+        handlers.onDone(data as unknown as TDone)
         finished = true
       } else if (event.name === 'error') {
         handlers.onError(String(data.code ?? 'INTERNAL_ERROR'))
@@ -89,4 +96,9 @@ export async function streamAiTestCall(prompt: string, handlers: AiTestCallHandl
     }
   }
   if (!finished) handlers.onError('NETWORK_ERROR')
+}
+
+/** Lời gọi thử sinh văn bản qua lớp kết nối (NCL-04-CN-001). */
+export function streamAiTestCall(prompt: string, handlers: AiTestCallHandlers, signal?: AbortSignal) {
+  return streamTextEvents('/api/v1/admin/ai/test-call', { prompt }, handlers, signal)
 }

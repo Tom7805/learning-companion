@@ -55,7 +55,8 @@ public class OpenAiCompatibleAdapter implements AiProviderAdapter {
             messages.addObject().put("role", message.role() == ChatRequest.Role.USER ? "user" : "assistant")
                     .put("content", message.text());
         }
-        return chat(provider, provider.textModel(), messages, request.maxOutputUnits(), onChunk);
+        return chat(provider, provider.textModel(), messages, request.maxOutputUnits(), request.tuning().temperature(),
+                onChunk);
     }
 
     @Override
@@ -83,14 +84,15 @@ public class OpenAiCompatibleAdapter implements AiProviderAdapter {
 
     @Override
     public ChatResult describeImage(ProviderDescriptor provider, VisionRequest request) {
-        return chat(provider, provider.visionModel(), imageMessages(request, request.question()), 1024, chunk -> {
-        });
+        return chat(provider, provider.visionModel(), imageMessages(request, request.question()), 1024, null,
+                chunk -> {
+                });
     }
 
     @Override
     public OcrResult recognizeText(ProviderDescriptor provider, VisionRequest request) {
         ChatResult result = chat(provider, provider.visionModel(), imageMessages(request, OCR_INSTRUCTION), 4096,
-                chunk -> {
+                null, chunk -> {
                 });
         return new OcrResult(result.text(), result.usage(), provider.code());
     }
@@ -105,9 +107,12 @@ public class OpenAiCompatibleAdapter implements AiProviderAdapter {
     }
 
     private ChatResult chat(ProviderDescriptor provider, String model, ArrayNode messages, int maxTokens,
-                            Consumer<ChatChunk> onChunk) {
+                            Double temperature, Consumer<ChatChunk> onChunk) {
         ObjectNode body = json.createObjectNode().put("model", model).put("stream", true)
                 .put("max_tokens", maxTokens);
+        if (temperature != null) {
+            body.put("temperature", temperature);
+        }
         body.set("messages", messages);
         body.putObject("stream_options").put("include_usage", true);
         StringBuilder text = new StringBuilder();

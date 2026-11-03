@@ -1,5 +1,7 @@
 package com.learningcompanion.ai.gateway.api;
 
+import com.learningcompanion.ai.config.application.AiConfigResolver;
+import com.learningcompanion.ai.config.domain.AiFeature;
 import com.learningcompanion.ai.gateway.AiCapability;
 import com.learningcompanion.ai.gateway.AiGateway;
 import com.learningcompanion.ai.gateway.AiGatewayAdminService;
@@ -45,16 +47,20 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RequestMapping(ApiPaths.ADMIN + "/ai")
 public class AiGatewayAdminController {
 
-    /** Mã chức năng của lời gọi thử, để tách khỏi mức sử dụng của người học. */
-    public static final String TEST_FEATURE = "ADMIN_TEST";
-    private static final String TEST_SYSTEM = "Bạn là trợ lý học tập. Trả lời ngắn gọn bằng tiếng Việt.";
+    /**
+     * Mã chức năng của lời gọi thử, để tách khỏi mức sử dụng của người học. Lời nhắc, nhiệt độ và độ dài lấy từ phiên
+     * bản cấu hình đang phát hành của chức năng này (NCL-04-CN-002).
+     */
+    public static final String TEST_FEATURE = AiFeature.ADMIN_TEST.name();
 
     private final AiGatewayAdminService admin;
     private final AiGateway gateway;
+    private final AiConfigResolver configs;
 
-    public AiGatewayAdminController(AiGatewayAdminService admin, AiGateway gateway) {
+    public AiGatewayAdminController(AiGatewayAdminService admin, AiGateway gateway, AiConfigResolver configs) {
         this.admin = admin;
         this.gateway = gateway;
+        this.configs = configs;
     }
 
     @GetMapping("/gateway")
@@ -118,10 +124,11 @@ public class AiGatewayAdminController {
      */
     @PostMapping(path = "/test-call", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter testCall(@Valid @RequestBody AiTestCallRequest body) {
+        ChatRequest request = configs.chatRequest(AiFeature.ADMIN_TEST, body.prompt());
         SseEmitter emitter = new SseEmitter(0L);
         Thread.ofVirtual().name("ai-test-call").start(() -> {
             try {
-                ChatResult result = gateway.streamText(TEST_FEATURE, ChatRequest.of(TEST_SYSTEM, body.prompt()),
+                ChatResult result = gateway.streamText(TEST_FEATURE, request,
                         chunk -> send(emitter, "chunk", Map.of("text", chunk.text())));
                 Map<String, Object> done = new LinkedHashMap<>();
                 done.put("providerCode", result.providerCode());

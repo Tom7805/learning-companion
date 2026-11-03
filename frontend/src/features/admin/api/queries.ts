@@ -1,5 +1,6 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/shared/api/queryKeys'
+import type { AiFeature } from '../types'
 import { adminApi, type AuditLogSearch } from './adminApi'
 
 /**
@@ -55,5 +56,37 @@ export function useAiGatewayMutation<TInput, TResult>(mutationFn: (input: TInput
       void client.invalidateQueries({ queryKey: queryKeys.aiGateway })
       void client.invalidateQueries({ queryKey: ['admin', 'ai', 'usage'] })
     },
+  })
+}
+
+/** Chức năng trí tuệ nhân tạo cùng phiên bản đang phát hành của từng chức năng và các bộ nguồn mẫu. */
+export function useAiConfigs() {
+  return useQuery({ queryKey: queryKeys.aiConfigs, queryFn: adminApi.aiConfigs, retry: false })
+}
+
+export function useAiConfigVersions(feature: AiFeature) {
+  return useQuery({
+    queryKey: queryKeys.aiConfigVersions(feature),
+    queryFn: () => adminApi.aiConfigVersions(feature),
+    retry: false,
+  })
+}
+
+export function useAiConfigDiff(feature: AiFeature, from: number | null, to: number | null) {
+  return useQuery({
+    queryKey: queryKeys.aiConfigDiff(feature, from ?? 0, to ?? 0),
+    queryFn: () => adminApi.aiConfigDiff(feature, from as number, to as number),
+    enabled: from != null && to != null && from !== to,
+    retry: false,
+    staleTime: Infinity,
+  })
+}
+
+/** Lưu, phát hành hay quay lại cấu hình: xong thì tải lại danh sách chức năng và lịch sử phiên bản. */
+export function useAiConfigMutation<TInput, TResult>(mutationFn: (input: TInput) => Promise<TResult>) {
+  const client = useQueryClient()
+  return useMutation({
+    mutationFn,
+    onSettled: () => void client.invalidateQueries({ queryKey: queryKeys.aiConfigs }),
   })
 }

@@ -81,6 +81,17 @@ public enum ErrorCode {
     AI_ROUTE_INVALID(HttpStatus.BAD_REQUEST,
             "Nhà cung cấp chính và dự phòng phải khác nhau, đang bật và hỗ trợ khả năng này."),
     AI_NO_FALLBACK(HttpStatus.CONFLICT, "Khả năng này chưa có nhà cung cấp dự phòng đang bật."),
+    /** Lời nhắc hệ thống có địa chỉ thư hay số điện thoại; chi tiết kèm vị trí từng đoạn (NCL-04-CN-002 TC-03). */
+    AI_CONFIG_PROMPT_HAS_PII(HttpStatus.BAD_REQUEST,
+            "Lời nhắc hệ thống chứa dữ liệu cá nhân (địa chỉ thư hoặc số điện thoại). Hãy xóa các đoạn được đánh dấu."),
+    AI_CONFIG_PROVIDER_INVALID(HttpStatus.BAD_REQUEST,
+            "Nhà cung cấp không tồn tại hoặc không hỗ trợ khả năng của chức năng này."),
+    AI_CONFIG_PROVIDER_UNAVAILABLE(HttpStatus.CONFLICT,
+            "Chưa phát hành được: nhà cung cấp của phiên bản này đang tắt hoặc chưa xác nhận không huấn luyện."),
+    AI_CONFIG_TRIAL_REQUIRED(HttpStatus.CONFLICT, "Hãy thử phiên bản này với một câu hỏi mẫu trước khi phát hành."),
+    AI_CONFIG_NOT_PUBLISHABLE(HttpStatus.CONFLICT,
+            "Phiên bản này đang phát hành hoặc đã bị thu hồi nên không phát hành được."),
+    AI_CONFIG_NO_PREVIOUS_VERSION(HttpStatus.CONFLICT, "Chưa có phiên bản phát hành trước đó để quay lại."),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Hệ thống gặp sự cố, hãy thử lại sau.");
 
     private final HttpStatus status;

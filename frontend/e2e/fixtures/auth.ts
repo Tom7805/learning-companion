@@ -101,6 +101,12 @@ export class DevApi {
     expect(response.ok()).toBeTruthy()
   }
 
+  /** Xóa mọi phiên bản cấu hình chức năng trí tuệ nhân tạo rồi đăng ký lại phiên bản 1 từ giá trị gốc. */
+  async resetAiConfigs() {
+    const response = await this.request.post(`${API}/dev/ai/configs/reset`)
+    expect(response.ok()).toBeTruthy()
+  }
+
   /** Cho một nhà cung cấp mô phỏng lỗi ngay (FAIL), treo (HANG) hoặc chạy bình thường (OK). */
   async setAiMockMode(providerCode: string, mode: 'OK' | 'FAIL' | 'HANG') {
     const response = await this.request.post(`${API}/dev/ai/mock/${providerCode}`, { params: { mode } })

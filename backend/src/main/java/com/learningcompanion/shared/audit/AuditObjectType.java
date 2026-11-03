@@ -16,5 +16,7 @@ public enum AuditObjectType {
     AUDIT_LOG,
     AI_PROVIDER,
     /** Định tuyến một khả năng trí tuệ nhân tạo; mã đối tượng để trống, khả năng nằm trong chi tiết. */
-    AI_ROUTE
+    AI_ROUTE,
+    /** Một phiên bản cấu hình của chức năng trí tuệ nhân tạo; chức năng và số phiên bản nằm trong chi tiết. */
+    AI_CONFIG
 }

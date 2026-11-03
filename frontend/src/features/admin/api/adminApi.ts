@@ -2,6 +2,11 @@ import { http } from '@/shared/api/httpClient'
 import type {
   AdminIdentity,
   AiCapability,
+  AiConfigDiff,
+  AiConfigOverview,
+  AiConfigVersion,
+  AiConfigVersionInput,
+  AiFeature,
   AiGatewayOverview,
   AiProvider,
   AiProviderInput,
@@ -88,5 +93,33 @@ export const adminApi = {
   },
   async acknowledgeAiAlert(id: string) {
     await http.post(`/admin/ai/alerts/${encodeURIComponent(id)}/acknowledge`)
+  },
+  async aiConfigs() {
+    const { data } = await http.get<AiConfigOverview>('/admin/ai/configs')
+    return data
+  },
+  async aiConfigVersions(feature: AiFeature) {
+    const { data } = await http.get<AiConfigVersion[]>(`/admin/ai/configs/${feature}/versions`)
+    return data
+  },
+  async aiConfigDiff(feature: AiFeature, from: number, to: number) {
+    const { data } = await http.get<AiConfigDiff>(`/admin/ai/configs/${feature}/diff`, { params: { from, to } })
+    return data
+  },
+  /** Mỗi lần lưu tạo một phiên bản nháp mới; phiên bản đã có không bao giờ bị sửa. */
+  async saveAiConfig(feature: AiFeature, input: AiConfigVersionInput) {
+    const { data } = await http.post<AiConfigVersion>(`/admin/ai/configs/${feature}/versions`, input)
+    return data
+  },
+  async publishAiConfig(feature: AiFeature, versionNumber: number) {
+    const { data } = await http.post<AiConfigVersion>(
+      `/admin/ai/configs/${feature}/versions/${versionNumber}/publish`,
+    )
+    return data
+  },
+  /** Thu hồi phiên bản đang chạy và phát hành lại phiên bản phát hành trước đó. */
+  async rollbackAiConfig(feature: AiFeature) {
+    const { data } = await http.post<AiConfigVersion>(`/admin/ai/configs/${feature}/rollback`)
+    return data
   },
 }

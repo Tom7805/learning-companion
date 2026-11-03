@@ -53,7 +53,7 @@ public class AnthropicAdapter implements AiProviderAdapter {
                     .put("content", message.text());
         }
         return messages(provider, provider.textModel(), request.system(), messages, request.maxOutputUnits(),
-                onChunk);
+                request.tuning().temperature(), onChunk);
     }
 
     @Override
@@ -65,14 +65,14 @@ public class AnthropicAdapter implements AiProviderAdapter {
     public ChatResult describeImage(ProviderDescriptor provider, VisionRequest request) {
         return messages(provider, provider.visionModel(), null,
                 imageMessages(request, request.question() == null ? "Mô tả hình ảnh này." : request.question()),
-                1024, chunk -> {
+                1024, null, chunk -> {
                 });
     }
 
     @Override
     public OcrResult recognizeText(ProviderDescriptor provider, VisionRequest request) {
         ChatResult result = messages(provider, provider.visionModel(), null, imageMessages(request, OCR_INSTRUCTION),
-                4096, chunk -> {
+                4096, null, chunk -> {
                 });
         return new OcrResult(result.text(), result.usage(), provider.code());
     }
@@ -88,9 +88,12 @@ public class AnthropicAdapter implements AiProviderAdapter {
     }
 
     private ChatResult messages(ProviderDescriptor provider, String model, String system, ArrayNode messages,
-                                int maxTokens, Consumer<ChatChunk> onChunk) {
+                                int maxTokens, Double temperature, Consumer<ChatChunk> onChunk) {
         ObjectNode body = json.createObjectNode().put("model", model).put("stream", true)
                 .put("max_tokens", maxTokens);
+        if (temperature != null) {
+            body.put("temperature", temperature);
+        }
         if (system != null && !system.isBlank()) {
             body.put("system", system);
         }
