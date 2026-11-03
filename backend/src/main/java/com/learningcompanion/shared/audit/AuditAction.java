@@ -85,7 +85,20 @@ public enum AuditAction {
     AI_FAILOVER_SWITCHED(ADMIN, SUCCESS),
     /** Hệ thống ngắt mạch một nhà cung cấp sau nhiều lỗi liên tiếp và chuyển lời gọi sang dự phòng. */
     AI_CIRCUIT_OPENED(ADMIN, FAILURE),
-    AI_ALERT_ACKNOWLEDGED(ADMIN, SUCCESS);
+    AI_ALERT_ACKNOWLEDGED(ADMIN, SUCCESS),
+    /** Hệ thống tạo phiên bản 1 cho chức năng trí tuệ nhân tạo vừa được xây dựng và phát hành luôn. */
+    AI_CONFIG_REGISTERED(ADMIN, SUCCESS),
+    /**
+     * Lưu một phiên bản cấu hình nháp mới; chi tiết ghi số phiên bản, phiên bản gốc, các tham số đổi và số dòng lời
+     * nhắc thêm bớt (nội dung đầy đủ nằm trong lịch sử phiên bản).
+     */
+    AI_CONFIG_DRAFT_SAVED(ADMIN, SUCCESS),
+    /** Lưu bị chặn vì lời nhắc chứa dữ liệu cá nhân; chi tiết ghi loại và số đoạn, không ghi giá trị. */
+    AI_CONFIG_SAVE_REJECTED(ADMIN, FAILURE),
+    /** Phát hành một phiên bản; chi tiết ghi phiên bản mới và phiên bản bị thay. */
+    AI_CONFIG_PUBLISHED(ADMIN, SUCCESS),
+    /** Quay lại phiên bản phát hành trước; phiên bản đang chạy bị thu hồi. */
+    AI_CONFIG_ROLLED_BACK(ADMIN, SUCCESS);
 
     /** Nhóm thao tác để lọc nhật ký. */
     public enum Category { LOGIN, SESSION, ACCOUNT, PRIVACY, SETTINGS, ACCESS, ADMIN }

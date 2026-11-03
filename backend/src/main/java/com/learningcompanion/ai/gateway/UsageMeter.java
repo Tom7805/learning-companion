@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Ghi sổ đo mức sử dụng: mỗi lời gọi một dòng, trong giao dịch riêng để lời gọi thất bại hay chức năng gọi bị hủy vẫn
+ * Ghi sổ đo mức sử dụng: mỗi lời gọi một dòng (kèm số phiên bản cấu hình của chức năng nếu có), trong giao dịch riêng để lời gọi thất bại hay chức năng gọi bị hủy vẫn
  * được đo. Chi phí tính theo giá mỗi triệu đơn vị của nhà cung cấp, lưu bằng phần triệu đô la.
  */
 @Component
@@ -24,11 +24,11 @@ public class UsageMeter {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public AiCallRecord record(AiCapability capability, String feature, AiProviderConfig provider,
-                               AiCallRecord.Outcome outcome, boolean usedFallback, int attempts, AiUsage usage,
-                               long latencyMs, String errorCode) {
+    public AiCallRecord record(AiCapability capability, String feature, Integer configVersion,
+                               AiProviderConfig provider, AiCallRecord.Outcome outcome, boolean usedFallback,
+                               int attempts, AiUsage usage, long latencyMs, String errorCode) {
         AiUsage measured = usage == null ? AiUsage.NONE : usage;
-        return records.save(new AiCallRecord(clock.instant(), capability, feature,
+        return records.save(new AiCallRecord(clock.instant(), capability, feature, configVersion,
                 provider == null ? null : provider.getCode(), outcome, usedFallback, attempts,
                 measured.inputUnits(), measured.outputUnits(), (int) Math.min(Integer.MAX_VALUE, latencyMs),
                 costMicroUsd(provider, measured), errorCode));

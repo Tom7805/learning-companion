@@ -984,7 +984,8 @@
     "nav": {
       "audit": "Nhật ký thao tác",
       "home": "Khu quản trị",
-      "ai": "Dịch vụ AI"
+      "ai": "Dịch vụ AI",
+      "aiConfig": "Cấu hình AI"
     },
     "forbidden": {
       "title": "Trang này chỉ dành cho quản trị viên",
@@ -1085,7 +1086,8 @@
       "ENDPOINT": "Trang của hệ thống",
       "AUDIT_LOG": "Nhật ký thao tác",
       "AI_PROVIDER": "Nhà cung cấp AI",
-      "AI_ROUTE": "Định tuyến AI"
+      "AI_ROUTE": "Định tuyến AI",
+      "AI_CONFIG": "Cấu hình AI"
     },
     "actions": {
       "ACCOUNT_REGISTERED": "Đăng ký tài khoản",
@@ -1142,7 +1144,12 @@
       "AI_ROUTE_CHANGED": "Đổi định tuyến AI",
       "AI_FAILOVER_SWITCHED": "Chuyển dự phòng AI",
       "AI_CIRCUIT_OPENED": "Ngắt mạch nhà cung cấp AI",
-      "AI_ALERT_ACKNOWLEDGED": "Xác nhận cảnh báo AI"
+      "AI_ALERT_ACKNOWLEDGED": "Xác nhận cảnh báo AI",
+      "AI_CONFIG_REGISTERED": "Đăng ký cấu hình AI",
+      "AI_CONFIG_DRAFT_SAVED": "Lưu bản nháp cấu hình AI",
+      "AI_CONFIG_SAVE_REJECTED": "Chặn lưu cấu hình AI có dữ liệu cá nhân",
+      "AI_CONFIG_PUBLISHED": "Phát hành cấu hình AI",
+      "AI_CONFIG_ROLLED_BACK": "Quay lại cấu hình AI trước"
     }
   },
   "adminLogin": {
@@ -1395,6 +1402,145 @@
       "noContent": "Chỉ có số liệu: lớp kết nối không ghi nội dung lời gọi hay câu trả lời.",
       "viaFallback": "qua dự phòng",
       "callFacts": "{{input}}/{{output}} đơn vị · {{latency}} ms · {{attempts}} lần gọi"
+    }
+  },
+  "aiConfig": {
+    "title": "Cấu hình mô hình và lời nhắc",
+    "subtitle": "Mỗi chức năng trí tuệ nhân tạo có cấu hình riêng: nhà cung cấp, mô hình, nhiệt độ, độ dài tối đa và lời nhắc hệ thống. Mỗi lần lưu là một phiên bản nháp mới; chỉ phiên bản đang phát hành chạy cho người học, và quay lại phiên bản trước chỉ cần một thao tác.",
+    "loadFailed": "Chưa tải được cấu hình. Hãy thử lại.",
+    "featuresLabel": "Các chức năng trí tuệ nhân tạo",
+    "featureLive": "Đang chạy phiên bản {{version}}",
+    "featureNone": "Chưa có phiên bản nào đang phát hành.",
+    "drafts_one": "{{count}} bản nháp",
+    "drafts_other": "{{count}} bản nháp",
+    "versionName": "Phiên bản {{version}}",
+    "defaultModel": "Mô hình mặc định của nhà cung cấp",
+    "summary": "{{provider}} · {{model}} · nhiệt độ {{temperature}} · tối đa {{tokens}} đơn vị",
+    "features": {
+      "ASSISTANT_CHAT": {
+        "name": "Trợ lý hỏi đáp",
+        "hint": "Trả lời câu hỏi dựa trên tài liệu của người học, kèm trích dẫn nguồn."
+      },
+      "ADMIN_TEST": {
+        "name": "Lời gọi thử của quản trị",
+        "hint": "Dùng cho nút gọi thử ở trang Dịch vụ AI để kiểm tra nhà cung cấp còn trả lời."
+      }
+    },
+    "status": {
+      "DRAFT": "Nháp",
+      "PUBLISHED": "Đang phát hành",
+      "SUPERSEDED": "Đã được thay",
+      "REVOKED": "Đã thu hồi"
+    },
+    "fields": {
+      "providerCode": "Nhà cung cấp",
+      "model": "Mô hình",
+      "temperature": "Nhiệt độ",
+      "maxOutputTokens": "Độ dài tối đa",
+      "systemPrompt": "Lời nhắc hệ thống"
+    },
+    "editor": {
+      "title": "Soạn phiên bản mới",
+      "subtitle": "Đang dựa trên phiên bản {{version}}. Phiên bản đang chạy không đổi cho tới khi bạn phát hành.",
+      "providerHint": "Để theo định tuyến thì lớp kết nối tự chọn nhà cung cấp chính và dự phòng.",
+      "followRoute": "Theo định tuyến của lớp kết nối",
+      "providerOff": "đang tắt",
+      "modelHint": "Tên mô hình trên nhà cung cấp đã chọn. Để trống thì dùng mô hình mặc định.",
+      "modelNeedsProvider": "Chọn nhà cung cấp trước rồi mới ghi được tên mô hình.",
+      "modelPlaceholder": "Mô hình mặc định",
+      "temperatureHint": "Từ 0 đến 2. Thấp thì trả lời ổn định, cao thì đa dạng hơn.",
+      "tokensHint": "Từ 1 đến 32.000 đơn vị cho mỗi câu trả lời.",
+      "promptHint": "{{count}}/{{max}} ký tự. Không ghi địa chỉ thư, số điện thoại hay thông tin của một người cụ thể.",
+      "piiSummary": "Tìm thấy {{count}} đoạn ({{kinds}}). Các đoạn được tô đỏ bên dưới; hãy xóa chúng trong ô soạn rồi lưu lại.",
+      "piiPreview": "Đoạn chứa dữ liệu cá nhân",
+      "versionHint": "Mỗi lần lưu tạo một phiên bản nháp mới, không sửa phiên bản cũ.",
+      "save": "Lưu thành bản nháp",
+      "saved": "Đã lưu phiên bản nháp {{version}}."
+    },
+    "pii": {
+      "EMAIL": "địa chỉ thư điện tử",
+      "PHONE": "số điện thoại"
+    },
+    "errors": {
+      "AI_CONFIG_PROMPT_HAS_PII": "Chưa lưu được: lời nhắc hệ thống chứa dữ liệu cá nhân.",
+      "AI_CONFIG_PROVIDER_INVALID": "Nhà cung cấp không tồn tại hoặc không hỗ trợ sinh văn bản.",
+      "AI_CONFIG_PROVIDER_UNAVAILABLE": "Chưa phát hành được: nhà cung cấp của phiên bản này đang tắt hoặc chưa xác nhận không huấn luyện. Bật nhà cung cấp ở trang Dịch vụ AI hoặc lưu phiên bản mới theo định tuyến.",
+      "AI_CONFIG_TRIAL_REQUIRED": "Hãy thử phiên bản này với một câu hỏi mẫu trước khi phát hành.",
+      "AI_CONFIG_NOT_PUBLISHABLE": "Phiên bản này đang phát hành hoặc đã bị thu hồi nên không phát hành được.",
+      "AI_CONFIG_NO_PREVIOUS_VERSION": "Chưa có phiên bản phát hành trước đó để quay lại.",
+      "VALIDATION_FAILED": "Thông tin chưa hợp lệ. Nhiệt độ từ 0 đến 2, độ dài từ 1 đến 32.000 và lời nhắc không được để trống.",
+      "NOT_FOUND": "Không tìm thấy phiên bản này, hãy tải lại trang."
+    },
+    "trial": {
+      "title": "Thử nhanh",
+      "subtitle": "Chạy một câu hỏi mẫu trên bộ nguồn mẫu với đúng cấu hình của phiên bản đã chọn. Nguồn mẫu là kiến thức phổ thông viết sẵn, không lấy từ tài liệu của người học.",
+      "version": "Phiên bản thử",
+      "sampleSet": "Bộ nguồn mẫu",
+      "sources_one": "Xem {{count}} nguồn mẫu",
+      "sources_other": "Xem {{count}} nguồn mẫu",
+      "question": "Câu hỏi mẫu",
+      "run": "Thử phiên bản {{version}}",
+      "runNone": "Chọn phiên bản để thử",
+      "waiting": "Đang chờ câu trả lời…",
+      "empty": "Câu trả lời sẽ hiện ở đây.",
+      "done": "Phiên bản {{version}} trả lời qua {{provider}}: {{input}} đơn vị vào, {{output}} đơn vị ra."
+    },
+    "publish": {
+      "action": "Phát hành phiên bản {{version}}",
+      "again": "Phát hành lại phiên bản {{version}}",
+      "confirmTitle": "Phát hành phiên bản {{version}}?",
+      "confirmBody": "Mọi lời gọi mới của {{feature}} sẽ dùng phiên bản {{version}} ngay. Phiên bản {{current}} chuyển sang đã được thay và vẫn quay lại được.",
+      "confirm": "Phát hành",
+      "done": "{{feature}} đang chạy phiên bản {{version}}."
+    },
+    "rollback": {
+      "action": "Quay lại phiên bản {{version}}",
+      "actionNone": "Quay lại phiên bản trước",
+      "unavailable": "Chưa có phiên bản phát hành trước đó.",
+      "confirmTitle": "Quay lại phiên bản trước?",
+      "confirmBody": "Phiên bản {{current}} sẽ bị thu hồi và phiên bản {{previous}} được phát hành lại ngay cho mọi lời gọi mới.",
+      "confirm": "Quay lại",
+      "done": "Đã quay lại: {{feature}} đang chạy phiên bản {{version}}."
+    },
+    "live": {
+      "publishedAt": "Phát hành",
+      "publishedBy": "{{who}} lúc {{time}}",
+      "showPrompt": "Xem lời nhắc hệ thống đang chạy"
+    },
+    "diff": {
+      "title": "Khác biệt giữa hai phiên bản",
+      "subtitle": "Tham số đổi giá trị và lời nhắc theo từng dòng: dòng thêm nền xanh, dòng bỏ nền đỏ.",
+      "from": "Phiên bản cũ",
+      "to": "Phiên bản mới",
+      "same": "Hãy chọn hai phiên bản khác nhau.",
+      "failed": "Chưa so sánh được hai phiên bản này.",
+      "empty": "(trống)",
+      "fields": "Tham số",
+      "noFieldChanges": "Tham số giữ nguyên.",
+      "becomes": "đổi thành",
+      "noPromptChanges": "Lời nhắc giữ nguyên.",
+      "line": {
+        "ADDED": "Thêm:",
+        "REMOVED": "Bỏ:"
+      }
+    },
+    "history": {
+      "title": "Lịch sử phiên bản",
+      "subtitle": "Mọi phiên bản được giữ lại, mới nhất trước, cùng người lưu, người phát hành và thời điểm.",
+      "unknownActor": "Quản trị viên",
+      "system": "Hệ thống",
+      "basedOn": "dựa trên phiên bản {{version}}",
+      "created": "Lưu bởi {{who}} lúc {{time}}",
+      "tried": "Đã thử lúc {{time}}",
+      "published": "Phát hành bởi {{who}} lúc {{time}}",
+      "wasPublished": "Từng phát hành bởi {{who}} lúc {{time}}",
+      "revoked": "Thu hồi bởi {{who}} lúc {{time}}",
+      "edit": "Sửa từ bản này",
+      "editLabel": "Soạn phiên bản mới từ phiên bản {{version}}",
+      "trial": "Thử",
+      "trialLabel": "Thử phiên bản {{version}}",
+      "compare": "So với bản đang chạy",
+      "compareLabel": "So sánh phiên bản {{version}} với phiên bản đang chạy"
     }
   }
 }

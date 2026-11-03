@@ -83,7 +83,8 @@ public class AiGateway {
      */
     public ChatResult streamText(String feature, ChatRequest request, Consumer<ChatChunk> onChunk) {
         Objects.requireNonNull(onChunk, "onChunk");
-        return execute(AiCapability.TEXT_GENERATION, feature, ChatResult::usage, ChatResult::withProvider,
+        return execute(AiCapability.TEXT_GENERATION, feature, request.tuning(), ChatResult::usage,
+                ChatResult::withProvider,
                 (adapter, provider, attempt) -> adapter.streamText(provider, request, chunk -> {
                     if (attempt.deliver()) {
                         onChunk.accept(chunk);
@@ -92,17 +93,20 @@ public class AiGateway {
     }
 
     public EmbeddingResult embed(String feature, EmbeddingRequest request) {
-        return execute(AiCapability.EMBEDDING, feature, EmbeddingResult::usage, EmbeddingResult::withProvider,
+        return execute(AiCapability.EMBEDDING, feature, ChatRequest.Tuning.NONE, EmbeddingResult::usage,
+                EmbeddingResult::withProvider,
                 (adapter, provider, attempt) -> adapter.embed(provider, request), false);
     }
 
     public ChatResult describeImage(String feature, VisionRequest request) {
-        return execute(AiCapability.VISION, feature, ChatResult::usage, ChatResult::withProvider,
+        return execute(AiCapability.VISION, feature, ChatRequest.Tuning.NONE, ChatResult::usage,
+                ChatResult::withProvider,
                 (adapter, provider, attempt) -> adapter.describeImage(provider, request), false);
     }
 
     public OcrResult recognizeText(String feature, VisionRequest request) {
-        return execute(AiCapability.OCR, feature, OcrResult::usage, OcrResult::withProvider,
+        return execute(AiCapability.OCR, feature, ChatRequest.Tuning.NONE, OcrResult::usage,
+                OcrResult::withProvider,
                 (adapter, provider, attempt) -> adapter.recognizeText(provider, request), false);
     }
 
@@ -116,8 +120,9 @@ public class AiGateway {
         T call(AiProviderAdapter adapter, ProviderDescriptor provider, Attempt attempt);
     }
 
-    private <T> T execute(AiCapability capability, String feature, Function<T, AiUsage> usageOf,
-                          ProviderCallResultNamer<T> namer, ProviderCall<T> call, boolean streaming) {
+    private <T> T execute(AiCapability capability, String feature, ChatRequest.Tuning tuning,
+                          Function<T, AiUsage> usageOf, ProviderCallResultNamer<T> namer, ProviderCall<T> call,
+                          boolean streaming) {
         if (feature == null || !FEATURE.matcher(feature).matches()) {
             throw new IllegalArgumentException("Mã chức năng không hợp lệ: " + feature);
         }
@@ -125,6 +130,19 @@ public class AiGateway {
         AiCapabilityRoute route = routes.findById(capability).orElse(null);
         AiProviderConfig primary = route == null ? null : load(route.getPrimaryProviderId());
         AiProviderConfig fallback = route == null ? null : load(route.getFallbackProviderId());
+        // Cấu hình của chức năng chọn nhà cung cấp khác định tuyến (NCL-04-CN-002): nhà cung cấp đó lên làm chính,
+        // nhà cung cấp chính của định tuyến lùi xuống làm dự phòng. Nhà cung cấp ưu tiên không dùng được thì bỏ qua.
+        AiProviderConfig preferred = tuning.providerCode() == null ? null
+                : providers.findByCode(tuning.providerCode()).orElse(null);
+        if (route != null && usable(preferred, capability) && (primary == null
+                || !preferred.getId().equals(primary.getId()))) {
+            fallback = usable(primary, capability) ? primary : fallback;
+            primary = preferred;
+            if (fallback != null && fallback.getId().equals(primary.getId())) {
+                fallback = null;
+            }
+        }
+        Integer configVersion = tuning.configVersion();
         Duration openFor = route == null ? Duration.ZERO : Duration.ofSeconds(route.getBreakerOpenSeconds());
 
         AiProviderConfig current;
@@ -135,8 +153,8 @@ public class AiGateway {
             current = fallback;
             usedFallback = true;
         } else {
-            meter.record(capability, feature, null, AiCallRecord.Outcome.UNAVAILABLE, false, 0, AiUsage.NONE,
-                    elapsedMs(started), "NO_PROVIDER");
+            meter.record(capability, feature, configVersion, null, AiCallRecord.Outcome.UNAVAILABLE, false, 0,
+                    AiUsage.NONE, elapsedMs(started), "NO_PROVIDER");
             throw unavailable(capability);
         }
 
@@ -149,13 +167,13 @@ public class AiGateway {
             attemptsOnCurrent++;
             Attempt attempt = new Attempt();
             AiProviderConfig provider = current;
-            Future<T> future = calls.submit(() -> call.call(adapterFor(provider), describe(provider, capability),
-                    attempt));
+            Future<T> future = calls.submit(() -> call.call(adapterFor(provider),
+                    describe(provider, capability, tuning), attempt));
             try {
                 T result = future.get(route.getTimeoutSeconds(), TimeUnit.SECONDS);
                 breakers.recordSuccess(capability, provider.getCode());
-                meter.record(capability, feature, provider, AiCallRecord.Outcome.SUCCESS, usedFallback, attempts,
-                        usageOf.apply(result), elapsedMs(started), null);
+                meter.record(capability, feature, configVersion, provider, AiCallRecord.Outcome.SUCCESS,
+                        usedFallback, attempts, usageOf.apply(result), elapsedMs(started), null);
                 return namer.withProvider(result, provider.getCode());
             } catch (TimeoutException ex) {
                 attempt.close();
@@ -199,7 +217,7 @@ public class AiGateway {
                 break;
             }
         }
-        meter.record(capability, feature, current,
+        meter.record(capability, feature, configVersion, current,
                 "TIMEOUT".equals(lastError) ? AiCallRecord.Outcome.TIMEOUT : AiCallRecord.Outcome.FAILURE,
                 usedFallback, attempts, AiUsage.NONE, elapsedMs(started), lastError);
         throw unavailable(capability);
@@ -253,7 +271,12 @@ public class AiGateway {
         return adapter;
     }
 
-    private ProviderDescriptor describe(AiProviderConfig provider, AiCapability capability) {
+    /**
+     * Mô hình ghi trong cấu hình chỉ áp cho đúng nhà cung cấp ưu tiên: tên mô hình riêng của từng nhà cung cấp, nên khi
+     * chuyển dự phòng thì dùng mô hình mặc định của nhà cung cấp dự phòng.
+     */
+    private ProviderDescriptor describe(AiProviderConfig provider, AiCapability capability,
+                                        ChatRequest.Tuning tuning) {
         String secret = null;
         if (provider.getAdapter().requiresSecret()) {
             secret = secrets.resolve(provider.getSecretName());
@@ -261,8 +284,10 @@ public class AiGateway {
                 throw new ProviderCallException("SECRET_MISSING", "Kho bí mật chưa có khóa của " + provider.getCode());
             }
         }
-        return new ProviderDescriptor(provider.getCode(), provider.getAdapter(), provider.getBaseUrl(),
-                provider.getTextModel(), provider.getEmbeddingModel(), provider.getVisionModel(), secret);
+        String textModel = tuning.model() != null && !tuning.model().isBlank()
+                && provider.getCode().equals(tuning.providerCode()) ? tuning.model() : provider.getTextModel();
+        return new ProviderDescriptor(provider.getCode(), provider.getAdapter(), provider.getBaseUrl(), textModel,
+                provider.getEmbeddingModel(), provider.getVisionModel(), secret);
     }
 
     private static BusinessException unavailable(AiCapability capability) {

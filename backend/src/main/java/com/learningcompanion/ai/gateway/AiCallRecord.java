@@ -34,6 +34,10 @@ public class AiCallRecord {
     @Column(nullable = false, length = 60)
     private String feature;
 
+    /** Phiên bản cấu hình của chức năng mà lời gọi chạy theo (NCL-04-CN-002); trống với lời gọi không theo cấu hình. */
+    @Column(name = "config_version")
+    private Integer configVersion;
+
     @Column(name = "provider_code", length = 40)
     private String providerCode;
 
@@ -65,13 +69,14 @@ public class AiCallRecord {
     protected AiCallRecord() {
     }
 
-    public AiCallRecord(Instant occurredAt, AiCapability capability, String feature, String providerCode,
-                        Outcome outcome, boolean usedFallback, int attempts, int inputUnits, int outputUnits,
-                        int latencyMs, long costMicroUsd, String errorCode) {
+    public AiCallRecord(Instant occurredAt, AiCapability capability, String feature, Integer configVersion,
+                        String providerCode, Outcome outcome, boolean usedFallback, int attempts, int inputUnits,
+                        int outputUnits, int latencyMs, long costMicroUsd, String errorCode) {
         this.id = UUID.randomUUID();
         this.occurredAt = occurredAt;
         this.capability = capability;
         this.feature = feature;
+        this.configVersion = configVersion;
         this.providerCode = providerCode;
         this.outcome = outcome;
         this.usedFallback = usedFallback;
@@ -97,6 +102,10 @@ public class AiCallRecord {
 
     public String getFeature() {
         return feature;
+    }
+
+    public Integer getConfigVersion() {
+        return configVersion;
     }
 
     public String getProviderCode() {

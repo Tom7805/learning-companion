@@ -1,5 +1,6 @@
 package com.learningcompanion.devtools;
 
+import com.learningcompanion.ai.config.application.AiConfigService;
 import com.learningcompanion.ai.gateway.CircuitBreakerRegistry;
 import com.learningcompanion.ai.provider.mock.MockAiAdapter;
 import com.learningcompanion.shared.web.ApiPaths;
@@ -30,11 +31,14 @@ public class DevAiGatewayController {
     private final MockAiAdapter mock;
     private final CircuitBreakerRegistry breakers;
     private final JdbcTemplate jdbc;
+    private final AiConfigService configs;
 
-    public DevAiGatewayController(MockAiAdapter mock, CircuitBreakerRegistry breakers, JdbcTemplate jdbc) {
+    public DevAiGatewayController(MockAiAdapter mock, CircuitBreakerRegistry breakers, JdbcTemplate jdbc,
+                                  AiConfigService configs) {
         this.mock = mock;
         this.breakers = breakers;
         this.jdbc = jdbc;
+        this.configs = configs;
     }
 
     /** Chế độ của một nhà cung cấp mô phỏng: OK, FAIL (lỗi ngay) hoặc HANG (không phản hồi). */
@@ -61,6 +65,18 @@ public class DevAiGatewayController {
                 + "breaker_open_seconds = 60, updated_at = now()", PRIMARY, BACKUP);
         jdbc.update("update ai_providers set enabled = false where id not in (?::uuid, ?::uuid)", PRIMARY, BACKUP);
         jdbc.update("update ai_gateway_alerts set acknowledged_at = now() where acknowledged_at is null");
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Xóa mọi phiên bản cấu hình chức năng (NCL-04-CN-002) rồi đăng ký lại phiên bản 1 từ giá trị gốc, để kiểm thử
+     * đầu cuối bắt đầu từ cùng một lịch sử.
+     */
+    @PostMapping("/configs/reset")
+    @Transactional
+    public ResponseEntity<Void> resetConfigs() {
+        jdbc.update("delete from ai_config_versions");
+        configs.registerFeatures();
         return ResponseEntity.noContent().build();
     }
 }

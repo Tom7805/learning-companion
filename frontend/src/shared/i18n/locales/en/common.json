@@ -984,7 +984,8 @@
     "nav": {
       "audit": "Audit log",
       "home": "Administration",
-      "ai": "AI services"
+      "ai": "AI services",
+      "aiConfig": "AI configuration"
     },
     "forbidden": {
       "title": "This page is for administrators only",
@@ -1085,7 +1086,8 @@
       "ENDPOINT": "System page",
       "AUDIT_LOG": "Audit log",
       "AI_PROVIDER": "AI provider",
-      "AI_ROUTE": "AI routing"
+      "AI_ROUTE": "AI routing",
+      "AI_CONFIG": "AI configuration"
     },
     "actions": {
       "ACCOUNT_REGISTERED": "Account registered",
@@ -1142,7 +1144,12 @@
       "AI_ROUTE_CHANGED": "AI routing changed",
       "AI_FAILOVER_SWITCHED": "AI failover switched",
       "AI_CIRCUIT_OPENED": "AI provider circuit opened",
-      "AI_ALERT_ACKNOWLEDGED": "AI alert acknowledged"
+      "AI_ALERT_ACKNOWLEDGED": "AI alert acknowledged",
+      "AI_CONFIG_REGISTERED": "AI configuration registered",
+      "AI_CONFIG_DRAFT_SAVED": "AI configuration draft saved",
+      "AI_CONFIG_SAVE_REJECTED": "AI configuration with personal data blocked",
+      "AI_CONFIG_PUBLISHED": "AI configuration published",
+      "AI_CONFIG_ROLLED_BACK": "AI configuration rolled back"
     }
   },
   "adminLogin": {
@@ -1395,6 +1402,145 @@
       "noContent": "Numbers only: the gateway never records prompts or answers.",
       "viaFallback": "via fallback",
       "callFacts": "{{input}}/{{output}} units · {{latency}} ms · {{attempts}} attempts"
+    }
+  },
+  "aiConfig": {
+    "title": "Model and prompt configuration",
+    "subtitle": "Each AI feature has its own configuration: provider, model, temperature, maximum length and system prompt. Every save creates a new draft version; only the published version serves learners, and rolling back takes one click.",
+    "loadFailed": "Could not load the configuration. Please try again.",
+    "featuresLabel": "AI features",
+    "featureLive": "Running version {{version}}",
+    "featureNone": "No version is published yet.",
+    "drafts_one": "{{count}} draft",
+    "drafts_other": "{{count}} drafts",
+    "versionName": "Version {{version}}",
+    "defaultModel": "Provider's default model",
+    "summary": "{{provider}} · {{model}} · temperature {{temperature}} · up to {{tokens}} units",
+    "features": {
+      "ASSISTANT_CHAT": {
+        "name": "Study assistant",
+        "hint": "Answers questions from the learner's documents, with cited sources."
+      },
+      "ADMIN_TEST": {
+        "name": "Admin test call",
+        "hint": "Used by the test call on the AI services page to check that a provider still answers."
+      }
+    },
+    "status": {
+      "DRAFT": "Draft",
+      "PUBLISHED": "Published",
+      "SUPERSEDED": "Superseded",
+      "REVOKED": "Revoked"
+    },
+    "fields": {
+      "providerCode": "Provider",
+      "model": "Model",
+      "temperature": "Temperature",
+      "maxOutputTokens": "Maximum length",
+      "systemPrompt": "System prompt"
+    },
+    "editor": {
+      "title": "Draft a new version",
+      "subtitle": "Based on version {{version}}. The running version does not change until you publish.",
+      "providerHint": "Follow routing to let the gateway pick the primary and fallback provider.",
+      "followRoute": "Follow gateway routing",
+      "providerOff": "disabled",
+      "modelHint": "Model name on the selected provider. Leave empty to use its default model.",
+      "modelNeedsProvider": "Choose a provider first to set a model name.",
+      "modelPlaceholder": "Default model",
+      "temperatureHint": "From 0 to 2. Lower is steadier, higher is more varied.",
+      "tokensHint": "From 1 to 32,000 units per answer.",
+      "promptHint": "{{count}}/{{max}} characters. Do not include email addresses, phone numbers or details about a specific person.",
+      "piiSummary": "Found {{count}} passage(s) ({{kinds}}). They are highlighted below; remove them in the editor and save again.",
+      "piiPreview": "Passages with personal data",
+      "versionHint": "Every save creates a new draft version and never edits an old one.",
+      "save": "Save as draft",
+      "saved": "Saved draft version {{version}}."
+    },
+    "pii": {
+      "EMAIL": "email address",
+      "PHONE": "phone number"
+    },
+    "errors": {
+      "AI_CONFIG_PROMPT_HAS_PII": "Not saved: the system prompt contains personal data.",
+      "AI_CONFIG_PROVIDER_INVALID": "The provider does not exist or does not support text generation.",
+      "AI_CONFIG_PROVIDER_UNAVAILABLE": "Cannot publish: this version's provider is disabled or has no no-training confirmation. Enable it on the AI services page or save a new version that follows routing.",
+      "AI_CONFIG_TRIAL_REQUIRED": "Try this version with a sample question before publishing.",
+      "AI_CONFIG_NOT_PUBLISHABLE": "This version is already published or was revoked, so it cannot be published.",
+      "AI_CONFIG_NO_PREVIOUS_VERSION": "There is no previously published version to roll back to.",
+      "VALIDATION_FAILED": "Invalid values. Temperature is 0 to 2, length is 1 to 32,000 and the prompt cannot be empty.",
+      "NOT_FOUND": "This version was not found. Reload the page."
+    },
+    "trial": {
+      "title": "Quick trial",
+      "subtitle": "Run a sample question over a sample source set with exactly the selected version's configuration. Sample sources are prewritten general knowledge, never learner documents.",
+      "version": "Version to try",
+      "sampleSet": "Sample sources",
+      "sources_one": "Show {{count}} sample source",
+      "sources_other": "Show {{count}} sample sources",
+      "question": "Sample question",
+      "run": "Try version {{version}}",
+      "runNone": "Choose a version to try",
+      "waiting": "Waiting for the answer…",
+      "empty": "The answer will appear here.",
+      "done": "Version {{version}} answered via {{provider}}: {{input}} units in, {{output}} units out."
+    },
+    "publish": {
+      "action": "Publish version {{version}}",
+      "again": "Republish version {{version}}",
+      "confirmTitle": "Publish version {{version}}?",
+      "confirmBody": "Every new {{feature}} call will use version {{version}} right away. Version {{current}} becomes superseded and can still be restored.",
+      "confirm": "Publish",
+      "done": "{{feature}} is now running version {{version}}."
+    },
+    "rollback": {
+      "action": "Roll back to version {{version}}",
+      "actionNone": "Roll back",
+      "unavailable": "There is no previously published version.",
+      "confirmTitle": "Roll back to the previous version?",
+      "confirmBody": "Version {{current}} will be revoked and version {{previous}} republished right away for every new call.",
+      "confirm": "Roll back",
+      "done": "Rolled back: {{feature}} is running version {{version}}."
+    },
+    "live": {
+      "publishedAt": "Published",
+      "publishedBy": "{{who}} at {{time}}",
+      "showPrompt": "Show the running system prompt"
+    },
+    "diff": {
+      "title": "Compare two versions",
+      "subtitle": "Changed settings and the prompt line by line: added lines in green, removed lines in red.",
+      "from": "Older version",
+      "to": "Newer version",
+      "same": "Choose two different versions.",
+      "failed": "Could not compare these versions.",
+      "empty": "(empty)",
+      "fields": "Settings",
+      "noFieldChanges": "Settings unchanged.",
+      "becomes": "becomes",
+      "noPromptChanges": "Prompt unchanged.",
+      "line": {
+        "ADDED": "Added:",
+        "REMOVED": "Removed:"
+      }
+    },
+    "history": {
+      "title": "Version history",
+      "subtitle": "Every version is kept, newest first, with who saved and published it and when.",
+      "unknownActor": "Administrator",
+      "system": "System",
+      "basedOn": "based on version {{version}}",
+      "created": "Saved by {{who}} at {{time}}",
+      "tried": "Tried at {{time}}",
+      "published": "Published by {{who}} at {{time}}",
+      "wasPublished": "Previously published by {{who}} at {{time}}",
+      "revoked": "Revoked by {{who}} at {{time}}",
+      "edit": "Edit from here",
+      "editLabel": "Draft a new version from version {{version}}",
+      "trial": "Try",
+      "trialLabel": "Try version {{version}}",
+      "compare": "Compare with live",
+      "compareLabel": "Compare version {{version}} with the running version"
     }
   }
 }

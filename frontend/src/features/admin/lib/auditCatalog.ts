@@ -60,6 +60,11 @@ export const AUDIT_ACTIONS: Record<AuditCategory, string[]> = {
     'AI_FAILOVER_SWITCHED',
     'AI_CIRCUIT_OPENED',
     'AI_ALERT_ACKNOWLEDGED',
+    'AI_CONFIG_REGISTERED',
+    'AI_CONFIG_DRAFT_SAVED',
+    'AI_CONFIG_SAVE_REJECTED',
+    'AI_CONFIG_PUBLISHED',
+    'AI_CONFIG_ROLLED_BACK',
   ],
 }
 
@@ -80,6 +85,7 @@ export const AUDIT_OBJECT_TYPES = [
   'AUDIT_LOG',
   'AI_PROVIDER',
   'AI_ROUTE',
+  'AI_CONFIG',
 ]
 
 export function isAuditCategory(value: string | null | undefined): value is AuditCategory {
