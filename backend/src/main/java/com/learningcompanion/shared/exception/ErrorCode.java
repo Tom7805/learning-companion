@@ -65,6 +65,22 @@ public enum ErrorCode {
     ADMIN_LOGIN_LOCKED(HttpStatus.LOCKED, "Đăng nhập quản trị đang tạm khóa do nhập sai mã xác thực nhiều lần."),
     /** Hệ thống chỉ có một quản trị viên (NCL-03-CN-002 TC-04). */
     ADMIN_ALREADY_EXISTS(HttpStatus.CONFLICT, "Hệ thống đã có quản trị viên và chỉ cho phép một quản trị viên."),
+    /** Lớp kết nối trí tuệ nhân tạo đã thử lại và chuyển dự phòng mà vẫn lỗi; chức năng gọi thử lại sau (NCL-04-CN-001). */
+    AI_TEMPORARILY_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE,
+            "Dịch vụ trí tuệ nhân tạo đang tạm gián đoạn, hãy thử lại sau ít phút."),
+    /** Chỉ bật được nhà cung cấp đã xác nhận cam kết không huấn luyện trên dữ liệu (QTN-11, NCL-04-CN-001 TC-04). */
+    AI_PROVIDER_TRAINING_NOT_CONFIRMED(HttpStatus.CONFLICT,
+            "Chưa bật được: cần xác nhận nhà cung cấp đã cam kết không dùng dữ liệu học tập để huấn luyện mô hình."),
+    AI_PROVIDER_SECRET_MISSING(HttpStatus.CONFLICT,
+            "Chưa bật được: kho bí mật chưa có khóa với tên đã khai báo cho nhà cung cấp này."),
+    AI_PROVIDER_INCOMPLETE(HttpStatus.CONFLICT, "Chưa bật được: thiếu địa chỉ dịch vụ hoặc tên mô hình."),
+    AI_PROVIDER_CODE_TAKEN(HttpStatus.CONFLICT, "Mã nhà cung cấp này đã được dùng."),
+    /** Nhà cung cấp đang là nhà cung cấp chính của một khả năng: đổi định tuyến trước rồi mới tắt được. */
+    AI_PROVIDER_IN_USE(HttpStatus.CONFLICT,
+            "Nhà cung cấp đang được dùng trong định tuyến. Hãy đổi định tuyến trước."),
+    AI_ROUTE_INVALID(HttpStatus.BAD_REQUEST,
+            "Nhà cung cấp chính và dự phòng phải khác nhau, đang bật và hỗ trợ khả năng này."),
+    AI_NO_FALLBACK(HttpStatus.CONFLICT, "Khả năng này chưa có nhà cung cấp dự phòng đang bật."),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Hệ thống gặp sự cố, hãy thử lại sau.");
 
     private final HttpStatus status;

@@ -983,7 +983,8 @@
     "navLabel": "Các trang quản trị",
     "nav": {
       "audit": "Nhật ký thao tác",
-      "home": "Khu quản trị"
+      "home": "Khu quản trị",
+      "ai": "Dịch vụ AI"
     },
     "forbidden": {
       "title": "Trang này chỉ dành cho quản trị viên",
@@ -1082,7 +1083,9 @@
       "NOTIFICATION": "Thông báo",
       "UI_PREFERENCES": "Tùy chọn giao diện",
       "ENDPOINT": "Trang của hệ thống",
-      "AUDIT_LOG": "Nhật ký thao tác"
+      "AUDIT_LOG": "Nhật ký thao tác",
+      "AI_PROVIDER": "Nhà cung cấp AI",
+      "AI_ROUTE": "Định tuyến AI"
     },
     "actions": {
       "ACCOUNT_REGISTERED": "Đăng ký tài khoản",
@@ -1130,7 +1133,16 @@
       "ADMIN_TWO_FACTOR_LOCKED": "Khóa đăng nhập quản trị",
       "ADMIN_RECOVERY_CODE_USED": "Dùng mã khôi phục",
       "ADMIN_ACCOUNT_CREATED": "Tạo tài khoản quản trị viên",
-      "ADMIN_CREATION_REJECTED": "Từ chối tạo thêm quản trị viên"
+      "ADMIN_CREATION_REJECTED": "Từ chối tạo thêm quản trị viên",
+      "AI_PROVIDER_CREATED": "Thêm nhà cung cấp AI",
+      "AI_PROVIDER_UPDATED": "Sửa nhà cung cấp AI",
+      "AI_PROVIDER_ENABLED": "Bật nhà cung cấp AI",
+      "AI_PROVIDER_DISABLED": "Tắt nhà cung cấp AI",
+      "AI_PROVIDER_ENABLE_REJECTED": "Từ chối bật nhà cung cấp AI",
+      "AI_ROUTE_CHANGED": "Đổi định tuyến AI",
+      "AI_FAILOVER_SWITCHED": "Chuyển dự phòng AI",
+      "AI_CIRCUIT_OPENED": "Ngắt mạch nhà cung cấp AI",
+      "AI_ALERT_ACKNOWLEDGED": "Xác nhận cảnh báo AI"
     }
   },
   "adminLogin": {
@@ -1199,6 +1211,190 @@
     "expired": {
       "title": "Bước xác thực đã hết hạn",
       "body": "Vì an toàn, bước nhập mã chỉ có hiệu lực vài phút sau khi nhập mật khẩu. Hãy đăng nhập lại từ đầu."
+    }
+  },
+  "aiGateway": {
+    "title": "Dịch vụ trí tuệ nhân tạo",
+    "subtitle": "Mọi lời gọi mô hình đi qua một lớp kết nối chung: mỗi khả năng có nhà cung cấp chính và dự phòng, thời gian chờ, số lần thử lại và ngắt mạch khi lỗi liên tiếp. Mỗi lời gọi được đo đơn vị, độ trễ và chi phí, không ghi nội dung.",
+    "loadFailed": "Không tải được cấu hình lớp kết nối.",
+    "cancel": "Hủy",
+    "alerts": {
+      "title": "Cảnh báo ngắt mạch",
+      "body": "{{provider}} lỗi liên tiếp khi {{capability}} nên đã bị ngắt mạch lúc {{time}}. Lời gọi đang chuyển sang {{fallback}}.",
+      "bodyNoFallback": "{{provider}} lỗi liên tiếp khi {{capability}} nên đã bị ngắt mạch lúc {{time}}. Khả năng này chưa có dự phòng nên người học đang nhận lỗi tạm thời.",
+      "acknowledge": "Đã xem"
+    },
+    "routes": {
+      "title": "Định tuyến theo khả năng",
+      "subtitle": "Chức năng chỉ gọi khả năng, không gọi thẳng nhà cung cấp. Đổi nhà cung cấp hay chuyển dự phòng ở đây không cần sửa chức năng nào."
+    },
+    "providers": {
+      "title": "Nhà cung cấp",
+      "subtitle": "Chỉ nhà cung cấp đã xác nhận cam kết không dùng dữ liệu học tập để huấn luyện mô hình mới bật được. Khóa bí mật nằm trong kho bí mật của máy chủ, ở đây chỉ khai báo tên khóa."
+    },
+    "capabilities": {
+      "TEXT_GENERATION": "Sinh văn bản",
+      "EMBEDDING": "Biểu diễn ngữ nghĩa",
+      "VISION": "Đọc hình ảnh",
+      "OCR": "Nhận dạng chữ"
+    },
+    "capabilityHints": {
+      "TEXT_GENERATION": "Trả lời theo luồng cho trợ lý, tóm tắt, tạo câu hỏi.",
+      "EMBEDDING": "Vector cho tìm kiếm theo nghĩa trong kho tài liệu.",
+      "VISION": "Mô tả hình, sơ đồ, ảnh chụp bài tập.",
+      "OCR": "Lấy chữ từ ảnh chụp và tài liệu quét."
+    },
+    "adapters": {
+      "MOCK": "Bản mô phỏng",
+      "OPENAI_COMPATIBLE": "Giao diện kiểu OpenAI",
+      "ANTHROPIC": "Anthropic Messages"
+    },
+    "circuit": {
+      "CLOSED": "Hoạt động bình thường",
+      "HALF_OPEN": "Đang thử lại",
+      "OPEN": "Đã ngắt mạch",
+      "retryAt": "thử lại lúc {{time}}",
+      "failures_one": "{{count}} lỗi gần đây",
+      "failures_other": "{{count}} lỗi gần đây"
+    },
+    "outcomes": {
+      "SUCCESS": "Thành công",
+      "FAILURE": "Lỗi",
+      "TIMEOUT": "Quá hạn",
+      "UNAVAILABLE": "Không có nhà cung cấp"
+    },
+    "route": {
+      "primary": "Chính",
+      "fallback": "Dự phòng",
+      "noFallback": "Chưa có dự phòng",
+      "timeout": "Thời gian chờ",
+      "retries": "Thử lại",
+      "breaker": "Ngắt mạch",
+      "seconds_one": "{{count}} giây",
+      "seconds_other": "{{count}} giây",
+      "retryCount_one": "{{count}} lần",
+      "retryCount_other": "{{count}} lần",
+      "breakerSummary": "{{failures}} lỗi trong {{window}} giây, ngắt {{open}} giây",
+      "edit": "Sửa",
+      "editLabel": "Sửa định tuyến {{capability}}",
+      "switch": "Chuyển sang dự phòng",
+      "switchLabel": "Chuyển {{capability}} sang dự phòng",
+      "switchTitle": "Chuyển {{capability}} sang dự phòng?",
+      "switchBody": "{{to}} sẽ thành nhà cung cấp chính, {{from}} lùi xuống làm dự phòng. Lời gọi mới đi tới nhà cung cấp mới ngay. Thao tác được ghi vào nhật ký.",
+      "switchConfirm": "Chuyển ngay",
+      "switched": "Đã chuyển {{capability}} sang {{provider}}.",
+      "editTitle": "Định tuyến {{capability}}",
+      "dialogHint": "Chỉ chọn được nhà cung cấp đang bật, đã xác nhận không huấn luyện và hỗ trợ khả năng này.",
+      "save": "Lưu định tuyến",
+      "saved": "Đã lưu định tuyến {{capability}}.",
+      "fields": {
+        "timeoutSeconds": "Thời gian chờ (giây)",
+        "maxRetries": "Số lần thử lại",
+        "breakerFailureThreshold": "Số lỗi liên tiếp",
+        "breakerWindowSeconds": "Trong khoảng (giây)",
+        "breakerOpenSeconds": "Ngắt trong (giây)"
+      }
+    },
+    "provider": {
+      "add": "Thêm nhà cung cấp",
+      "addTitle": "Thêm nhà cung cấp",
+      "editTitle": "Sửa nhà cung cấp",
+      "dialogHint": "Nhà cung cấp mới thêm ở trạng thái tắt. Bật sau khi đã đặt khóa vào kho bí mật và xác nhận cam kết.",
+      "edit": "Sửa",
+      "editLabel": "Sửa {{name}}",
+      "save": "Lưu thay đổi",
+      "created": "Đã thêm {{name}}.",
+      "updated": "Đã lưu {{name}}.",
+      "enabled": "Đã bật {{name}}.",
+      "disabled": "Đã tắt {{name}}.",
+      "on": "Bật",
+      "off": "Tắt",
+      "toggleLabel": "Bật hoặc tắt {{name}}",
+      "displayName": "Tên hiển thị",
+      "code": "Mã",
+      "codeHint": "Chữ thường, số và gạch nối; không đổi được sau khi thêm.",
+      "adapter": "Kiểu kết nối",
+      "baseUrl": "Địa chỉ dịch vụ",
+      "baseUrlOptional": "Để trống để dùng địa chỉ mặc định.",
+      "capabilities": "Khả năng",
+      "capabilitiesRequired": "Chọn ít nhất một khả năng.",
+      "textModel": "Mô hình sinh văn bản",
+      "embeddingModel": "Mô hình biểu diễn",
+      "visionModel": "Mô hình đọc hình",
+      "secretName": "Tên khóa trong kho bí mật",
+      "secretHint": "Ví dụ LC_AI_OPENAI_KEY. Giá trị khóa đặt trên máy chủ, không nhập ở đây.",
+      "inputPrice": "Giá đầu vào (USD / 1 triệu đơn vị)",
+      "outputPrice": "Giá đầu ra (USD / 1 triệu đơn vị)",
+      "noTrainingTitle": "Cam kết không huấn luyện trên dữ liệu",
+      "noTrainingLabel": "Tôi đã kiểm tra hợp đồng hoặc điều khoản: nhà cung cấp cam kết không dùng dữ liệu gửi tới để huấn luyện mô hình.",
+      "noTrainingYes": "Đã xác nhận không huấn luyện",
+      "noTrainingNo": "Chưa xác nhận không huấn luyện",
+      "secretReady": "Kho bí mật có khóa {{name}}",
+      "secretMissing": "Kho bí mật chưa có khóa {{name}}",
+      "price": "{{input}} / {{output}} USD mỗi triệu đơn vị",
+      "primaryFor": "Chính cho {{capability}}",
+      "fallbackFor": "Dự phòng cho {{capability}}"
+    },
+    "requirements": {
+      "NO_TRAINING_CONFIRMATION": "xác nhận cam kết không huấn luyện",
+      "SECRET": "khóa trong kho bí mật",
+      "BASE_URL": "địa chỉ dịch vụ",
+      "MODEL": "tên mô hình cho mỗi khả năng"
+    },
+    "errors": {
+      "generic": "Thao tác chưa thành công, hãy thử lại.",
+      "missingPrefix": "Còn thiếu:",
+      "VALIDATION_FAILED": "Thông tin chưa hợp lệ. Kiểm tra mã, địa chỉ (bắt đầu bằng https://), tên khóa và các khả năng đã chọn.",
+      "AI_PROVIDER_TRAINING_NOT_CONFIRMED": "Chưa bật được: nhà cung cấp chưa được xác nhận cam kết không dùng dữ liệu học tập để huấn luyện mô hình. Hãy sửa nhà cung cấp và đánh dấu ô xác nhận sau khi đã kiểm tra điều khoản.",
+      "AI_PROVIDER_SECRET_MISSING": "Chưa bật được: kho bí mật của máy chủ chưa có khóa với tên đã khai báo.",
+      "AI_PROVIDER_INCOMPLETE": "Chưa bật được: thiếu địa chỉ dịch vụ hoặc tên mô hình.",
+      "AI_PROVIDER_CODE_TAKEN": "Mã này đã được dùng cho nhà cung cấp khác.",
+      "AI_PROVIDER_IN_USE": "Nhà cung cấp đang làm chính trong định tuyến. Hãy đổi định tuyến trước rồi mới tắt hoặc bỏ xác nhận.",
+      "AI_ROUTE_INVALID": "Nhà cung cấp chính và dự phòng phải khác nhau, đang bật và hỗ trợ khả năng này.",
+      "AI_NO_FALLBACK": "Khả năng này chưa có nhà cung cấp dự phòng đang bật.",
+      "AI_TEMPORARILY_UNAVAILABLE": "Dịch vụ trí tuệ nhân tạo đang tạm gián đoạn: đã thử lại mà vẫn lỗi. Hãy thử lại sau ít phút.",
+      "NETWORK_ERROR": "Mất kết nối tới máy chủ."
+    },
+    "test": {
+      "title": "Gọi thử",
+      "subtitle": "Gửi một lời gọi sinh văn bản qua lớp kết nối như mọi chức năng khác. Lời gọi được đo dưới mã ADMIN_TEST.",
+      "prompt": "Lời nhắn",
+      "defaultPrompt": "Giải thích định luật Ohm trong một câu.",
+      "run": "Gọi thử",
+      "waiting": "Đang chờ nhà cung cấp trả lời…",
+      "empty": "Kết quả hiện ở đây theo luồng.",
+      "done": "{{provider}} đã trả lời · {{input}} đơn vị vào, {{output}} đơn vị ra."
+    },
+    "usage": {
+      "title": "Mức sử dụng",
+      "subtitle": "Số lời gọi, đơn vị và chi phí theo khả năng và nhà cung cấp.",
+      "period": "Khoảng thời gian",
+      "days_one": "{{count}} ngày",
+      "days_other": "{{count}} ngày",
+      "loadFailed": "Không tải được mức sử dụng.",
+      "totals": {
+        "calls": "Lời gọi",
+        "failures": "Lời gọi lỗi",
+        "units": "Đơn vị vào / ra",
+        "cost": "Chi phí"
+      },
+      "byProvider": "Mức sử dụng theo khả năng và nhà cung cấp",
+      "columns": {
+        "capability": "Khả năng",
+        "provider": "Nhà cung cấp",
+        "calls": "Lời gọi",
+        "units": "Đơn vị vào / ra",
+        "latency": "Độ trễ trung bình",
+        "cost": "Chi phí"
+      },
+      "empty": "Chưa có lời gọi nào trong khoảng này.",
+      "noProvider": "Không có nhà cung cấp",
+      "failed_one": "{{count}} lỗi",
+      "failed_other": "{{count}} lỗi",
+      "recent": "Lời gọi gần nhất",
+      "noContent": "Chỉ có số liệu: lớp kết nối không ghi nội dung lời gọi hay câu trả lời.",
+      "viaFallback": "qua dự phòng",
+      "callFacts": "{{input}}/{{output}} đơn vị · {{latency}} ms · {{attempts}} lần gọi"
     }
   }
 }

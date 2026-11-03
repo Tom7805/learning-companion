@@ -16,4 +16,6 @@ export const queryKeys = {
   notificationsUnread: ['notifications', 'unread'] as const,
   adminMe: ['admin', 'me'] as const,
   auditLogs: (search: object) => ['admin', 'audit-logs', search] as const,
+  aiGateway: ['admin', 'ai', 'gateway'] as const,
+  aiUsage: (days: number) => ['admin', 'ai', 'usage', days] as const,
 }

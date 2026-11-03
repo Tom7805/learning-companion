@@ -13,5 +13,8 @@ public enum AuditObjectType {
     UI_PREFERENCES,
     /** Một điểm cuối của hệ thống, ví dụ khu quản trị; mã đối tượng để trống, đường dẫn nằm trong chi tiết. */
     ENDPOINT,
-    AUDIT_LOG
+    AUDIT_LOG,
+    AI_PROVIDER,
+    /** Định tuyến một khả năng trí tuệ nhân tạo; mã đối tượng để trống, khả năng nằm trong chi tiết. */
+    AI_ROUTE
 }

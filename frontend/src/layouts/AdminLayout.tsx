@@ -1,4 +1,4 @@
-import { Clock, ScrollText, ShieldCheck } from 'lucide-react'
+import { Clock, Cpu, ScrollText, ShieldCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, Outlet } from 'react-router'
 import { routes } from '@/app/routes'
@@ -8,7 +8,10 @@ import { useDisplayTimeZone } from '@/shared/lib/timezone'
 import { cn } from '@/shared/lib/cn'
 
 /** Các trang của khu quản trị; story quản trị sau chỉ cần thêm mục vào đây. */
-const sections = [{ id: 'audit', to: routes.adminAudit, label: 'admin.nav.audit', icon: ScrollText }]
+const sections = [
+  { id: 'audit', to: routes.adminAudit, label: 'admin.nav.audit', icon: ScrollText },
+  { id: 'ai', to: routes.adminAi, label: 'admin.nav.ai', icon: Cpu },
+]
 
 /** Khung chung của khu quản trị, nằm trong vùng nội dung của ứng dụng: nhãn khu vực và các trang quản trị. */
 export function AdminLayout() {

@@ -70,7 +70,22 @@ public enum AuditAction {
     /** Câu lệnh cài đặt trên máy chủ tạo tài khoản quản trị viên. */
     ADMIN_ACCOUNT_CREATED(ADMIN, SUCCESS),
     /** Yêu cầu tạo thêm quản trị viên khi đã có một người; luôn bị từ chối. */
-    ADMIN_CREATION_REJECTED(ADMIN, DENIED);
+    ADMIN_CREATION_REJECTED(ADMIN, DENIED),
+    /** Thêm nhà cung cấp trí tuệ nhân tạo; chi tiết ghi mã, kiểu và khả năng, không bao giờ ghi khóa bí mật. */
+    AI_PROVIDER_CREATED(ADMIN, SUCCESS),
+    /** Sửa nhà cung cấp; chi tiết ghi giá trị trước và sau của từng trường đã đổi. */
+    AI_PROVIDER_UPDATED(ADMIN, SUCCESS),
+    AI_PROVIDER_ENABLED(ADMIN, SUCCESS),
+    AI_PROVIDER_DISABLED(ADMIN, SUCCESS),
+    /** Bật nhà cung cấp chưa đủ điều kiện (chưa xác nhận không huấn luyện, thiếu khóa); luôn bị từ chối. */
+    AI_PROVIDER_ENABLE_REJECTED(ADMIN, DENIED),
+    /** Đổi định tuyến của một khả năng (chính, dự phòng, thời gian chờ, thử lại, ngắt mạch). */
+    AI_ROUTE_CHANGED(ADMIN, SUCCESS),
+    /** Quản trị viên chuyển dự phòng bằng tay: đổi vai nhà cung cấp chính và dự phòng. */
+    AI_FAILOVER_SWITCHED(ADMIN, SUCCESS),
+    /** Hệ thống ngắt mạch một nhà cung cấp sau nhiều lỗi liên tiếp và chuyển lời gọi sang dự phòng. */
+    AI_CIRCUIT_OPENED(ADMIN, FAILURE),
+    AI_ALERT_ACKNOWLEDGED(ADMIN, SUCCESS);
 
     /** Nhóm thao tác để lọc nhật ký. */
     public enum Category { LOGIN, SESSION, ACCOUNT, PRIVACY, SETTINGS, ACCESS, ADMIN }
