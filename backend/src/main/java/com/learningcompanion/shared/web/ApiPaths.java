@@ -15,6 +15,7 @@ public final class ApiPaths {
     public static final String EXPORTS = V1 + "/exports";
     public static final String UI_PREFERENCES = V1 + "/ui-preferences";
     public static final String NOTIFICATIONS = V1 + "/notifications";
+    public static final String QUOTA = V1 + "/quota";
 
     /**
      * Chức năng học tập, chỉ vai trò người học dùng được; quản trị viên chỉ thấy siêu dữ liệu vận hành (QTN-07).

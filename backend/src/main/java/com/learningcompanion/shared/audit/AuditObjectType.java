@@ -18,5 +18,7 @@ public enum AuditObjectType {
     /** Định tuyến một khả năng trí tuệ nhân tạo; mã đối tượng để trống, khả năng nằm trong chi tiết. */
     AI_ROUTE,
     /** Một phiên bản cấu hình của chức năng trí tuệ nhân tạo; chức năng và số phiên bản nằm trong chi tiết. */
-    AI_CONFIG
+    AI_CONFIG,
+    /** Hạn mức lượt trí tuệ nhân tạo và dung lượng lưu trữ, kèm bảng quy đổi lượt; mã đối tượng để trống. */
+    QUOTA_POLICY
 }

@@ -56,6 +56,16 @@ describe('describeNotification', () => {
     )
   })
 
+  it('tác vụ AI lỗi: báo không bị trừ lượt kèm số lượt đã hoàn (NCL-04-CN-003 TC-02)', () => {
+    expect(
+      describeNotification(notification('AI_TASK_REFUNDED', { task: 'QUIZ_GENERATION', units: 5 }), t, format),
+    ).toEqual({
+      title: 'Không bị trừ lượt',
+      body: 'Sinh bài kiểm tra gặp lỗi từ dịch vụ bên ngoài. 5 lượt đã giữ chỗ được hoàn lại đầy đủ.',
+    })
+    expect(describeNotification(notification('AI_TASK_REFUNDED', {}), t, format).body).toContain('Tác vụ AI')
+  })
+
   it('loại chưa biết hoặc tham số lạ vẫn hiển thị được, không vỡ', () => {
     expect(describeNotification(notification('STUDIO_READY', { title: 'Bộ thẻ' }), t, format)).toEqual({
       title: 'Bạn có một thông báo mới',

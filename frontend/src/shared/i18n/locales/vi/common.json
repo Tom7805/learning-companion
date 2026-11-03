@@ -150,7 +150,9 @@
     "RECOVERY_CODE_INVALID": "Mã khôi phục chưa đúng hoặc đã được dùng.",
     "TWO_FACTOR_ENROLLMENT_NOT_STARTED": "Hãy tạo khóa cho ứng dụng sinh mã trước.",
     "ADMIN_LOGIN_LOCKED": "Đăng nhập quản trị đang tạm khóa do nhập sai mã xác thực nhiều lần.",
-    "ADMIN_ALREADY_EXISTS": "Hệ thống đã có quản trị viên và chỉ cho phép một quản trị viên."
+    "ADMIN_ALREADY_EXISTS": "Hệ thống đã có quản trị viên và chỉ cho phép một quản trị viên.",
+    "AI_QUOTA_EXHAUSTED": "Bạn đã dùng hết lượt AI hôm nay. Lượt hồi lại vào nửa đêm; mọi chức năng học khác vẫn dùng bình thường.",
+    "STORAGE_QUOTA_EXCEEDED": "Kho tài liệu không đủ chỗ cho tệp này. Hãy xóa bớt tài liệu cũ rồi thử lại."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -968,7 +970,13 @@
         "SET": "Đã đặt mật khẩu cho tài khoản",
         "body": "Nếu không phải bạn, hãy đặt lại mật khẩu ngay."
       },
-      "fallback": "Bạn có một thông báo mới"
+      "fallback": "Bạn có một thông báo mới",
+      "AI_TASK_REFUNDED": {
+        "title": "Không bị trừ lượt",
+        "body_one": "{{task}} gặp lỗi từ dịch vụ bên ngoài. {{count}} lượt đã giữ chỗ được hoàn lại đầy đủ.",
+        "body_other": "{{task}} gặp lỗi từ dịch vụ bên ngoài. {{count}} lượt đã giữ chỗ được hoàn lại đầy đủ.",
+        "task": "Tác vụ AI"
+      }
     }
   },
   "contentGone": {
@@ -985,7 +993,8 @@
       "audit": "Nhật ký thao tác",
       "home": "Khu quản trị",
       "ai": "Dịch vụ AI",
-      "aiConfig": "Cấu hình AI"
+      "aiConfig": "Cấu hình AI",
+      "quotas": "Hạn mức"
     },
     "forbidden": {
       "title": "Trang này chỉ dành cho quản trị viên",
@@ -1087,7 +1096,8 @@
       "AUDIT_LOG": "Nhật ký thao tác",
       "AI_PROVIDER": "Nhà cung cấp AI",
       "AI_ROUTE": "Định tuyến AI",
-      "AI_CONFIG": "Cấu hình AI"
+      "AI_CONFIG": "Cấu hình AI",
+      "QUOTA_POLICY": "Hạn mức"
     },
     "actions": {
       "ACCOUNT_REGISTERED": "Đăng ký tài khoản",
@@ -1149,7 +1159,9 @@
       "AI_CONFIG_DRAFT_SAVED": "Lưu bản nháp cấu hình AI",
       "AI_CONFIG_SAVE_REJECTED": "Chặn lưu cấu hình AI có dữ liệu cá nhân",
       "AI_CONFIG_PUBLISHED": "Phát hành cấu hình AI",
-      "AI_CONFIG_ROLLED_BACK": "Quay lại cấu hình AI trước"
+      "AI_CONFIG_ROLLED_BACK": "Quay lại cấu hình AI trước",
+      "QUOTA_POLICY_CHANGED": "Đổi hạn mức chung",
+      "QUOTA_TASK_COSTS_CHANGED": "Đổi bảng quy đổi lượt"
     }
   },
   "adminLogin": {
@@ -1541,6 +1553,122 @@
       "trialLabel": "Thử phiên bản {{version}}",
       "compare": "So với bản đang chạy",
       "compareLabel": "So sánh phiên bản {{version}} với phiên bản đang chạy"
+    }
+  },
+  "quota": {
+    "meter": {
+      "title": "Lượt AI hôm nay",
+      "label": "Lượt AI hôm nay: còn {{remaining}} trên {{daily}}. {{reset}}. Xem chi tiết",
+      "resetsAt": "Hồi lại lúc {{time}}",
+      "resetsOn": "Hồi lại lúc {{time}} ngày {{date}}",
+      "emptyHint": "Đã hết lượt · {{reset}}"
+    },
+    "page": {
+      "title": "Lượt AI và dung lượng",
+      "subtitle": "Mọi chức năng học tập đều mở miễn phí. Chỉ một số tác vụ AI tốn lượt, và lượt hồi đủ mỗi nửa đêm theo múi giờ của bạn.",
+      "loadFailed": "Chưa tải được lượt dùng. Hãy thử lại."
+    },
+    "ai": {
+      "title": "Lượt AI hôm nay",
+      "remaining": "Còn {{remaining}} / {{daily}} lượt",
+      "used": "Đã dùng",
+      "reserved": "Đang giữ chỗ cho tác vụ đang chạy",
+      "resets": "Hồi đủ lượt",
+      "resetsAt": "lúc {{time}}",
+      "resetsOn": "lúc {{time}} ngày {{date}}",
+      "timeZone": "Tính theo múi giờ {{zone}} trong hồ sơ của bạn.",
+      "changeTimeZone": "Đổi múi giờ"
+    },
+    "storage": {
+      "title": "Dung lượng lưu trữ",
+      "of": "trên {{limit}}",
+      "remaining": "Còn trống {{size}}. Hết chỗ chỉ chặn tải thêm tệp mới, tài liệu đã có vẫn mở và học bình thường.",
+      "manage": "Quản lý tài liệu trong kho"
+    },
+    "costs": {
+      "title": "Phần nào tốn lượt",
+      "subtitle": "Tác vụ nhẹ tốn một lượt, tác vụ sinh nội dung dài tốn nhiều lượt hơn.",
+      "units_one": "{{count}} lượt",
+      "units_other": "{{count}} lượt",
+      "refund": "Lượt được giữ chỗ khi tác vụ bắt đầu và chỉ bị trừ khi tác vụ xong. Tác vụ lỗi hoặc bị hủy được hoàn lại đủ lượt."
+    },
+    "freeActions": {
+      "title": "Không bao giờ tốn lượt",
+      "subtitle": "Hết lượt vẫn học được bình thường.",
+      "read": "Đọc và tìm kiếm tài liệu trong kho",
+      "review": "Ôn các bộ thẻ ghi nhớ đã có",
+      "quiz": "Làm lại các bài kiểm tra đã sinh",
+      "notes": "Ghi chú, đánh dấu và sắp xếp tài liệu",
+      "history": "Xem lại câu trả lời và kết quả cũ"
+    },
+    "exhausted": {
+      "title": "Bạn đã dùng hết lượt AI hôm nay",
+      "body": "Tác vụ AI mới tạm dừng tới khi lượt hồi lại. Mọi thứ khác vẫn dùng bình thường.",
+      "partialTitle": "Không đủ lượt cho tác vụ này",
+      "partialBody": "Tác vụ cần {{required}} lượt, bạn còn {{remaining}} lượt hôm nay. Tác vụ nhẹ hơn vẫn chạy được.",
+      "resetsAt": "Lượt hồi đủ lúc {{time}}",
+      "resetsOn": "Lượt hồi đủ lúc {{time}} ngày {{date}}",
+      "neverBlocks": "Hạn mức chỉ giữ chi phí bền vững, không bao giờ chặn việc học."
+    },
+    "free": {
+      "title": "Học tiếp không tốn lượt",
+      "library": "Mở kho tài liệu và đọc lại bài",
+      "review": "Ôn các bộ thẻ ghi nhớ đã có",
+      "notes": "Tự tóm tắt bằng lời của mình vào ghi chú",
+      "explain": "Tự giải thích lại khái niệm khó như đang dạy cho bạn"
+    },
+    "tasks": {
+      "ASSISTANT_QUESTION": "Hỏi đáp trên tài liệu",
+      "EXPLAIN_PASSAGE": "Giải thích đoạn đang đọc",
+      "IMAGE_TEXT_RECOGNITION": "Đọc chữ trong ảnh",
+      "DOCUMENT_SUMMARY": "Tóm tắt tài liệu",
+      "FLASHCARD_GENERATION": "Sinh thẻ ghi nhớ",
+      "QUIZ_GENERATION": "Sinh bài kiểm tra",
+      "STUDY_GUIDE": "Sinh đề cương ôn tập"
+    },
+    "weights": {
+      "LIGHT": "Tác vụ nhẹ",
+      "LONG": "Nội dung dài"
+    }
+  },
+  "adminQuota": {
+    "title": "Hạn mức công bằng",
+    "subtitle": "Đặt số lượt AI mỗi ngày và dung lượng lưu trữ chung cho mọi người học, cùng bảng quy đổi lượt của từng loại tác vụ. Thay đổi áp dụng ngay cho tác vụ bắt đầu sau đó.",
+    "loadFailed": "Chưa tải được hạn mức. Hãy thử lại.",
+    "cancel": "Hủy",
+    "noChanges": "Chưa có gì thay đổi.",
+    "defaultValues": "Đang dùng giá trị mặc định lúc cài đặt.",
+    "lastChange": "Sửa lần cuối bởi {{name}} lúc {{time}}",
+    "unknownActor": "tài khoản đã xóa",
+    "policy": {
+      "title": "Hạn mức chung",
+      "subtitle": "Áp dụng cho mọi người học. Lượt hồi đủ mỗi nửa đêm theo múi giờ của từng người.",
+      "daily": "Lượt AI mỗi ngày",
+      "dailyHint": "Từ 1 đến 10 000 lượt.",
+      "dailyInvalid": "Nhập số nguyên từ 1 đến 10 000.",
+      "storage": "Dung lượng mỗi người học (MB)",
+      "storageHint": "Từ 10 MB; 1024 MB là 1 GB.",
+      "storageInvalid": "Nhập số nguyên từ 10 đến 1 048 576.",
+      "save": "Lưu hạn mức",
+      "saved": "Đã lưu hạn mức mới."
+    },
+    "costs": {
+      "title": "Bảng quy đổi lượt",
+      "subtitle": "Số lượt mỗi lần chạy của từng loại tác vụ, từ 1 đến 100.",
+      "default_one": "mặc định {{count}} lượt",
+      "default_other": "mặc định {{count}} lượt",
+      "unitsFor": "Số lượt: {{task}}",
+      "invalid": "Từ 1 đến 100.",
+      "save": "Lưu bảng quy đổi",
+      "saved": "Đã lưu bảng quy đổi mới."
+    },
+    "confirm": {
+      "policyTitle": "Xác nhận đổi hạn mức",
+      "policyBody": "Hạn mức mới áp dụng ngay cho mọi người học:",
+      "costsTitle": "Xác nhận đổi bảng quy đổi",
+      "costsBody": "Số lượt mới áp dụng ngay cho tác vụ bắt đầu sau đó:",
+      "change": "{{field}}: {{before}} → {{after}}",
+      "apply": "Áp dụng"
     }
   }
 }

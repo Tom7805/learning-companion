@@ -37,6 +37,8 @@ interface SidebarProps extends SidebarAccountProps {
   onQuickOpen: () => void
   /** Chuông thông báo, đặt cạnh nút Mở nhanh ở đầu thanh bên. */
   bell?: ReactNode
+  /** Đồng hồ lượt trí tuệ nhân tạo của người học (NCL-04-CN-003), nằm ngay trên trình đơn tài khoản. */
+  meter?: ReactNode
 }
 
 /**
@@ -50,6 +52,7 @@ export function Sidebar({
   onNavigate,
   onQuickOpen,
   bell,
+  meter,
   ...account
 }: SidebarProps) {
   const { t } = useTranslation()
@@ -198,7 +201,8 @@ export function Sidebar({
         </section>
       )}
 
-      <div className={cn('mt-auto', !collapsed && 'w-full')}>
+      <div className={cn('mt-auto flex flex-col gap-2', collapsed ? 'items-center' : 'w-full')}>
+        {meter && (collapsed ? <Tooltip label={t('quota.meter.title')} side="right">{meter}</Tooltip> : meter)}
         <AccountMenu
           placement={collapsed ? 'sidebar-collapsed' : 'sidebar'}
           name={account.name}

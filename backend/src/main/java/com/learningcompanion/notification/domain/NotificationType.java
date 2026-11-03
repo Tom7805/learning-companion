@@ -10,5 +10,7 @@ public enum NotificationType {
     /** Tài khoản vừa đăng nhập trên một thiết bị chưa từng dùng (NCL-01-CN-002). */
     NEW_DEVICE_LOGIN,
     /** Mật khẩu vừa được đổi, đặt lại hoặc đặt lần đầu (NCL-01-CN-003). */
-    PASSWORD_CHANGED
+    PASSWORD_CHANGED,
+    /** Tác vụ trí tuệ nhân tạo lỗi do dịch vụ bên ngoài; lượt đã giữ chỗ được hoàn lại đủ (NCL-04-CN-003). */
+    AI_TASK_REFUNDED
 }

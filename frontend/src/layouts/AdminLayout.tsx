@@ -1,4 +1,4 @@
-import { Clock, Cpu, ScrollText, ShieldCheck, SlidersHorizontal } from 'lucide-react'
+import { Clock, Cpu, Gauge, ScrollText, ShieldCheck, SlidersHorizontal } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, Outlet } from 'react-router'
 import { routes } from '@/app/routes'
@@ -12,6 +12,7 @@ const sections = [
   { id: 'audit', to: routes.adminAudit, label: 'admin.nav.audit', icon: ScrollText },
   { id: 'ai', to: routes.adminAi, label: 'admin.nav.ai', icon: Cpu },
   { id: 'ai-config', to: routes.adminAiConfig, label: 'admin.nav.aiConfig', icon: SlidersHorizontal },
+  { id: 'quotas', to: routes.adminQuotas, label: 'admin.nav.quotas', icon: Gauge },
 ]
 
 /** Khung chung của khu quản trị, nằm trong vùng nội dung của ứng dụng: nhãn khu vực và các trang quản trị. */
