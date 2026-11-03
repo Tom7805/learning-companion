@@ -1,13 +1,13 @@
 package com.learningcompanion.devtools;
 
-import com.learningcompanion.ai.gateway.AiGateway;
-import com.learningcompanion.ai.gateway.model.ChatRequest;
+import com.learningcompanion.ai.config.domain.AiFeature;
 import com.learningcompanion.ai.gateway.model.ChatResult;
 import com.learningcompanion.ai.quota.application.LearnerDay;
 import com.learningcompanion.ai.quota.application.QuotaReservationService;
 import com.learningcompanion.ai.quota.application.QuotaService;
 import com.learningcompanion.ai.quota.domain.QuotaReservation;
 import com.learningcompanion.ai.quota.domain.QuotaTask;
+import com.learningcompanion.ai.safety.application.SafeGenerationService;
 import com.learningcompanion.auth.domain.UserAccount;
 import com.learningcompanion.auth.domain.UserAccountRepository;
 import com.learningcompanion.shared.exception.BusinessException;
@@ -39,16 +39,17 @@ public class DevQuotaController {
     private final QuotaReservationService reservations;
     private final QuotaService quotas;
     private final LearnerDay learnerDay;
-    private final AiGateway gateway;
+    private final SafeGenerationService generation;
     private final JdbcTemplate jdbc;
 
     public DevQuotaController(UserAccountRepository accounts, QuotaReservationService reservations,
-                              QuotaService quotas, LearnerDay learnerDay, AiGateway gateway, JdbcTemplate jdbc) {
+                              QuotaService quotas, LearnerDay learnerDay, SafeGenerationService generation,
+                              JdbcTemplate jdbc) {
         this.accounts = accounts;
         this.reservations = reservations;
         this.quotas = quotas;
         this.learnerDay = learnerDay;
-        this.gateway = gateway;
+        this.generation = generation;
         this.jdbc = jdbc;
     }
 
@@ -64,10 +65,11 @@ public class DevQuotaController {
             reservations.release(reservation.id(), QuotaReservation.ReleaseReason.CANCELLED);
             return Map.of("task", request.task().name(), "units", reservation.units(), "outcome", "CANCELLED");
         }
-        ChatResult result = reservations.metered(account.getId(), request.task(),
-                () -> gateway.streamText(request.task().name(),
-                        ChatRequest.of("Bạn là trợ lý học tập.", "Tóm tắt định luật Ohm trong một câu."),
-                        chunk -> { }));
+        // Đi qua lối sinh nội dung chung (bộ lọc an toàn, NCL-04-CN-004) như mọi chức năng tốn lượt thật.
+        ChatResult result = generation.generate(SafeGenerationService.Request
+                .of(account.getId(), AiFeature.ASSISTANT_CHAT, "Tóm tắt định luật Ohm trong một câu.")
+                .withMeterCode(request.task().name())
+                .withQuota(request.task()), chunk -> { }).result();
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("task", request.task().name());
         body.put("outcome", "COMMITTED");

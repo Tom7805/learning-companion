@@ -20,5 +20,9 @@ public enum AuditObjectType {
     /** Một phiên bản cấu hình của chức năng trí tuệ nhân tạo; chức năng và số phiên bản nằm trong chi tiết. */
     AI_CONFIG,
     /** Hạn mức lượt trí tuệ nhân tạo và dung lượng lưu trữ, kèm bảng quy đổi lượt; mã đối tượng để trống. */
-    QUOTA_POLICY
+    QUOTA_POLICY,
+    /** Ngưỡng lọc nội dung không an toàn; mã đối tượng để trống, các nhóm đổi nằm trong chi tiết. */
+    CONTENT_SAFETY,
+    /** Một lần bộ lọc an toàn can thiệp khi lời gọi không gắn với đối tượng nào; mã đối tượng là mã sự kiện. */
+    AI_SAFETY_EVENT
 }

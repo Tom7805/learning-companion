@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,6 +47,17 @@ public class DevAiGatewayController {
     public Map<String, String> mode(@PathVariable String providerCode, @RequestParam MockAiAdapter.Mode mode) {
         mock.setMode(providerCode, mode);
         return Map.of("providerCode", providerCode, "mode", mode.name());
+    }
+
+    /**
+     * Câu trả lời cố định của bản mô phỏng cho các lời gọi sinh văn bản tiếp theo (ví dụ nội dung vi phạm để thử bộ
+     * lọc đầu ra, NCL-04-CN-004). Gửi {@code text} rỗng để bỏ; đặt lại lớp kết nối cũng bỏ.
+     */
+    @PostMapping("/mock-reply")
+    public ResponseEntity<Void> scriptedReply(@RequestBody Map<String, String> body) {
+        String text = body.get("text");
+        mock.setScriptedReply(text == null || text.isBlank() ? null : text);
+        return ResponseEntity.noContent().build();
     }
 
     /**

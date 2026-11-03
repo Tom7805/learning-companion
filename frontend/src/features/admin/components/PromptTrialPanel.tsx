@@ -3,6 +3,7 @@ import { useEffect, useId, useRef, useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/shared/api/queryKeys'
+import { FlaggedSourcesNote, SafetyNotice, type SafetyOutcome } from '@/features/safety'
 import { Alert, Button } from '@/shared/ui'
 import { streamPromptTrial, type PromptTrialDone } from '../lib/promptTrial'
 import type { AiConfigVersion, AiFeature, AiTrialSampleSet } from '../types'
@@ -39,6 +40,7 @@ export function PromptTrialPanel({
   const [output, setOutput] = useState('')
   const [done, setDone] = useState<PromptTrialDone | null>(null)
   const [errorCode, setErrorCode] = useState<string | null>(null)
+  const [safety, setSafety] = useState<SafetyOutcome | null>(null)
   const [running, setRunning] = useState(false)
   const abort = useRef<AbortController | null>(null)
   // Phiên bản đã thu hồi không phát hành lại được nên cũng không cần thử.
@@ -56,6 +58,7 @@ export function PromptTrialPanel({
     setOutput('')
     setDone(null)
     setErrorCode(null)
+    setSafety(null)
     setRunning(true)
     try {
       await streamPromptTrial(
@@ -66,6 +69,11 @@ export function PromptTrialPanel({
           onChunk: (text) => setOutput((current) => current + text),
           onDone: setDone,
           onError: setErrorCode,
+          onSafety: (outcome) => {
+            // Nội dung sinh ra bị thay: bỏ phần đã hiện, chỉ còn thông báo chặn (NCL-04-CN-004 TC-04).
+            setOutput('')
+            setSafety(outcome)
+          },
         },
         abort.current.signal,
       )
@@ -168,15 +176,20 @@ export function PromptTrialPanel({
           </Button>
         </div>
       </form>
-      <div
-        aria-live="polite"
-        aria-busy={running || undefined}
-        className="min-h-16 whitespace-pre-wrap rounded-field border border-line bg-paper px-4 py-3 text-[0.9375rem] leading-relaxed"
-        data-testid="ai-config-trial-output"
-      >
-        {output || <span className="text-muted">{t(running ? 'aiConfig.trial.waiting' : 'aiConfig.trial.empty')}</span>}
-      </div>
-      {done && (
+      {safety ? (
+        <SafetyNotice outcome={safety} />
+      ) : (
+        <div
+          aria-live="polite"
+          aria-busy={running || undefined}
+          className="min-h-16 whitespace-pre-wrap rounded-field border border-line bg-paper px-4 py-3 text-[0.9375rem] leading-relaxed"
+          data-testid="ai-config-trial-output"
+        >
+          {output || <span className="text-muted">{t(running ? 'aiConfig.trial.waiting' : 'aiConfig.trial.empty')}</span>}
+        </div>
+      )}
+      {done && <FlaggedSourcesNote sources={done.flaggedSources ?? []} />}
+      {done?.providerCode && (
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-ink-soft" data-testid="ai-config-trial-done">
             {t('aiConfig.trial.done', {

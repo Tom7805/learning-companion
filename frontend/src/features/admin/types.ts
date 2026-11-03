@@ -32,7 +32,7 @@ export interface TwoFactorResult {
   recoveryCodes: string[]
 }
 
-export type AuditCategory = 'LOGIN' | 'SESSION' | 'ACCOUNT' | 'PRIVACY' | 'SETTINGS' | 'ACCESS' | 'ADMIN'
+export type AuditCategory = 'LOGIN' | 'SESSION' | 'ACCOUNT' | 'PRIVACY' | 'SETTINGS' | 'ACCESS' | 'ADMIN' | 'SAFETY'
 export type AuditOutcome = 'SUCCESS' | 'FAILURE' | 'DENIED'
 export type AuditActorType = 'USER' | 'ANONYMOUS' | 'SYSTEM'
 

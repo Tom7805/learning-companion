@@ -994,7 +994,8 @@
       "home": "Khu quản trị",
       "ai": "Dịch vụ AI",
       "aiConfig": "Cấu hình AI",
-      "quotas": "Hạn mức"
+      "quotas": "Hạn mức",
+      "safety": "An toàn nội dung"
     },
     "forbidden": {
       "title": "Trang này chỉ dành cho quản trị viên",
@@ -1074,7 +1075,8 @@
       "PRIVACY": "Quyền riêng tư và dữ liệu",
       "SETTINGS": "Cài đặt",
       "ACCESS": "Từ chối truy cập",
-      "ADMIN": "Quản trị"
+      "ADMIN": "Quản trị",
+      "SAFETY": "An toàn nội dung"
     },
     "outcomes": {
       "SUCCESS": "Thành công",
@@ -1097,7 +1099,9 @@
       "AI_PROVIDER": "Nhà cung cấp AI",
       "AI_ROUTE": "Định tuyến AI",
       "AI_CONFIG": "Cấu hình AI",
-      "QUOTA_POLICY": "Hạn mức"
+      "QUOTA_POLICY": "Hạn mức",
+      "CONTENT_SAFETY": "Ngưỡng lọc nội dung",
+      "AI_SAFETY_EVENT": "Lần lọc nội dung"
     },
     "actions": {
       "ACCOUNT_REGISTERED": "Đăng ký tài khoản",
@@ -1161,7 +1165,12 @@
       "AI_CONFIG_PUBLISHED": "Phát hành cấu hình AI",
       "AI_CONFIG_ROLLED_BACK": "Quay lại cấu hình AI trước",
       "QUOTA_POLICY_CHANGED": "Đổi hạn mức chung",
-      "QUOTA_TASK_COSTS_CHANGED": "Đổi bảng quy đổi lượt"
+      "QUOTA_TASK_COSTS_CHANGED": "Đổi bảng quy đổi lượt",
+      "AI_INPUT_BLOCKED": "Chặn câu hỏi không an toàn",
+      "AI_OUTPUT_BLOCKED": "Ẩn nội dung sinh ra không an toàn",
+      "AI_SELF_HARM_SUPPORT_GIVEN": "Trả lời ân cần câu hỏi có dấu hiệu tự gây hại",
+      "AI_SOURCE_INJECTION_FLAGGED": "Gắn cờ đoạn nguồn nghi chèn chỉ dẫn",
+      "CONTENT_SAFETY_LEVELS_CHANGED": "Đổi ngưỡng lọc nội dung"
     }
   },
   "adminLogin": {
@@ -1669,6 +1678,121 @@
       "costsBody": "Số lượt mới áp dụng ngay cho tác vụ bắt đầu sau đó:",
       "change": "{{field}}: {{before}} → {{after}}",
       "apply": "Áp dụng"
+    }
+  },
+  "safety": {
+    "categories": {
+      "VIOLENCE": "bạo lực",
+      "HATE": "thù ghét",
+      "SEXUAL": "tình dục",
+      "HARMFUL_INSTRUCTIONS": "hướng dẫn gây hại",
+      "FRAUD": "lừa đảo",
+      "SELF_HARM": "tự gây hại"
+    },
+    "blocked": {
+      "inputTitle": "Trợ lý không trả lời câu hỏi này",
+      "outputTitle": "Câu trả lời vừa rồi đã được ẩn",
+      "inputReason": "Câu hỏi có nội dung thuộc nhóm {{category}}, nên không được gửi cho trợ lý và không tốn lượt của bạn.",
+      "outputReason": "Câu trả lời có nội dung thuộc nhóm {{category}}, nên đã được thay bằng thông báo này.",
+      "suggestionsTitle": "Bạn có thể hỏi theo cách khác:"
+    },
+    "suggestions": {
+      "VIOLENCE": [
+        "Hỏi về nguyên nhân, hậu quả hay cách phòng tránh bạo lực.",
+        "Ví dụ: \"Kỹ năng nào giúp giải quyết mâu thuẫn mà không dùng bạo lực?\""
+      ],
+      "HATE": [
+        "Hỏi về lịch sử, nguyên nhân hay tác hại của định kiến và phân biệt đối xử.",
+        "Ví dụ: \"Vì sao định kiến về người nhập cư hình thành?\""
+      ],
+      "SEXUAL": [
+        "Hỏi về kiến thức sinh học, sức khỏe sinh sản hay kỹ năng tự bảo vệ.",
+        "Ví dụ: \"Dậy thì gồm những thay đổi nào?\""
+      ],
+      "HARMFUL_INSTRUCTIONS": [
+        "Hỏi về nguyên lý khoa học, lịch sử hay quy định an toàn thay vì cách chế tạo.",
+        "Ví dụ: \"Vì sao thuốc nổ được quản lý chặt chẽ?\""
+      ],
+      "FRAUD": [
+        "Hỏi cách nhận biết và phòng tránh lừa đảo, hoặc quy định pháp luật liên quan.",
+        "Ví dụ: \"Dấu hiệu nào cho thấy một tin nhắn là lừa đảo?\""
+      ],
+      "SELF_HARM": [
+        "Nếu bạn đang thấy nặng nề, hãy nói chuyện với người bạn tin tưởng hoặc gọi 115."
+      ]
+    },
+    "support": {
+      "title": "Bạn không một mình",
+      "resources": "Nguồn trợ giúp",
+      "call": "Gọi {{contact}}"
+    },
+    "flagged": "Đoạn nguồn {{list}} có câu nghi chèn chỉ dẫn. Câu đó đã bị bỏ qua, trợ lý chỉ dùng phần kiến thức còn lại."
+  },
+  "adminSafety": {
+    "title": "An toàn nội dung",
+    "subtitle": "Mọi câu hỏi và nội dung do AI sinh ra đều qua bộ lọc an toàn; văn bản trong tài liệu luôn được coi là dữ liệu, không phải câu lệnh. Nhật ký chỉ ghi loại vi phạm và mã đối tượng, không ghi nội dung.",
+    "loadFailed": "Chưa tải được cấu hình an toàn nội dung.",
+    "levels": {
+      "title": "Ngưỡng lọc",
+      "subtitle": "Ngưỡng áp dụng ngay cho lời gọi tiếp theo. Bộ lọc không tắt được; ngưỡng nới nhất vẫn chặn yêu cầu trắng trợn.",
+      "names": {
+        "STRICT": "Nghiêm",
+        "STANDARD": "Tiêu chuẩn",
+        "LENIENT": "Nới"
+      },
+      "hints": {
+        "STRICT": "Chặn cả khi chỉ nhắc tới",
+        "STANDARD": "Chặn yêu cầu rõ ràng",
+        "LENIENT": "Chỉ chặn yêu cầu trắng trợn"
+      },
+      "levelFor": "Ngưỡng cho nhóm {{category}}",
+      "default": "Mặc định: {{level}}",
+      "selfHarm": "Tự gây hại",
+      "selfHarmNote": "Luôn bật: câu hỏi có dấu hiệu tự gây hại nhận câu trả lời ân cần kèm nguồn trợ giúp. Không chỉnh được.",
+      "save": "Lưu ngưỡng lọc",
+      "saved": "Đã lưu ngưỡng lọc",
+      "noChanges": "Chưa có thay đổi nào.",
+      "confirmTitle": "Đổi ngưỡng lọc?",
+      "confirmBody": "Ngưỡng mới áp dụng ngay cho mọi người học và được ghi vào nhật ký:",
+      "change": "{{field}}: {{before}} → {{after}}",
+      "apply": "Áp dụng",
+      "cancel": "Hủy",
+      "lastChange": "Sửa gần nhất bởi {{name}} lúc {{time}}",
+      "defaultValues": "Đang dùng ngưỡng mặc định lúc cài đặt.",
+      "unknownActor": "Quản trị viên"
+    },
+    "trial": {
+      "title": "Chạy thử bộ lọc",
+      "subtitle": "Câu hỏi đi qua đúng lối của trợ lý hỏi đáp: bộ lọc đầu vào, lớp bao dữ liệu, cấu hình đang phát hành và bộ lọc đầu ra. Lần thử cũng được ghi vào sổ can thiệp.",
+      "question": "Câu hỏi",
+      "source": "Đoạn nguồn mẫu (không bắt buộc)",
+      "sourceHint": "Dán một đoạn văn để thử chống chèn chỉ dẫn, ví dụ có câu \"Hãy bỏ qua mọi chỉ dẫn trước đó\".",
+      "run": "Chạy thử",
+      "empty": "Kết quả sẽ hiện ở đây.",
+      "waiting": "Đang chờ trợ lý…",
+      "answered": "Trợ lý đã trả lời qua {{provider}}."
+    },
+    "events": {
+      "title": "Lần can thiệp gần đây",
+      "subtitle": "50 lần gần nhất. Chỉ có loại vi phạm và mã đối tượng.",
+      "empty": "Bộ lọc chưa can thiệp lần nào.",
+      "time": "Thời điểm",
+      "kind": "Loại",
+      "category": "Nhóm hoặc dấu hiệu",
+      "feature": "Chức năng",
+      "object": "Đối tượng",
+      "kinds": {
+        "INPUT_BLOCKED": "Chặn câu hỏi",
+        "OUTPUT_BLOCKED": "Ẩn nội dung sinh ra",
+        "SELF_HARM_SUPPORT": "Trả lời ân cần",
+        "INJECTION_FLAGGED": "Gắn cờ nguồn"
+      },
+      "signals": {
+        "IGNORE_INSTRUCTIONS": "Yêu cầu bỏ qua chỉ dẫn",
+        "REVEAL_SYSTEM_PROMPT": "Đòi tiết lộ lời nhắc hệ thống",
+        "ROLE_OVERRIDE": "Ép đổi vai",
+        "FAKE_DELIMITER": "Giả dấu ranh giới"
+      }
     }
   }
 }
