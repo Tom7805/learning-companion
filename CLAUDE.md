@@ -36,7 +36,7 @@ Người dùng đã chốt: làm **theo đúng STT trên Jira** (STT ghi trong d
 |-----|-------|------|--------|------------|
 | 5 | LC-19 Nhật ký thao tác | LC-3 | `feature/LC-19-audit-log-recording-and-search` | Đã merge (PR #12) |
 | 6 | LC-20 Tài khoản admin duy nhất + 2FA | LC-3 | `feature/LC-20-single-admin-account-with-two-factor-auth` | Đã merge (PR #13) |
-| 11 | LC-25 Lớp kết nối dịch vụ AI thay được nhà cung cấp | LC-4 | `feature/LC-25-swappable-ai-provider-gateway` | PR mở, chờ merge |
+| 11 | LC-25 Lớp kết nối dịch vụ AI thay được nhà cung cấp | LC-4 | `feature/LC-25-swappable-ai-provider-gateway` | PR #14 mở, chờ merge |
 | 12 | LC-26 Cấu hình model/prompt theo phiên bản | LC-4 | `feature/LC-26-versioned-model-and-prompt-config` | Chưa làm |
 | 13 | LC-27 Hạn mức AI và dung lượng | LC-4 | `feature/LC-27-fair-quotas-for-ai-and-storage` | Chưa làm |
 | 14 | LC-28 Lọc nội dung không an toàn, chống prompt injection | LC-4 | `feature/LC-28-unsafe-content-filter-and-prompt-injection-guard` | Chưa làm |
