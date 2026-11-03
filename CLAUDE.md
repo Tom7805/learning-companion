@@ -16,6 +16,7 @@ Jira: project `LC`, cloudId `44f5ab70-66fd-4932-bbd5-6141d0d938a8`. Sprint đang
    - Frontend: Vitest (`npm run test:run`), `npm run typecheck`, `npm run lint`
    - Playwright e2e (`npm run test:e2e`) trên desktop và mobile, có kiểm tra a11y bằng axe
    - Xem lại giao diện bằng screenshot, dùng script để trong thư mục scratchpad
+   - GitHub Actions tự chạy `ci-backend.yml` (`./mvnw verify`, có Testcontainers) và `ci-frontend.yml` (typecheck, lint, Vitest) trên mọi PR vào `develop`/`main`. Mở PR xong thì xem check; nếu đỏ thì sửa trước khi báo xong. Playwright e2e chưa có trên CI, vẫn phải tự chạy.
 5. **Không tạo rác**: script dùng một lần để ngoài repo, không commit file tạm.
 6. **Khi xong và test đã pass**: commit, push branch, rồi mở PR vào `develop` (KHÔNG phải `main`). Không cần hỏi lại người dùng. Commit message theo dạng `feat(<module>): <mô tả tiếng Anh> (LC-<key>, NCL-0x-CN-0yy)`, phần thân liệt kê thay đổi Backend/Frontend. Mô tả PR theo `.github/PULL_REQUEST_TEMPLATE.md`, ghi rõ test nào đã chạy và test nào không chạy được (ví dụ IT/e2e khi môi trường không có Docker).
 7. **Sau khi mở PR**: chuyển story sang **Done** (transition `31`) và thêm comment tiếng Việt tóm tắt thay đổi, kèm link PR. Các transition khác: `2` Reviewing, `11` To Do.

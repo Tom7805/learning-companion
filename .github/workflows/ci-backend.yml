@@ -1,0 +1,46 @@
+name: CI backend
+
+on:
+  pull_request:
+    branches: [develop, main]
+    paths: ["backend/**", ".github/workflows/ci-backend.yml"]
+  push:
+    branches: [develop, main]
+    paths: ["backend/**", ".github/workflows/ci-backend.yml"]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-backend-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: mvnw verify (unit + Testcontainers IT)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      # Máy chạy ubuntu của GitHub có sẵn Docker nên Testcontainers (postgres:17-alpine) chạy được.
+      - name: Build and test
+        run: ./mvnw -B -ntp verify
+
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-reports
+          path: backend/target/surefire-reports/
+          retention-days: 7
