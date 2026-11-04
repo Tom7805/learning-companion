@@ -126,6 +126,8 @@ public enum ErrorCode {
     /** Dịch vụ quét mã độc tạm không trả lời: tệp chưa quét thì không nhận, người học thử lại sau. */
     MALWARE_SCAN_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE,
             "Chưa kiểm tra được tệp lúc này, hãy thử tải lên lại sau ít phút."),
+    /** Chỉ tài liệu xử lý lỗi mới thử xử lý lại được (NCL-05-CN-003). */
+    DOCUMENT_NOT_FAILED(HttpStatus.CONFLICT, "Tài liệu này không ở trạng thái lỗi nên không cần thử lại."),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Hệ thống gặp sự cố, hãy thử lại sau.");
 
     private final HttpStatus status;

@@ -45,4 +45,19 @@ public interface DocumentRepository extends OwnerScopedRepository<Document> {
             + "where d.ownerId = :ownerId and d.folderId in :folderIds and d.trashedAt is null")
     int trashByOwnerIdAndFolderIdIn(@Param("ownerId") UUID ownerId, @Param("folderIds") Collection<UUID> folderIds,
                                     @Param("batch") UUID batch, @Param("now") Instant now);
+
+    /**
+     * Nhận một tài liệu để xử lý (NCL-05-CN-003): chỉ tài liệu chờ xử lý, hoặc đang xử lý nhưng bắt đầu trước
+     * {@code staleBefore} (máy chủ dừng giữa chừng). Trả về 1 nếu nhận được; hai máy chủ không bao giờ cùng nhận một
+     * tài liệu, nên mỗi tài liệu chỉ được xử lý một lần.
+     */
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("update Document d set d.status = :processing, d.processingStartedAt = :now, "
+            + "d.processingAttempts = d.processingAttempts + 1, d.version = d.version + 1 "
+            + "where d.id = :id and d.ownerId = :ownerId and d.trashedAt is null and (d.status = :pending "
+            + "or (d.status = :processing and d.processingStartedAt < :staleBefore))")
+    int claimForProcessingByIdAndOwnerId(@Param("id") UUID id, @Param("ownerId") UUID ownerId,
+                                         @Param("now") Instant now, @Param("staleBefore") Instant staleBefore,
+                                         @Param("pending") DocumentStatus pending,
+                                         @Param("processing") DocumentStatus processing);
 }

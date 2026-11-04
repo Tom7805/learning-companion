@@ -12,14 +12,20 @@ import com.learningcompanion.ai.provider.AdapterType;
 import com.learningcompanion.ai.provider.AiProviderAdapter;
 import com.learningcompanion.ai.provider.ProviderCallException;
 import com.learningcompanion.ai.provider.ProviderDescriptor;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
+import javax.imageio.ImageIO;
 import org.springframework.stereotype.Component;
 
 /**
@@ -39,6 +45,8 @@ public class MockAiAdapter implements AiProviderAdapter {
     private volatile Duration chunkDelay = Duration.ofMillis(25);
     private volatile String scriptedReply;
     private volatile ChatRequest lastRequest;
+    // Số lời gọi nhận dạng chữ sắp tới sẽ lỗi (âm: lỗi mãi cho tới khi đặt lại), để thử lỗi ở một trang (NCL-05-CN-003).
+    private final AtomicInteger ocrFailures = new AtomicInteger();
 
     /**
      * Câu chèn chỉ dẫn mẫu mà bản mô phỏng "nghe theo" như một mô hình ngây thơ (NCL-04-CN-004): nếu câu này lọt tới
@@ -68,8 +76,17 @@ public class MockAiAdapter implements AiProviderAdapter {
 
     public void reset() {
         modes.clear();
+        ocrFailures.set(0);
         scriptedReply = null;
         lastRequest = null;
+    }
+
+    /**
+     * Cho {@code calls} lời gọi nhận dạng chữ tiếp theo lỗi như dịch vụ bên ngoài gặp sự cố; số âm thì lỗi cho tới khi
+     * đặt lại. Chỉ ảnh hưởng nhận dạng chữ, các khả năng khác vẫn chạy.
+     */
+    public void failNextOcr(int calls) {
+        ocrFailures.set(calls);
     }
 
     /** Câu trả lời cố định cho mọi lời gọi sinh văn bản tiếp theo, ví dụ để thử bộ lọc đầu ra; null để bỏ. */
@@ -136,8 +153,100 @@ public class MockAiAdapter implements AiProviderAdapter {
     @Override
     public OcrResult recognizeText(ProviderDescriptor provider, VisionRequest request) {
         behave(provider);
-        String text = "Văn bản mô phỏng nhận dạng từ hình ảnh.";
+        if (ocrFailures.getAndUpdate(left -> left > 0 ? left - 1 : left) != 0) {
+            throw new ProviderCallException("MOCK_OCR_FAILURE", "Bản mô phỏng đang giả lập lỗi nhận dạng chữ");
+        }
+        String text = recognizedText(request.image());
         return new OcrResult(text, new AiUsage(imageUnits(request), words(text)), provider.code());
+    }
+
+    /**
+     * Chữ "nhận dạng" được: ảnh PNG mang sẵn chữ trong khối {@value #OCR_TEXT_KEY} (ảnh mẫu của môi trường thử) thì trả
+     * đúng chữ đó; ảnh một màu (trang trắng) thì không có chữ; còn lại là câu mô phỏng cố định.
+     */
+    static String recognizedText(byte[] image) {
+        String embedded = embeddedText(image);
+        if (embedded != null) {
+            return embedded;
+        }
+        return isPlain(image) ? "" : "Văn bản mô phỏng nhận dạng từ hình ảnh.";
+    }
+
+    /** Tên khối chữ quốc tế (iTXt) trong ảnh PNG mẫu mà bản mô phỏng đọc như chữ nhận dạng được. */
+    public static final String OCR_TEXT_KEY = "MockOcrText";
+
+    private static String embeddedText(byte[] png) {
+        if (png.length < 8 || (png[0] & 0xff) != 0x89 || png[1] != 'P' || png[2] != 'N' || png[3] != 'G') {
+            return null;
+        }
+        ByteBuffer buffer = ByteBuffer.wrap(png);
+        buffer.position(8);
+        while (buffer.remaining() >= 12) {
+            int length = buffer.getInt();
+            byte[] type = new byte[4];
+            buffer.get(type);
+            if (length < 0 || length > buffer.remaining() - 4) {
+                return null;
+            }
+            byte[] data = new byte[length];
+            buffer.get(data);
+            buffer.getInt();
+            if ("iTXt".equals(new String(type, StandardCharsets.US_ASCII))) {
+                String text = iTxt(data);
+                if (text != null) {
+                    return text;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static String iTxt(byte[] data) {
+        int keyEnd = indexOf(data, 0);
+        if (keyEnd < 0 || !OCR_TEXT_KEY.equals(new String(data, 0, keyEnd, StandardCharsets.ISO_8859_1))
+                || keyEnd + 2 >= data.length || data[keyEnd + 1] != 0) {
+            return null;
+        }
+        int languageEnd = indexOf(data, keyEnd + 3);
+        int translatedEnd = languageEnd < 0 ? -1 : indexOf(data, languageEnd + 1);
+        if (translatedEnd < 0) {
+            return null;
+        }
+        return new String(data, translatedEnd + 1, data.length - translatedEnd - 1, StandardCharsets.UTF_8);
+    }
+
+    private static int indexOf(byte[] data, int from) {
+        for (int i = from; i < data.length; i++) {
+            if (data[i] == 0) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /** Ảnh gần như một màu, ví dụ trang giấy trắng chụp lại. Ảnh không đọc được thì coi như có nội dung. */
+    private static boolean isPlain(byte[] image) {
+        try {
+            BufferedImage decoded = ImageIO.read(new ByteArrayInputStream(image));
+            if (decoded == null) {
+                return false;
+            }
+            int min = 255;
+            int max = 0;
+            int stepX = Math.max(1, decoded.getWidth() / 200);
+            int stepY = Math.max(1, decoded.getHeight() / 200);
+            for (int y = 0; y < decoded.getHeight(); y += stepY) {
+                for (int x = 0; x < decoded.getWidth(); x += stepX) {
+                    int rgb = decoded.getRGB(x, y);
+                    int luminance = (((rgb >> 16) & 0xff) * 299 + ((rgb >> 8) & 0xff) * 587 + (rgb & 0xff) * 114) / 1000;
+                    min = Math.min(min, luminance);
+                    max = Math.max(max, luminance);
+                }
+            }
+            return max - min < 24;
+        } catch (IOException ex) {
+            return false;
+        }
     }
 
     /** Vector cố định theo nội dung: cùng đoạn văn bản luôn cho cùng vector, độ dài 1. */

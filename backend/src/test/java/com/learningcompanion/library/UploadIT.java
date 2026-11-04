@@ -49,7 +49,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
  * NCL-05-CN-002 — tải tài liệu lên kho theo từng phần, kiểm qua API, kho tệp và cơ sở dữ liệu thật. Mỗi phần dài 1 KiB
  * để tệp nhỏ cũng đi qua nhiều phần.
  */
-@SpringBootTest(properties = "app.uploads.chunk-size-bytes=1024")
+@SpringBootTest(properties = {"app.uploads.chunk-size-bytes=1024", "app.library.processing.enabled=false"})
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Import(PostgresTestConfiguration.class)

@@ -111,6 +111,31 @@ export class DevApi {
     return response.json()
   }
 
+  /**
+   * Dừng hoặc chạy lại tác vụ nền xử lý tài liệu (NCL-05-CN-003). Kiểm thử tải lên dừng nó để thấy tài liệu chờ xử
+   * lý; chạy lại thì hàng chờ được quét ngay.
+   */
+  async setDocumentProcessing(running: boolean) {
+    const response = await this.request.post(`${API}/dev/library/processing`, { data: { running } })
+    expect(response.ok()).toBeTruthy()
+  }
+
+  /**
+   * Tệp mẫu cho kiểm thử xử lý tài liệu: bài giảng nhiều trang (có thể kèm một trang quét), tệp chỉ có trang trắng,
+   * ảnh trang vở mang sẵn chữ cho bản mô phỏng nhận dạng chữ.
+   */
+  async sampleFile(name: 'lecture.pdf' | 'blank.pdf' | 'notebook.png', params: Record<string, string | number> = {}) {
+    const response = await this.request.get(`${API}/dev/library/samples/${name}`, { params })
+    expect(response.ok()).toBeTruthy()
+    return response.body()
+  }
+
+  /** Cho ngần ấy lời gọi nhận dạng chữ tiếp theo lỗi; số âm: lỗi cho tới khi đặt lại (NCL-05-CN-003 TC-03). */
+  async failNextOcr(calls: number) {
+    const response = await this.request.post(`${API}/dev/ai/mock-ocr-failures`, { data: { calls } })
+    expect(response.ok()).toBeTruthy()
+  }
+
   /** Thông báo mẫu (NCL-02-CN-002) trỏ tới gói dữ liệu không tồn tại; trả về số thông báo đã tạo. */
   async sampleNotifications(email: string, count: number): Promise<number> {
     const response = await this.request.post(`${API}/dev/notifications/sample`, { data: { email, count } })

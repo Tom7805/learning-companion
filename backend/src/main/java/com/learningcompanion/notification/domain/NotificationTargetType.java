@@ -12,5 +12,7 @@ public enum NotificationTargetType {
     /** Trang bảo mật tài khoản; không có mã đối tượng. */
     SECURITY,
     /** Trang lượt trí tuệ nhân tạo và dung lượng của người học; không có mã đối tượng. */
-    USAGE
+    USAGE,
+    /** Một tài liệu trong kho tài liệu; có mã đối tượng. */
+    DOCUMENT
 }

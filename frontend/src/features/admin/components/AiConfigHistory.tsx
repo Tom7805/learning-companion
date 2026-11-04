@@ -13,6 +13,11 @@ interface AiConfigHistoryProps {
   onTrial: (version: AiConfigVersion) => void
   onPublish: (version: AiConfigVersion) => void
   onCompare: (version: AiConfigVersion) => void
+  /**
+   * Chức năng sinh văn bản phải thử phiên bản nháp bằng câu hỏi mẫu trước khi phát hành; nhận dạng chữ và biểu diễn
+   * ngữ nghĩa không có gì để thử nên phát hành thẳng.
+   */
+  trialRequired?: boolean
 }
 
 const statusClass: Record<AiConfigStatus, string> = {
@@ -38,7 +43,14 @@ export function AiConfigStatusBadge({ status }: { status: AiConfigStatus }) {
 }
 
 /** Lịch sử mọi phiên bản của một chức năng, mới nhất trước: ai lưu, ai phát hành, ai thu hồi và lúc nào (TC-05). */
-export function AiConfigHistory({ versions, onEdit, onTrial, onPublish, onCompare }: AiConfigHistoryProps) {
+export function AiConfigHistory({
+  versions,
+  onEdit,
+  onTrial,
+  onPublish,
+  onCompare,
+  trialRequired = true,
+}: AiConfigHistoryProps) {
   const { t, i18n } = useTranslation()
   const id = useId()
   const timeZone = useDisplayTimeZone()
@@ -62,7 +74,8 @@ export function AiConfigHistory({ versions, onEdit, onTrial, onPublish, onCompar
         {versions.map((version) => {
           const name = t('aiConfig.versionName', { version: version.versionNumber })
           const publishable =
-            version.status === 'SUPERSEDED' || (version.status === 'DRAFT' && Boolean(version.lastTrialAt))
+            version.status === 'SUPERSEDED' ||
+            (version.status === 'DRAFT' && (!trialRequired || Boolean(version.lastTrialAt)))
           return (
             <li
               key={version.id}
@@ -115,7 +128,7 @@ export function AiConfigHistory({ versions, onEdit, onTrial, onPublish, onCompar
                 >
                   {t('aiConfig.history.edit')}
                 </Button>
-                {version.status !== 'REVOKED' && (
+                {trialRequired && version.status !== 'REVOKED' && (
                   <Button
                     variant="ghost"
                     className="h-9 px-3 text-sm"

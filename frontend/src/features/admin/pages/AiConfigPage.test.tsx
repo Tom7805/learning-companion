@@ -201,4 +201,34 @@ describe('AiConfigPage', () => {
     expect(lines.querySelector('[data-change="REMOVED"]')).toHaveTextContent('Bỏ:Trả lời ngắn.')
     expect(lines.querySelector('[data-change="ADDED"]')).toHaveTextContent('Thêm:Trả lời đầy đủ, có ví dụ.')
   })
+
+  it('chức năng nhận dạng chữ không có phần thử bằng câu hỏi mẫu; bản nháp phát hành thẳng được', async () => {
+    const ocr: AiConfigVersion[] = [
+      version(2, { feature: 'DOCUMENT_OCR', status: 'DRAFT', lastTrialAt: null, publishedAt: null, publishedBy: null }),
+      version(1, { feature: 'DOCUMENT_OCR', status: 'PUBLISHED', lastTrialAt: null }),
+    ]
+    const calls = serve()
+    server.use(
+      http.get(BASE, () =>
+        HttpResponse.json({
+          ...overview,
+          features: [
+            ...overview.features,
+            { feature: 'DOCUMENT_OCR', capability: 'OCR', published: ocr[1], latestVersion: 2, draftCount: 1 },
+          ],
+        }),
+      ),
+      http.get(`${BASE}/DOCUMENT_OCR/versions`, () => HttpResponse.json(ocr)),
+    )
+    const { user } = renderPage()
+
+    await user.click(within(await screen.findByTestId('ai-config-feature-DOCUMENT_OCR')).getByText('Nhận dạng chữ trong tài liệu'))
+    expect(await screen.findByTestId('ai-config-no-trial')).toHaveTextContent('không thử bằng câu hỏi mẫu')
+    expect(screen.queryByTestId('ai-config-trial')).not.toBeInTheDocument()
+    const draft = await screen.findByTestId('ai-config-version-2')
+    expect(within(draft).queryByRole('button', { name: /Thử/ })).not.toBeInTheDocument()
+    await user.click(within(draft).getByRole('button', { name: 'Phát hành phiên bản 2' }))
+    await user.click(within(await screen.findByRole('dialog')).getByRole('button', { name: /Phát hành/ }))
+    await waitFor(() => expect(calls.map((call) => call.path)).toContain('/DOCUMENT_OCR/versions/2/publish'))
+  })
 })

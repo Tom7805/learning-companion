@@ -9,6 +9,7 @@ import com.learningcompanion.ai.config.application.AiConfigResolver;
 import com.learningcompanion.ai.config.application.AiConfigService;
 import com.learningcompanion.ai.config.application.PromptTrialSamples;
 import com.learningcompanion.ai.config.domain.AiFeature;
+import com.learningcompanion.ai.gateway.AiCapability;
 import com.learningcompanion.ai.safety.api.SafetyStream;
 import com.learningcompanion.ai.safety.application.SafeGenerationService;
 import com.learningcompanion.shared.exception.BusinessException;
@@ -101,6 +102,10 @@ public class AiConfigController {
     public SseEmitter trial(@AuthenticationPrincipal AuthenticatedUser user, @PathVariable AiFeature feature,
                             @PathVariable int number, @Valid @RequestBody PromptTrialRequest body,
                             HttpServletRequest http) {
+        if (feature.capability() != AiCapability.TEXT_GENERATION) {
+            // Nhận dạng chữ và biểu diễn ngữ nghĩa không trả lời câu hỏi, nên không có gì để thử bằng câu hỏi mẫu.
+            throw new BusinessException(ErrorCode.VALIDATION_FAILED, "feature");
+        }
         PromptTrialSamples.SampleSet samples = PromptTrialSamples.find(body.sampleSetId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.VALIDATION_FAILED, "sampleSetId"));
         AiConfigVersionResponse version = configs.version(feature, number);

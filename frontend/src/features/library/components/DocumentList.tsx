@@ -5,6 +5,7 @@ import { cn } from '@/shared/lib/cn'
 import { useDateFormat } from '@/shared/hooks/useDateFormat'
 import { formatBytes } from '@/shared/lib/format'
 import type { DocumentCard, Tag } from '../types'
+import { ProcessingFailure } from './DocumentProcessing'
 import { DocumentStatusBadge } from './DocumentStatusBadge'
 import { InfoButton, PeekButton, SelectBox, StarButton, type DocumentItemHandlers } from './DocumentItemControls'
 import { TagChip } from './TagChip'
@@ -32,7 +33,7 @@ export function DocumentList({ documents, tags, ...handlers }: DocumentListProps
             data-testid="document-item"
             data-title={document.title}
             onDragStart={(event) => handlers.onDragStart(document, event.dataTransfer)}
-            className={cn('flex items-center gap-1 px-2 py-1.5', selected && 'bg-sun-soft')}
+            className={cn('flex flex-wrap items-center gap-1 px-2 py-1.5', selected && 'bg-sun-soft')}
           >
             <SelectBox document={document} checked={selected} onToggle={() => handlers.onToggleSelect(document.id)} />
             <Link
@@ -54,6 +55,9 @@ export function DocumentList({ documents, tags, ...handlers }: DocumentListProps
             <StarButton document={document} onToggle={() => handlers.onToggleStar(document)} />
             <InfoButton document={document} onClick={() => handlers.onInfo(document)} />
             <PeekButton document={document} onClick={() => handlers.onPeek(document)} />
+            {document.status === 'FAILED' && (
+              <ProcessingFailure document={document} className="w-full basis-full pb-1 pl-10 pr-2" />
+            )}
           </li>
         )
       })}

@@ -79,6 +79,12 @@ async function otherLearner(browser: Browser, dev: DevApi) {
 
 test.beforeEach(async ({ dev }) => {
   await dev.resetQuota()
+  // Tài liệu vừa tải lên nằm ở trạng thái chờ xử lý; việc xử lý được kiểm ở processing.spec.ts.
+  await dev.setDocumentProcessing(false)
+})
+
+test.afterEach(async ({ dev }) => {
+  await dev.setDocumentProcessing(true)
 })
 
 test.describe('NCL-05-CN-002 · Tải tài liệu lên kho', () => {

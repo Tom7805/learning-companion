@@ -93,7 +93,12 @@ public class AiGateway {
     }
 
     public EmbeddingResult embed(String feature, EmbeddingRequest request) {
-        return execute(AiCapability.EMBEDDING, feature, ChatRequest.Tuning.NONE, EmbeddingResult::usage,
+        return embed(feature, request, ChatRequest.Tuning.NONE);
+    }
+
+    /** Như {@link #embed(String, EmbeddingRequest)}, theo nhà cung cấp ưu tiên và số phiên bản của cấu hình. */
+    public EmbeddingResult embed(String feature, EmbeddingRequest request, ChatRequest.Tuning tuning) {
+        return execute(AiCapability.EMBEDDING, feature, tuning, EmbeddingResult::usage,
                 EmbeddingResult::withProvider,
                 (adapter, provider, attempt) -> adapter.embed(provider, request), false);
     }
@@ -105,7 +110,12 @@ public class AiGateway {
     }
 
     public OcrResult recognizeText(String feature, VisionRequest request) {
-        return execute(AiCapability.OCR, feature, ChatRequest.Tuning.NONE, OcrResult::usage,
+        return recognizeText(feature, request, ChatRequest.Tuning.NONE);
+    }
+
+    /** Như {@link #recognizeText(String, VisionRequest)}, theo nhà cung cấp ưu tiên và số phiên bản của cấu hình. */
+    public OcrResult recognizeText(String feature, VisionRequest request, ChatRequest.Tuning tuning) {
+        return execute(AiCapability.OCR, feature, tuning, OcrResult::usage,
                 OcrResult::withProvider,
                 (adapter, provider, attempt) -> adapter.recognizeText(provider, request), false);
     }

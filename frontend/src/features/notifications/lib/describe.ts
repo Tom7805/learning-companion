@@ -7,6 +7,8 @@ const CATEGORY: Record<string, NotificationCategory> = {
   NEW_DEVICE_LOGIN: 'security',
   PASSWORD_CHANGED: 'security',
   DATA_EXPORT_READY: 'data',
+  DOCUMENT_READY: 'data',
+  DOCUMENT_PROCESSING_FAILED: 'data',
 }
 
 export function notificationCategory(type: string): NotificationCategory {
@@ -64,6 +66,26 @@ export function describeNotification(notification: AppNotification, t: TFunction
           count: units,
           task: task ? t(`quota.tasks.${task}`, { defaultValue: task }) : t('notifications.types.AI_TASK_REFUNDED.task'),
         }),
+      }
+    }
+    case 'DOCUMENT_READY': {
+      const title = text(params.title) ?? t('notifications.types.DOCUMENT_READY.untitled')
+      return {
+        title: t('notifications.types.DOCUMENT_READY.title'),
+        body: t('notifications.types.DOCUMENT_READY.body', { title }),
+      }
+    }
+    case 'DOCUMENT_PROCESSING_FAILED': {
+      const title = text(params.title) ?? t('notifications.types.DOCUMENT_READY.untitled')
+      const error = text(params.error) ?? 'INTERNAL'
+      const page = number(params.page)
+      const reason =
+        error === 'OCR_FAILED' && page
+          ? t('library.processing.errors.OCR_FAILED_PAGE', { page })
+          : t(`library.processing.errors.${error}`, { defaultValue: t('library.processing.errors.INTERNAL') })
+      return {
+        title: t('notifications.types.DOCUMENT_PROCESSING_FAILED.title'),
+        body: t('notifications.types.DOCUMENT_PROCESSING_FAILED.body', { title, reason }),
       }
     }
     default:

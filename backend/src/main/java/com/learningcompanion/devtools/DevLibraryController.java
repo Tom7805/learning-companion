@@ -3,6 +3,7 @@ package com.learningcompanion.devtools;
 import com.learningcompanion.auth.domain.UserAccount;
 import com.learningcompanion.auth.domain.UserAccountRepository;
 import com.learningcompanion.library.application.DocumentService;
+import com.learningcompanion.library.application.ingestion.IngestionJob;
 import com.learningcompanion.library.domain.Document;
 import com.learningcompanion.library.domain.DocumentRepository;
 import com.learningcompanion.library.domain.DocumentStatus;
@@ -28,9 +29,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -65,11 +71,13 @@ public class DevLibraryController {
     private final JdbcTemplate jdbc;
     private final Clock clock;
     private final EntityManager entityManager;
+    private final IngestionJob ingestion;
 
     public DevLibraryController(UserAccountRepository accounts, DocumentService documentService,
                                 DocumentRepository documents, FolderRepository folders, TagRepository tags,
-                                JdbcTemplate jdbc, Clock clock, EntityManager entityManager) {
+                                JdbcTemplate jdbc, Clock clock, EntityManager entityManager, IngestionJob ingestion) {
         this.entityManager = entityManager;
+        this.ingestion = ingestion;
         this.accounts = accounts;
         this.documentService = documentService;
         this.documents = documents;
@@ -136,6 +144,38 @@ public class DevLibraryController {
         return new SeedResponse(folderIds, tagIds, created);
     }
 
+    /**
+     * Dừng hoặc chạy lại tác vụ nền xử lý tài liệu (NCL-05-CN-003), để kiểm thử của chức năng tải lên thấy tài liệu ở
+     * trạng thái chờ xử lý. Chạy lại thì hàng chờ được quét ngay.
+     */
+    @PostMapping("/processing")
+    public ProcessingState processing(@RequestBody ProcessingState request) {
+        ingestion.setRunning(request.running());
+        return new ProcessingState(ingestion.isRunning());
+    }
+
+    /**
+     * Tệp mẫu cho kiểm thử xử lý tài liệu: {@code lecture.pdf} (bài giảng {@code pages} trang, trang {@code scannedPage}
+     * là ảnh quét), {@code blank.pdf} (chỉ có trang trắng), {@code notebook.png} (ảnh trang vở mang sẵn chữ
+     * {@code text} cho bản mô phỏng nhận dạng chữ).
+     */
+    @GetMapping("/samples/{name}")
+    public ResponseEntity<byte[]> sample(@PathVariable String name, @RequestParam(defaultValue = "3") int pages,
+                                         @RequestParam(defaultValue = "0") int scannedPage,
+                                         @RequestParam(defaultValue = "Ghi chép") String text) {
+        int count = Math.clamp(pages, 1, 200);
+        return switch (name) {
+            case "lecture.pdf" -> file(SampleDocuments.lecture(count, scannedPage), MediaType.APPLICATION_PDF);
+            case "blank.pdf" -> file(SampleDocuments.blank(count), MediaType.APPLICATION_PDF);
+            case "notebook.png" -> file(SampleDocuments.notebook(text), MediaType.IMAGE_PNG);
+            default -> ResponseEntity.notFound().build();
+        };
+    }
+
+    private static ResponseEntity<byte[]> file(byte[] content, MediaType type) {
+        return ResponseEntity.ok().contentType(type).body(content);
+    }
+
     private UUID folderId(UUID ownerId, String path, Map<String, UUID> known, Instant now) {
         UUID parent = null;
         StringBuilder sofar = new StringBuilder();
@@ -180,6 +220,9 @@ public class DevLibraryController {
 
     public record DocumentSeed(String title, DocumentType type, String folder, Set<String> tags, Boolean starred,
                                DocumentStatus status, Integer addedDaysAgo, String text) {
+    }
+
+    public record ProcessingState(boolean running) {
     }
 
     public record SeedResponse(Map<String, UUID> folders, Map<String, UUID> tags, List<UUID> documents) {
