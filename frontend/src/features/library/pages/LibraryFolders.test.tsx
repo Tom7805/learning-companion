@@ -177,6 +177,7 @@ describe('Kho tài liệu (NCL-05-CN-001)', () => {
     await user.type(within(dialog).getByLabelText('Tên thư mục'), 'Giải tích')
     expect(await within(dialog).findByText('Đã có “Giải tích” trong thư mục này.')).toBeInTheDocument()
     expect(within(dialog).getByRole('button', { name: 'Tạo thư mục' })).toBeDisabled()
+    expect(within(dialog).getByRole('button', { name: 'Hủy' })).toBeInTheDocument()
 
     await user.click(within(dialog).getByRole('button', { name: 'Dùng tên “Giải tích (2)”' }))
     expect(within(dialog).getByLabelText('Tên thư mục')).toHaveValue('Giải tích (2)')

@@ -308,7 +308,8 @@
     "back": "Back",
     "retry": "Try again",
     "close": "Close",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "cancel": "Cancel"
   },
   "devices": {
     "nav": "Devices",

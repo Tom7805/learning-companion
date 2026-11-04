@@ -67,7 +67,7 @@ export function DocumentFilters({ query, tags, layout, onChange, onLayoutChange,
           )}
         </Button>
         {!recent && (
-          <div className="flex items-center gap-1.5">
+          <div className="flex min-w-0 grow basis-60 items-center gap-1.5 sm:grow-0">
             <label htmlFor={sortId} className="sr-only">
               {t('library.filters.sort')}
             </label>
@@ -78,7 +78,7 @@ export function DocumentFilters({ query, tags, layout, onChange, onLayoutChange,
                 const sort = event.target.value as LibrarySort
                 onChange((current) => ({ ...current, sort, direction: sort === 'NAME' ? 'ASC' : 'DESC' }))
               }}
-              className="h-11 rounded-field border-[1.5px] border-ink bg-surface px-3 text-[0.9375rem] text-ink"
+              className="h-11 w-full min-w-0 truncate rounded-field border-[1.5px] border-ink bg-surface px-3 text-[0.9375rem] text-ink sm:w-auto"
             >
               {SORTS.map((sort) => (
                 <option key={sort} value={sort}>
@@ -93,7 +93,7 @@ export function DocumentFilters({ query, tags, layout, onChange, onLayoutChange,
                 direction: t(`library.filters.direction.${query.direction}`),
               })}
               title={t(`library.filters.direction.${query.direction}`)}
-              className="grid size-11 place-items-center rounded-xl border-[1.5px] border-ink bg-surface text-ink hover:bg-paper"
+              className="grid size-11 shrink-0 place-items-center rounded-xl border-[1.5px] border-ink bg-surface text-ink hover:bg-paper"
               data-testid="sort-direction"
             >
               {query.direction === 'ASC' ? (
