@@ -161,7 +161,10 @@
     "UPLOAD_PART_OUT_OF_ORDER": "A file part arrived out of order.",
     "UPLOAD_INCOMPLETE": "The file hasn't finished uploading.",
     "MALWARE_SCAN_UNAVAILABLE": "The file can't be checked right now. Please try again in a few minutes.",
-    "DOCUMENT_NOT_FAILED": "This document hasn't failed, so there's nothing to retry."
+    "DOCUMENT_NOT_FAILED": "This document hasn't failed, so there's nothing to retry.",
+    "WEB_ADDRESS_INVALID": "This link is not valid. Paste a page address starting with http:// or https://.",
+    "WEB_ADDRESS_BLOCKED": "Content cannot be fetched from internal network addresses. Use the link of a public page.",
+    "WEB_PAGE_UNAVAILABLE": "Could not fetch this page. You can paste its text to add it to your library."
   },
   "checkEmail": {
     "title": "Check your inbox",
@@ -674,7 +677,9 @@
       "openFull": "Open document",
       "star": "Star",
       "unstar": "Unstar",
-      "downloadFailed": "Couldn't download the original file. Please try again."
+      "downloadFailed": "Couldn't download the original file. Please try again.",
+      "source": "Source page",
+      "fetchedAt": "Fetched at {{time}}"
     },
     "tags": {
       "manage": "Manage tags",
@@ -816,6 +821,50 @@
       },
       "chunks_one": "{{count}} indexed passage",
       "chunks_other": "{{count}} indexed passages"
+    },
+    "addSource": {
+      "fromWeb": "Add from a web page",
+      "fromText": "Paste text",
+      "title": "Add a document without a file",
+      "description": "The new document goes into {{folder}} and is split and indexed just like an uploaded file.",
+      "tabs": "How to add the document",
+      "tab": {
+        "web": "Web page",
+        "text": "Pasted text"
+      },
+      "added": "Added “{{title}}” to {{folder}}, waiting to be processed.",
+      "duplicate": "“{{title}}” is already in your library with the same content. Reuse it instead of adding a copy.",
+      "web": {
+        "label": "Web page link",
+        "hint": "For example: https://en.wikipedia.org/wiki/Sorting_algorithm. Only the main content is kept, without navigation or ads.",
+        "privacy": "A snapshot of the content is saved with the original link and fetch time. Page content is only ever used as material, never as instructions.",
+        "submit": "Add page",
+        "fetching": "Fetching content…",
+        "invalid": "This link is not valid. Paste an address starting with http:// or https://.",
+        "blocked": "Content cannot be fetched from internal network or server addresses. Use the link of a public page.",
+        "pasteInstead": "Paste text instead",
+        "unavailable": {
+          "LOGIN_REQUIRED": "This page requires signing in, so its content could not be fetched. Open it, copy what you need and paste the text here.",
+          "NOT_FOUND": "This page was not found. Check the link, or paste the text instead.",
+          "TIMEOUT": "The page took too long to respond. Try again later, or paste the text instead.",
+          "TOO_LARGE": "The page is too large to fetch automatically. Paste the text you need instead.",
+          "UNSUPPORTED": "The link does not point to a web page or text. Upload it as a file, or paste the text instead.",
+          "NO_CONTENT": "The page has no readable text. Paste the text instead.",
+          "UNREACHABLE": "Could not connect to this page. Check the link, or paste the text instead."
+        }
+      },
+      "text": {
+        "titleLabel": "Document title",
+        "textLabel": "Text",
+        "placeholder": "Paste notes, lecture text or any passage to study. Leave a blank line between paragraphs.",
+        "hint": "Paragraphs separated by blank lines keep their order.",
+        "count_one": "{{words}} word · {{chars}} characters",
+        "count_other": "{{words}} words · {{chars}} characters",
+        "tooLong": "The text is longer than {{max}} characters. Split it or upload it as a file.",
+        "titleRequired": "Give the document a title.",
+        "textRequired": "Paste the text to add.",
+        "submit": "Add text"
+      }
     }
   },
   "account": {

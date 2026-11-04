@@ -128,6 +128,18 @@ public enum ErrorCode {
             "Chưa kiểm tra được tệp lúc này, hãy thử tải lên lại sau ít phút."),
     /** Chỉ tài liệu xử lý lỗi mới thử xử lý lại được (NCL-05-CN-003). */
     DOCUMENT_NOT_FAILED(HttpStatus.CONFLICT, "Tài liệu này không ở trạng thái lỗi nên không cần thử lại."),
+    /** Đường dẫn trang web không đọc được hoặc không dùng giao thức http/https (NCL-05-CN-004). */
+    WEB_ADDRESS_INVALID(HttpStatus.UNPROCESSABLE_CONTENT,
+            "Đường dẫn chưa hợp lệ. Hãy dán địa chỉ trang bắt đầu bằng http:// hoặc https://."),
+    /** Đường dẫn trỏ vào mạng nội bộ hoặc chính máy chủ: không bao giờ lấy nội dung (NCL-05-CN-004 TC-03). */
+    WEB_ADDRESS_BLOCKED(HttpStatus.UNPROCESSABLE_CONTENT,
+            "Không lấy nội dung từ địa chỉ thuộc mạng nội bộ. Hãy dùng đường dẫn của một trang công khai."),
+    /**
+     * Không lấy được nội dung trang (NCL-05-CN-004 TC-04); {@code details.reason} là LOGIN_REQUIRED, NOT_FOUND,
+     * TIMEOUT, TOO_LARGE, UNSUPPORTED, NO_CONTENT hoặc UNREACHABLE. Giao diện gợi ý dán văn bản thay thế.
+     */
+    WEB_PAGE_UNAVAILABLE(HttpStatus.UNPROCESSABLE_CONTENT,
+            "Không lấy được nội dung trang này. Bạn có thể dán văn bản của trang để thêm vào kho."),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Hệ thống gặp sự cố, hãy thử lại sau.");
 
     private final HttpStatus status;

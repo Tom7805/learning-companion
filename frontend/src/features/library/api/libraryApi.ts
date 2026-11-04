@@ -11,11 +11,13 @@ import type {
   LearningDocument,
   LibraryQuery,
   NameCheck,
+  PasteTextRequest,
   StartUploadRequest,
   DocumentChunk,
   UploadProgress,
   Tag,
   TagColor,
+  WebImportRequest,
 } from '../types'
 
 const doc = (id: string) => `/library/documents/${encodeURIComponent(id)}`
@@ -46,6 +48,16 @@ export const libraryApi = {
   /** Các đoạn đã lập chỉ mục, kèm vị trí trong tài liệu gốc. */
   async chunks(id: string) {
     const { data } = await http.get<DocumentChunk[]>(`${doc(id)}/chunks`)
+    return data
+  },
+  /** Thêm tài liệu từ đường dẫn trang web: máy chủ lấy nội dung chính và chặn địa chỉ nội bộ. */
+  async importWeb(body: WebImportRequest) {
+    const { data } = await http.post<DocumentCard>('/library/sources/web', body)
+    return data
+  },
+  /** Tạo tài liệu văn bản từ đoạn dán vào kèm tiêu đề. */
+  async pasteText(body: PasteTextRequest) {
+    const { data } = await http.post<DocumentCard>('/library/sources/text', body)
     return data
   },
   /** Đưa tài liệu xử lý lỗi về hàng chờ để xử lý lại. */

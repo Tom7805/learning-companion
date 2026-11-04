@@ -117,6 +117,13 @@ public class Document implements OwnedEntity {
     @Column(name = "index_provider", length = 40)
     private String indexProvider;
 
+    // Trang web gốc và thời điểm lấy nội dung (NCL-05-CN-004); để trống với tài liệu tải tệp hay dán văn bản.
+    @Column(name = "source_url", updatable = false, length = 2048)
+    private String sourceUrl;
+
+    @Column(name = "fetched_at", updatable = false)
+    private Instant fetchedAt;
+
     @Version
     private long version;
 
@@ -288,6 +295,20 @@ public class Document implements OwnedEntity {
 
     public UUID getTrashBatchId() {
         return trashBatchId;
+    }
+
+    /** Ghi nguồn của tài liệu lấy từ trang web; chỉ gọi khi vừa tạo tài liệu. */
+    public void recordWebSource(String url, Instant fetched) {
+        this.sourceUrl = url;
+        this.fetchedAt = fetched;
+    }
+
+    public String getSourceUrl() {
+        return sourceUrl;
+    }
+
+    public Instant getFetchedAt() {
+        return fetchedAt;
     }
 
     public String getContentSha256() {

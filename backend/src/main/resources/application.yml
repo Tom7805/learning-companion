@@ -102,6 +102,14 @@ app:
     # Chặn tệp nén (văn bản soạn thảo, trình chiếu, sách điện tử) bung ra quá lớn.
     max-inflated-bytes: 536870912
     max-inflate-ratio: 100
+  library:
+    web-fetch:
+      # http: lấy trang thật (chặn mạng nội bộ) | mock: trang mẫu cố định cho máy phát triển và kiểm thử.
+      mode: ${APP_WEB_FETCH_MODE:http}
+      connect-timeout: 5s
+      timeout: 15s
+      max-bytes: 3145728
+      max-redirects: 5
   oauth:
     # disabled | google | mock. Môi trường thật đặt APP_OAUTH_MODE=google kèm mã ứng dụng Google.
     mode: ${APP_OAUTH_MODE:disabled}

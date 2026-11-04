@@ -161,7 +161,10 @@
     "UPLOAD_PART_OUT_OF_ORDER": "Phần tệp gửi lên chưa đúng thứ tự.",
     "UPLOAD_INCOMPLETE": "Tệp chưa tải lên xong.",
     "MALWARE_SCAN_UNAVAILABLE": "Chưa kiểm tra được tệp lúc này. Hãy thử lại sau ít phút.",
-    "DOCUMENT_NOT_FAILED": "Tài liệu này không ở trạng thái lỗi nên không cần thử lại."
+    "DOCUMENT_NOT_FAILED": "Tài liệu này không ở trạng thái lỗi nên không cần thử lại.",
+    "WEB_ADDRESS_INVALID": "Đường dẫn chưa hợp lệ. Hãy dán địa chỉ trang bắt đầu bằng http:// hoặc https://.",
+    "WEB_ADDRESS_BLOCKED": "Không lấy nội dung từ địa chỉ thuộc mạng nội bộ. Hãy dùng đường dẫn của một trang công khai.",
+    "WEB_PAGE_UNAVAILABLE": "Không lấy được nội dung trang này. Bạn có thể dán văn bản của trang để thêm vào kho."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -674,7 +677,9 @@
       "openFull": "Mở tài liệu",
       "star": "Gắn sao",
       "unstar": "Bỏ sao",
-      "downloadFailed": "Chưa tải được tệp gốc, hãy thử lại."
+      "downloadFailed": "Chưa tải được tệp gốc, hãy thử lại.",
+      "source": "Trang gốc",
+      "fetchedAt": "Lấy nội dung lúc {{time}}"
     },
     "tags": {
       "manage": "Quản lý nhãn",
@@ -816,6 +821,50 @@
       },
       "chunks_one": "{{count}} đoạn đã lập chỉ mục",
       "chunks_other": "{{count}} đoạn đã lập chỉ mục"
+    },
+    "addSource": {
+      "fromWeb": "Thêm từ trang web",
+      "fromText": "Dán văn bản",
+      "title": "Thêm tài liệu không cần tệp",
+      "description": "Tài liệu mới sẽ nằm trong {{folder}} và được chia đoạn, lập chỉ mục như tệp tải lên.",
+      "tabs": "Cách thêm tài liệu",
+      "tab": {
+        "web": "Trang web",
+        "text": "Văn bản dán"
+      },
+      "added": "Đã thêm “{{title}}” vào {{folder}}, đang chờ xử lý.",
+      "duplicate": "“{{title}}” đã có trong kho của bạn với cùng nội dung. Hãy dùng lại bản đó thay vì thêm bản mới.",
+      "web": {
+        "label": "Đường dẫn trang web",
+        "hint": "Ví dụ: https://vi.wikipedia.org/wiki/Thuật_toán_sắp_xếp. Chỉ lưu phần nội dung chính, bỏ thanh điều hướng và quảng cáo.",
+        "privacy": "Hệ thống lưu một bản chụp nội dung kèm đường dẫn gốc và thời điểm lấy. Nội dung trang chỉ được dùng làm tài liệu, không bao giờ được coi là câu lệnh.",
+        "submit": "Thêm trang",
+        "fetching": "Đang lấy nội dung…",
+        "invalid": "Đường dẫn chưa hợp lệ. Hãy dán địa chỉ bắt đầu bằng http:// hoặc https://.",
+        "blocked": "Không lấy nội dung từ địa chỉ thuộc mạng nội bộ hay chính máy chủ. Hãy dùng đường dẫn của một trang công khai.",
+        "pasteInstead": "Dán văn bản thay thế",
+        "unavailable": {
+          "LOGIN_REQUIRED": "Trang này yêu cầu đăng nhập nên không lấy được nội dung. Bạn có thể mở trang, sao chép phần cần học rồi dán văn bản vào đây.",
+          "NOT_FOUND": "Không tìm thấy trang này. Hãy kiểm tra lại đường dẫn, hoặc dán văn bản thay thế.",
+          "TIMEOUT": "Trang phản hồi quá lâu nên chưa lấy được nội dung. Hãy thử lại sau, hoặc dán văn bản thay thế.",
+          "TOO_LARGE": "Trang quá lớn để lấy tự động. Hãy dán phần văn bản cần học thay thế.",
+          "UNSUPPORTED": "Đường dẫn không trỏ tới một trang web hay văn bản. Nếu là tệp, hãy tải tệp lên; hoặc dán văn bản thay thế.",
+          "NO_CONTENT": "Trang không có nội dung chữ nào đọc được. Hãy dán văn bản thay thế.",
+          "UNREACHABLE": "Không kết nối được tới trang này. Hãy kiểm tra lại đường dẫn, hoặc dán văn bản thay thế."
+        }
+      },
+      "text": {
+        "titleLabel": "Tiêu đề tài liệu",
+        "textLabel": "Văn bản",
+        "placeholder": "Dán ghi chép, bài giảng hay đoạn văn cần học. Để một dòng trống giữa các đoạn.",
+        "hint": "Đoạn văn cách nhau bằng dòng trống được giữ đúng thứ tự.",
+        "count_one": "{{words}} chữ · {{chars}} ký tự",
+        "count_other": "{{words}} chữ · {{chars}} ký tự",
+        "tooLong": "Văn bản dài quá {{max}} ký tự. Hãy chia nhỏ hoặc tải lên dạng tệp.",
+        "titleRequired": "Hãy đặt tiêu đề cho tài liệu.",
+        "textRequired": "Hãy dán văn bản cần thêm.",
+        "submit": "Thêm văn bản"
+      }
     }
   },
   "account": {

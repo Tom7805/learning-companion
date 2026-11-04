@@ -137,6 +137,23 @@ public class DocumentService implements LearningDataUsage {
     @Transactional
     public Document createUploaded(UUID ownerId, UUID folderId, String title, DocumentType type,
                                    String originalFilename, String mimeType, byte[] file, String contentSha256) {
+        return createQueued(ownerId, folderId, title, type, originalFilename, mimeType, file, contentSha256, null, null);
+    }
+
+    /**
+     * Tạo tài liệu từ bản chụp nội dung chính của một trang web (NCL-05-CN-004): đi qua đúng luồng của tệp tải lên
+     * (kiểm dung lượng, lưu mã hóa, chờ trích văn bản và lập chỉ mục), kèm đường dẫn gốc và thời điểm lấy nội dung.
+     */
+    @Transactional
+    public Document createFromWeb(UUID ownerId, UUID folderId, String title, String originalFilename, byte[] snapshot,
+                                  String contentSha256, String sourceUrl, Instant fetchedAt) {
+        return createQueued(ownerId, folderId, title, DocumentType.WEB, originalFilename, "text/html; charset=utf-8",
+                snapshot, contentSha256, sourceUrl, fetchedAt);
+    }
+
+    private Document createQueued(UUID ownerId, UUID folderId, String title, DocumentType type,
+                                  String originalFilename, String mimeType, byte[] file, String contentSha256,
+                                  String sourceUrl, Instant fetchedAt) {
         storageQuota.requireRoom(ownerId, file.length);
         Set<String> taken = takenTitles(ownerId, folderId, Set.of());
         String unique = taken.contains(LibraryNames.key(title))
@@ -146,6 +163,9 @@ public class DocumentService implements LearningDataUsage {
         Document document = Document.create(ownerId, unique, type, "", originalFilename, mimeType, file.length, key,
                 contentSha256, now);
         document.moveTo(folderId, now);
+        if (sourceUrl != null) {
+            document.recordWebSource(sourceUrl, fetchedAt);
+        }
         document.changeStatus(DocumentStatus.PENDING);
         Document saved = documents.save(document);
         // Tác vụ nền trích văn bản và lập chỉ mục nhận tài liệu ngay khi giao dịch lưu xong (NCL-05-CN-003).

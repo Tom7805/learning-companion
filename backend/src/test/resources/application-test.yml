@@ -1,4 +1,7 @@
 app:
+  library:
+    web-fetch:
+      mode: ${APP_WEB_FETCH_MODE:mock}
   mail:
     gateway: mock
   dev-tools:

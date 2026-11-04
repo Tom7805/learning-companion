@@ -1,5 +1,8 @@
 # Môi trường phát triển: thư gửi qua bản mô phỏng, đồng hồ điều chỉnh được để thử các mốc hết hạn.
 app:
+  library:
+    web-fetch:
+      mode: ${APP_WEB_FETCH_MODE:mock}
   mail:
     gateway: mock
   dev-tools:
