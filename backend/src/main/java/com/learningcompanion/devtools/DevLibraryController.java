@@ -44,17 +44,18 @@ import org.springframework.web.bind.annotation.RestController;
 @ConditionalOnProperty(name = "app.dev-tools.enabled", havingValue = "true")
 public class DevLibraryController {
 
-    private static final Map<DocumentType, String[]> FILES = Map.of(
-            DocumentType.PDF, new String[] {"pdf", "application/pdf"},
-            DocumentType.DOCX, new String[] {"docx",
-                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
-            DocumentType.PPTX, new String[] {"pptx",
-                    "application/vnd.openxmlformats-officedocument.presentationml.presentation"},
-            DocumentType.TEXT, new String[] {"txt", "text/plain; charset=utf-8"},
-            DocumentType.IMAGE, new String[] {"png", "image/png"},
-            DocumentType.AUDIO, new String[] {"mp3", "audio/mpeg"},
-            DocumentType.VIDEO, new String[] {"mp4", "video/mp4"},
-            DocumentType.WEB, new String[] {"html", "text/html; charset=utf-8"});
+    private static final Map<DocumentType, String[]> FILES = Map.ofEntries(
+            Map.entry(DocumentType.PDF, new String[] {"pdf", "application/pdf"}),
+            Map.entry(DocumentType.DOCX, new String[] {"docx",
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"}),
+            Map.entry(DocumentType.PPTX, new String[] {"pptx",
+                    "application/vnd.openxmlformats-officedocument.presentationml.presentation"}),
+            Map.entry(DocumentType.EPUB, new String[] {"epub", "application/epub+zip"}),
+            Map.entry(DocumentType.TEXT, new String[] {"txt", "text/plain; charset=utf-8"}),
+            Map.entry(DocumentType.IMAGE, new String[] {"png", "image/png"}),
+            Map.entry(DocumentType.AUDIO, new String[] {"mp3", "audio/mpeg"}),
+            Map.entry(DocumentType.VIDEO, new String[] {"mp4", "video/mp4"}),
+            Map.entry(DocumentType.WEB, new String[] {"html", "text/html; charset=utf-8"}));
 
     private final UserAccountRepository accounts;
     private final DocumentService documentService;

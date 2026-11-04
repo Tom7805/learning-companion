@@ -69,6 +69,13 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
+        <!-- Đọc tệp tài liệu dạng trang: nhận biết tệp có mật khẩu hoặc hỏng khi tải lên -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>3.0.7</version>
+        </dependency>
+
         <!-- Kiểm thử -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

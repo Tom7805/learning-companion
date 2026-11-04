@@ -28,5 +28,7 @@ public enum AuditObjectType {
     /** Một thư mục trong kho tài liệu của người học. */
     LIBRARY_FOLDER,
     /** Một nhãn trong kho tài liệu của người học. */
-    LIBRARY_TAG
+    LIBRARY_TAG,
+    /** Một lần tải tệp lên kho tài liệu (NCL-05-CN-002). */
+    LIBRARY_UPLOAD
 }

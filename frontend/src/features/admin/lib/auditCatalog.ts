@@ -74,6 +74,7 @@ export const AUDIT_ACTIONS: Record<AuditCategory, string[]> = {
     'AI_OUTPUT_BLOCKED',
     'AI_SELF_HARM_SUPPORT_GIVEN',
     'AI_SOURCE_INJECTION_FLAGGED',
+    'DOCUMENT_UPLOAD_REJECTED',
   ],
 }
 
@@ -100,6 +101,7 @@ export const AUDIT_OBJECT_TYPES = [
   'AI_SAFETY_EVENT',
   'LIBRARY_FOLDER',
   'LIBRARY_TAG',
+  'LIBRARY_UPLOAD',
 ]
 
 export function isAuditCategory(value: string | null | undefined): value is AuditCategory {

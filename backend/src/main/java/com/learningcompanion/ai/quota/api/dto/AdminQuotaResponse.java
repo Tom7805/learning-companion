@@ -12,7 +12,8 @@ public record AdminQuotaResponse(Policy policy, List<Cost> costs) {
     }
 
     /** {@code updatedBy} trống khi vẫn là giá trị mặc định lúc cài đặt. */
-    public record Policy(int dailyAiUnits, long storageLimitBytes, Instant updatedAt, Actor updatedBy) {
+    public record Policy(int dailyAiUnits, long storageLimitBytes, long maxUploadFileBytes, Instant updatedAt,
+                         Actor updatedBy) {
     }
 
     public record Cost(QuotaTask task, QuotaTask.Weight weight, int units, int defaultUnits, Instant updatedAt,

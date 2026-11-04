@@ -5,6 +5,8 @@ public enum DocumentType {
     PDF,
     DOCX,
     PPTX,
+    /** Sách điện tử. */
+    EPUB,
     TEXT,
     IMAGE,
     AUDIO,

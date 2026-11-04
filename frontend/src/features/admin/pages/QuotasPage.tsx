@@ -92,32 +92,40 @@ function PolicyForm({ data }: { data: AdminQuota }) {
   const { t } = useTranslation()
   const currentMb = Math.round(data.policy.storageLimitBytes / MEBIBYTE)
   const [daily, setDaily] = useState(String(data.policy.dailyAiUnits))
+  const currentFileMb = Math.round(data.policy.maxUploadFileBytes / MEBIBYTE)
   const [storage, setStorage] = useState(String(currentMb))
+  const [maxFile, setMaxFile] = useState(String(currentFileMb))
   const [confirming, setConfirming] = useState(false)
   const save = useAdminQuotaMutation(quotaApi.updatePolicy)
   const dailyValue = integer(daily)
   const storageValue = integer(storage)
+  const maxFileValue = integer(maxFile)
   const dailyError = Number.isInteger(dailyValue) && dailyValue >= 1 && dailyValue <= 10000
     ? undefined : t('adminQuota.policy.dailyInvalid')
   const storageError = Number.isInteger(storageValue) && storageValue >= 10 && storageValue <= 1048576
     ? undefined : t('adminQuota.policy.storageInvalid')
+  const maxFileError = Number.isInteger(maxFileValue) && maxFileValue >= 1 && maxFileValue <= 2048
+    && (!Number.isInteger(storageValue) || maxFileValue <= storageValue)
+    ? undefined : t('adminQuota.policy.maxFileInvalid')
   const changes: Change[] = [
     ...(dailyValue !== data.policy.dailyAiUnits
       ? [{ label: t('adminQuota.policy.daily'), before: data.policy.dailyAiUnits, after: dailyValue }] : []),
     ...(storageValue !== currentMb
       ? [{ label: t('adminQuota.policy.storage'), before: currentMb, after: storageValue }] : []),
+    ...(maxFileValue !== currentFileMb
+      ? [{ label: t('adminQuota.policy.maxFile'), before: currentFileMb, after: maxFileValue }] : []),
   ]
   const [touched, setTouched] = useState(false)
 
   const submit = (event: FormEvent) => {
     event.preventDefault()
     setTouched(true)
-    if (dailyError || storageError || changes.length === 0) return
+    if (dailyError || storageError || maxFileError || changes.length === 0) return
     setConfirming(true)
   }
   const confirm = () =>
     save.mutate(
-      { dailyAiUnits: dailyValue, storageLimitMb: storageValue },
+      { dailyAiUnits: dailyValue, storageLimitMb: storageValue, maxUploadFileMb: maxFileValue },
       {
         onSuccess: () => {
           setConfirming(false)
@@ -160,11 +168,19 @@ function PolicyForm({ data }: { data: AdminQuota }) {
           error={touched ? storageError : undefined}
           hint={t('adminQuota.policy.storageHint')}
         />
+        <TextField
+          label={t('adminQuota.policy.maxFile')}
+          inputMode="numeric"
+          value={maxFile}
+          onChange={(event) => setMaxFile(event.target.value)}
+          error={touched ? maxFileError : undefined}
+          hint={t('adminQuota.policy.maxFileHint')}
+        />
         <div className="flex flex-wrap items-center gap-3">
           <Button type="submit" variant="accent" disabled={changes.length === 0 && !touched}>
             {t('adminQuota.policy.save')}
           </Button>
-          {touched && changes.length === 0 && !dailyError && !storageError && (
+          {touched && changes.length === 0 && !dailyError && !storageError && !maxFileError && (
             <span className="text-sm text-muted">{t('adminQuota.noChanges')}</span>
           )}
         </div>

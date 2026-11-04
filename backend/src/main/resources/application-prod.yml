@@ -8,3 +8,6 @@ app:
     gateway: smtp
   dev-tools:
     enabled: false
+  uploads:
+    # Môi trường thật quét mã độc bằng ClamAV; không quét được thì tệp không được nhận.
+    malware-scanner: ${APP_MALWARE_SCANNER:clamav}

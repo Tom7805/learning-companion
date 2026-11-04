@@ -7,7 +7,7 @@ import { renderWithProviders } from '@/test/renderWithProviders'
 import { QuotasPage } from './QuotasPage'
 
 const overview: AdminQuota = {
-  policy: { dailyAiUnits: 50, storageLimitBytes: 1073741824, updatedAt: '2026-11-03T08:00:00Z', updatedBy: null },
+  policy: { dailyAiUnits: 50, storageLimitBytes: 1073741824, maxUploadFileBytes: 52428800, updatedAt: '2026-11-03T08:00:00Z', updatedBy: null },
   costs: [
     { task: 'ASSISTANT_QUESTION', weight: 'LIGHT', units: 1, defaultUnits: 1, updatedAt: '2026-11-03T08:00:00Z' },
     { task: 'QUIZ_GENERATION', weight: 'LONG', units: 5, defaultUnits: 5, updatedAt: '2026-11-03T08:00:00Z' },
@@ -26,6 +26,7 @@ describe('QuotasPage', () => {
           policy: {
             dailyAiUnits: 20,
             storageLimitBytes: 500 * 1024 * 1024,
+            maxUploadFileBytes: 50 * 1024 * 1024,
             updatedAt: '2026-11-03T09:00:00Z',
             updatedBy: { id: 'a1', displayName: 'Lan Anh' },
           },
@@ -47,9 +48,37 @@ describe('QuotasPage', () => {
     expect(within(dialog).getByTestId('admin-quota-changes')).toHaveTextContent('Lượt AI mỗi ngày: 50 → 20')
     expect(within(dialog).getByTestId('admin-quota-changes')).toHaveTextContent('(MB): 1024 → 500')
     await user.click(within(dialog).getByRole('button', { name: 'Áp dụng' }))
-    await waitFor(() => expect(sent).toEqual({ dailyAiUnits: 20, storageLimitMb: 500 }))
+    await waitFor(() => expect(sent).toEqual({ dailyAiUnits: 20, storageLimitMb: 500, maxUploadFileMb: 50 }))
     expect(await screen.findByText('Đã lưu hạn mức mới.')).toBeInTheDocument()
     expect(await screen.findByTestId('admin-quota-last-change')).toHaveTextContent('Sửa lần cuối bởi Lan Anh')
+  })
+
+  it('đổi dung lượng tối đa một tệp tải lên; lớn hơn cả dung lượng kho thì bị chặn (NCL-05-CN-002)', async () => {
+    let sent: unknown
+    server.use(
+      http.get('*/api/v1/admin/quotas', () => HttpResponse.json(overview)),
+      http.put('*/api/v1/admin/quotas/policy', async ({ request }) => {
+        sent = await request.json()
+        return HttpResponse.json(overview)
+      }),
+    )
+    const { user } = renderWithProviders(<QuotasPage />)
+    const policy = await screen.findByTestId('admin-quota-policy')
+    const maxFile = within(policy).getByLabelText('Dung lượng tối đa một tệp tải lên (MB)')
+    expect(maxFile).toHaveValue('50')
+    await user.clear(maxFile)
+    await user.type(maxFile, '2000')
+    await user.click(within(policy).getByRole('button', { name: 'Lưu hạn mức' }))
+    expect(within(policy).getByText('Nhập số nguyên từ 1 đến 2048, không lớn hơn dung lượng mỗi người học.')).toBeInTheDocument()
+    expect(sent).toBeUndefined()
+
+    await user.clear(maxFile)
+    await user.type(maxFile, '100')
+    await user.click(within(policy).getByRole('button', { name: 'Lưu hạn mức' }))
+    const dialog = await screen.findByRole('dialog', { name: 'Xác nhận đổi hạn mức' })
+    expect(within(dialog).getByTestId('admin-quota-changes')).toHaveTextContent('tải lên (MB): 50 → 100')
+    await user.click(within(dialog).getByRole('button', { name: 'Áp dụng' }))
+    await waitFor(() => expect(sent).toEqual({ dailyAiUnits: 50, storageLimitMb: 1024, maxUploadFileMb: 100 }))
   })
 
   it('giá trị ngoài khoảng cho phép bị chặn ngay, không gửi lên máy chủ', async () => {

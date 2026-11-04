@@ -155,7 +155,12 @@
     "STORAGE_QUOTA_EXCEEDED": "Your library doesn't have room for this file. Delete some old documents and try again.",
     "LIBRARY_NAME_TAKEN": "That name is already used in this folder. Choose another one.",
     "LIBRARY_FOLDER_CYCLE": "A folder can't be moved into itself or one of its subfolders.",
-    "LIBRARY_TAG_NAME_TAKEN": "You already have a tag with this name."
+    "LIBRARY_TAG_NAME_TAKEN": "You already have a tag with this name.",
+    "UPLOAD_REJECTED": "This file wasn't accepted.",
+    "LIBRARY_DOCUMENT_DUPLICATE": "This document is already in your library.",
+    "UPLOAD_PART_OUT_OF_ORDER": "A file part arrived out of order.",
+    "UPLOAD_INCOMPLETE": "The file hasn't finished uploading.",
+    "MALWARE_SCAN_UNAVAILABLE": "The file can't be checked right now. Please try again in a few minutes."
   },
   "checkEmail": {
     "title": "Check your inbox",
@@ -485,7 +490,8 @@
       "IMAGE": "Image",
       "AUDIO": "Audio",
       "VIDEO": "Video",
-      "WEB": "Web page"
+      "WEB": "Web page",
+      "EPUB": "E-book"
     },
     "onlyYou": "Only visible to you",
     "addedAt": "Added {{time}}",
@@ -727,7 +733,59 @@
     },
     "actionFailed": "That didn't work. Please try again.",
     "starredToast": "Starred “{{title}}”.",
-    "unstarredToast": "Unstarred “{{title}}”."
+    "unstarredToast": "Unstarred “{{title}}”.",
+    "upload": {
+      "dropHint": "Drag files here to upload to {{folder}}",
+      "dropNow": "Drop files to upload to {{folder}}",
+      "formats": "PDF, Word, PowerPoint, EPUB e-books, plain text and photos. You can pick several files at once.",
+      "formatsWithLimit": "PDF, Word, PowerPoint, EPUB e-books, plain text and photos, up to {{max}} per file. You can pick several files at once.",
+      "choose": "Choose files",
+      "started_one": "Uploading {{count}} file to {{folder}}",
+      "started_other": "Uploading {{count}} files to {{folder}}",
+      "queueActive_one": "Uploading {{count}} file",
+      "queueActive_other": "Uploading {{count}} files",
+      "queueDone": "Uploaded {{done}} of {{total}} files",
+      "clear": "Hide finished files",
+      "cancelFile": "Cancel uploading {{name}}",
+      "retryFile": "Retry uploading {{name}}",
+      "renameFile": "Rename {{name}}",
+      "rename": "Rename",
+      "failed": "Couldn't upload. Please try again.",
+      "folderGone": "The target folder no longer exists. Pick another folder and upload again.",
+      "state": {
+        "queued": "Waiting",
+        "preparing": "Preparing",
+        "uploading": "Uploading {{sent}} / {{total}}",
+        "offline": "Connection lost at {{sent}} / {{total}}. Will resume when you're back online",
+        "verifying": "Checking the file",
+        "done": "Added to {{folder}}, waiting to be processed",
+        "duplicate": "Already in your library, in {{location}}",
+        "cancelled": "Cancelled"
+      },
+      "reasons": {
+        "MALWARE": "The file contains malware, so it wasn't saved.",
+        "UNSUPPORTED": "This format isn't accepted. Use PDF, Word, PowerPoint, EPUB, plain text or images.",
+        "PASSWORD_PROTECTED": "The file is password-protected. Remove the password and upload it again.",
+        "CORRUPTED": "The file is damaged or can't be opened.",
+        "EXPANDS_TOO_LARGE": "The file expands to an excessive size when opened, so it wasn't accepted.",
+        "EMPTY": "The file is empty.",
+        "TOO_LARGE": "The file is larger than the {{max}} per-file limit."
+      },
+      "duplicate": {
+        "title": "This document is already in your library",
+        "body": "“{{file}}” has the same content as “{{title}}” in {{location}}.",
+        "reuse": "Each document only needs to be stored once. Reuse the existing copy: every study space can link to it without using more storage.",
+        "openExisting": "Open existing copy",
+        "openFolder": "Open its folder",
+        "details": "Details"
+      },
+      "announce": {
+        "done": "Uploaded {{name}} to {{folder}}.",
+        "duplicate": "{{name}} is already in your library.",
+        "problem": "Couldn't upload {{name}}: {{reason}}",
+        "offline": "Connection lost. The upload will resume when you're back online."
+      }
+    }
   },
   "account": {
     "menu": "Account menu for {{name}}",
@@ -1322,7 +1380,8 @@
       "CONTENT_SAFETY": "Content filter levels",
       "AI_SAFETY_EVENT": "Content filter event",
       "LIBRARY_FOLDER": "Library folder",
-      "LIBRARY_TAG": "Library tag"
+      "LIBRARY_TAG": "Library tag",
+      "LIBRARY_UPLOAD": "File upload"
     },
     "actions": {
       "ACCOUNT_REGISTERED": "Account registered",
@@ -1391,7 +1450,8 @@
       "AI_OUTPUT_BLOCKED": "Hid unsafe generated content",
       "AI_SELF_HARM_SUPPORT_GIVEN": "Gave a caring reply to a self-harm signal",
       "AI_SOURCE_INJECTION_FLAGGED": "Flagged a source for prompt injection",
-      "CONTENT_SAFETY_LEVELS_CHANGED": "Changed content filter levels"
+      "CONTENT_SAFETY_LEVELS_CHANGED": "Changed content filter levels",
+      "DOCUMENT_UPLOAD_REJECTED": "Rejected a file uploaded to the library"
     }
   },
   "adminLogin": {
@@ -1880,7 +1940,10 @@
       "storageHint": "At least 10 MB; 1024 MB is 1 GB.",
       "storageInvalid": "Enter a whole number from 10 to 1,048,576.",
       "save": "Save quota",
-      "saved": "New quota saved."
+      "saved": "New quota saved.",
+      "maxFile": "Maximum size per uploaded file (MB)",
+      "maxFileHint": "From 1 to 2048 MB. Larger files are rejected as soon as a learner picks them.",
+      "maxFileInvalid": "Enter a whole number from 1 to 2048, no larger than the storage per learner."
     },
     "costs": {
       "title": "Credit costs",

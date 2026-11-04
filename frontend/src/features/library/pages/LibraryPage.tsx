@@ -1,5 +1,5 @@
 import { BookOpen, ChevronRight, Folder as FolderIcon, FolderTree as FolderTreeIcon, SearchX } from 'lucide-react'
-import { useCallback, useLayoutEffect, useMemo, useRef, useState, type DragEvent } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type DragEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router'
 import { useSidePanel } from '@/app/providers/sidePanel'
@@ -18,15 +18,21 @@ import { DocumentInfoPanel } from '../components/DocumentInfoPanel'
 import type { DocumentItemHandlers } from '../components/DocumentItemControls'
 import { DocumentList } from '../components/DocumentList'
 import { DocumentPeek } from '../components/DocumentPeek'
+import { DuplicateDialog } from '../components/DuplicateDialog'
 import { FolderNameDialog } from '../components/FolderNameDialog'
 import { FolderTree } from '../components/FolderTree'
 import { MoveDialog } from '../components/MoveDialog'
 import { PrivacyNote } from '../components/PrivacyNote'
+import { RenameDocumentDialog } from '../components/RenameDocumentDialog'
 import { StorageMeter } from '../components/StorageMeter'
 import { TagAssignDialog, TagManagerDialog } from '../components/TagManager'
+import { UploadDropzone } from '../components/UploadDropzone'
+import { UploadQueue } from '../components/UploadQueue'
+import { useChunkedUpload, type UploadItem } from '../hooks/useChunkedUpload'
 import { conflictMessage, useDocumentActions } from '../hooks/useDocumentActions'
 import { DRAG_DOCUMENTS, readDraggedDocuments, writeDraggedDocuments } from '../lib/drag'
 import { hasFilters, parseLibraryQuery, toSearchParams } from '../lib/query'
+import { isFileDrag } from '../lib/uploadText'
 import { buildTree, descendantIds, folderPath, type FolderNode } from '../lib/tree'
 import type { DocumentCard, Folder, LibraryQuery } from '../types'
 
@@ -41,6 +47,8 @@ type DialogState =
   | { kind: 'tagDocuments' }
   | { kind: 'deleteDocuments' }
   | { kind: 'manageTags' }
+  | { kind: 'duplicate'; item: UploadItem }
+  | { kind: 'renameUpload'; item: UploadItem }
   | null
 
 function storedLayout(): LibraryLayout {
@@ -71,6 +79,18 @@ export function LibraryPage() {
   const [dialog, setDialog] = useState<DialogState>(null)
   const [treeOpen, setTreeOpen] = useState(false)
   const [moveError, setMoveError] = useState<string | null>(null)
+  const uploads = useChunkedUpload()
+  const [fileDragging, setFileDragging] = useState(false)
+  const shownDuplicates = useRef(new Set<string>())
+
+  // Báo trùng ngay bằng hộp thoại, một lần cho mỗi tệp; sau đó vẫn mở lại được từ hàng đợi.
+  useEffect(() => {
+    if (dialog !== null) return
+    const next = uploads.items.find((item) => item.state === 'duplicate' && !shownDuplicates.current.has(item.key))
+    if (!next) return
+    shownDuplicates.current.add(next.key)
+    setDialog({ kind: 'duplicate', item: next })
+  }, [uploads.items, dialog])
 
   const folders = useMemo(() => tree.data?.folders ?? [], [tree.data])
   const tagMap = useMemo(() => new Map((tags.data ?? []).map((tag) => [tag.id, tag])), [tags.data])
@@ -218,6 +238,16 @@ export function LibraryPage() {
     query.scope === 'FOLDER' && query.folderId && documents.isError && toApiError(documents.error).status === 404
   const libraryEmpty = tree.data?.totalDocumentCount === 0 && query.scope === 'ALL' && !hasFilters(query)
   const totalBytes = list.reduce((sum, document) => sum + document.sizeBytes, 0)
+  // Tệp kéo vào trang đi vào thư mục đang mở; ở các lối tắt (tất cả, gần đây, có gắn sao) thì vào thư mục gốc.
+  const uploadFolderId = query.scope === 'FOLDER' ? (query.folderId ?? null) : null
+  const uploadFolderName = uploadFolderId ? (currentFolder?.name ?? t('library.shortcuts.root')) : t('library.shortcuts.root')
+  const canUpload = !folderMissing && !(uploadFolderId && !currentFolder && tree.isPending)
+  const uploadFiles = (files: File[]) => {
+    setFileDragging(false)
+    if (!canUpload || !files.length) return
+    const added = uploads.add(files, uploadFolderId, uploadFolderName)
+    toast.success(t('library.upload.started', { count: added.length, folder: uploadFolderName }))
+  }
 
   const asideContent = treeProps && (
     <div className="flex flex-col gap-4">
@@ -249,7 +279,24 @@ export function LibraryPage() {
           {tree.isPending ? <Skeleton className="h-72" /> : <div className="sticky top-4">{asideContent}</div>}
         </aside>
 
-        <div className="flex min-w-0 flex-col gap-4">
+        <div
+          className="flex min-w-0 flex-col gap-4"
+          data-testid="library-main"
+          onDragOver={(event) => {
+            if (!canUpload || !isFileDrag(event)) return
+            event.preventDefault()
+            event.dataTransfer.dropEffect = 'copy'
+            if (!fileDragging) setFileDragging(true)
+          }}
+          onDragLeave={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFileDragging(false)
+          }}
+          onDrop={(event) => {
+            if (!isFileDrag(event)) return
+            event.preventDefault()
+            uploadFiles(Array.from(event.dataTransfer.files))
+          }}
+        >
           <div className="lg:hidden">
             <Button
               variant="outline"
@@ -303,6 +350,16 @@ export function LibraryPage() {
               ))}
             </section>
           )}
+
+          {canUpload && <UploadDropzone targetName={uploadFolderName} active={fileDragging} onFiles={uploadFiles} />}
+          <UploadQueue
+            items={uploads.items}
+            onCancel={uploads.cancel}
+            onRetry={uploads.retry}
+            onRename={(item) => setDialog({ kind: 'renameUpload', item })}
+            onShowDuplicate={(item) => setDialog({ kind: 'duplicate', item })}
+            onClear={uploads.clearFinished}
+          />
 
           <DocumentFilters
             query={query}
@@ -467,6 +524,19 @@ export function LibraryPage() {
         }}
       />
       <TagManagerDialog open={dialog?.kind === 'manageTags'} onClose={() => setDialog(null)} />
+      <DuplicateDialog
+        fileName={dialog?.kind === 'duplicate' ? dialog.item.file.name : ''}
+        info={dialog?.kind === 'duplicate' ? (dialog.item.duplicate ?? null) : null}
+        onClose={() => setDialog(null)}
+      />
+      {dialog?.kind === 'renameUpload' && dialog.item.document && (
+        <RenameDocumentDialog
+          open
+          document={dialog.item.document}
+          onClose={() => setDialog(null)}
+          onRenamed={(title) => uploads.rename(dialog.item.key, title)}
+        />
+      )}
     </div>
   )
 }

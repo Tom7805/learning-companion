@@ -3,6 +3,7 @@ package com.learningcompanion.library.application;
 import com.learningcompanion.ai.quota.application.StorageQuotaService;
 import com.learningcompanion.library.domain.Document;
 import com.learningcompanion.library.domain.DocumentRepository;
+import com.learningcompanion.library.domain.DocumentStatus;
 import com.learningcompanion.library.domain.DocumentType;
 import com.learningcompanion.shared.audit.AuditObjectType;
 import com.learningcompanion.shared.exception.BusinessException;
@@ -107,8 +108,8 @@ public class DocumentService implements LearningDataUsage {
     }
 
     /**
-     * Tạo tài liệu cho người học đang đăng nhập; dùng bởi dữ liệu mẫu và sau này bởi chức năng tải lên. Tệp làm vượt
-     * hạn mức dung lượng thì bị chặn trước khi ghi (NCL-04-CN-003).
+     * Tạo tài liệu cho người học; dùng bởi dữ liệu mẫu và chức năng tải lên. Tệp làm vượt hạn mức dung lượng thì bị
+     * chặn trước khi ghi (NCL-04-CN-003); tệp được lưu mã hóa kèm dấu vân tay nội dung để báo trùng về sau.
      */
     @Transactional
     public Document create(UUID ownerId, String title, DocumentType type, String contentText,
@@ -116,7 +117,28 @@ public class DocumentService implements LearningDataUsage {
         storageQuota.requireRoom(ownerId, file.length);
         String key = storage.store(ownerId, file);
         return documents.save(Document.create(ownerId, title, type, contentText, originalFilename, mimeType,
-                file.length, key, clock.instant()));
+                file.length, key, Fingerprints.sha256(file), clock.instant()));
+    }
+
+    /**
+     * Tạo tài liệu từ tệp vừa tải lên (NCL-05-CN-002): nằm ngay trong thư mục đích ({@code null}: thư mục gốc), ở trạng
+     * thái chờ xử lý cho tới khi tác vụ trích văn bản chạy xong. Tên trùng với tài liệu khác trong thư mục được tự thêm số
+     * thứ tự; người học đổi tên được sau.
+     */
+    @Transactional
+    public Document createUploaded(UUID ownerId, UUID folderId, String title, DocumentType type,
+                                   String originalFilename, String mimeType, byte[] file, String contentSha256) {
+        storageQuota.requireRoom(ownerId, file.length);
+        Set<String> taken = takenTitles(ownerId, folderId, Set.of());
+        String unique = taken.contains(LibraryNames.key(title))
+                ? LibraryNames.suggest(title, taken, TITLE_MAX_LENGTH) : title;
+        String key = storage.store(ownerId, file);
+        Instant now = clock.instant();
+        Document document = Document.create(ownerId, unique, type, "", originalFilename, mimeType, file.length, key,
+                contentSha256, now);
+        document.moveTo(folderId, now);
+        document.changeStatus(DocumentStatus.PENDING);
+        return documents.save(document);
     }
 
     /** Đổi tên; tên trùng với tài liệu khác trong cùng thư mục bị báo kèm tên gợi ý (NCL-05-CN-001). */

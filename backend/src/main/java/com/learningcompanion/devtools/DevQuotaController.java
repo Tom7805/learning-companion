@@ -97,6 +97,7 @@ public class DevQuotaController {
         jdbc.update("delete from quota_reservations");
         jdbc.update("delete from quota_daily_usage");
         jdbc.update("update quota_policies set daily_ai_units = 50, storage_limit_bytes = 1073741824, "
+                + "max_upload_file_bytes = 52428800, "
                 + "updated_by = null, updated_at = now()");
         jdbc.update("delete from quota_task_costs");
         quotas.registerTasks();

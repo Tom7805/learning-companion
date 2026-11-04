@@ -8,7 +8,10 @@ import jakarta.persistence.Version;
 import java.time.Instant;
 import java.util.UUID;
 
-/** Hạn mức chung cho mọi người học (NCL-04-CN-003): số lượt mỗi ngày và dung lượng lưu trữ. Chỉ có một dòng. */
+/**
+ * Hạn mức chung cho mọi người học (NCL-04-CN-003): số lượt mỗi ngày, dung lượng lưu trữ và dung lượng tối đa một tệp
+ * tải lên (NCL-05-CN-002). Chỉ có một dòng.
+ */
 @Entity
 @Table(name = "quota_policies")
 public class QuotaPolicy {
@@ -24,6 +27,9 @@ public class QuotaPolicy {
     @Column(name = "storage_limit_bytes", nullable = false)
     private long storageLimitBytes;
 
+    @Column(name = "max_upload_file_bytes", nullable = false)
+    private long maxUploadFileBytes;
+
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
@@ -36,9 +42,10 @@ public class QuotaPolicy {
     protected QuotaPolicy() {
     }
 
-    public void change(int dailyAiUnits, long storageLimitBytes, UUID actorId, Instant now) {
+    public void change(int dailyAiUnits, long storageLimitBytes, long maxUploadFileBytes, UUID actorId, Instant now) {
         this.dailyAiUnits = dailyAiUnits;
         this.storageLimitBytes = storageLimitBytes;
+        this.maxUploadFileBytes = maxUploadFileBytes;
         this.updatedBy = actorId;
         this.updatedAt = now;
     }
@@ -49,6 +56,11 @@ public class QuotaPolicy {
 
     public long getStorageLimitBytes() {
         return storageLimitBytes;
+    }
+
+    /** Dung lượng tối đa một tệp tải lên (QTN-19). */
+    public long getMaxUploadFileBytes() {
+        return maxUploadFileBytes;
     }
 
     public Instant getUpdatedAt() {
