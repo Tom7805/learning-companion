@@ -41,7 +41,7 @@ Người dùng đã chốt: làm **theo đúng STT trên Jira** (STT ghi trong d
 | 12 | LC-26 Cấu hình model/prompt theo phiên bản | LC-4 | `feature/LC-26-versioned-model-and-prompt-config` | Đã merge (PR #15) |
 | 13 | LC-27 Hạn mức AI và dung lượng | LC-4 | `feature/LC-27-fair-quotas-for-ai-and-storage` | Đã merge (PR #17) |
 | 14 | LC-28 Lọc nội dung không an toàn, chống prompt injection | LC-4 | `feature/LC-28-unsafe-content-filter-and-prompt-injection-guard` | Đã merge (PR #18) |
-| 15 | LC-29 Kho tài liệu: thư mục nhiều cấp, nhãn, gắn sao | LC-5 | `feature/LC-29-document-library-with-folders-tags-and-stars` | PR #PRNUM mở |
+| 15 | LC-29 Kho tài liệu: thư mục nhiều cấp, nhãn, gắn sao | LC-5 | `feature/LC-29-document-library-with-folders-tags-and-stars` | PR #19 mở |
 | 16 | LC-30 Tải tài liệu lên kho | LC-5 | tạo mới | Chưa làm |
 | 17 | LC-31 Trích văn bản, OCR, chia đoạn, lập chỉ mục | LC-5 | tạo mới | Chưa làm |
 | 18 | LC-32 Thêm tài liệu từ trang web và văn bản dán | LC-5 | tạo mới | Chưa làm |
