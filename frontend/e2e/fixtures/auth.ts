@@ -25,6 +25,27 @@ export interface CapturedMail {
   sentAt: string
 }
 
+export interface LibrarySeed {
+  folders?: string[]
+  tags?: { name: string; color?: 'SUN' | 'LILAC' | 'SKY' | 'MINT' | 'CORAL' | 'INK' }[]
+  documents?: {
+    title: string
+    type?: 'PDF' | 'DOCX' | 'PPTX' | 'TEXT' | 'IMAGE' | 'AUDIO' | 'VIDEO' | 'WEB'
+    folder?: string
+    tags?: string[]
+    starred?: boolean
+    status?: 'PENDING' | 'PROCESSING' | 'READY' | 'FAILED'
+    addedDaysAgo?: number
+    text?: string
+  }[]
+}
+
+export interface LibrarySeeded {
+  folders: Record<string, string>
+  tags: Record<string, string>
+  documents: string[]
+}
+
 /** Công cụ chỉ có ở hồ sơ dev của máy chủ: hộp thư mô phỏng và đồng hồ tua được. */
 export class DevApi {
   constructor(private readonly request: APIRequestContext) {}
@@ -78,6 +99,16 @@ export class DevApi {
     const response = await this.request.post(`${API}/dev/library/sample`, { data: { email, title } })
     expect(response.ok()).toBeTruthy()
     return (await response.json()).id
+  }
+
+  /**
+   * Dựng kho tài liệu mẫu (NCL-05-CN-001): thư mục ghi theo đường dẫn "Học kỳ một/Kinh tế vi mô", nhãn theo tên, tài
+   * liệu trỏ tới thư mục và nhãn. Trả về mã của thư mục (theo đường dẫn), nhãn (theo tên) và tài liệu (theo thứ tự).
+   */
+  async seedLibrary(email: string, seed: LibrarySeed): Promise<LibrarySeeded> {
+    const response = await this.request.post(`${API}/dev/library/seed`, { data: { email, ...seed } })
+    expect(response.ok()).toBeTruthy()
+    return response.json()
   }
 
   /** Thông báo mẫu (NCL-02-CN-002) trỏ tới gói dữ liệu không tồn tại; trả về số thông báo đã tạo. */

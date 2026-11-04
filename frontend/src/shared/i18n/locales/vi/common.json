@@ -152,7 +152,10 @@
     "ADMIN_LOGIN_LOCKED": "Đăng nhập quản trị đang tạm khóa do nhập sai mã xác thực nhiều lần.",
     "ADMIN_ALREADY_EXISTS": "Hệ thống đã có quản trị viên và chỉ cho phép một quản trị viên.",
     "AI_QUOTA_EXHAUSTED": "Bạn đã dùng hết lượt AI hôm nay. Lượt hồi lại vào nửa đêm; mọi chức năng học khác vẫn dùng bình thường.",
-    "STORAGE_QUOTA_EXCEEDED": "Kho tài liệu không đủ chỗ cho tệp này. Hãy xóa bớt tài liệu cũ rồi thử lại."
+    "STORAGE_QUOTA_EXCEEDED": "Kho tài liệu không đủ chỗ cho tệp này. Hãy xóa bớt tài liệu cũ rồi thử lại.",
+    "LIBRARY_NAME_TAKEN": "Tên này đã có trong cùng thư mục. Hãy chọn tên khác.",
+    "LIBRARY_FOLDER_CYCLE": "Không thể chuyển thư mục vào chính nó hoặc thư mục con của nó.",
+    "LIBRARY_TAG_NAME_TAKEN": "Bạn đã có nhãn với tên này."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -464,7 +467,7 @@
   "library": {
     "nav": "Thư viện",
     "title": "Thư viện của tôi",
-    "subtitle": "Tài liệu học tập của bạn. Mở một tài liệu để đọc nội dung và xem tệp gốc.",
+    "subtitle": "Kho tài liệu của bạn: sắp xếp bằng thư mục, nhãn màu và gắn sao, lọc để lấy ra ngay khi cần.",
     "summary_one": "{{count}} tài liệu · {{size}}",
     "summary_other": "{{count}} tài liệu · {{size}}",
     "privacy": "Chỉ mình bạn mở được dữ liệu học tập ở đây. Quản trị viên chỉ thấy số lượng và dung lượng đã dùng, không bao giờ thấy nội dung.",
@@ -508,7 +511,222 @@
       "open": "Xem {{title}} bên cạnh",
       "action": "Xem bên cạnh",
       "openFull": "Mở toàn trang"
-    }
+    },
+    "shown_one": "Đang xem {{count}} tài liệu",
+    "shown_other": "Đang xem {{count}} tài liệu",
+    "shortcuts": {
+      "recent": "Gần đây",
+      "starred": "Có gắn sao",
+      "all": "Tất cả tài liệu",
+      "root": "Thư mục gốc"
+    },
+    "tree": {
+      "label": "Thư mục và lối tắt",
+      "folders": "Thư mục",
+      "newFolder": "Thư mục mới",
+      "expand": "Mở {{name}}",
+      "collapse": "Thu gọn {{name}}",
+      "count_one": "{{count}} tài liệu",
+      "count_other": "{{count}} tài liệu",
+      "actions": "Thao tác với thư mục {{name}}",
+      "mobileToggle": "Thư mục: {{name}}",
+      "empty": "Chưa có thư mục nào. Tạo thư mục để xếp tài liệu theo môn hay học kỳ.",
+      "subfolders": "Thư mục con",
+      "dragHint": "Kéo tài liệu thả vào một thư mục để chuyển."
+    },
+    "folderActions": {
+      "rename": "Đổi tên",
+      "newSubfolder": "Tạo thư mục con",
+      "move": "Chuyển tới…",
+      "delete": "Xóa thư mục"
+    },
+    "folderDialog": {
+      "createTitle": "Tạo thư mục",
+      "createIn": "Trong {{name}}",
+      "renameTitle": "Đổi tên thư mục",
+      "name": "Tên thư mục",
+      "hint": "Tối đa 120 ký tự, không trùng tên trong cùng thư mục.",
+      "taken": "Đã có “{{name}}” trong thư mục này.",
+      "useSuggestion": "Dùng tên “{{name}}”",
+      "available": "Tên này dùng được",
+      "create": "Tạo thư mục",
+      "save": "Lưu tên mới",
+      "required": "Hãy nhập tên thư mục.",
+      "tooLong": "Tên thư mục tối đa 120 ký tự.",
+      "created": "Đã tạo thư mục “{{name}}”.",
+      "renamed": "Đã đổi tên thành “{{name}}”."
+    },
+    "renameDocument": {
+      "title": "Đổi tên tài liệu",
+      "label": "Tên tài liệu",
+      "save": "Lưu tên mới",
+      "taken": "Thư mục này đã có tài liệu tên này.",
+      "required": "Hãy nhập tên tài liệu.",
+      "tooLong": "Tên tài liệu tối đa 200 ký tự.",
+      "done": "Đã đổi tên thành “{{name}}”."
+    },
+    "moveDialog": {
+      "documentsTitle_one": "Chuyển {{count}} tài liệu",
+      "documentsTitle_other": "Chuyển {{count}} tài liệu",
+      "folderTitle": "Chuyển thư mục “{{name}}”",
+      "destination": "Chọn thư mục đích",
+      "here": "đang ở đây",
+      "move": "Chuyển tới đây",
+      "conflicts": "Thư mục đích đã có tài liệu cùng tên: {{names}}. Hãy đổi tên trước khi chuyển.",
+      "moved_one": "Đã chuyển {{count}} tài liệu vào {{folder}}.",
+      "moved_other": "Đã chuyển {{count}} tài liệu vào {{folder}}.",
+      "folderMoved": "Đã chuyển thư mục “{{name}}” vào {{folder}}."
+    },
+    "deleteFolder": {
+      "title": "Xóa thư mục “{{name}}”?",
+      "body_one": "Thư mục, các thư mục con và {{count}} tài liệu bên trong sẽ vào thùng rác. Bạn khôi phục được từ thùng rác.",
+      "body_other": "Thư mục, các thư mục con và {{count}} tài liệu bên trong sẽ vào thùng rác. Bạn khôi phục được từ thùng rác.",
+      "confirm": "Chuyển vào thùng rác",
+      "done": "Đã chuyển thư mục “{{name}}” và {{count}} tài liệu vào thùng rác."
+    },
+    "deleteDocuments": {
+      "title_one": "Xóa {{count}} tài liệu?",
+      "title_other": "Xóa {{count}} tài liệu?",
+      "body": "Tài liệu sẽ vào thùng rác cùng tệp gốc; bạn khôi phục được từ thùng rác.",
+      "confirm": "Chuyển vào thùng rác",
+      "done_one": "Đã chuyển {{count}} tài liệu vào thùng rác.",
+      "done_other": "Đã chuyển {{count}} tài liệu vào thùng rác."
+    },
+    "filters": {
+      "label": "Lọc và sắp xếp",
+      "toggle": "Bộ lọc",
+      "type": "Loại tệp",
+      "tags": "Nhãn",
+      "status": "Trạng thái xử lý",
+      "from": "Thêm từ ngày",
+      "to": "Đến ngày",
+      "clear": "Xóa bộ lọc",
+      "sort": "Sắp xếp theo",
+      "sortBy": {
+        "NAME": "Tên",
+        "ADDED": "Ngày thêm",
+        "OPENED": "Lần mở gần nhất",
+        "SIZE": "Dung lượng"
+      },
+      "direction": {
+        "ASC": "Tăng dần",
+        "DESC": "Giảm dần"
+      },
+      "toggleDirection": "Đổi chiều sắp xếp, đang {{direction}}",
+      "layout": "Cách hiển thị",
+      "grid": "Dạng lưới",
+      "list": "Dạng danh sách",
+      "noTags": "Chưa có nhãn nào.",
+      "active_one": "{{count}} bộ lọc",
+      "active_other": "{{count}} bộ lọc",
+      "recentNote": "Gần đây: tối đa 30 tài liệu bạn mở hoặc thêm gần nhất."
+    },
+    "status": {
+      "PENDING": "Chờ xử lý",
+      "PROCESSING": "Đang xử lý",
+      "READY": "Sẵn sàng",
+      "FAILED": "Xử lý lỗi"
+    },
+    "selection": {
+      "select": "Chọn {{title}}",
+      "selectAll": "Chọn tất cả",
+      "count_one": "Đã chọn {{count}} tài liệu",
+      "count_other": "Đã chọn {{count}} tài liệu",
+      "clear": "Bỏ chọn",
+      "move": "Chuyển tới…",
+      "tag": "Gắn nhãn…",
+      "star": "Gắn sao",
+      "delete": "Xóa",
+      "bar": "Thao tác với tài liệu đã chọn",
+      "dragCount_one": "{{count}} tài liệu",
+      "dragCount_other": "{{count}} tài liệu"
+    },
+    "star": {
+      "add": "Gắn sao {{title}}",
+      "remove": "Bỏ sao {{title}}"
+    },
+    "info": {
+      "open": "Thông tin {{title}}",
+      "action": "Thông tin",
+      "type": "Loại",
+      "size": "Dung lượng",
+      "folder": "Thư mục",
+      "tags": "Nhãn",
+      "added": "Ngày thêm",
+      "opened": "Lần mở gần nhất",
+      "never": "Chưa mở lần nào",
+      "status": "Trạng thái",
+      "file": "Tệp gốc",
+      "download": "Tải tệp gốc",
+      "rename": "Đổi tên",
+      "move": "Chuyển tới…",
+      "delete": "Xóa",
+      "noTags": "Chưa gắn nhãn",
+      "editTags": "Sửa nhãn",
+      "openFull": "Mở tài liệu",
+      "star": "Gắn sao",
+      "unstar": "Bỏ sao",
+      "downloadFailed": "Chưa tải được tệp gốc, hãy thử lại."
+    },
+    "tags": {
+      "manage": "Quản lý nhãn",
+      "title": "Nhãn của bạn",
+      "assignTitle_one": "Gắn nhãn cho {{count}} tài liệu",
+      "assignTitle_other": "Gắn nhãn cho {{count}} tài liệu",
+      "editTitle": "Nhãn của “{{title}}”",
+      "assignHint": "Chọn nhãn cần gắn hoặc gỡ.",
+      "new": "Nhãn mới",
+      "name": "Tên nhãn",
+      "color": "Màu",
+      "colors": {
+        "SUN": "Vàng",
+        "LILAC": "Tím",
+        "SKY": "Xanh trời",
+        "MINT": "Xanh bạc hà",
+        "CORAL": "Cam san hô",
+        "INK": "Đen"
+      },
+      "create": "Thêm nhãn",
+      "save": "Lưu",
+      "cancel": "Hủy",
+      "edit": "Sửa nhãn {{name}}",
+      "delete": "Xóa nhãn {{name}}",
+      "deleteTitle": "Xóa nhãn “{{name}}”?",
+      "deleteBody": "Nhãn được gỡ khỏi mọi tài liệu; tài liệu vẫn còn nguyên.",
+      "taken": "Bạn đã có nhãn tên này.",
+      "required": "Hãy nhập tên nhãn.",
+      "tooLong": "Tên nhãn tối đa 40 ký tự.",
+      "empty": "Chưa có nhãn nào. Tạo nhãn như “Ôn thi” hay “Đọc thêm” để lọc tài liệu nhanh.",
+      "add": "Gắn nhãn",
+      "remove": "Gỡ nhãn",
+      "done": "Đã cập nhật nhãn.",
+      "count_one": "{{count}} tài liệu",
+      "count_other": "{{count}} tài liệu",
+      "colorOption": "Màu {{color}}"
+    },
+    "storage": {
+      "label": "Dung lượng",
+      "used": "Đã dùng {{used}} trên {{limit}}",
+      "nearlyFull": "Kho gần đầy. Hãy xóa bớt tài liệu cũ để có chỗ cho tài liệu mới."
+    },
+    "emptyView": {
+      "folderTitle": "Thư mục này chưa có tài liệu",
+      "folderBody": "Kéo tài liệu thả vào thư mục trên cây, hoặc chọn tài liệu rồi bấm “Chuyển tới…”.",
+      "filterTitle": "Không có tài liệu khớp bộ lọc",
+      "filterBody": "Thử bỏ bớt điều kiện lọc hoặc chọn khoảng ngày rộng hơn.",
+      "recentTitle": "Chưa có tài liệu gần đây",
+      "recentBody": "Tài liệu bạn mở hoặc thêm gần nhất sẽ hiện ở đây.",
+      "starredTitle": "Chưa có tài liệu gắn sao",
+      "starredBody": "Bấm biểu tượng ngôi sao trên tài liệu hay dùng để lấy ra nhanh ở đây."
+    },
+    "folderNotFound": {
+      "title": "Không tìm thấy thư mục",
+      "body": "Thư mục này không tồn tại, đã bị xóa hoặc không thuộc tài khoản của bạn.",
+      "back": "Về tất cả tài liệu"
+    },
+    "actionFailed": "Chưa thực hiện được, hãy thử lại.",
+    "starredToast": "Đã gắn sao “{{title}}”.",
+    "unstarredToast": "Đã bỏ sao “{{title}}”."
   },
   "account": {
     "menu": "Trình đơn tài khoản của {{name}}",
@@ -1101,7 +1319,9 @@
       "AI_CONFIG": "Cấu hình AI",
       "QUOTA_POLICY": "Hạn mức",
       "CONTENT_SAFETY": "Ngưỡng lọc nội dung",
-      "AI_SAFETY_EVENT": "Lần lọc nội dung"
+      "AI_SAFETY_EVENT": "Lần lọc nội dung",
+      "LIBRARY_FOLDER": "Thư mục tài liệu",
+      "LIBRARY_TAG": "Nhãn tài liệu"
     },
     "actions": {
       "ACCOUNT_REGISTERED": "Đăng ký tài khoản",
