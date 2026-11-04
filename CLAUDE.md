@@ -44,7 +44,7 @@ Người dùng đã chốt: làm **theo đúng STT trên Jira** (STT ghi trong d
 | 15 | LC-29 Kho tài liệu: thư mục nhiều cấp, nhãn, gắn sao | LC-5 | `feature/LC-29-document-library-with-folders-tags-and-stars` | Đã merge (PR #19) |
 | 16 | LC-30 Tải tài liệu lên kho | LC-5 | `feature/LC-30-upload-documents-to-library` | Đã merge (PR #20) |
 | 17 | LC-31 Trích văn bản, OCR, chia đoạn, lập chỉ mục | LC-5 | `feature/LC-31-text-extraction-ocr-chunking-and-indexing` | Đã merge (PR #21) |
-| 18 | LC-32 Thêm tài liệu từ trang web và văn bản dán | LC-5 | `feature/LC-32-add-documents-from-web-pages-and-pasted-text` | PR #PRNUM mở |
+| 18 | LC-32 Thêm tài liệu từ trang web và văn bản dán | LC-5 | `feature/LC-32-add-documents-from-web-pages-and-pasted-text` | PR #22 mở |
 | 19 | LC-33 Xem tài liệu ở khung xem bên, mở đúng đoạn | LC-5 | tạo mới | Chưa làm |
 | 20 | LC-34 Không gian học gắn tài liệu từ kho | LC-6 | tạo mới | Chưa làm |
 | 21 | LC-35 Hỏi đáp có căn cứ trên tài liệu | LC-7 | tạo mới | Chưa làm |
