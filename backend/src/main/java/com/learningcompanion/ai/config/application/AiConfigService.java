@@ -7,6 +7,7 @@ import com.learningcompanion.ai.config.api.dto.AiConfigVersionResponse;
 import com.learningcompanion.ai.config.domain.AiConfigVersion;
 import com.learningcompanion.ai.config.domain.AiConfigVersionRepository;
 import com.learningcompanion.ai.config.domain.AiFeature;
+import com.learningcompanion.ai.gateway.AiCapability;
 import com.learningcompanion.ai.config.domain.ConfigVersionStatus;
 import com.learningcompanion.ai.gateway.AiProviderConfig;
 import com.learningcompanion.ai.gateway.AiProviderConfigRepository;
@@ -229,7 +230,9 @@ public class AiConfigService {
         if (!target.isPublishable()) {
             throw new BusinessException(ErrorCode.AI_CONFIG_NOT_PUBLISHABLE);
         }
-        if (target.getStatus() == ConfigVersionStatus.DRAFT && target.getLastTrialAt() == null) {
+        // Chỉ chức năng sinh văn bản mới thử được bằng câu hỏi mẫu; nhận dạng chữ và vector phát hành không cần thử.
+        if (target.getStatus() == ConfigVersionStatus.DRAFT && target.getLastTrialAt() == null
+                && feature.capability() == AiCapability.TEXT_GENERATION) {
             throw new BusinessException(ErrorCode.AI_CONFIG_TRIAL_REQUIRED);
         }
         requireUsableProvider(target);

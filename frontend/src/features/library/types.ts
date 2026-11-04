@@ -7,6 +7,38 @@ export type DocumentStatus = 'PENDING' | 'PROCESSING' | 'READY' | 'FAILED'
 
 export const DOCUMENT_STATUSES: DocumentStatus[] = ['PENDING', 'PROCESSING', 'READY', 'FAILED']
 
+/** Lý do tài liệu xử lý lỗi (NCL-05-CN-003). */
+export type ProcessingError = 'NO_TEXT' | 'OCR_FAILED' | 'INDEXING_FAILED' | 'UNREADABLE' | 'UNSUPPORTED' | 'INTERNAL'
+
+/** Kết quả trích văn bản, nhận dạng chữ và lập chỉ mục của tài liệu. */
+export interface ProcessingInfo {
+  error?: ProcessingError | null
+  /** Trang lỗi khi lỗi nằm ở một trang (ví dụ nhận dạng chữ lỗi ở trang 12). */
+  errorPage?: number | null
+  /** Lỗi tạm thời: bấm thử lại có thể được. Lỗi do chính tệp thì cần tải bản khác. */
+  retryable: boolean
+  /** Số trang, số trang trình chiếu, số ảnh hoặc số đoạn văn. */
+  units?: number | null
+  chunks: number
+  processedAt?: string | null
+}
+
+/** Vị trí của một đoạn trong tài liệu gốc. */
+export interface ChunkLocation {
+  kind: 'PAGE' | 'SLIDE' | 'IMAGE' | 'PARAGRAPH'
+  number: number
+  end: number
+}
+
+/** Một đoạn đã lập chỉ mục của tài liệu. */
+export interface DocumentChunk {
+  ordinal: number
+  location: ChunkLocation
+  heading?: string | null
+  content: string
+  source: 'TEXT' | 'OCR'
+}
+
 /** Một tài liệu trong danh sách kho tài liệu, không kèm nội dung. */
 export interface DocumentCard {
   id: string
@@ -22,6 +54,7 @@ export interface DocumentCard {
   starred?: boolean
   status?: DocumentStatus
   lastOpenedAt?: string | null
+  processing?: ProcessingInfo
 }
 
 /** Chi tiết tài liệu kèm toàn bộ nội dung, chỉ chủ sở hữu nhận được. */

@@ -92,6 +92,31 @@ public class Document implements OwnedEntity {
     @Column(name = "tag_id", nullable = false)
     private Set<UUID> tagIds = new LinkedHashSet<>();
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "processing_error", length = 40)
+    private ProcessingError processingError;
+
+    @Column(name = "processing_error_page")
+    private Integer processingErrorPage;
+
+    @Column(name = "processing_started_at")
+    private Instant processingStartedAt;
+
+    @Column(name = "processed_at")
+    private Instant processedAt;
+
+    @Column(name = "processing_attempts", nullable = false)
+    private int processingAttempts;
+
+    @Column(name = "unit_count")
+    private Integer unitCount;
+
+    @Column(name = "chunk_count", nullable = false)
+    private int chunkCount;
+
+    @Column(name = "index_provider", length = 40)
+    private String indexProvider;
+
     @Version
     private long version;
 
@@ -162,6 +187,33 @@ public class Document implements OwnedEntity {
 
     public void changeStatus(DocumentStatus newStatus) {
         this.status = newStatus;
+    }
+
+    /** Xử lý xong: văn bản đầy đủ, số trang (hay trang trình chiếu, ảnh, đoạn văn) và số đoạn đã lập chỉ mục. */
+    public void markProcessed(String text, int units, int chunks, String provider, Instant now) {
+        this.contentText = text;
+        this.unitCount = units;
+        this.chunkCount = chunks;
+        this.indexProvider = provider;
+        this.processingError = null;
+        this.processingErrorPage = null;
+        this.processedAt = now;
+        this.status = DocumentStatus.READY;
+    }
+
+    /** Xử lý lỗi kèm lý do; {@code page} là trang lỗi nếu lỗi nằm ở một trang. */
+    public void markFailed(ProcessingError error, Integer page, Instant now) {
+        this.processingError = error;
+        this.processingErrorPage = page;
+        this.processedAt = now;
+        this.status = DocumentStatus.FAILED;
+    }
+
+    /** Người học bấm thử lại: tài liệu lỗi quay về hàng chờ xử lý. */
+    public void requeue() {
+        this.processingError = null;
+        this.processingErrorPage = null;
+        this.status = DocumentStatus.PENDING;
     }
 
     public boolean isTrashed() {
@@ -240,6 +292,38 @@ public class Document implements OwnedEntity {
 
     public String getContentSha256() {
         return contentSha256;
+    }
+
+    public ProcessingError getProcessingError() {
+        return processingError;
+    }
+
+    public Integer getProcessingErrorPage() {
+        return processingErrorPage;
+    }
+
+    public Instant getProcessingStartedAt() {
+        return processingStartedAt;
+    }
+
+    public Instant getProcessedAt() {
+        return processedAt;
+    }
+
+    public int getProcessingAttempts() {
+        return processingAttempts;
+    }
+
+    public Integer getUnitCount() {
+        return unitCount;
+    }
+
+    public int getChunkCount() {
+        return chunkCount;
+    }
+
+    public String getIndexProvider() {
+        return indexProvider;
     }
 
     public Set<UUID> getTagIds() {

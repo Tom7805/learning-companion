@@ -160,7 +160,8 @@
     "LIBRARY_DOCUMENT_DUPLICATE": "Tài liệu này đã có trong kho của bạn.",
     "UPLOAD_PART_OUT_OF_ORDER": "Phần tệp gửi lên chưa đúng thứ tự.",
     "UPLOAD_INCOMPLETE": "Tệp chưa tải lên xong.",
-    "MALWARE_SCAN_UNAVAILABLE": "Chưa kiểm tra được tệp lúc này. Hãy thử lại sau ít phút."
+    "MALWARE_SCAN_UNAVAILABLE": "Chưa kiểm tra được tệp lúc này. Hãy thử lại sau ít phút.",
+    "DOCUMENT_NOT_FAILED": "Tài liệu này không ở trạng thái lỗi nên không cần thử lại."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -785,6 +786,36 @@
         "problem": "Không tải được {{name}}: {{reason}}",
         "offline": "Mất kết nối. Tệp sẽ tải tiếp khi mạng có lại."
       }
+    },
+    "processing": {
+      "pending": "Đang chờ xử lý: hệ thống sẽ trích văn bản và lập chỉ mục tài liệu trong giây lát.",
+      "running": "Đang trích văn bản, nhận dạng chữ và lập chỉ mục tài liệu…",
+      "failedTitle": "Chưa xử lý được tài liệu này",
+      "retry": "Thử lại",
+      "retryNamed": "Thử lại xử lý “{{title}}”",
+      "requeued": "Đã đưa “{{title}}” vào hàng chờ xử lý lại.",
+      "uploadAnother": "Hãy tải lên bản khác của tài liệu.",
+      "errors": {
+        "NO_TEXT": "Không trích được văn bản nào từ tài liệu này. Hãy tải lên bản rõ hơn hoặc bản có chữ chọn được.",
+        "OCR_FAILED": "Dịch vụ nhận dạng chữ đang gặp lỗi. Hãy thử lại sau ít phút.",
+        "OCR_FAILED_PAGE": "Dịch vụ nhận dạng chữ gặp lỗi ở trang {{page}}. Hãy thử lại sau ít phút.",
+        "INDEXING_FAILED": "Dịch vụ lập chỉ mục đang gặp lỗi. Hãy thử lại sau ít phút.",
+        "UNREADABLE": "Không đọc được nội dung tệp, có thể tệp đã bị hỏng.",
+        "UNSUPPORTED": "Loại tài liệu này chưa trích được văn bản.",
+        "INTERNAL": "Hệ thống gặp sự cố khi xử lý tài liệu. Hãy thử lại."
+      },
+      "units": {
+        "pages_one": "{{count}} trang",
+        "pages_other": "{{count}} trang",
+        "slides_one": "{{count}} trang trình chiếu",
+        "slides_other": "{{count}} trang trình chiếu",
+        "images_one": "{{count}} ảnh",
+        "images_other": "{{count}} ảnh",
+        "paragraphs_one": "{{count}} đoạn văn",
+        "paragraphs_other": "{{count}} đoạn văn"
+      },
+      "chunks_one": "{{count}} đoạn đã lập chỉ mục",
+      "chunks_other": "{{count}} đoạn đã lập chỉ mục"
     }
   },
   "account": {
@@ -1253,6 +1284,15 @@
         "body_one": "{{task}} gặp lỗi từ dịch vụ bên ngoài. {{count}} lượt đã giữ chỗ được hoàn lại đầy đủ.",
         "body_other": "{{task}} gặp lỗi từ dịch vụ bên ngoài. {{count}} lượt đã giữ chỗ được hoàn lại đầy đủ.",
         "task": "Tác vụ AI"
+      },
+      "DOCUMENT_READY": {
+        "title": "Tài liệu đã sẵn sàng",
+        "body": "“{{title}}” đã được trích văn bản và lập chỉ mục, dùng được cho hỏi đáp và tạo học liệu.",
+        "untitled": "Tài liệu"
+      },
+      "DOCUMENT_PROCESSING_FAILED": {
+        "title": "Chưa xử lý được tài liệu",
+        "body": "“{{title}}”: {{reason}}"
       }
     }
   },
@@ -1726,6 +1766,14 @@
       "ADMIN_TEST": {
         "name": "Lời gọi thử của quản trị",
         "hint": "Dùng cho nút gọi thử ở trang Dịch vụ AI để kiểm tra nhà cung cấp còn trả lời."
+      },
+      "DOCUMENT_OCR": {
+        "name": "Nhận dạng chữ trong tài liệu",
+        "hint": "Đọc chữ trong trang quét và ảnh chụp khi xử lý tài liệu tải lên."
+      },
+      "DOCUMENT_EMBEDDING": {
+        "name": "Lập chỉ mục tài liệu",
+        "hint": "Tạo biểu diễn ngữ nghĩa cho từng đoạn tài liệu để tìm theo nghĩa."
       }
     },
     "status": {
@@ -1843,7 +1891,8 @@
       "trialLabel": "Thử phiên bản {{version}}",
       "compare": "So với bản đang chạy",
       "compareLabel": "So sánh phiên bản {{version}} với phiên bản đang chạy"
-    }
+    },
+    "noTrial": "Chức năng này không trả lời câu hỏi nên không thử bằng câu hỏi mẫu. Lưu phiên bản nháp rồi phát hành ngay trong lịch sử phiên bản."
   },
   "quota": {
     "meter": {

@@ -205,7 +205,7 @@ export interface AiUsage {
 }
 
 /** Chức năng trí tuệ nhân tạo có cấu hình theo phiên bản (NCL-04-CN-002), giống enum AiFeature ở máy chủ. */
-export type AiFeature = 'ASSISTANT_CHAT' | 'ADMIN_TEST'
+export type AiFeature = 'ASSISTANT_CHAT' | 'ADMIN_TEST' | 'DOCUMENT_OCR' | 'DOCUMENT_EMBEDDING'
 export type AiConfigStatus = 'DRAFT' | 'PUBLISHED' | 'SUPERSEDED' | 'REVOKED'
 
 /** Người thực hiện; trống nghĩa là hệ thống (phiên bản 1 đăng ký khi chức năng được xây dựng). */

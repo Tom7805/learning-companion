@@ -8,12 +8,14 @@ import java.util.UUID;
 /** Một dòng trong kho tài liệu: không kèm nội dung để danh sách nhẹ. */
 public record DocumentCardResponse(UUID id, String title, String type, String originalFilename, String mimeType,
                                    long sizeBytes, Instant createdAt, UUID folderId, List<UUID> tagIds,
-                                   boolean starred, String status, Instant lastOpenedAt) {
+                                   boolean starred, String status, Instant lastOpenedAt,
+                                   ProcessingInfo processing) {
 
     public static DocumentCardResponse of(Document document) {
         return new DocumentCardResponse(document.getId(), document.getTitle(), document.getType().name(),
                 document.getOriginalFilename(), document.getMimeType(), document.getSizeBytes(),
                 document.getCreatedAt(), document.getFolderId(), document.getTagIds().stream().sorted().toList(),
-                document.isStarred(), document.getStatus().name(), document.getLastOpenedAt());
+                document.isStarred(), document.getStatus().name(), document.getLastOpenedAt(),
+                ProcessingInfo.of(document));
     }
 }

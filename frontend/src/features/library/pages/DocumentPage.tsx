@@ -11,6 +11,8 @@ import { usePageHeading } from '@/shared/hooks/usePageHeading'
 import { formatBytes } from '@/shared/lib/format'
 import { Alert, Badge, Button, Skeleton, buttonClasses } from '@/shared/ui'
 import { useDocument } from '../api/queries'
+import { ProcessingPanel } from '../components/DocumentProcessing'
+import { DocumentStatusBadge } from '../components/DocumentStatusBadge'
 import { PrivacyNote } from '../components/PrivacyNote'
 import { DocumentViewer } from '../components/viewer/DocumentViewer'
 
@@ -94,6 +96,7 @@ export function DocumentPage() {
       <header className="flex flex-col gap-3">
         <div className="flex flex-wrap items-center gap-2">
           <Badge tone="ink">{t(`library.type.${doc.type}`)}</Badge>
+          <DocumentStatusBadge status={doc.status} />
           <Badge tone="lilac" className="gap-1">
             <Lock className="size-3.5" aria-hidden="true" />
             {t('library.onlyYou')}
@@ -107,6 +110,10 @@ export function DocumentPage() {
           {formatBytes(doc.sizeBytes, i18n.language)}
         </p>
       </header>
+
+      <div aria-live="polite" className="empty:hidden">
+        <ProcessingPanel document={doc} />
+      </div>
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
         <div className="flex min-w-0 flex-col gap-6">

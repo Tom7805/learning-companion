@@ -1,6 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/shared/api/queryKeys'
-import type { LibraryQuery } from '../types'
+import type { DocumentCard, LibraryQuery } from '../types'
 import { libraryApi } from './libraryApi'
 
 /**
@@ -11,6 +11,12 @@ export function useDocuments(enabled = true) {
   return useQuery({ queryKey: queryKeys.documents, queryFn: () => libraryApi.documents(), staleTime: 30_000, enabled })
 }
 
+/** Hỏi lại máy chủ sau mỗi chừng này khi còn tài liệu chờ hoặc đang xử lý, để trạng thái tự cập nhật. */
+export const PROCESSING_POLL_MS = 3_000
+
+const inProgress = (document?: Pick<DocumentCard, 'status'>) =>
+  document?.status === 'PENDING' || document?.status === 'PROCESSING'
+
 /** Danh sách trong kho theo phạm vi và bộ lọc; giữ danh sách cũ trong lúc tải bộ lọc mới để trang không nháy. */
 export function useLibraryDocuments(query: LibraryQuery) {
   return useQuery({
@@ -20,6 +26,7 @@ export function useLibraryDocuments(query: LibraryQuery) {
     placeholderData: keepPreviousData,
     // 404: thư mục không tồn tại, đã vào thùng rác hoặc của người khác; hỏi lại cũng vậy.
     retry: false,
+    refetchInterval: (current) => (current.state.data?.some(inProgress) ? PROCESSING_POLL_MS : false),
   })
 }
 
@@ -30,6 +37,8 @@ export function useDocument(id: string) {
     staleTime: 30_000,
     // 404 nghĩa là không có quyền hoặc không tồn tại: hỏi lại cũng vậy.
     retry: false,
+    // Tài liệu đang chờ hay đang xử lý: hỏi lại để trạng thái tự cập nhật.
+    refetchInterval: (current) => (inProgress(current.state.data) ? PROCESSING_POLL_MS : false),
   })
 }
 
@@ -40,6 +49,7 @@ export function useDocumentInfo(id: string) {
     queryFn: () => libraryApi.document(id, false),
     staleTime: 10_000,
     retry: false,
+    refetchInterval: (current) => (inProgress(current.state.data) ? PROCESSING_POLL_MS : false),
   })
 }
 

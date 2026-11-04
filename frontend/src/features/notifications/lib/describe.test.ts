@@ -74,4 +74,18 @@ describe('describeNotification', () => {
     expect(notificationCategory('STUDIO_READY')).toBe('general')
     expect(describeNotification(notification('DATA_EXPORT_READY', { fileCount: 'nhiều' }), t, format).body).toBe('')
   })
+
+  it('tài liệu xử lý xong hay lỗi: tên tài liệu và lý do lỗi kèm trang', () => {
+    expect(describeNotification(notification('DOCUMENT_READY', { title: 'Giải tích 1' }), t, format)).toEqual({
+      title: 'Tài liệu đã sẵn sàng',
+      body: '“Giải tích 1” đã được trích văn bản và lập chỉ mục, dùng được cho hỏi đáp và tạo học liệu.',
+    })
+    expect(
+      describeNotification(notification('DOCUMENT_PROCESSING_FAILED', { title: 'Bài giảng', error: 'OCR_FAILED', page: 12 }), t, format),
+    ).toEqual({
+      title: 'Chưa xử lý được tài liệu',
+      body: '“Bài giảng”: Dịch vụ nhận dạng chữ gặp lỗi ở trang 12. Hãy thử lại sau ít phút.',
+    })
+    expect(notificationCategory('DOCUMENT_READY')).toBe('data')
+  })
 })

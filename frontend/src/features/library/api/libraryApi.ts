@@ -12,6 +12,7 @@ import type {
   LibraryQuery,
   NameCheck,
   StartUploadRequest,
+  DocumentChunk,
   UploadProgress,
   Tag,
   TagColor,
@@ -40,6 +41,16 @@ export const libraryApi = {
   /** {@code track} false: chỉ xem thông tin, không tính là một lần mở cho lối tắt "Gần đây". */
   async document(id: string, track = true) {
     const { data } = await http.get<LearningDocument>(doc(id), { params: track ? undefined : { track: false } })
+    return data
+  },
+  /** Các đoạn đã lập chỉ mục, kèm vị trí trong tài liệu gốc. */
+  async chunks(id: string) {
+    const { data } = await http.get<DocumentChunk[]>(`${doc(id)}/chunks`)
+    return data
+  },
+  /** Đưa tài liệu xử lý lỗi về hàng chờ để xử lý lại. */
+  async reprocess(id: string) {
+    const { data } = await http.post<DocumentCard>(`${doc(id)}/reprocess`)
     return data
   },
   async fileLink(id: string) {

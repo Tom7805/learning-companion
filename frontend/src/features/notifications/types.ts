@@ -1,5 +1,11 @@
 /** Loại thông báo; loại mới do chức năng sau thêm vẫn hiển thị được dưới dạng chung. */
-export type NotificationType = 'DATA_EXPORT_READY' | 'NEW_DEVICE_LOGIN' | 'PASSWORD_CHANGED' | 'AI_TASK_REFUNDED'
+export type NotificationType =
+  | 'DATA_EXPORT_READY'
+  | 'NEW_DEVICE_LOGIN'
+  | 'PASSWORD_CHANGED'
+  | 'AI_TASK_REFUNDED'
+  | 'DOCUMENT_READY'
+  | 'DOCUMENT_PROCESSING_FAILED'
 
 export type NotificationTargetType = 'DATA_EXPORT' | 'DEVICES' | 'SECURITY' | 'USAGE'
 

@@ -1,7 +1,10 @@
 package com.learningcompanion.library.application;
 
 import com.learningcompanion.ai.quota.application.StorageQuotaService;
+import com.learningcompanion.library.application.ingestion.DocumentQueued;
 import com.learningcompanion.library.domain.Document;
+import com.learningcompanion.library.domain.DocumentChunk;
+import com.learningcompanion.library.domain.DocumentChunkRepository;
 import com.learningcompanion.library.domain.DocumentRepository;
 import com.learningcompanion.library.domain.DocumentStatus;
 import com.learningcompanion.library.domain.DocumentType;
@@ -25,6 +28,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,11 +51,16 @@ public class DocumentService implements LearningDataUsage {
     private final FileStorageService storage;
     private final SignedUrlService signedUrls;
     private final StorageQuotaService storageQuota;
+    private final DocumentChunkRepository chunks;
+    private final ApplicationEventPublisher events;
     private final Clock clock;
 
     public DocumentService(DocumentRepository documents, DocumentSearch search, FolderService folders,
                            TagService tags, OwnerContext owner, OwnershipGuard guard, FileStorageService storage,
-                           SignedUrlService signedUrls, StorageQuotaService storageQuota, Clock clock) {
+                           SignedUrlService signedUrls, StorageQuotaService storageQuota,
+                           DocumentChunkRepository chunks, ApplicationEventPublisher events, Clock clock) {
+        this.chunks = chunks;
+        this.events = events;
         this.documents = documents;
         this.search = search;
         this.folders = folders;
@@ -138,7 +147,35 @@ public class DocumentService implements LearningDataUsage {
                 contentSha256, now);
         document.moveTo(folderId, now);
         document.changeStatus(DocumentStatus.PENDING);
-        return documents.save(document);
+        Document saved = documents.save(document);
+        // Tác vụ nền trích văn bản và lập chỉ mục nhận tài liệu ngay khi giao dịch lưu xong (NCL-05-CN-003).
+        events.publishEvent(new DocumentQueued(saved.getId(), ownerId));
+        return saved;
+    }
+
+    /**
+     * Thử xử lý lại một tài liệu lỗi (NCL-05-CN-003 TC-03): tài liệu quay về hàng chờ và được xử lý lại từ đầu. Tài liệu
+     * chưa lỗi thì không có gì để thử lại.
+     */
+    @Transactional
+    public Document reprocess(UUID id, ClientInfo client) {
+        Document document = require(id, client);
+        if (document.getStatus() != DocumentStatus.FAILED) {
+            throw new BusinessException(ErrorCode.DOCUMENT_NOT_FAILED);
+        }
+        document.requeue();
+        events.publishEvent(new DocumentQueued(document.getId(), document.getOwnerId()));
+        return document;
+    }
+
+    /**
+     * Các đoạn đã lập chỉ mục của một tài liệu, theo thứ tự, kèm vị trí trong tài liệu gốc. Tài liệu của người khác trả
+     * 404 và lần từ chối được ghi nhật ký (NCL-05-CN-003 TC-05).
+     */
+    @Transactional(readOnly = true)
+    public List<DocumentChunk> chunks(UUID id, ClientInfo client) {
+        Document document = require(id, client);
+        return chunks.findAllByOwnerIdAndDocumentIdOrderByOrdinalAsc(document.getOwnerId(), document.getId());
     }
 
     /** Đổi tên; tên trùng với tài liệu khác trong cùng thư mục bị báo kèm tên gợi ý (NCL-05-CN-001). */

@@ -34,8 +34,12 @@ public class AiConfigResolver {
         }
 
         public ChatRequest toRequest(List<ChatRequest.Message> messages) {
-            return new ChatRequest(systemPrompt, messages, maxOutputTokens,
-                    new ChatRequest.Tuning(providerCode, model, temperature.doubleValue(), versionNumber));
+            return new ChatRequest(systemPrompt, messages, maxOutputTokens, tuning());
+        }
+
+        /** Nhà cung cấp ưu tiên, mô hình và số phiên bản cho lời gọi không sinh văn bản (nhận dạng chữ, vector). */
+        public ChatRequest.Tuning tuning() {
+            return new ChatRequest.Tuning(providerCode, model, temperature.doubleValue(), versionNumber);
         }
     }
 
@@ -59,5 +63,13 @@ public class AiConfigResolver {
 
     public ChatRequest chatRequest(AiFeature feature, List<ChatRequest.Message> messages) {
         return resolve(feature).toRequest(messages);
+    }
+
+    /**
+     * Cấu hình đang phát hành cho lời gọi {@code AiGateway.embed} hay {@code recognizeText}: lời gọi đi tới nhà cung cấp
+     * ưu tiên của phiên bản và được ghi số phiên bản trong sổ đo.
+     */
+    public ChatRequest.Tuning tuning(AiFeature feature) {
+        return resolve(feature).tuning();
     }
 }

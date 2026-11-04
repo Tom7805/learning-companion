@@ -2,6 +2,7 @@ package com.learningcompanion.library.api;
 
 import com.learningcompanion.library.api.dto.BulkActionRequest;
 import com.learningcompanion.library.api.dto.DocumentCardResponse;
+import com.learningcompanion.library.api.dto.DocumentChunkResponse;
 import com.learningcompanion.library.api.dto.DocumentResponse;
 import com.learningcompanion.library.application.BulkActionService;
 import com.learningcompanion.library.application.DocumentQuery;
@@ -103,6 +104,21 @@ public class DocumentController {
     public BulkActionService.Result bulk(@Valid @RequestBody BulkActionRequest body, HttpServletRequest request) {
         return bulk.apply(body.action(), body.documentIds(), body.folderId(), body.tagIds(),
                 ClientInfo.from(request));
+    }
+
+    /**
+     * Các đoạn đã lập chỉ mục, theo thứ tự, kèm vị trí trong tài liệu gốc (NCL-05-CN-003). Không kèm vector. Tài liệu
+     * của người khác trả 404 và lần từ chối được ghi nhật ký (TC-05).
+     */
+    @GetMapping("/{id}/chunks")
+    public List<DocumentChunkResponse> chunks(@PathVariable UUID id, HttpServletRequest request) {
+        return documents.chunks(id, ClientInfo.from(request)).stream().map(DocumentChunkResponse::of).toList();
+    }
+
+    /** Thử xử lý lại tài liệu lỗi (NCL-05-CN-003 TC-03): tài liệu quay về hàng chờ xử lý. */
+    @PostMapping("/{id}/reprocess")
+    public DocumentCardResponse reprocess(@PathVariable UUID id, HttpServletRequest request) {
+        return DocumentCardResponse.of(documents.reprocess(id, ClientInfo.from(request)));
     }
 
     /** Xin đường dẫn mở tệp gốc mới; giao diện gọi lại khi đường dẫn cũ hết hạn. */

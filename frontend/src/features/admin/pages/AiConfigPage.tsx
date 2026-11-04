@@ -132,6 +132,8 @@ function FeatureWorkspace({
   const publish = useAiConfigMutation((versionNumber: number) => adminApi.publishAiConfig(feature, versionNumber))
   const rollback = useAiConfigMutation(() => adminApi.rollbackAiConfig(feature))
   const name = t(`aiConfig.features.${feature}.name`)
+  // Chỉ chức năng sinh văn bản mới thử được bằng câu hỏi mẫu.
+  const textGeneration = summary.capability === 'TEXT_GENERATION'
 
   // Chưa chọn gì thì soạn từ phiên bản mới nhất, thử phiên bản mới nhất và so bản đang chạy với bản mới nhất.
   const latest = versions[0]
@@ -263,14 +265,20 @@ function FeatureWorkspace({
               setCompare({ from: published?.versionNumber ?? null, to: saved.versionNumber })
             }}
           />
-          <PromptTrialPanel
-            feature={feature}
-            versions={versions}
-            sampleSets={sampleSets}
-            versionNumber={trialVersion}
-            onVersionChange={setTrialNumber}
-            onPublish={setPublishing}
-          />
+          {textGeneration ? (
+            <PromptTrialPanel
+              feature={feature}
+              versions={versions}
+              sampleSets={sampleSets}
+              versionNumber={trialVersion}
+              onVersionChange={setTrialNumber}
+              onPublish={setPublishing}
+            />
+          ) : (
+            <Alert tone="info" data-testid="ai-config-no-trial">
+              {t('aiConfig.noTrial')}
+            </Alert>
+          )}
         </div>
       )}
 
@@ -287,6 +295,7 @@ function FeatureWorkspace({
       {versions.length > 0 && (
         <AiConfigHistory
           versions={versions}
+          trialRequired={textGeneration}
           onEdit={(version) => {
             setBaseNumber(version.versionNumber)
             document.querySelector('[data-testid="ai-config-editor"]')?.scrollIntoView({ block: 'start' })

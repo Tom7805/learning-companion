@@ -160,7 +160,8 @@
     "LIBRARY_DOCUMENT_DUPLICATE": "This document is already in your library.",
     "UPLOAD_PART_OUT_OF_ORDER": "A file part arrived out of order.",
     "UPLOAD_INCOMPLETE": "The file hasn't finished uploading.",
-    "MALWARE_SCAN_UNAVAILABLE": "The file can't be checked right now. Please try again in a few minutes."
+    "MALWARE_SCAN_UNAVAILABLE": "The file can't be checked right now. Please try again in a few minutes.",
+    "DOCUMENT_NOT_FAILED": "This document hasn't failed, so there's nothing to retry."
   },
   "checkEmail": {
     "title": "Check your inbox",
@@ -785,6 +786,36 @@
         "problem": "Couldn't upload {{name}}: {{reason}}",
         "offline": "Connection lost. The upload will resume when you're back online."
       }
+    },
+    "processing": {
+      "pending": "Waiting to be processed: the text will be extracted and indexed in a moment.",
+      "running": "Extracting text, recognizing handwriting and scans, and indexing…",
+      "failedTitle": "This document couldn't be processed",
+      "retry": "Try again",
+      "retryNamed": "Try again processing “{{title}}”",
+      "requeued": "“{{title}}” is queued to be processed again.",
+      "uploadAnother": "Please upload another copy of the document.",
+      "errors": {
+        "NO_TEXT": "No text could be extracted from this document. Try uploading a clearer copy or one with selectable text.",
+        "OCR_FAILED": "The text recognition service is having trouble. Please try again in a few minutes.",
+        "OCR_FAILED_PAGE": "The text recognition service failed on page {{page}}. Please try again in a few minutes.",
+        "INDEXING_FAILED": "The indexing service is having trouble. Please try again in a few minutes.",
+        "UNREADABLE": "The file's content can't be read; it may be damaged.",
+        "UNSUPPORTED": "Text can't be extracted from this kind of document yet.",
+        "INTERNAL": "Something went wrong while processing the document. Please try again."
+      },
+      "units": {
+        "pages_one": "{{count}} page",
+        "pages_other": "{{count}} pages",
+        "slides_one": "{{count}} slide",
+        "slides_other": "{{count}} slides",
+        "images_one": "{{count}} image",
+        "images_other": "{{count}} images",
+        "paragraphs_one": "{{count}} paragraph",
+        "paragraphs_other": "{{count}} paragraphs"
+      },
+      "chunks_one": "{{count}} indexed passage",
+      "chunks_other": "{{count}} indexed passages"
     }
   },
   "account": {
@@ -1253,6 +1284,15 @@
         "body_one": "{{task}} failed because of an outside service. The {{count}} held credit was fully refunded.",
         "body_other": "{{task}} failed because of an outside service. The {{count}} held credits were fully refunded.",
         "task": "An AI task"
+      },
+      "DOCUMENT_READY": {
+        "title": "Your document is ready",
+        "body": "“{{title}}” has been extracted and indexed, ready for questions and study materials.",
+        "untitled": "Document"
+      },
+      "DOCUMENT_PROCESSING_FAILED": {
+        "title": "A document couldn't be processed",
+        "body": "“{{title}}”: {{reason}}"
       }
     }
   },
@@ -1726,6 +1766,14 @@
       "ADMIN_TEST": {
         "name": "Admin test call",
         "hint": "Used by the test call on the AI services page to check that a provider still answers."
+      },
+      "DOCUMENT_OCR": {
+        "name": "Document text recognition",
+        "hint": "Reads text in scanned pages and photos when uploaded documents are processed."
+      },
+      "DOCUMENT_EMBEDDING": {
+        "name": "Document indexing",
+        "hint": "Creates semantic vectors for each passage so documents can be searched by meaning."
       }
     },
     "status": {
@@ -1843,7 +1891,8 @@
       "trialLabel": "Try version {{version}}",
       "compare": "Compare with live",
       "compareLabel": "Compare version {{version}} with the running version"
-    }
+    },
+    "noTrial": "This feature doesn't answer questions, so there's no sample-question trial. Save a draft, then publish it from the version history."
   },
   "quota": {
     "meter": {

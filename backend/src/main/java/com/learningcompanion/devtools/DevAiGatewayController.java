@@ -61,6 +61,17 @@ public class DevAiGatewayController {
     }
 
     /**
+     * Cho {@code calls} lời gọi nhận dạng chữ tiếp theo lỗi (âm: lỗi cho tới khi đặt lại), để thử lỗi nhận dạng ở một
+     * trang (NCL-05-CN-003 TC-03). Đặt lại lớp kết nối cũng bỏ.
+     */
+    @PostMapping("/mock-ocr-failures")
+    public ResponseEntity<Void> ocrFailures(@RequestBody Map<String, Integer> body) {
+        Integer calls = body.get("calls");
+        mock.failNextOcr(calls == null ? 0 : calls);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
      * Đưa lớp kết nối về trạng thái ban đầu: hai bản mô phỏng bật, định tuyến mặc định, mạch đóng, cảnh báo đã xác
      * nhận, nhà cung cấp thêm trong lúc thử bị tắt.
      */

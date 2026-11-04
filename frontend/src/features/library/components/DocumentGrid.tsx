@@ -6,6 +6,7 @@ import { useDateFormat } from '@/shared/hooks/useDateFormat'
 import { formatBytes } from '@/shared/lib/format'
 import { Badge } from '@/shared/ui'
 import type { DocumentCard, Tag } from '../types'
+import { ProcessingFailure } from './DocumentProcessing'
 import { DocumentStatusBadge } from './DocumentStatusBadge'
 import { InfoButton, PeekButton, SelectBox, StarButton, type DocumentItemHandlers } from './DocumentItemControls'
 import { TagChip } from './TagChip'
@@ -31,10 +32,11 @@ export function DocumentGrid({ documents, tags, ...handlers }: DocumentGridProps
       {documents.map((document, index) => {
         const selected = handlers.selected.has(document.id)
         const documentTags = (document.tagIds ?? []).flatMap((id) => tags.get(id) ?? [])
+        const failed = document.status === 'FAILED'
         return (
           <li
             key={document.id}
-            className="relative"
+            className="relative flex flex-col"
             data-testid="document-item"
             data-title={document.title}
             onDragStart={(event) => handlers.onDragStart(document, event.dataTransfer)}
@@ -43,10 +45,11 @@ export function DocumentGrid({ documents, tags, ...handlers }: DocumentGridProps
               to={documentPath(document.id)}
               data-testid="document-card"
               className={cn(
-                'flex h-full flex-col gap-3 rounded-card border-[1.5px] border-ink p-5 pt-16 transition-transform duration-150',
+                'flex flex-1 flex-col gap-3 rounded-card border-[1.5px] border-ink p-5 pt-16 transition-transform duration-150',
                 'hover:-translate-y-0.5 hover:shadow-pop focus-visible:-translate-y-0.5',
                 tones[index % tones.length],
                 selected && 'ring-4 ring-ink ring-offset-2 ring-offset-paper',
+                failed && 'rounded-b-none',
               )}
             >
               <span className="flex flex-wrap items-center gap-2">
@@ -66,6 +69,12 @@ export function DocumentGrid({ documents, tags, ...handlers }: DocumentGridProps
                 <time dateTime={document.createdAt}>{format.dateTime(document.createdAt)}</time>
               </span>
             </Link>
+            {failed && (
+              <ProcessingFailure
+                document={document}
+                className="rounded-b-card border-[1.5px] border-t-0 border-ink bg-danger-soft px-4 py-3"
+              />
+            )}
             <span className="absolute left-2 top-2">
               <SelectBox document={document} checked={selected} onToggle={() => handlers.onToggleSelect(document.id)} />
             </span>

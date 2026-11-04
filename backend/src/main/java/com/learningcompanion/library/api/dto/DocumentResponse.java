@@ -8,13 +8,14 @@ import java.util.UUID;
 /** Chi tiết tài liệu kèm toàn bộ nội dung; chỉ trả cho chính chủ sở hữu. */
 public record DocumentResponse(UUID id, String title, String type, String contentText, String originalFilename,
                                String mimeType, long sizeBytes, Instant createdAt, Instant updatedAt, UUID folderId,
-                               List<UUID> tagIds, boolean starred, String status, Instant lastOpenedAt) {
+                               List<UUID> tagIds, boolean starred, String status, Instant lastOpenedAt,
+                                   ProcessingInfo processing) {
 
     public static DocumentResponse of(Document document) {
         return new DocumentResponse(document.getId(), document.getTitle(), document.getType().name(),
                 document.getContentText(), document.getOriginalFilename(), document.getMimeType(),
                 document.getSizeBytes(), document.getCreatedAt(), document.getUpdatedAt(), document.getFolderId(),
                 document.getTagIds().stream().sorted().toList(), document.isStarred(), document.getStatus().name(),
-                document.getLastOpenedAt());
+                document.getLastOpenedAt(), ProcessingInfo.of(document));
     }
 }

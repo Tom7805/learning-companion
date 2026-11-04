@@ -12,6 +12,7 @@ import { useDocumentInfo, useFolderTree, useTags } from '../api/queries'
 import { useDocumentActions } from '../hooks/useDocumentActions'
 import { useOriginalFile } from '../hooks/useOriginalFile'
 import { folderPath } from '../lib/tree'
+import { ProcessingPanel } from './DocumentProcessing'
 import { DocumentStatusBadge } from './DocumentStatusBadge'
 import { MoveDialog } from './MoveDialog'
 import { RenameDocumentDialog } from './RenameDocumentDialog'
@@ -77,6 +78,7 @@ export function DocumentInfoPanel({ id, onClose }: { id: string; onClose: () => 
         <Badge tone="ink">{t(`library.type.${doc.type}`)}</Badge>
         <DocumentStatusBadge status={doc.status} always />
       </div>
+      <ProcessingPanel document={doc} />
       <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-3 text-[0.9375rem]">
         <dt className="text-muted">{t('library.info.type')}</dt>
         <dd>{t(`library.type.${doc.type}`)}</dd>
