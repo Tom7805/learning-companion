@@ -81,6 +81,10 @@ public class Document implements OwnedEntity {
     @Column(name = "trash_batch_id")
     private UUID trashBatchId;
 
+    // Dấu vân tay nội dung (SHA-256 của tệp gốc) để báo trùng trong toàn kho (QTN-17); tài liệu cũ có thể để trống.
+    @Column(name = "content_sha256", updatable = false, length = 64)
+    private String contentSha256;
+
     // Nhãn luôn đi kèm thẻ tài liệu; đọc theo lô để danh sách hàng trăm tài liệu chỉ tốn thêm một truy vấn.
     @ElementCollection(fetch = FetchType.EAGER)
     @BatchSize(size = 256)
@@ -97,6 +101,12 @@ public class Document implements OwnedEntity {
     public static Document create(UUID ownerId, String title, DocumentType type, String contentText,
                                   String originalFilename, String mimeType, long sizeBytes, String storageKey,
                                   Instant now) {
+        return create(ownerId, title, type, contentText, originalFilename, mimeType, sizeBytes, storageKey, null, now);
+    }
+
+    public static Document create(UUID ownerId, String title, DocumentType type, String contentText,
+                                  String originalFilename, String mimeType, long sizeBytes, String storageKey,
+                                  String contentSha256, Instant now) {
         Document document = new Document();
         document.id = UUID.randomUUID();
         document.ownerId = ownerId;
@@ -107,6 +117,7 @@ public class Document implements OwnedEntity {
         document.mimeType = mimeType;
         document.sizeBytes = sizeBytes;
         document.storageKey = storageKey;
+        document.contentSha256 = contentSha256;
         document.createdAt = now;
         document.updatedAt = now;
         return document;
@@ -225,6 +236,10 @@ public class Document implements OwnedEntity {
 
     public UUID getTrashBatchId() {
         return trashBatchId;
+    }
+
+    public String getContentSha256() {
+        return contentSha256;
     }
 
     public Set<UUID> getTagIds() {

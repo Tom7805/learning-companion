@@ -1,5 +1,6 @@
 package com.learningcompanion.ai.quota.application;
 
+import com.learningcompanion.ai.quota.domain.QuotaPolicy;
 import com.learningcompanion.ai.quota.domain.QuotaPolicyRepository;
 import com.learningcompanion.shared.exception.BusinessException;
 import com.learningcompanion.shared.exception.ErrorCode;
@@ -31,7 +32,20 @@ public class StorageQuotaService {
     @Transactional(readOnly = true)
     public StorageUsage usage(UUID ownerId) {
         long used = usageSources.orderedStream().mapToLong(source -> source.usageOf(ownerId).bytes()).sum();
-        return new StorageUsage(policies.current().getStorageLimitBytes(), used);
+        QuotaPolicy policy = policies.current();
+        return new StorageUsage(policy.getStorageLimitBytes(), used, policy.getMaxUploadFileBytes());
+    }
+
+    /** Chặn tệp lớn hơn dung lượng tối đa một tệp do quản trị viên đặt (QTN-19); chi tiết kèm giới hạn. */
+    @Transactional(readOnly = true)
+    public void requireFileSize(long bytes) {
+        long max = policies.current().getMaxUploadFileBytes();
+        if (bytes > max) {
+            Map<String, Object> details = new LinkedHashMap<>();
+            details.put("maxBytes", max);
+            details.put("sizeBytes", bytes);
+            throw new BusinessException(ErrorCode.FILE_TOO_LARGE, null, details);
+        }
     }
 
     /** Chặn khi thêm {@code additionalBytes} sẽ vượt hạn mức dung lượng. */
@@ -47,7 +61,7 @@ public class StorageQuotaService {
         }
     }
 
-    public record StorageUsage(long limitBytes, long usedBytes) {
+    public record StorageUsage(long limitBytes, long usedBytes, long maxFileBytes) {
 
         public long remainingBytes() {
             return Math.max(0, limitBytes - usedBytes);

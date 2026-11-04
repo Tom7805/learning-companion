@@ -89,6 +89,19 @@ app:
     encryption-key: ${APP_STORAGE_ENCRYPTION_KEY:}
     signing-key: ${APP_STORAGE_SIGNING_KEY:}
     signed-url-ttl: 5m
+  uploads:
+    # Tải tài liệu lên kho theo từng phần 2 MiB (NCL-05-CN-002); phiên bỏ dở quá 24 giờ thì bị dọn.
+    chunk-size-bytes: 2097152
+    session-ttl: 24h
+    # signature: nhận mẫu thử EICAR (máy phát triển, kiểm thử) | clamav: gọi clamd (môi trường thật).
+    malware-scanner: ${APP_MALWARE_SCANNER:signature}
+    clamav:
+      host: ${APP_CLAMAV_HOST:127.0.0.1}
+      port: ${APP_CLAMAV_PORT:3310}
+      timeout: 30s
+    # Chặn tệp nén (văn bản soạn thảo, trình chiếu, sách điện tử) bung ra quá lớn.
+    max-inflated-bytes: 536870912
+    max-inflate-ratio: 100
   oauth:
     # disabled | google | mock. Môi trường thật đặt APP_OAUTH_MODE=google kèm mã ứng dụng Google.
     mode: ${APP_OAUTH_MODE:disabled}

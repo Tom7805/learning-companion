@@ -199,7 +199,7 @@ export const sampleQuota: QuotaStatus = {
     timeZone: 'Asia/Ho_Chi_Minh',
     resetsAt: '2026-11-03T17:00:00Z',
   },
-  storage: { limitBytes: 1073741824, usedBytes: 52428800, remainingBytes: 1021313024 },
+  storage: { limitBytes: 1073741824, usedBytes: 52428800, remainingBytes: 1021313024, maxFileBytes: 52428800 },
   costs: [
     { task: 'ASSISTANT_QUESTION', weight: 'LIGHT', units: 1 },
     { task: 'QUIZ_GENERATION', weight: 'LONG', units: 5 },

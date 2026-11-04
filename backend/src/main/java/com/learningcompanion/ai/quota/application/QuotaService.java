@@ -94,7 +94,8 @@ public class QuotaService {
         return new QuotaStatusResponse(
                 new QuotaStatusResponse.Ai(limit, used, reserved, Math.max(0, limit - used - reserved), today.day(),
                         today.zone().getId(), today.resetsAt()),
-                new QuotaStatusResponse.Storage(stored.limitBytes(), stored.usedBytes(), stored.remainingBytes()),
+                new QuotaStatusResponse.Storage(stored.limitBytes(), stored.usedBytes(), stored.remainingBytes(),
+                        stored.maxFileBytes()),
                 costTable().values().stream()
                         .map(cost -> new QuotaStatusResponse.TaskCostResponse(cost.getTask(), cost.getTask().weight(),
                                 cost.getUnits()))
@@ -111,7 +112,7 @@ public class QuotaService {
                 table.values().stream().map(TaskCost::getUpdatedBy)));
         return new AdminQuotaResponse(
                 new AdminQuotaResponse.Policy(policy.getDailyAiUnits(), policy.getStorageLimitBytes(),
-                        policy.getUpdatedAt(), actor(policy.getUpdatedBy(), people)),
+                        policy.getMaxUploadFileBytes(), policy.getUpdatedAt(), actor(policy.getUpdatedBy(), people)),
                 table.values().stream()
                         .map(cost -> new AdminQuotaResponse.Cost(cost.getTask(), cost.getTask().weight(),
                                 cost.getUnits(), cost.getTask().defaultUnits(), cost.getUpdatedAt(),
@@ -123,11 +124,18 @@ public class QuotaService {
     public AdminQuotaResponse updatePolicy(UUID actorId, QuotaPolicyRequest request, ClientInfo client) {
         QuotaPolicy policy = policies.current();
         long storageBytes = request.storageLimitMb() * MEBIBYTE;
+        long maxFileMb = request.maxUploadFileMb() == null ? policy.getMaxUploadFileBytes() / MEBIBYTE
+                : request.maxUploadFileMb();
+        if (maxFileMb > request.storageLimitMb()) {
+            // Một tệp không thể lớn hơn cả kho.
+            throw new BusinessException(ErrorCode.VALIDATION_FAILED, "maxUploadFileMb");
+        }
         AuditChanges changes = AuditChanges.of()
                 .field("dailyAiUnits", policy.getDailyAiUnits(), request.dailyAiUnits())
-                .field("storageLimitMb", policy.getStorageLimitBytes() / MEBIBYTE, request.storageLimitMb());
+                .field("storageLimitMb", policy.getStorageLimitBytes() / MEBIBYTE, request.storageLimitMb())
+                .field("maxUploadFileMb", policy.getMaxUploadFileBytes() / MEBIBYTE, maxFileMb);
         if (!changes.isEmpty()) {
-            policy.change(request.dailyAiUnits(), storageBytes, actorId, clock.instant());
+            policy.change(request.dailyAiUnits(), storageBytes, maxFileMb * MEBIBYTE, actorId, clock.instant());
             policies.saveAndFlush(policy);
             audit.byUser(actorId, AuditAction.QUOTA_POLICY_CHANGED, AuditObjectType.QUOTA_POLICY, null,
                     changes.toDetails(), client);

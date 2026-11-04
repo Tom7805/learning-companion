@@ -155,7 +155,12 @@
     "STORAGE_QUOTA_EXCEEDED": "Kho tài liệu không đủ chỗ cho tệp này. Hãy xóa bớt tài liệu cũ rồi thử lại.",
     "LIBRARY_NAME_TAKEN": "Tên này đã có trong cùng thư mục. Hãy chọn tên khác.",
     "LIBRARY_FOLDER_CYCLE": "Không thể chuyển thư mục vào chính nó hoặc thư mục con của nó.",
-    "LIBRARY_TAG_NAME_TAKEN": "Bạn đã có nhãn với tên này."
+    "LIBRARY_TAG_NAME_TAKEN": "Bạn đã có nhãn với tên này.",
+    "UPLOAD_REJECTED": "Tệp này không được nhận.",
+    "LIBRARY_DOCUMENT_DUPLICATE": "Tài liệu này đã có trong kho của bạn.",
+    "UPLOAD_PART_OUT_OF_ORDER": "Phần tệp gửi lên chưa đúng thứ tự.",
+    "UPLOAD_INCOMPLETE": "Tệp chưa tải lên xong.",
+    "MALWARE_SCAN_UNAVAILABLE": "Chưa kiểm tra được tệp lúc này. Hãy thử lại sau ít phút."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -485,7 +490,8 @@
       "IMAGE": "Hình ảnh",
       "AUDIO": "Âm thanh",
       "VIDEO": "Video",
-      "WEB": "Trang web"
+      "WEB": "Trang web",
+      "EPUB": "Sách điện tử"
     },
     "onlyYou": "Chỉ mình bạn xem được",
     "addedAt": "Thêm lúc {{time}}",
@@ -727,7 +733,59 @@
     },
     "actionFailed": "Chưa thực hiện được, hãy thử lại.",
     "starredToast": "Đã gắn sao “{{title}}”.",
-    "unstarredToast": "Đã bỏ sao “{{title}}”."
+    "unstarredToast": "Đã bỏ sao “{{title}}”.",
+    "upload": {
+      "dropHint": "Kéo thả tệp vào đây để tải vào {{folder}}",
+      "dropNow": "Thả tệp để tải vào {{folder}}",
+      "formats": "PDF, Word, PowerPoint, sách điện tử EPUB, văn bản và ảnh chụp. Chọn được nhiều tệp cùng lúc.",
+      "formatsWithLimit": "PDF, Word, PowerPoint, sách điện tử EPUB, văn bản và ảnh chụp, tối đa {{max}} mỗi tệp. Chọn được nhiều tệp cùng lúc.",
+      "choose": "Chọn tệp",
+      "started_one": "Đang tải {{count}} tệp vào {{folder}}",
+      "started_other": "Đang tải {{count}} tệp vào {{folder}}",
+      "queueActive_one": "Đang tải lên {{count}} tệp",
+      "queueActive_other": "Đang tải lên {{count}} tệp",
+      "queueDone": "Đã tải xong {{done}}/{{total}} tệp",
+      "clear": "Ẩn các tệp đã xong",
+      "cancelFile": "Hủy tải {{name}}",
+      "retryFile": "Thử tải lại {{name}}",
+      "renameFile": "Đổi tên {{name}}",
+      "rename": "Đổi tên",
+      "failed": "Chưa tải lên được. Hãy thử lại.",
+      "folderGone": "Thư mục đích không còn nữa. Hãy chọn thư mục khác rồi tải lại.",
+      "state": {
+        "queued": "Đang chờ lượt",
+        "preparing": "Đang chuẩn bị",
+        "uploading": "Đang tải lên {{sent}} / {{total}}",
+        "offline": "Mất kết nối ở {{sent}} / {{total}}. Sẽ tải tiếp khi mạng có lại",
+        "verifying": "Đang kiểm tra tệp",
+        "done": "Đã thêm vào {{folder}}, đang chờ xử lý",
+        "duplicate": "Đã có trong kho, ở {{location}}",
+        "cancelled": "Đã hủy"
+      },
+      "reasons": {
+        "MALWARE": "Tệp có mã độc nên không được lưu.",
+        "UNSUPPORTED": "Định dạng này chưa được nhận. Hãy dùng PDF, Word, PowerPoint, EPUB, văn bản hoặc ảnh.",
+        "PASSWORD_PROTECTED": "Tệp đang đặt mật khẩu. Hãy gỡ mật khẩu rồi tải lại.",
+        "CORRUPTED": "Tệp bị hỏng hoặc không mở được.",
+        "EXPANDS_TOO_LARGE": "Tệp bung ra quá lớn khi mở nên không được nhận.",
+        "EMPTY": "Tệp rỗng.",
+        "TOO_LARGE": "Tệp lớn hơn mức tối đa {{max}} mỗi tệp."
+      },
+      "duplicate": {
+        "title": "Tài liệu này đã có trong kho",
+        "body": "Nội dung của “{{file}}” trùng với “{{title}}” đang ở {{location}}.",
+        "reuse": "Mỗi tài liệu chỉ cần lưu một lần. Hãy dùng lại bản đã có: mọi không gian học đều gắn được nó mà không tốn thêm dung lượng.",
+        "openExisting": "Mở bản đã có",
+        "openFolder": "Mở thư mục chứa",
+        "details": "Xem chi tiết"
+      },
+      "announce": {
+        "done": "Đã tải {{name}} vào {{folder}}.",
+        "duplicate": "{{name}} đã có trong kho.",
+        "problem": "Không tải được {{name}}: {{reason}}",
+        "offline": "Mất kết nối. Tệp sẽ tải tiếp khi mạng có lại."
+      }
+    }
   },
   "account": {
     "menu": "Trình đơn tài khoản của {{name}}",
@@ -1322,7 +1380,8 @@
       "CONTENT_SAFETY": "Ngưỡng lọc nội dung",
       "AI_SAFETY_EVENT": "Lần lọc nội dung",
       "LIBRARY_FOLDER": "Thư mục tài liệu",
-      "LIBRARY_TAG": "Nhãn tài liệu"
+      "LIBRARY_TAG": "Nhãn tài liệu",
+      "LIBRARY_UPLOAD": "Lần tải tệp lên"
     },
     "actions": {
       "ACCOUNT_REGISTERED": "Đăng ký tài khoản",
@@ -1391,7 +1450,8 @@
       "AI_OUTPUT_BLOCKED": "Ẩn nội dung sinh ra không an toàn",
       "AI_SELF_HARM_SUPPORT_GIVEN": "Trả lời ân cần câu hỏi có dấu hiệu tự gây hại",
       "AI_SOURCE_INJECTION_FLAGGED": "Gắn cờ đoạn nguồn nghi chèn chỉ dẫn",
-      "CONTENT_SAFETY_LEVELS_CHANGED": "Đổi ngưỡng lọc nội dung"
+      "CONTENT_SAFETY_LEVELS_CHANGED": "Đổi ngưỡng lọc nội dung",
+      "DOCUMENT_UPLOAD_REJECTED": "Từ chối tệp tải lên kho tài liệu"
     }
   },
   "adminLogin": {
@@ -1880,7 +1940,10 @@
       "storageHint": "Từ 10 MB; 1024 MB là 1 GB.",
       "storageInvalid": "Nhập số nguyên từ 10 đến 1 048 576.",
       "save": "Lưu hạn mức",
-      "saved": "Đã lưu hạn mức mới."
+      "saved": "Đã lưu hạn mức mới.",
+      "maxFile": "Dung lượng tối đa một tệp tải lên (MB)",
+      "maxFileHint": "Từ 1 đến 2048 MB. Tệp lớn hơn bị từ chối ngay khi người học chọn.",
+      "maxFileInvalid": "Nhập số nguyên từ 1 đến 2048, không lớn hơn dung lượng mỗi người học."
     },
     "costs": {
       "title": "Bảng quy đổi lượt",

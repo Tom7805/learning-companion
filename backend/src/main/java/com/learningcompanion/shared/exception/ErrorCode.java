@@ -109,6 +109,23 @@ public enum ErrorCode {
     /** Không chuyển được thư mục vào chính nó hoặc vào một thư mục con của nó. */
     LIBRARY_FOLDER_CYCLE(HttpStatus.CONFLICT, "Không thể chuyển thư mục vào chính nó hoặc thư mục con của nó."),
     LIBRARY_TAG_NAME_TAKEN(HttpStatus.CONFLICT, "Bạn đã có nhãn với tên này."),
+    /**
+     * Tệp tải lên không được nhận (QTN-19); {@code details.reason} cho biết vì sao: MALWARE, UNSUPPORTED,
+     * PASSWORD_PROTECTED, CORRUPTED, EXPANDS_TOO_LARGE hoặc EMPTY. Tệp không được lưu.
+     */
+    UPLOAD_REJECTED(HttpStatus.UNPROCESSABLE_CONTENT, "Tệp này không được nhận."),
+    /**
+     * Kho đã có tài liệu cùng nội dung (QTN-17); chi tiết kèm mã, tên và đường dẫn thư mục của bản đã có để giao diện
+     * gợi ý dùng lại bản đó (NCL-05-CN-002 TC-03).
+     */
+    LIBRARY_DOCUMENT_DUPLICATE(HttpStatus.CONFLICT, "Tài liệu này đã có trong kho của bạn."),
+    /** Phần gửi lên không phải phần kế tiếp; chi tiết kèm số byte máy chủ đã nhận để giao diện tải tiếp từ đó. */
+    UPLOAD_PART_OUT_OF_ORDER(HttpStatus.CONFLICT, "Phần tệp gửi lên chưa đúng thứ tự."),
+    /** Yêu cầu hoàn tất khi máy chủ chưa nhận đủ các phần; chi tiết kèm số byte đã nhận. */
+    UPLOAD_INCOMPLETE(HttpStatus.CONFLICT, "Tệp chưa tải lên xong."),
+    /** Dịch vụ quét mã độc tạm không trả lời: tệp chưa quét thì không nhận, người học thử lại sau. */
+    MALWARE_SCAN_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE,
+            "Chưa kiểm tra được tệp lúc này, hãy thử tải lên lại sau ít phút."),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Hệ thống gặp sự cố, hãy thử lại sau.");
 
     private final HttpStatus status;

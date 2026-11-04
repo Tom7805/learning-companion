@@ -10,20 +10,31 @@ export function RenameDocumentDialog({
   open,
   document,
   onClose,
+  onRenamed,
 }: {
   open: boolean
   document: { id: string; title: string }
   onClose: () => void
+  /** Gọi với tên mới khi đổi tên thành công. */
+  onRenamed?: (title: string) => void
 }) {
   const { t } = useTranslation()
   return (
     <Dialog open={open} onClose={onClose} title={t('library.renameDocument.title')}>
-      <RenameForm document={document} onDone={onClose} />
+      <RenameForm document={document} onDone={onClose} onRenamed={onRenamed} />
     </Dialog>
   )
 }
 
-function RenameForm({ document, onDone }: { document: { id: string; title: string }; onDone: () => void }) {
+function RenameForm({
+  document,
+  onDone,
+  onRenamed,
+}: {
+  document: { id: string; title: string }
+  onDone: () => void
+  onRenamed?: (title: string) => void
+}) {
   const { t } = useTranslation()
   const actions = useDocumentActions()
   const [title, setTitle] = useState(document.title)
@@ -37,7 +48,10 @@ function RenameForm({ document, onDone }: { document: { id: string; title: strin
     if (trimmed.length > MAX) return setError(t('library.renameDocument.tooLong'))
     if (trimmed === document.title) return onDone()
     const failure = await actions.rename(document.id, trimmed)
-    if (!failure) return onDone()
+    if (!failure) {
+      onRenamed?.(trimmed)
+      return onDone()
+    }
     if (failure.code === 'LIBRARY_NAME_TAKEN') {
       setError(t('library.renameDocument.taken'))
       setSuggestion(typeof failure.details?.suggestion === 'string' ? failure.details.suggestion : null)

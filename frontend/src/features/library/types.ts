@@ -1,6 +1,6 @@
-export type DocumentType = 'PDF' | 'DOCX' | 'PPTX' | 'TEXT' | 'IMAGE' | 'AUDIO' | 'VIDEO' | 'WEB'
+export type DocumentType = 'PDF' | 'DOCX' | 'PPTX' | 'EPUB' | 'TEXT' | 'IMAGE' | 'AUDIO' | 'VIDEO' | 'WEB'
 
-export const DOCUMENT_TYPES: DocumentType[] = ['PDF', 'DOCX', 'PPTX', 'TEXT', 'IMAGE', 'AUDIO', 'VIDEO', 'WEB']
+export const DOCUMENT_TYPES: DocumentType[] = ['PDF', 'DOCX', 'PPTX', 'EPUB', 'TEXT', 'IMAGE', 'AUDIO', 'VIDEO', 'WEB']
 
 /** Trạng thái xử lý (trích văn bản, nhận dạng chữ, lập chỉ mục) của tài liệu. */
 export type DocumentStatus = 'PENDING' | 'PROCESSING' | 'READY' | 'FAILED'
@@ -101,6 +101,38 @@ export interface BulkResult {
   action: BulkAction
   affected: number
   trashBatchId?: string | null
+}
+
+/** Tiến độ một lần tải tệp lên kho (NCL-05-CN-002); gửi tiếp từ phần {@code nextPart}. */
+export interface UploadProgress {
+  id: string
+  fileName: string
+  folderId?: string | null
+  sizeBytes: number
+  chunkSize: number
+  partCount: number
+  receivedBytes: number
+  nextPart: number
+  status: 'UPLOADING' | 'COMPLETED'
+  documentId?: string | null
+  expiresAt: string
+}
+
+export interface StartUploadRequest {
+  fileName: string
+  sizeBytes: number
+  folderId?: string | null
+  /** Dấu vân tay SHA-256 tự tính để máy chủ báo trùng ngay, khỏi gửi cả tệp. */
+  sha256?: string
+}
+
+/** Chi tiết lỗi LIBRARY_DOCUMENT_DUPLICATE: bản đã có cùng nội dung và vị trí của nó. */
+export interface DuplicateInfo {
+  documentId: string
+  title: string
+  folderId?: string | null
+  /** Tên các thư mục từ gốc tới thư mục chứa bản đã có; rỗng là thư mục gốc. */
+  folderPath: string[]
 }
 
 export interface FolderTrashed {

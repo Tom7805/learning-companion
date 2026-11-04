@@ -15,7 +15,8 @@ public record QuotaStatusResponse(Ai ai, Storage storage, List<TaskCostResponse>
                      String timeZone, Instant resetsAt) {
     }
 
-    public record Storage(long limitBytes, long usedBytes, long remainingBytes) {
+    /** {@code maxFileBytes}: dung lượng tối đa một tệp tải lên, để giao diện báo sớm trước khi gửi. */
+    public record Storage(long limitBytes, long usedBytes, long remainingBytes, long maxFileBytes) {
     }
 
     public record TaskCostResponse(QuotaTask task, QuotaTask.Weight weight, int units) {

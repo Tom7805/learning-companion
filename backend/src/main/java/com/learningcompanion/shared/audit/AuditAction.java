@@ -116,7 +116,12 @@ public enum AuditAction {
     /** Một đoạn nguồn chứa câu nghi chèn chỉ dẫn: câu đó bị lược khỏi ngữ cảnh; chi tiết ghi kiểu dấu hiệu. */
     AI_SOURCE_INJECTION_FLAGGED(SAFETY, DENIED),
     /** Đổi ngưỡng lọc nội dung; chi tiết ghi ngưỡng trước và sau của từng nhóm đã đổi. */
-    CONTENT_SAFETY_LEVELS_CHANGED(ADMIN, SUCCESS);
+    CONTENT_SAFETY_LEVELS_CHANGED(ADMIN, SUCCESS),
+    /**
+     * Tệp tải lên kho bị từ chối (NCL-05-CN-002, QTN-19): có mã độc, sai định dạng, có mật khẩu, hỏng, bung ra quá lớn,
+     * vượt dung lượng tối đa một tệp hoặc kho hết chỗ. Chi tiết ghi lý do và cỡ tệp, không bao giờ ghi tên hay nội dung.
+     */
+    DOCUMENT_UPLOAD_REJECTED(SAFETY, DENIED);
 
     /** Nhóm thao tác để lọc nhật ký. */
     public enum Category { LOGIN, SESSION, ACCOUNT, PRIVACY, SETTINGS, ACCESS, ADMIN, SAFETY }

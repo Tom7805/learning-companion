@@ -11,6 +11,8 @@ import type {
   LearningDocument,
   LibraryQuery,
   NameCheck,
+  StartUploadRequest,
+  UploadProgress,
   Tag,
   TagColor,
 } from '../types'
@@ -18,6 +20,13 @@ import type {
 const doc = (id: string) => `/library/documents/${encodeURIComponent(id)}`
 const folder = (id: string) => `/library/folders/${encodeURIComponent(id)}`
 const tag = (id: string) => `/library/tags/${encodeURIComponent(id)}`
+const upload = (id: string) => `/library/uploads/${encodeURIComponent(id)}`
+
+export interface PartOptions {
+  signal?: AbortSignal
+  /** Số byte của phần này đã gửi đi. */
+  onProgress?: (loaded: number) => void
+}
 
 export const libraryApi = {
   async documents(query?: LibraryQuery) {
@@ -97,5 +106,30 @@ export const libraryApi = {
   },
   async deleteTag(id: string) {
     await http.delete(tag(id))
+  },
+  async startUpload(request: StartUploadRequest, signal?: AbortSignal) {
+    const { data } = await http.post<UploadProgress>('/library/uploads', request, { signal })
+    return data
+  },
+  async uploadProgress(id: string, signal?: AbortSignal) {
+    const { data } = await http.get<UploadProgress>(upload(id), { signal })
+    return data
+  },
+  async uploadPart(id: string, index: number, part: Blob, options: PartOptions = {}) {
+    const { data } = await http.put<UploadProgress>(`${upload(id)}/parts/${index}`, part, {
+      headers: { 'Content-Type': 'application/octet-stream' },
+      signal: options.signal,
+      onUploadProgress: (event) => options.onProgress?.(event.loaded),
+      // Một phần có thể lâu trên mạng chậm; đứt kết nối thì giao diện hỏi lại tiến độ và gửi tiếp.
+      timeout: 120_000,
+    })
+    return data
+  },
+  async completeUpload(id: string, signal?: AbortSignal) {
+    const { data } = await http.post<DocumentCard>(`${upload(id)}/complete`, undefined, { signal, timeout: 120_000 })
+    return data
+  },
+  async cancelUpload(id: string) {
+    await http.delete(upload(id))
   },
 }

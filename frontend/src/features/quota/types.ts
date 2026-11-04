@@ -30,7 +30,8 @@ export interface QuotaStatus {
     /** Nửa đêm kế tiếp theo múi giờ của người học, lúc lượt hồi đủ. */
     resetsAt: string
   }
-  storage: { limitBytes: number; usedBytes: number; remainingBytes: number }
+  /** {@code maxFileBytes}: dung lượng tối đa một tệp tải lên do quản trị viên đặt. */
+  storage: { limitBytes: number; usedBytes: number; remainingBytes: number; maxFileBytes?: number }
   costs: TaskCost[]
 }
 
@@ -44,6 +45,8 @@ export interface AdminQuota {
   policy: {
     dailyAiUnits: number
     storageLimitBytes: number
+    /** Dung lượng tối đa một tệp tải lên (NCL-05-CN-002). */
+    maxUploadFileBytes: number
     updatedAt: string
     /** Trống khi vẫn là giá trị mặc định lúc cài đặt. */
     updatedBy?: QuotaActor | null
@@ -54,4 +57,5 @@ export interface AdminQuota {
 export interface QuotaPolicyInput {
   dailyAiUnits: number
   storageLimitMb: number
+  maxUploadFileMb: number
 }

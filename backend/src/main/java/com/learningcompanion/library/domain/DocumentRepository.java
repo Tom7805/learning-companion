@@ -23,6 +23,10 @@ public interface DocumentRepository extends OwnerScopedRepository<Document> {
 
     long countByOwnerIdAndTrashedAtIsNull(UUID ownerId);
 
+    /** Tài liệu còn hoạt động có cùng dấu vân tay nội dung, ở bất kỳ thư mục nào của kho (QTN-17). */
+    List<Document> findAllByOwnerIdAndContentSha256AndTrashedAtIsNullOrderByCreatedAtAsc(UUID ownerId,
+                                                                                        String contentSha256);
+
     long countByOwnerIdAndStarredTrueAndTrashedAtIsNull(UUID ownerId);
 
     /** Số tài liệu nằm trực tiếp trong từng thư mục (thư mục rỗng: thư mục gốc), không tính thùng rác. */
