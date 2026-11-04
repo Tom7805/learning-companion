@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw'
 import type { AdminIdentity, AuditLogEntry, AuditLogPage } from '@/features/admin/types'
 import type { Account, DeviceSession } from '@/features/auth/types'
-import type { LearningDocument } from '@/features/library/types'
+import type { FolderTree, LearningDocument } from '@/features/library/types'
 import type { NotificationPage } from '@/features/notifications/types'
 import type { Profile } from '@/features/settings/types'
 import type { ConsentHistoryEntry, DataExport, LegalCurrent, PrivacyStatus } from '@/features/privacy/types'
@@ -119,9 +119,16 @@ export const handlers = [
         originalFilename: sampleDocument.originalFilename,
         sizeBytes: sampleDocument.sizeBytes,
         createdAt: sampleDocument.createdAt,
+        folderId: null,
+        tagIds: [],
+        starred: false,
+        status: 'READY',
       },
     ]),
   ),
+  http.get('*/api/v1/library/folders', () => HttpResponse.json(sampleFolderTree)),
+  http.get('*/api/v1/library/folders/name-check', () => HttpResponse.json({ available: true })),
+  http.get('*/api/v1/library/tags', () => HttpResponse.json([])),
   http.get('*/api/v1/library/documents/:id', ({ params }) =>
     params.id === sampleDocument.id ? HttpResponse.json(sampleDocument) : apiError(404, 'NOT_FOUND'),
   ),
@@ -215,6 +222,14 @@ export const readyExport: DataExport = {
     { id: 'library', title: 'Thư viện tài liệu', fileCount: 5 },
   ],
   reauthenticationRequired: false,
+}
+
+/** Kho có đúng một tài liệu ở thư mục gốc, chưa có thư mục nào. */
+export const sampleFolderTree: FolderTree = {
+  folders: [],
+  rootDocumentCount: 1,
+  totalDocumentCount: 1,
+  starredCount: 0,
 }
 
 export const sampleDocument: LearningDocument = {

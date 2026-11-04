@@ -2,7 +2,7 @@ import { screen, within } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
 import { documentPath, routes } from '@/app/routes'
-import { apiError, sampleDocument } from '@/test/mocks/handlers'
+import { apiError, sampleDocument, sampleFolderTree } from '@/test/mocks/handlers'
 import { server } from '@/test/mocks/server'
 import { renderWithProviders } from '@/test/renderWithProviders'
 import { SidePanel } from '@/layouts/SidePanel'
@@ -26,7 +26,10 @@ describe('LibraryPage', () => {
   })
 
   it('thư viện trống thì giải thích tài liệu sẽ nằm ở đâu', async () => {
-    server.use(http.get('*/api/v1/library/documents', () => HttpResponse.json([])))
+    server.use(
+      http.get('*/api/v1/library/documents', () => HttpResponse.json([])),
+      http.get('*/api/v1/library/folders', () => HttpResponse.json({ ...sampleFolderTree, rootDocumentCount: 0, totalDocumentCount: 0 })),
+    )
     renderPage()
 
     expect(await screen.findByTestId('library-empty')).toHaveTextContent('Thư viện của bạn đang trống')
@@ -40,6 +43,7 @@ describe('LibraryPage', () => {
         attempt += 1
         return attempt === 1 ? HttpResponse.error() : HttpResponse.json([])
       }),
+      http.get('*/api/v1/library/folders', () => HttpResponse.json({ ...sampleFolderTree, rootDocumentCount: 0, totalDocumentCount: 0 })),
     )
     const { user } = renderPage()
 

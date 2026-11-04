@@ -1,10 +1,26 @@
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/shared/api/queryKeys'
+import type { LibraryQuery } from '../types'
 import { libraryApi } from './libraryApi'
 
-/** {@code enabled} false: không hỏi máy chủ, ví dụ khi người đăng nhập là quản trị viên (không có thư viện). */
+/**
+ * Mọi tài liệu (dùng cho ô mở nhanh). {@code enabled} false: không hỏi máy chủ, ví dụ khi người đăng nhập là quản trị
+ * viên (không có thư viện).
+ */
 export function useDocuments(enabled = true) {
-  return useQuery({ queryKey: queryKeys.documents, queryFn: libraryApi.documents, staleTime: 30_000, enabled })
+  return useQuery({ queryKey: queryKeys.documents, queryFn: () => libraryApi.documents(), staleTime: 30_000, enabled })
+}
+
+/** Danh sách trong kho theo phạm vi và bộ lọc; giữ danh sách cũ trong lúc tải bộ lọc mới để trang không nháy. */
+export function useLibraryDocuments(query: LibraryQuery) {
+  return useQuery({
+    queryKey: queryKeys.libraryDocuments(query),
+    queryFn: () => libraryApi.documents(query),
+    staleTime: 15_000,
+    placeholderData: keepPreviousData,
+    // 404: thư mục không tồn tại, đã vào thùng rác hoặc của người khác; hỏi lại cũng vậy.
+    retry: false,
+  })
 }
 
 export function useDocument(id: string) {
@@ -14,5 +30,32 @@ export function useDocument(id: string) {
     staleTime: 30_000,
     // 404 nghĩa là không có quyền hoặc không tồn tại: hỏi lại cũng vậy.
     retry: false,
+  })
+}
+
+/** Chi tiết cho khung thông tin: đọc không tính là một lần mở tài liệu. */
+export function useDocumentInfo(id: string) {
+  return useQuery({
+    queryKey: [...queryKeys.document(id), 'info'],
+    queryFn: () => libraryApi.document(id, false),
+    staleTime: 10_000,
+    retry: false,
+  })
+}
+
+export function useFolderTree() {
+  return useQuery({ queryKey: queryKeys.folderTree, queryFn: libraryApi.folders, staleTime: 15_000 })
+}
+
+export function useTags() {
+  return useQuery({ queryKey: queryKeys.tags, queryFn: libraryApi.tags, staleTime: 30_000 })
+}
+
+/** Thao tác làm đổi kho tài liệu: xong thì làm mới cây thư mục, danh sách, nhãn và chi tiết tài liệu. */
+export function useLibraryMutation<TInput, TResult>(action: (input: TInput) => Promise<TResult>) {
+  const client = useQueryClient()
+  return useMutation({
+    mutationFn: action,
+    onSettled: () => client.invalidateQueries({ queryKey: queryKeys.library }),
   })
 }

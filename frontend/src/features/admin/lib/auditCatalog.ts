@@ -98,6 +98,8 @@ export const AUDIT_OBJECT_TYPES = [
   'QUOTA_POLICY',
   'CONTENT_SAFETY',
   'AI_SAFETY_EVENT',
+  'LIBRARY_FOLDER',
+  'LIBRARY_TAG',
 ]
 
 export function isAuditCategory(value: string | null | undefined): value is AuditCategory {

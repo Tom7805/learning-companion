@@ -24,5 +24,9 @@ public enum AuditObjectType {
     /** Ngưỡng lọc nội dung không an toàn; mã đối tượng để trống, các nhóm đổi nằm trong chi tiết. */
     CONTENT_SAFETY,
     /** Một lần bộ lọc an toàn can thiệp khi lời gọi không gắn với đối tượng nào; mã đối tượng là mã sự kiện. */
-    AI_SAFETY_EVENT
+    AI_SAFETY_EVENT,
+    /** Một thư mục trong kho tài liệu của người học. */
+    LIBRARY_FOLDER,
+    /** Một nhãn trong kho tài liệu của người học. */
+    LIBRARY_TAG
 }

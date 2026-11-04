@@ -152,7 +152,10 @@
     "ADMIN_LOGIN_LOCKED": "Admin sign-in is locked after too many wrong verification codes.",
     "ADMIN_ALREADY_EXISTS": "An administrator already exists and only one is allowed.",
     "AI_QUOTA_EXHAUSTED": "You've used all of today's AI credits. They refill at midnight; every other learning feature keeps working.",
-    "STORAGE_QUOTA_EXCEEDED": "Your library doesn't have room for this file. Delete some old documents and try again."
+    "STORAGE_QUOTA_EXCEEDED": "Your library doesn't have room for this file. Delete some old documents and try again.",
+    "LIBRARY_NAME_TAKEN": "That name is already used in this folder. Choose another one.",
+    "LIBRARY_FOLDER_CYCLE": "A folder can't be moved into itself or one of its subfolders.",
+    "LIBRARY_TAG_NAME_TAKEN": "You already have a tag with this name."
   },
   "checkEmail": {
     "title": "Check your inbox",
@@ -305,7 +308,8 @@
     "back": "Back",
     "retry": "Try again",
     "close": "Close",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "cancel": "Cancel"
   },
   "devices": {
     "nav": "Devices",
@@ -464,7 +468,7 @@
   "library": {
     "nav": "Library",
     "title": "My library",
-    "subtitle": "Your study materials. Open a document to read its content and view the original file.",
+    "subtitle": "Your document library: organize with folders, colored tags and stars, and filter to find anything fast.",
     "summary_one": "{{count}} document · {{size}}",
     "summary_other": "{{count}} documents · {{size}}",
     "privacy": "Only you can open your learning data here. Administrators only see counts and storage used, never the content.",
@@ -508,7 +512,222 @@
       "open": "View {{title}} side by side",
       "action": "View side by side",
       "openFull": "Open full page"
-    }
+    },
+    "shown_one": "Showing {{count}} document",
+    "shown_other": "Showing {{count}} documents",
+    "shortcuts": {
+      "recent": "Recent",
+      "starred": "Starred",
+      "all": "All documents",
+      "root": "Top level"
+    },
+    "tree": {
+      "label": "Folders and shortcuts",
+      "folders": "Folders",
+      "newFolder": "New folder",
+      "expand": "Expand {{name}}",
+      "collapse": "Collapse {{name}}",
+      "count_one": "{{count}} document",
+      "count_other": "{{count}} documents",
+      "actions": "Actions for folder {{name}}",
+      "mobileToggle": "Folder: {{name}}",
+      "empty": "No folders yet. Create folders to group documents by subject or semester.",
+      "subfolders": "Subfolders",
+      "dragHint": "Drag documents onto a folder to move them."
+    },
+    "folderActions": {
+      "rename": "Rename",
+      "newSubfolder": "New subfolder",
+      "move": "Move to…",
+      "delete": "Delete folder"
+    },
+    "folderDialog": {
+      "createTitle": "New folder",
+      "createIn": "In {{name}}",
+      "renameTitle": "Rename folder",
+      "name": "Folder name",
+      "hint": "Up to 120 characters, unique within the same folder.",
+      "taken": "“{{name}}” already exists in this folder.",
+      "useSuggestion": "Use “{{name}}”",
+      "available": "This name is available",
+      "create": "Create folder",
+      "save": "Save name",
+      "required": "Enter a folder name.",
+      "tooLong": "Folder names can be up to 120 characters.",
+      "created": "Created folder “{{name}}”.",
+      "renamed": "Renamed to “{{name}}”."
+    },
+    "renameDocument": {
+      "title": "Rename document",
+      "label": "Document name",
+      "save": "Save name",
+      "taken": "This folder already has a document with this name.",
+      "required": "Enter a document name.",
+      "tooLong": "Document names can be up to 200 characters.",
+      "done": "Renamed to “{{name}}”."
+    },
+    "moveDialog": {
+      "documentsTitle_one": "Move {{count}} document",
+      "documentsTitle_other": "Move {{count}} documents",
+      "folderTitle": "Move folder “{{name}}”",
+      "destination": "Choose a destination folder",
+      "here": "current",
+      "move": "Move here",
+      "conflicts": "The destination already has documents named: {{names}}. Rename them before moving.",
+      "moved_one": "Moved {{count}} document to {{folder}}.",
+      "moved_other": "Moved {{count}} documents to {{folder}}.",
+      "folderMoved": "Moved folder “{{name}}” to {{folder}}."
+    },
+    "deleteFolder": {
+      "title": "Delete folder “{{name}}”?",
+      "body_one": "The folder, its subfolders and the {{count}} document inside go to the trash. You can restore them from the trash.",
+      "body_other": "The folder, its subfolders and the {{count}} documents inside go to the trash. You can restore them from the trash.",
+      "confirm": "Move to trash",
+      "done": "Moved folder “{{name}}” and {{count}} documents to the trash."
+    },
+    "deleteDocuments": {
+      "title_one": "Delete {{count}} document?",
+      "title_other": "Delete {{count}} documents?",
+      "body": "Documents go to the trash along with their original files; you can restore them from the trash.",
+      "confirm": "Move to trash",
+      "done_one": "Moved {{count}} document to the trash.",
+      "done_other": "Moved {{count}} documents to the trash."
+    },
+    "filters": {
+      "label": "Filter and sort",
+      "toggle": "Filters",
+      "type": "File type",
+      "tags": "Tags",
+      "status": "Processing status",
+      "from": "Added from",
+      "to": "Added until",
+      "clear": "Clear filters",
+      "sort": "Sort by",
+      "sortBy": {
+        "NAME": "Name",
+        "ADDED": "Date added",
+        "OPENED": "Last opened",
+        "SIZE": "Size"
+      },
+      "direction": {
+        "ASC": "Ascending",
+        "DESC": "Descending"
+      },
+      "toggleDirection": "Change sort direction, currently {{direction}}",
+      "layout": "Layout",
+      "grid": "Grid",
+      "list": "List",
+      "noTags": "No tags yet.",
+      "active_one": "{{count}} filter",
+      "active_other": "{{count}} filters",
+      "recentNote": "Recent: up to 30 documents you opened or added most recently."
+    },
+    "status": {
+      "PENDING": "Waiting",
+      "PROCESSING": "Processing",
+      "READY": "Ready",
+      "FAILED": "Failed"
+    },
+    "selection": {
+      "select": "Select {{title}}",
+      "selectAll": "Select all",
+      "count_one": "{{count}} document selected",
+      "count_other": "{{count}} documents selected",
+      "clear": "Clear selection",
+      "move": "Move to…",
+      "tag": "Tag…",
+      "star": "Star",
+      "delete": "Delete",
+      "bar": "Actions for selected documents",
+      "dragCount_one": "{{count}} document",
+      "dragCount_other": "{{count}} documents"
+    },
+    "star": {
+      "add": "Star {{title}}",
+      "remove": "Unstar {{title}}"
+    },
+    "info": {
+      "open": "Details for {{title}}",
+      "action": "Details",
+      "type": "Type",
+      "size": "Size",
+      "folder": "Folder",
+      "tags": "Tags",
+      "added": "Added",
+      "opened": "Last opened",
+      "never": "Never opened",
+      "status": "Status",
+      "file": "Original file",
+      "download": "Download original",
+      "rename": "Rename",
+      "move": "Move to…",
+      "delete": "Delete",
+      "noTags": "No tags",
+      "editTags": "Edit tags",
+      "openFull": "Open document",
+      "star": "Star",
+      "unstar": "Unstar",
+      "downloadFailed": "Couldn't download the original file. Please try again."
+    },
+    "tags": {
+      "manage": "Manage tags",
+      "title": "Your tags",
+      "assignTitle_one": "Tag {{count}} document",
+      "assignTitle_other": "Tag {{count}} documents",
+      "editTitle": "Tags for “{{title}}”",
+      "assignHint": "Choose tags to add or remove.",
+      "new": "New tag",
+      "name": "Tag name",
+      "color": "Color",
+      "colors": {
+        "SUN": "Yellow",
+        "LILAC": "Lilac",
+        "SKY": "Sky blue",
+        "MINT": "Mint",
+        "CORAL": "Coral",
+        "INK": "Black"
+      },
+      "create": "Add tag",
+      "save": "Save",
+      "cancel": "Cancel",
+      "edit": "Edit tag {{name}}",
+      "delete": "Delete tag {{name}}",
+      "deleteTitle": "Delete tag “{{name}}”?",
+      "deleteBody": "The tag is removed from every document; the documents stay.",
+      "taken": "You already have a tag with this name.",
+      "required": "Enter a tag name.",
+      "tooLong": "Tag names can be up to 40 characters.",
+      "empty": "No tags yet. Create tags like “Exam prep” or “Further reading” to filter quickly.",
+      "add": "Add tag",
+      "remove": "Remove tag",
+      "done": "Tags updated.",
+      "count_one": "{{count}} document",
+      "count_other": "{{count}} documents",
+      "colorOption": "Color {{color}}"
+    },
+    "storage": {
+      "label": "Storage",
+      "used": "{{used}} of {{limit}} used",
+      "nearlyFull": "Your library is almost full. Delete some old documents to make room."
+    },
+    "emptyView": {
+      "folderTitle": "This folder has no documents yet",
+      "folderBody": "Drag documents onto a folder in the tree, or select documents and choose “Move to…”.",
+      "filterTitle": "No documents match these filters",
+      "filterBody": "Try removing some filters or widening the date range.",
+      "recentTitle": "No recent documents",
+      "recentBody": "Documents you open or add show up here.",
+      "starredTitle": "No starred documents",
+      "starredBody": "Star the documents you use often to find them here."
+    },
+    "folderNotFound": {
+      "title": "Folder not found",
+      "body": "This folder doesn't exist, was deleted or doesn't belong to your account.",
+      "back": "Back to all documents"
+    },
+    "actionFailed": "That didn't work. Please try again.",
+    "starredToast": "Starred “{{title}}”.",
+    "unstarredToast": "Unstarred “{{title}}”."
   },
   "account": {
     "menu": "Account menu for {{name}}",
@@ -1101,7 +1320,9 @@
       "AI_CONFIG": "AI configuration",
       "QUOTA_POLICY": "Quota",
       "CONTENT_SAFETY": "Content filter levels",
-      "AI_SAFETY_EVENT": "Content filter event"
+      "AI_SAFETY_EVENT": "Content filter event",
+      "LIBRARY_FOLDER": "Library folder",
+      "LIBRARY_TAG": "Library tag"
     },
     "actions": {
       "ACCOUNT_REGISTERED": "Account registered",

@@ -1,17 +1,29 @@
 package com.learningcompanion.library.domain;
 
 import com.learningcompanion.shared.ownership.OwnedEntity;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import java.time.Instant;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
+import org.hibernate.annotations.BatchSize;
 
-/** Tài liệu học tập của một người học; tệp gốc nằm mã hóa trong kho tệp, ở đây chỉ giữ khóa của nó. */
+/**
+ * Tài liệu học tập của một người học; tệp gốc nằm mã hóa trong kho tệp, ở đây chỉ giữ khóa của nó. Trong kho tài liệu
+ * (NCL-05-CN-001) tài liệu nằm trong một thư mục (rỗng là thư mục gốc), gắn được nhiều nhãn và gắn sao. Xóa chỉ đưa
+ * vào thùng rác (QTN-18).
+ */
 @Entity
 @Table(name = "documents")
 public class Document implements OwnedEntity {
@@ -50,6 +62,32 @@ public class Document implements OwnedEntity {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    @Column(name = "folder_id")
+    private UUID folderId;
+
+    @Column(nullable = false)
+    private boolean starred;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "processing_status", nullable = false, length = 20)
+    private DocumentStatus status = DocumentStatus.READY;
+
+    @Column(name = "last_opened_at")
+    private Instant lastOpenedAt;
+
+    @Column(name = "trashed_at")
+    private Instant trashedAt;
+
+    @Column(name = "trash_batch_id")
+    private UUID trashBatchId;
+
+    // Nhãn luôn đi kèm thẻ tài liệu; đọc theo lô để danh sách hàng trăm tài liệu chỉ tốn thêm một truy vấn.
+    @ElementCollection(fetch = FetchType.EAGER)
+    @BatchSize(size = 256)
+    @CollectionTable(name = "library_document_tags", joinColumns = @JoinColumn(name = "document_id"))
+    @Column(name = "tag_id", nullable = false)
+    private Set<UUID> tagIds = new LinkedHashSet<>();
+
     @Version
     private long version;
 
@@ -72,6 +110,51 @@ public class Document implements OwnedEntity {
         document.createdAt = now;
         document.updatedAt = now;
         return document;
+    }
+
+    public void rename(String newTitle, Instant now) {
+        this.title = newTitle;
+        this.updatedAt = now;
+    }
+
+    public void moveTo(UUID newFolderId, Instant now) {
+        this.folderId = newFolderId;
+        this.updatedAt = now;
+    }
+
+    public void star(boolean value) {
+        this.starred = value;
+    }
+
+    /** Lần mở gần nhất, cho lối tắt "Gần đây" và cách sắp xếp theo lần mở; không đổi ngày cập nhật. */
+    public void markOpened(Instant now) {
+        this.lastOpenedAt = now;
+    }
+
+    public void replaceTags(Collection<UUID> newTagIds) {
+        tagIds.clear();
+        tagIds.addAll(newTagIds);
+    }
+
+    public void addTags(Collection<UUID> more) {
+        tagIds.addAll(more);
+    }
+
+    public void removeTags(Collection<UUID> fewer) {
+        tagIds.removeAll(fewer);
+    }
+
+    public void trash(UUID batch, Instant now) {
+        this.trashedAt = now;
+        this.trashBatchId = batch;
+    }
+
+    public void changeStatus(DocumentStatus newStatus) {
+        this.status = newStatus;
+    }
+
+    public boolean isTrashed() {
+        return trashedAt != null;
     }
 
     @Override
@@ -118,5 +201,33 @@ public class Document implements OwnedEntity {
 
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    public UUID getFolderId() {
+        return folderId;
+    }
+
+    public boolean isStarred() {
+        return starred;
+    }
+
+    public DocumentStatus getStatus() {
+        return status;
+    }
+
+    public Instant getLastOpenedAt() {
+        return lastOpenedAt;
+    }
+
+    public Instant getTrashedAt() {
+        return trashedAt;
+    }
+
+    public UUID getTrashBatchId() {
+        return trashBatchId;
+    }
+
+    public Set<UUID> getTagIds() {
+        return Set.copyOf(tagIds);
     }
 }

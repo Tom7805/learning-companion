@@ -101,6 +101,14 @@ public enum ErrorCode {
     /** Tệp mới làm vượt dung lượng lưu trữ của người học; chi tiết kèm dung lượng đã dùng và hạn mức. */
     STORAGE_QUOTA_EXCEEDED(HttpStatus.CONFLICT,
             "Kho tài liệu đã gần đầy, không đủ chỗ cho tệp này. Hãy xóa bớt tài liệu cũ rồi thử lại."),
+    /**
+     * Thư mục cha đã có thư mục hoặc tài liệu cùng tên (không phân biệt hoa thường); chi tiết kèm tên gợi ý còn trống
+     * (NCL-05-CN-001 TC-03).
+     */
+    LIBRARY_NAME_TAKEN(HttpStatus.CONFLICT, "Tên này đã có trong cùng thư mục. Hãy chọn tên khác."),
+    /** Không chuyển được thư mục vào chính nó hoặc vào một thư mục con của nó. */
+    LIBRARY_FOLDER_CYCLE(HttpStatus.CONFLICT, "Không thể chuyển thư mục vào chính nó hoặc thư mục con của nó."),
+    LIBRARY_TAG_NAME_TAKEN(HttpStatus.CONFLICT, "Bạn đã có nhãn với tên này."),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Hệ thống gặp sự cố, hãy thử lại sau.");
 
     private final HttpStatus status;

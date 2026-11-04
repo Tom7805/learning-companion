@@ -2,7 +2,12 @@ export const queryKeys = {
   session: ['auth', 'session'] as const,
   deviceSessions: ['auth', 'sessions'] as const,
   legalCurrent: ['legal', 'current'] as const,
+  /** Tiền tố chung của mọi dữ liệu kho tài liệu: thao tác nào đổi kho thì làm mới cả nhóm. */
+  library: ['library'] as const,
   documents: ['library', 'documents'] as const,
+  libraryDocuments: (query: object) => ['library', 'documents', 'list', query] as const,
+  folderTree: ['library', 'folders'] as const,
+  tags: ['library', 'tags'] as const,
   profile: ['profile', 'me'] as const,
   uiPreferences: ['ui-preferences'] as const,
   oauthProviders: ['auth', 'oauth', 'providers'] as const,

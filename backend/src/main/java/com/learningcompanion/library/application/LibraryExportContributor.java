@@ -2,6 +2,9 @@ package com.learningcompanion.library.application;
 
 import com.learningcompanion.library.domain.Document;
 import com.learningcompanion.library.domain.DocumentRepository;
+import com.learningcompanion.library.domain.Folder;
+import com.learningcompanion.library.domain.FolderRepository;
+import com.learningcompanion.library.domain.TagRepository;
 import com.learningcompanion.shared.export.DataExportContributor;
 import com.learningcompanion.shared.export.ExportFormat;
 import com.learningcompanion.shared.export.ExportWriter;
@@ -17,17 +20,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Phần "Thư viện" của gói xuất: tệp gốc của từng tài liệu, nội dung văn bản đã trích ở dạng Markdown và bảng kê.
- * Tệp gốc nằm dưới "files/" theo cây thư mục của thư viện; khi chức năng thư mục (NCL-03-CN-001) có, đường dẫn
- * thư mục được ghép vào trước tên tệp ở đây.
+ * Tệp gốc nằm dưới "files/" theo cây thư mục của kho tài liệu (NCL-05-CN-001); bảng kê ghi thêm thư mục, nhãn, gắn sao
+ * và tài liệu đang nằm trong thùng rác.
  */
 @Component
 public class LibraryExportContributor implements DataExportContributor {
 
     private final DocumentRepository documents;
+    private final FolderRepository folders;
+    private final TagRepository tags;
     private final FileStorageService storage;
 
-    public LibraryExportContributor(DocumentRepository documents, FileStorageService storage) {
+    public LibraryExportContributor(DocumentRepository documents, FolderRepository folders, TagRepository tags,
+                                    FileStorageService storage) {
         this.documents = documents;
+        this.folders = folders;
+        this.tags = tags;
         this.storage = storage;
     }
 
@@ -46,7 +54,8 @@ public class LibraryExportContributor implements DataExportContributor {
         return List.of(
                 "files/: tệp gốc của từng tài liệu, theo cây thư mục trong thư viện.",
                 "text/: nội dung văn bản đã trích từ từng tài liệu, mỗi tài liệu một tệp Markdown.",
-                "documents.json: bảng kê tài liệu (tên, loại, kích thước, thời điểm) và đường dẫn tới tệp tương ứng.");
+                "documents.json: bảng kê tài liệu (tên, loại, kích thước, thời điểm, thư mục, nhãn, gắn sao) và đường dẫn tới "
+                        + "tệp tương ứng.");
     }
 
     @Override
@@ -68,9 +77,20 @@ public class LibraryExportContributor implements DataExportContributor {
         if (mine.isEmpty()) {
             return;
         }
+        Map<UUID, Folder> folderById = new LinkedHashMap<>();
+        folders.findAllByOwnerIdAndTrashedAtIsNullOrderByNameAsc(ownerId)
+                .forEach(folder -> folderById.put(folder.getId(), folder));
+        Map<UUID, String> tagNames = new LinkedHashMap<>();
+        tags.findAllByOwnerIdOrderByNameAsc(ownerId).forEach(tag -> tagNames.put(tag.getId(), tag.getName()));
         List<Map<String, Object>> index = new ArrayList<>();
         for (Document document : mine) {
-            String file = writer.bytes(ExportWriter.path("files", document.getOriginalFilename()),
+            List<String> folderPath = document.isTrashed() ? List.of("Thùng rác")
+                    : folderPath(folderById, document.getFolderId());
+            List<String> segments = new ArrayList<>();
+            segments.add("files");
+            segments.addAll(folderPath);
+            segments.add(document.getOriginalFilename());
+            String file = writer.bytes(ExportWriter.path(segments.toArray(String[]::new)),
                     storage.read(document.getStorageKey()));
             String text = document.getContentText().isBlank() ? null
                     : writer.text(ExportWriter.path("text", document.getTitle() + ".md"), markdown(document, file));
@@ -83,11 +103,28 @@ public class LibraryExportContributor implements DataExportContributor {
             entry.put("sizeBytes", document.getSizeBytes());
             entry.put("createdAt", document.getCreatedAt());
             entry.put("updatedAt", document.getUpdatedAt());
+            entry.put("folder", document.isTrashed() ? null : String.join("/", folderPath));
+            entry.put("tags", document.getTagIds().stream().map(tagNames::get).filter(java.util.Objects::nonNull)
+                    .sorted().toList());
+            entry.put("starred", document.isStarred());
+            entry.put("inTrash", document.isTrashed());
             entry.put("file", file);
             entry.put("text", text);
             index.add(entry);
         }
         writer.json("documents.json", index);
+    }
+
+    /** Đường dẫn thư mục từ gốc xuống; thư mục cha đã vào thùng rác thì dừng ở đó. */
+    private static List<String> folderPath(Map<UUID, Folder> folderById, UUID folderId) {
+        List<String> path = new ArrayList<>();
+        UUID next = folderId;
+        while (next != null && folderById.containsKey(next) && path.size() < 64) {
+            Folder folder = folderById.get(next);
+            path.add(0, folder.getName());
+            next = folder.getParentId();
+        }
+        return path;
     }
 
     private static String markdown(Document document, String file) {
