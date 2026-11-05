@@ -1,4 +1,4 @@
-import { BookOpen, ChevronRight, Folder as FolderIcon, FolderTree as FolderTreeIcon, SearchX } from 'lucide-react'
+import { BookOpen, ChevronRight, ClipboardPaste, Folder as FolderIcon, FolderTree as FolderTreeIcon, Globe, SearchX } from 'lucide-react'
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type DragEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router'
@@ -11,6 +11,7 @@ import { formatBytes } from '@/shared/lib/format'
 import { Alert, Button, ConfirmDialog, Drawer, EmptyState, Skeleton, buttonClasses, toast } from '@/shared/ui'
 import { libraryApi } from '../api/libraryApi'
 import { useFolderTree, useLibraryDocuments, useLibraryMutation, useTags } from '../api/queries'
+import { AddSourceDialog, type AddSourceTab } from '../components/AddSourceDialog'
 import { BulkActionBar } from '../components/BulkActionBar'
 import { DocumentFilters, type LibraryLayout } from '../components/DocumentFilters'
 import { DocumentGrid } from '../components/DocumentGrid'
@@ -80,6 +81,7 @@ export function LibraryPage() {
   const [treeOpen, setTreeOpen] = useState(false)
   const [moveError, setMoveError] = useState<string | null>(null)
   const uploads = useChunkedUpload()
+  const [addSource, setAddSource] = useState<AddSourceTab | null>(null)
   const [fileDragging, setFileDragging] = useState(false)
   const shownDuplicates = useRef(new Set<string>())
 
@@ -351,7 +353,36 @@ export function LibraryPage() {
             </section>
           )}
 
-          {canUpload && <UploadDropzone targetName={uploadFolderName} active={fileDragging} onFiles={uploadFiles} />}
+          {canUpload && (
+            <div className="flex flex-col gap-2">
+              <UploadDropzone targetName={uploadFolderName} active={fileDragging} onFiles={uploadFiles} />
+              <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap" data-testid="add-source-actions">
+                <Button
+                  variant="outline"
+                  onClick={() => setAddSource('web')}
+                  icon={<Globe className="size-4" aria-hidden="true" />}
+                  data-testid="add-from-web"
+                >
+                  {t('library.addSource.fromWeb')}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setAddSource('text')}
+                  icon={<ClipboardPaste className="size-4" aria-hidden="true" />}
+                  data-testid="add-from-text"
+                >
+                  {t('library.addSource.fromText')}
+                </Button>
+              </div>
+            </div>
+          )}
+          <AddSourceDialog
+            open={addSource !== null}
+            initialTab={addSource ?? 'web'}
+            folderId={uploadFolderId}
+            folderName={uploadFolderName}
+            onClose={() => setAddSource(null)}
+          />
           <UploadQueue
             items={uploads.items}
             onCancel={uploads.cancel}

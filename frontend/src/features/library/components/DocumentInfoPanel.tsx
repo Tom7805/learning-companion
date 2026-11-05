@@ -100,8 +100,26 @@ export function DocumentInfoPanel({ id, onClose }: { id: string; onClose: () => 
         <dd>
           {doc.lastOpenedAt ? <time dateTime={doc.lastOpenedAt}>{format.dateTime(doc.lastOpenedAt)}</time> : t('library.info.never')}
         </dd>
-        <dt className="text-muted">{t('library.info.file')}</dt>
-        <dd className="[overflow-wrap:anywhere]">{doc.originalFilename}</dd>
+        {doc.sourceUrl ? (
+          <>
+            <dt className="text-muted">{t('library.info.source')}</dt>
+            <dd className="flex flex-col gap-0.5 [overflow-wrap:anywhere]" data-testid="info-source">
+              <a href={doc.sourceUrl} target="_blank" rel="noopener noreferrer nofollow" className="underline underline-offset-2">
+                {doc.sourceUrl}
+              </a>
+              {doc.fetchedAt && (
+                <span className="text-muted">
+                  {t('library.info.fetchedAt', { time: format.dateTime(doc.fetchedAt) })}
+                </span>
+              )}
+            </dd>
+          </>
+        ) : (
+          <>
+            <dt className="text-muted">{t('library.info.file')}</dt>
+            <dd className="[overflow-wrap:anywhere]">{doc.originalFilename}</dd>
+          </>
+        )}
       </dl>
 
       <div className="flex flex-wrap gap-2">

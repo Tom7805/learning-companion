@@ -9,13 +9,13 @@ import java.util.UUID;
 public record DocumentCardResponse(UUID id, String title, String type, String originalFilename, String mimeType,
                                    long sizeBytes, Instant createdAt, UUID folderId, List<UUID> tagIds,
                                    boolean starred, String status, Instant lastOpenedAt,
-                                   ProcessingInfo processing) {
+                                   ProcessingInfo processing, String sourceUrl, Instant fetchedAt) {
 
     public static DocumentCardResponse of(Document document) {
         return new DocumentCardResponse(document.getId(), document.getTitle(), document.getType().name(),
                 document.getOriginalFilename(), document.getMimeType(), document.getSizeBytes(),
                 document.getCreatedAt(), document.getFolderId(), document.getTagIds().stream().sorted().toList(),
                 document.isStarred(), document.getStatus().name(), document.getLastOpenedAt(),
-                ProcessingInfo.of(document));
+                ProcessingInfo.of(document), document.getSourceUrl(), document.getFetchedAt());
     }
 }

@@ -55,6 +55,21 @@ export interface DocumentCard {
   status?: DocumentStatus
   lastOpenedAt?: string | null
   processing?: ProcessingInfo
+  /** Trang web gốc của tài liệu lấy từ đường dẫn (NCL-05-CN-004); trống với tệp tải lên và văn bản dán. */
+  sourceUrl?: string | null
+  /** Thời điểm lấy nội dung trang. */
+  fetchedAt?: string | null
+}
+
+export interface WebImportRequest {
+  url: string
+  folderId: string | null
+}
+
+export interface PasteTextRequest {
+  title: string
+  text: string
+  folderId: string | null
 }
 
 /** Chi tiết tài liệu kèm toàn bộ nội dung, chỉ chủ sở hữu nhận được. */

@@ -75,6 +75,12 @@
             <artifactId>pdfbox</artifactId>
             <version>3.0.7</version>
         </dependency>
+        <!-- Tách nội dung chính của trang web khi thêm tài liệu từ đường dẫn (NCL-05-CN-004). -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.21.2</version>
+        </dependency>
 
         <!-- Kiểm thử -->
         <dependency>
