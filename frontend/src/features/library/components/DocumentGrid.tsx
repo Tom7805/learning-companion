@@ -43,6 +43,7 @@ export function DocumentGrid({ documents, tags, ...handlers }: DocumentGridProps
           >
             <Link
               to={documentPath(document.id)}
+              onClick={(event) => { event.preventDefault(); handlers.onPeek(document) }}
               data-testid="document-card"
               className={cn(
                 'flex flex-1 flex-col gap-3 rounded-card border-[1.5px] border-ink p-5 pt-16 transition-transform duration-150',

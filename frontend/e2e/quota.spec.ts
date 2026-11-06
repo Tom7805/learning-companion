@@ -169,7 +169,8 @@ test('TC-03: hết lượt thì thao tác đọc vẫn chạy, chỉ tác vụ m
   await notice.getByRole('link', { name: 'Mở kho tài liệu và đọc lại bài' }).click()
   await expect(page).toHaveURL(/\/library$/)
   await page.getByRole('link', { name: /Định luật Ohm/ }).first().click()
-  await expect(page.getByRole('heading', { level: 1, name: 'Định luật Ohm' })).toBeVisible()
+  await expect(page.getByTestId('side-panel').getByRole('heading', { name: 'Định luật Ohm' })).toBeVisible()
+  await expect(page.getByTestId('document-viewer')).toBeVisible()
   await expect(meter(page)).toHaveAttribute('data-remaining', '0')
 })
 

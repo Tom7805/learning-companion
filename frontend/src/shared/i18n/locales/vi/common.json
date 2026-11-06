@@ -523,6 +523,18 @@
       "action": "Xem bên cạnh",
       "openFull": "Mở toàn trang"
     },
+    "viewer": {
+      "find": "Tìm trong tài liệu",
+      "nextResult": "Kết quả tiếp",
+      "page": "Trang",
+      "pdfPage": "Trang PDF {{number}}",
+      "previous": "Trang trước",
+      "next": "Trang sau",
+      "zoomIn": "Phóng to",
+      "zoomOut": "Thu nhỏ",
+      "passage": "Đoạn {{number}}",
+      "progress": "Đã xử lý {{percent}}%"
+    },
     "shown_one": "Đang xem {{count}} tài liệu",
     "shown_other": "Đang xem {{count}} tài liệu",
     "shortcuts": {

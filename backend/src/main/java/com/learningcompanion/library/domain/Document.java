@@ -114,6 +114,9 @@ public class Document implements OwnedEntity {
     @Column(name = "chunk_count", nullable = false)
     private int chunkCount;
 
+    @Column(name = "processing_percent", nullable = false)
+    private int processingPercent;
+
     @Column(name = "index_provider", length = 40)
     private String indexProvider;
 
@@ -206,6 +209,7 @@ public class Document implements OwnedEntity {
         this.processingErrorPage = null;
         this.processedAt = now;
         this.status = DocumentStatus.READY;
+        this.processingPercent = 100;
     }
 
     /** Xử lý lỗi kèm lý do; {@code page} là trang lỗi nếu lỗi nằm ở một trang. */
@@ -221,6 +225,7 @@ public class Document implements OwnedEntity {
         this.processingError = null;
         this.processingErrorPage = null;
         this.status = DocumentStatus.PENDING;
+        this.processingPercent = 0;
     }
 
     public boolean isTrashed() {
@@ -341,6 +346,10 @@ public class Document implements OwnedEntity {
 
     public int getChunkCount() {
         return chunkCount;
+    }
+
+    public int getProcessingPercent() {
+        return processingPercent;
     }
 
     public String getIndexProvider() {

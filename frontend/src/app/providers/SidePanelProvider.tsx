@@ -22,10 +22,11 @@ export function SidePanelProvider({ children }: { children: ReactNode }) {
   })
 
   const open = useCallback((next: SidePanelContent) => setContent(next), [])
-  const close = useCallback(() => {
+  const close = useCallback((notify = true) => {
+    if (notify) content?.onClose?.()
     setContent(null)
     setFullscreen(false)
-  }, [])
+  }, [content])
   const setWidth = useCallback((next: number) => {
     const rounded = Math.round(Math.max(SIDE_PANEL_MIN_WIDTH, next))
     setStoredWidth(rounded)
