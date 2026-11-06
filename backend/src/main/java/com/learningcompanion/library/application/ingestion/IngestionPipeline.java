@@ -84,13 +84,16 @@ public class IngestionPipeline {
             byte[] file = storage.read(document.getStorageKey());
             Extraction extracted = extraction.extract(document.getType(), file, document.getMimeType(), ocr::recognize)
                     .orElseThrow();
+            progress(job, 60);
             List<ChunkingService.Draft> drafts = chunking.chunk(extracted.blocks());
             if (drafts.isEmpty()) {
                 // Trang trắng hoặc ảnh không có chữ: gợi ý tải bản rõ hơn (TC-04).
                 fail(job, ProcessingError.NO_TEXT, null);
                 return true;
             }
+            progress(job, 75);
             EmbeddingIndexer.Embeddings embeddings = indexer.embed(drafts);
+            progress(job, 90);
             succeed(job, extracted, drafts, embeddings);
         } catch (OcrService.PageRecognitionException ex) {
             fail(job, ProcessingError.OCR_FAILED, ex.page());
@@ -120,6 +123,11 @@ public class IngestionPipeline {
             }
             return documents.findByIdAndOwnerId(job.documentId(), job.ownerId());
         });
+    }
+
+    private void progress(DocumentQueued job, int percent) {
+        tx.executeWithoutResult(status -> documents.updateProcessingPercentByOwnerId(job.documentId(), job.ownerId(),
+                percent, DocumentStatus.PROCESSING));
     }
 
     private void succeed(DocumentQueued job, Extraction extracted, List<ChunkingService.Draft> drafts,

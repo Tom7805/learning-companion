@@ -5,6 +5,7 @@ export interface SidePanelContent {
   id: string
   title: string
   render: () => ReactNode
+  onClose?: () => void
 }
 
 export interface SidePanelValue {
@@ -12,7 +13,7 @@ export interface SidePanelValue {
   fullscreen: boolean
   width: number
   open: (content: SidePanelContent) => void
-  close: () => void
+  close: (notify?: boolean) => void
   setFullscreen: (fullscreen: boolean) => void
   setWidth: (width: number) => void
 }

@@ -18,6 +18,7 @@ import type {
   Tag,
   TagColor,
   WebImportRequest,
+  ViewerContent,
 } from '../types'
 
 const doc = (id: string) => `/library/documents/${encodeURIComponent(id)}`
@@ -48,6 +49,10 @@ export const libraryApi = {
   /** Các đoạn đã lập chỉ mục, kèm vị trí trong tài liệu gốc. */
   async chunks(id: string) {
     const { data } = await http.get<DocumentChunk[]>(`${doc(id)}/chunks`)
+    return data
+  },
+  async viewer(id: string) {
+    const { data } = await http.get<ViewerContent>(`${doc(id)}/viewer`)
     return data
   },
   /** Thêm tài liệu từ đường dẫn trang web: máy chủ lấy nội dung chính và chặn địa chỉ nội bộ. */

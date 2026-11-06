@@ -523,6 +523,18 @@
       "action": "View side by side",
       "openFull": "Open full page"
     },
+    "viewer": {
+      "find": "Find in document",
+      "nextResult": "Next result",
+      "page": "Page",
+      "pdfPage": "PDF page {{number}}",
+      "previous": "Previous page",
+      "next": "Next page",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "passage": "Passage {{number}}",
+      "progress": "{{percent}}% processed"
+    },
     "shown_one": "Showing {{count}} document",
     "shown_other": "Showing {{count}} documents",
     "shortcuts": {

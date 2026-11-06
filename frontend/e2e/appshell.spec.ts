@@ -113,7 +113,7 @@ test.describe('NCL-02-CN-001 · Khung ứng dụng trên máy tính', () => {
     await expect(panel).toBeVisible()
     await expect(panel.getByRole('heading', { name: 'Ghi chú: Định luật Ohm' })).toBeVisible()
     await expect(panel.getByTestId('document-peek')).toContainText('I = U / R')
-    await expect(page).toHaveURL(/\/library$/)
+    await expect(page).toHaveURL(/\/library\?viewer=/)
     await expect(panel).toBeFocused()
     await expectNoSeriousA11yViolations(page)
 

@@ -66,7 +66,7 @@ export function SidePanel() {
           onClick={() => panel.setFullscreen(!panel.fullscreen)}
         />
       )}
-      <IconButton label={t('shell.panel.close')} icon={<X className="size-5" />} onClick={panel.close} />
+      <IconButton label={t('shell.panel.close')} icon={<X className="size-5" />} onClick={() => panel.close()} />
     </header>
   )
   const body = <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-5">{panel.content.render()}</div>

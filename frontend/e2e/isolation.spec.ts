@@ -39,7 +39,7 @@ test.describe('NCL-01-CN-004 · Cách ly dữ liệu học tập theo chủ sở
   test('TC-01: người học mở bản ghi mẫu của mình từ thư viện và thấy đủ nội dung', async ({ page, dev }) => {
     const email = uniqueEmail('thu-vien')
     await createVerifiedAccount(page, dev, email)
-    await dev.sampleDocument(email, 'Ghi chú: Định luật Ohm')
+    const id = await dev.sampleDocument(email, 'Ghi chú: Định luật Ohm')
 
     await page.goto('/')
     await navigateTo(page, 'Thư viện')
@@ -49,6 +49,8 @@ test.describe('NCL-01-CN-004 · Cách ly dữ liệu học tập theo chủ sở
     await expectNoSeriousA11yViolations(page)
 
     await page.getByTestId('document-card').click()
+    await expect(page.getByTestId('side-panel').getByTestId('reader-view')).toContainText('I = U / R')
+    await page.goto(`/library/${id}`)
     await expect(page.getByRole('heading', { level: 1, name: 'Ghi chú: Định luật Ohm' })).toBeVisible()
     await expect(page.getByTestId('document-content')).toContainText('I = U / R')
     await expect(page.getByTestId('document-content')).toContainText('1/R = 1/R1 + 1/R2')

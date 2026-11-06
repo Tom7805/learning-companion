@@ -14,7 +14,7 @@ import { useDocument } from '../api/queries'
 import { ProcessingPanel } from '../components/DocumentProcessing'
 import { DocumentStatusBadge } from '../components/DocumentStatusBadge'
 import { PrivacyNote } from '../components/PrivacyNote'
-import { DocumentViewer } from '../components/viewer/DocumentViewer'
+import { OriginalFilePreview } from '../components/viewer/OriginalFilePreview'
 
 /**
  * Một tài liệu kèm toàn bộ nội dung. Tài liệu của người khác hoặc mã không tồn tại đều hiện
@@ -131,7 +131,7 @@ export function DocumentPage() {
               {doc.contentText || t('library.noContent')}
             </div>
           </section>
-          <DocumentViewer document={doc} />
+          <OriginalFilePreview document={doc} />
         </div>
         <PrivacyNote />
       </div>
