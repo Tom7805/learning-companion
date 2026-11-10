@@ -116,8 +116,11 @@ export const libraryApi = {
     const { data } = await http.post<Folder>(`${folder(id)}/move`, { parentId })
     return data
   },
-  async trashFolder(id: string) {
-    const { data } = await http.delete<FolderTrashed>(folder(id))
+  /** {@code confirmInUse}: đã báo trước các không gian học đang dùng tài liệu trong thư mục và người học vẫn xóa. */
+  async trashFolder(id: string, confirmInUse = false) {
+    const { data } = await http.delete<FolderTrashed>(folder(id), {
+      params: confirmInUse ? { confirmInUse: true } : undefined,
+    })
     return data
   },
   async tags() {

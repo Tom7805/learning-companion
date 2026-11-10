@@ -135,6 +135,9 @@ export const handlers = [
   http.post('*/api/v1/library/documents/:id/file-link', () =>
     HttpResponse.json({ url: '/api/v1/files/link-1', expiresAt: new Date(Date.now() + 300_000).toISOString() }),
   ),
+  // Mặc định người học chưa có không gian học nào và chưa tài liệu nào được gắn; bài kiểm thử cần thì ghi đè.
+  http.get('*/api/v1/workspaces/usage', () => HttpResponse.json([])),
+  http.get('*/api/v1/workspaces', () => HttpResponse.json([])),
   http.get('*/api/v1/profiles/me', () => HttpResponse.json(sampleProfile)),
   // Mặc định không bật nhà cung cấp định danh; bài kiểm thử cần thì ghi đè.
   http.get('*/api/v1/auth/oauth/providers', () => HttpResponse.json([])),

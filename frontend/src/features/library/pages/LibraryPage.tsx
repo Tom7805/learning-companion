@@ -5,6 +5,8 @@ import { Link, useSearchParams } from 'react-router'
 import { useSidePanel } from '@/app/providers/sidePanel'
 import { routes } from '@/app/routes'
 import { toApiError } from '@/shared/api/errors'
+import { useDocumentUsage } from '@/features/workspaces/api/queries'
+import { DeleteImpactNote } from '@/features/workspaces/components/UsedInWorkspaces'
 import { usePageHeading } from '@/shared/hooks/usePageHeading'
 import { cn } from '@/shared/lib/cn'
 import { formatBytes } from '@/shared/lib/format'
@@ -18,8 +20,7 @@ import { DocumentGrid } from '../components/DocumentGrid'
 import { DocumentInfoPanel } from '../components/DocumentInfoPanel'
 import type { DocumentItemHandlers } from '../components/DocumentItemControls'
 import { DocumentList } from '../components/DocumentList'
-import { DocumentViewer } from '../components/viewer/DocumentViewer'
-import { parseViewerLocation } from '../hooks/useDocumentViewer'
+import { useViewerPanel } from '../hooks/useViewerPanel'
 import { DuplicateDialog } from '../components/DuplicateDialog'
 import { FolderNameDialog } from '../components/FolderNameDialog'
 import { FolderTree } from '../components/FolderTree'
@@ -77,35 +78,9 @@ export function LibraryPage() {
   const documents = useLibraryDocuments(query)
   const actions = useDocumentActions()
   const panel = useSidePanel()
-  const viewerId = params.get('viewer')
-  const viewerKind = params.get('kind')
-  const viewerNumber = params.get('number')
-  const viewerPassage = params.get('passage')
-  useEffect(() => {
-    if (!viewerId) {
-      if (panel.content?.id.startsWith('viewer:')) panel.close()
-      return
-    }
-    const contentId = `viewer:${viewerId}:${viewerKind}:${viewerNumber}:${viewerPassage}`
-    const title = documents.data?.find((item) => item.id === viewerId)?.title ?? t('library.content')
-    if (panel.content?.id === contentId && panel.content.title === title) return
-    const location = parseViewerLocation(new URLSearchParams({
-      ...(viewerKind && { kind: viewerKind }), ...(viewerNumber && { number: viewerNumber }),
-      ...(viewerPassage && { passage: viewerPassage }),
-    }))
-    panel.open({
-      id: contentId,
-      title,
-      render: () => <DocumentViewer key={contentId} id={viewerId} location={location} />,
-      onClose: () => setParams((current) => {
-        const next = new URLSearchParams(current)
-        for (const key of ['viewer', 'kind', 'number', 'passage']) next.delete(key)
-        return next
-      }, { replace: true }),
-    })
-  // panel.content đổi khi đóng; thêm cả panel vào deps sẽ mở lại khung ngay trước lúc đổi trang.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [viewerId, viewerKind, viewerNumber, viewerPassage, panel.open, documents.data, setParams, t])
+  const { viewerId, openViewer, closeViewer } = useViewerPanel(
+    (id) => documents.data?.find((item) => item.id === id)?.title,
+  )
   const [selection, setSelection] = useState<{ scope: string; ids: Set<string> }>(() => ({ scope: '', ids: new Set() }))
   const [dialog, setDialog] = useState<DialogState>(null)
   const [treeOpen, setTreeOpen] = useState(false)
@@ -141,6 +116,12 @@ export function LibraryPage() {
     [scopeKey, selected],
   )
   const selectedDocuments = list.filter((document) => selected.has(document.id))
+  // Trước khi xóa: những không gian học nào đang dùng các tài liệu (hay thư mục) sắp vào thùng rác (NCL-06-CN-001).
+  const deleteUsage = useDocumentUsage(
+    dialog?.kind === 'deleteFolder' ? { folderId: dialog.folder.id } : { documentIds: [...selected] },
+    dialog?.kind === 'deleteFolder' || dialog?.kind === 'deleteDocuments',
+  )
+  const deleteImpact = deleteUsage.isFetching ? undefined : deleteUsage.data
 
   const hrefFor = useCallback(
     (scope: Pick<LibraryQuery, 'scope' | 'folderId'>) => {
@@ -175,7 +156,9 @@ export function LibraryPage() {
   const moveFolder = useLibraryMutation(({ id, parentId }: { id: string; parentId: string | null }) =>
     libraryApi.moveFolder(id, parentId),
   )
-  const trashFolder = useLibraryMutation((id: string) => libraryApi.trashFolder(id))
+  const trashFolder = useLibraryMutation(({ id, confirmInUse }: { id: string; confirmInUse: boolean }) =>
+    libraryApi.trashFolder(id, confirmInUse),
+  )
 
   const moveDocuments = async (ids: string[], folderId: string | null, name: string) => {
     const failure = await actions.move(ids, folderId, name)
@@ -214,23 +197,14 @@ export function LibraryPage() {
       }),
     onToggleStar: (document) => void actions.toggleStar(document.id, document.title, !document.starred),
     onInfo: (document) => {
-      if (viewerId) setParams((current) => {
-        const next = new URLSearchParams(current)
-        for (const key of ['viewer', 'kind', 'number', 'passage']) next.delete(key)
-        return next
-      }, { replace: true })
+      if (viewerId) closeViewer()
       panel.open({
         id: `document-info:${document.id}`,
         title: document.title,
         render: () => <DocumentInfoPanel id={document.id} onClose={panel.close} />,
       })
     },
-    onPeek: (document) => setParams((current) => {
-      const next = new URLSearchParams(current)
-      next.set('viewer', document.id)
-      for (const key of ['kind', 'number', 'passage']) next.delete(key)
-      return next
-    }),
+    onPeek: (document) => openViewer(document.id),
     onDragStart: (document: DocumentCard, data: DataTransfer) =>
       writeDraggedDocuments(data, selected.has(document.id) ? [...selected] : [document.id]),
   }
@@ -552,16 +526,24 @@ export function LibraryPage() {
       <ConfirmDialog
         open={dialog?.kind === 'deleteDocuments'}
         title={t('library.deleteDocuments.title', { count: selected.size })}
-        description={t('library.deleteDocuments.body')}
+        description={
+          <>
+            {t('library.deleteDocuments.body')}
+            {dialog?.kind === 'deleteDocuments' && <DeleteImpactNote workspaces={deleteImpact} />}
+          </>
+        }
         confirmLabel={t('library.deleteDocuments.confirm')}
         cancelLabel={t('common.cancel')}
-        loading={actions.pending}
+        loading={actions.pending || deleteUsage.isFetching}
         onCancel={() => setDialog(null)}
         onConfirm={() =>
-          void actions.trash([...selected]).then((done) => {
+          void actions.trash([...selected], Boolean(deleteImpact?.length)).then((done) => {
             if (done) {
               setSelected(new Set())
               setDialog(null)
+            } else {
+              // Có thể tài liệu vừa được gắn vào không gian học: hỏi lại để hộp thoại nêu đúng tên.
+              void deleteUsage.refetch()
             }
           })
         }
@@ -569,15 +551,20 @@ export function LibraryPage() {
       <ConfirmDialog
         open={dialog?.kind === 'deleteFolder'}
         title={t('library.deleteFolder.title', { name: dialog?.kind === 'deleteFolder' ? dialog.folder.name : '' })}
-        description={t('library.deleteFolder.body', { count: dialog?.kind === 'deleteFolder' ? dialog.folder.totalCount : 0 })}
+        description={
+          <>
+            {t('library.deleteFolder.body', { count: dialog?.kind === 'deleteFolder' ? dialog.folder.totalCount : 0 })}
+            {dialog?.kind === 'deleteFolder' && <DeleteImpactNote workspaces={deleteImpact} />}
+          </>
+        }
         confirmLabel={t('library.deleteFolder.confirm')}
         cancelLabel={t('common.cancel')}
-        loading={trashFolder.isPending}
+        loading={trashFolder.isPending || deleteUsage.isFetching}
         onCancel={() => setDialog(null)}
         onConfirm={() => {
           if (dialog?.kind !== 'deleteFolder') return
           const folder = dialog.folder
-          trashFolder.mutate(folder.id, {
+          trashFolder.mutate({ id: folder.id, confirmInUse: Boolean(deleteImpact?.length) }, {
             onSuccess: (result) => {
               toast.success(t('library.deleteFolder.done', { name: folder.name, count: result.documents }))
               setDialog(null)
@@ -586,7 +573,12 @@ export function LibraryPage() {
                 setQuery({ ...query, folderId: folder.parentId ?? null })
               }
             },
-            onError: () => toast.error(t('library.actionFailed')),
+            onError: (error) => {
+              const apiError = toApiError(error)
+              toast.error(t(`errors.${apiError.code}`, { defaultValue: t('library.actionFailed') }))
+              // Vừa có không gian học gắn thêm tài liệu trong thư mục: hỏi lại để hộp thoại nêu đúng tên.
+              if (apiError.code === 'LIBRARY_DOCUMENT_IN_USE') void deleteUsage.refetch()
+            },
           })
         }}
       />

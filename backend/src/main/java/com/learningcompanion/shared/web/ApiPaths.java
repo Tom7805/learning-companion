@@ -7,6 +7,7 @@ public final class ApiPaths {
     public static final String LEGAL = V1 + "/legal";
     public static final String DEV = V1 + "/dev";
     public static final String LIBRARY = V1 + "/library";
+    public static final String WORKSPACES = V1 + "/workspaces";
     public static final String FILES = V1 + "/files";
     public static final String ADMIN = V1 + "/admin";
     public static final String PROFILES = V1 + "/profiles";
@@ -21,7 +22,8 @@ public final class ApiPaths {
      * Chức năng học tập, chỉ vai trò người học dùng được; quản trị viên chỉ thấy siêu dữ liệu vận hành (QTN-07).
      * Story thêm chức năng học tập mới thì thêm đường dẫn vào đây.
      */
-    public static final String[] LEARNING_FEATURES = {LIBRARY + "/**", EXPORTS, EXPORTS + "/**"};
+    public static final String[] LEARNING_FEATURES = {LIBRARY + "/**", WORKSPACES, WORKSPACES + "/**", EXPORTS,
+            EXPORTS + "/**"};
 
     private ApiPaths() {
     }

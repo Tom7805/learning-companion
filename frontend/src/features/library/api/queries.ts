@@ -61,11 +61,17 @@ export function useTags() {
   return useQuery({ queryKey: queryKeys.tags, queryFn: libraryApi.tags, staleTime: 30_000 })
 }
 
-/** Thao tác làm đổi kho tài liệu: xong thì làm mới cây thư mục, danh sách, nhãn và chi tiết tài liệu. */
+/**
+ * Thao tác làm đổi kho tài liệu: xong thì làm mới cây thư mục, danh sách, nhãn, chi tiết tài liệu và các không gian học.
+ */
 export function useLibraryMutation<TInput, TResult>(action: (input: TInput) => Promise<TResult>) {
   const client = useQueryClient()
   return useMutation({
     mutationFn: action,
-    onSettled: () => client.invalidateQueries({ queryKey: queryKeys.library }),
+    onSettled: () => {
+      // Xóa tài liệu làm đổi số tài liệu của các không gian học đang gắn nó.
+      void client.invalidateQueries({ queryKey: queryKeys.workspaces })
+      return client.invalidateQueries({ queryKey: queryKeys.library })
+    },
   })
 }

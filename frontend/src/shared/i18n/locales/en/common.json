@@ -164,7 +164,8 @@
     "DOCUMENT_NOT_FAILED": "This document hasn't failed, so there's nothing to retry.",
     "WEB_ADDRESS_INVALID": "This link is not valid. Paste a page address starting with http:// or https://.",
     "WEB_ADDRESS_BLOCKED": "Content cannot be fetched from internal network addresses. Use the link of a public page.",
-    "WEB_PAGE_UNAVAILABLE": "Could not fetch this page. You can paste its text to add it to your library."
+    "WEB_PAGE_UNAVAILABLE": "Could not fetch this page. You can paste its text to add it to your library.",
+    "LIBRARY_DOCUMENT_IN_USE": "This document is in use by study spaces. Review the affected study spaces, then confirm again."
   },
   "checkEmail": {
     "title": "Check your inbox",
@@ -691,7 +692,8 @@
       "unstar": "Unstar",
       "downloadFailed": "Couldn't download the original file. Please try again.",
       "source": "Source page",
-      "fetchedAt": "Fetched at {{time}}"
+      "fetchedAt": "Fetched at {{time}}",
+      "workspaces": "Study spaces"
     },
     "tags": {
       "manage": "Manage tags",
@@ -877,6 +879,168 @@
         "textRequired": "Paste the text to add.",
         "submit": "Add text"
       }
+    }
+  },
+  "workspaces": {
+    "nav": "Study spaces",
+    "title": "Study spaces",
+    "subtitle": "One workspace for each thing you are learning, linked to exactly the documents you pick from your library. Create as many as you like.",
+    "create": "New study space",
+    "edit": "Edit",
+    "search": "Search study spaces",
+    "summary_one": "{{formatted}} study space",
+    "summary_other": "{{formatted}} study spaces",
+    "summaryFiltered": "{{shown}} / {{total}} study spaces",
+    "documentCount_one": "{{formatted}} document",
+    "documentCount_other": "{{formatted}} documents",
+    "noDocuments": "No documents yet",
+    "loadFailed": "Could not load the study space. Please try again.",
+    "actionFailed": "That did not work. Please try again.",
+    "backToList": "All study spaces",
+    "empty": {
+      "title": "No study spaces yet",
+      "body": "Create a study space for a course or topic, then attach documents from your library. One document can be used in many study spaces without uploading it again.",
+      "action": "Create your first study space"
+    },
+    "noMatch": {
+      "title": "No study spaces match",
+      "body": "Try another keyword, or clear the search to see them all.",
+      "clear": "Clear search"
+    },
+    "notFound": {
+      "title": "Study space not found",
+      "body": "This study space does not exist, was deleted, or does not belong to your account."
+    },
+    "sidebar": {
+      "title": "Study spaces",
+      "empty": "No study spaces yet. Use the plus button to create one.",
+      "all_one": "See all {{formatted}} study space",
+      "all_other": "See all {{formatted}} study spaces"
+    },
+    "form": {
+      "createTitle": "New study space",
+      "editTitle": "Edit study space",
+      "createHint": "Name it after what you want to learn. You can change the icon, colour and description at any time.",
+      "name": "Study space name",
+      "nameHint": "{{used}}/{{max}} characters",
+      "nameRequired": "Give the study space a name.",
+      "nameTooLong": "The name can be at most 100 characters.",
+      "icon": "Icon",
+      "color": "Colour",
+      "description": "Description (optional)",
+      "descriptionPlaceholder": "For example: final exam revision, chapters 1 to 4",
+      "descriptionCount": "{{used}}/{{max}} characters",
+      "create": "Create study space",
+      "save": "Save changes",
+      "created": "Created the study space “{{name}}”.",
+      "updated": "Saved the study space “{{name}}”."
+    },
+    "icons": {
+      "BOOK": "Book",
+      "CALCULATOR": "Calculator",
+      "FLASK": "Flask",
+      "ATOM": "Atom",
+      "GLOBE": "Globe",
+      "CODE": "Code",
+      "LANGUAGES": "Languages",
+      "CHART": "Chart",
+      "BRAIN": "Brain",
+      "PALETTE": "Palette",
+      "MUSIC": "Music note",
+      "BRIEFCASE": "Briefcase"
+    },
+    "tabs": {
+      "label": "Study space sections",
+      "overview": "Overview",
+      "sources": "Documents"
+    },
+    "guide": {
+      "title": "Attach your first document",
+      "body": "“{{name}}” has no documents yet. Attach textbooks, lecture slides or notes so everything you do here is grounded in those documents.",
+      "steps": {
+        "pick": {
+          "title": "Pick from the library or upload",
+          "body": "Choose documents already in your library, or upload a new file right here."
+        },
+        "share": {
+          "title": "One document, many places",
+          "body": "A document is stored and processed once; attaching it to more study spaces uses no extra storage."
+        },
+        "study": {
+          "title": "Study from the right documents",
+          "body": "Open a document alongside your work to read it. Detach it when you are done; it stays in the library."
+        }
+      },
+      "fromLibrary": "Pick from library",
+      "upload": "Upload a file"
+    },
+    "overview": {
+      "stats": {
+        "total": "Documents",
+        "ready": "Ready",
+        "processing": "Processing",
+        "failed": "Failed"
+      },
+      "recent": "Recently attached",
+      "allSources": "See all documents",
+      "next": "Select a document name to read it in the side viewer."
+    },
+    "sources": {
+      "hint": "Documents here are links to your library: detaching one does not delete it.",
+      "emptyTitle": "No documents attached",
+      "emptyBody": "Attach documents from your library or upload a new file to get started.",
+      "attachedAt": "Attached {{time}}",
+      "open": "Open",
+      "openNamed": "Open {{title}}",
+      "detach": "Detach",
+      "detachNamed": "Detach {{title}} from the study space",
+      "detachTitle": "Detach this document from the study space?",
+      "detachBody": "“{{title}}” will no longer be in “{{name}}”. The document stays in your library and in your other study spaces.",
+      "detachConfirm": "Detach from study space",
+      "detached": "Detached “{{title}}”. The document is still in your library.",
+      "loadFailed": "Could not load the documents. Please try again."
+    },
+    "attach": {
+      "action": "Attach documents",
+      "title": "Attach documents",
+      "description": "Choose documents for “{{name}}”. Library documents are reused, not uploaded again.",
+      "tabs": "Ways to attach documents",
+      "tab": {
+        "library": "Pick from library",
+        "upload": "Upload a file"
+      },
+      "folder": "Folder",
+      "search": "Search by document name",
+      "noMatch": "No documents match",
+      "folderEmpty": "This folder has no documents",
+      "already": "Attached",
+      "selected_one": "{{formatted}} document selected",
+      "selected_other": "{{formatted}} documents selected",
+      "submit": "Attach to study space",
+      "done_one": "Attached {{formatted}} document to “{{name}}”.",
+      "done_other": "Attached {{formatted}} documents to “{{name}}”.",
+      "gone": "A document is no longer in your library. Close this dialog and choose again.",
+      "libraryEmptyTitle": "Your library is empty",
+      "libraryEmptyBody": "Upload a file right here: it is saved to your library and attached to this study space.",
+      "uploadInstead": "Upload a file",
+      "uploadHint": "Files are saved to your library, in the “{{folder}}” folder, and attached to this study space straight away.",
+      "folderFailed": "Could not prepare the library folder. Please try again.",
+      "reused": "That file has the same content as a document already in your library: nothing new was stored, and the existing document was attached.",
+      "linkFailed": "A file was uploaded to your library but could not be attached. Attach it from the “Pick from library” tab.",
+      "finish": "Done"
+    },
+    "delete": {
+      "action": "Delete",
+      "title": "Delete the study space “{{name}}”?",
+      "body": "The study space goes to the trash; you can restore it from there. Attached documents stay in your library.",
+      "confirm": "Move to trash",
+      "done": "Moved the study space “{{name}}” to the trash. Its documents are still in your library."
+    },
+    "usage": {
+      "none": "Not attached to any study space",
+      "warning_one": "In use by {{count}} study space:",
+      "warning_other": "In use by {{count}} study spaces:",
+      "consequence": "After deletion, these study spaces will no longer have that document."
     }
   },
   "account": {
@@ -1482,7 +1646,8 @@
       "AI_SAFETY_EVENT": "Content filter event",
       "LIBRARY_FOLDER": "Library folder",
       "LIBRARY_TAG": "Library tag",
-      "LIBRARY_UPLOAD": "File upload"
+      "LIBRARY_UPLOAD": "File upload",
+      "WORKSPACE": "Study space"
     },
     "actions": {
       "ACCOUNT_REGISTERED": "Account registered",

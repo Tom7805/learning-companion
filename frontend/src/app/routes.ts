@@ -2,6 +2,9 @@ export const routes = {
   home: '/',
   library: '/library',
   libraryDocument: '/library/:id',
+  /** Danh sách không gian học và trang của từng không gian (NCL-06-CN-001). */
+  workspaces: '/workspaces',
+  workspace: '/workspaces/:id',
   devices: '/devices',
   security: '/security',
   privacySettings: '/privacy',
@@ -36,5 +39,6 @@ export const routes = {
 } as const
 
 export const documentPath = (id: string) => `/library/${encodeURIComponent(id)}`
+export const workspacePath = (id: string) => `/workspaces/${encodeURIComponent(id)}`
 export const dataExportPath = (id: string) => `/exports/${encodeURIComponent(id)}`
 export const notificationPath = (id: string) => `/notifications/${encodeURIComponent(id)}`

@@ -30,5 +30,7 @@ public enum AuditObjectType {
     /** Một nhãn trong kho tài liệu của người học. */
     LIBRARY_TAG,
     /** Một lần tải tệp lên kho tài liệu (NCL-05-CN-002). */
-    LIBRARY_UPLOAD
+    LIBRARY_UPLOAD,
+    /** Một không gian học của người học (NCL-06-CN-001). */
+    WORKSPACE
 }

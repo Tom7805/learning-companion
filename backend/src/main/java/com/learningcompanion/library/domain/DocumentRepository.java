@@ -39,6 +39,12 @@ public interface DocumentRepository extends OwnerScopedRepository<Document> {
             + "group by t")
     List<Object[]> countActiveByOwnerIdGroupedByTag(@Param("ownerId") UUID ownerId);
 
+    /** Mã mọi tài liệu còn hoạt động trong các thư mục này, để báo trước những gì sẽ vào thùng rác cùng thư mục. */
+    @Query("select d.id from Document d where d.ownerId = :ownerId and d.folderId in :folderIds "
+            + "and d.trashedAt is null")
+    List<UUID> findActiveIdsByOwnerIdAndFolderIdIn(@Param("ownerId") UUID ownerId,
+                                                   @Param("folderIds") Collection<UUID> folderIds);
+
     /** Đưa mọi tài liệu còn hoạt động trong các thư mục này vào thùng rác cùng đợt xóa của thư mục. */
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("update Document d set d.trashedAt = :now, d.trashBatchId = :batch "
