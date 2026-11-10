@@ -1,6 +1,7 @@
 import type { LucideIcon } from 'lucide-react'
 import { adminNavigation } from '@/features/admin/navigation'
 import { dashboardNavigation } from '@/features/dashboard/navigation'
+import { assistantNavigation } from '@/features/assistant/navigation'
 import { libraryNavigation } from '@/features/library/navigation'
 import { workspacesNavigation } from '@/features/workspaces/navigation'
 
@@ -21,6 +22,7 @@ export interface NavigationEntry {
  */
 export const navigation: NavigationEntry[] = [
   ...dashboardNavigation,
+  ...assistantNavigation,
   ...workspacesNavigation,
   ...libraryNavigation,
 ].sort(

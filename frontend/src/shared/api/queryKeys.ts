@@ -14,6 +14,10 @@ export const queryKeys = {
   workspace: (id: string) => ['workspaces', 'detail', id] as const,
   workspaceDocuments: (id: string) => ['workspaces', 'detail', id, 'documents'] as const,
   workspaceUsage: (target: object) => ['workspaces', 'usage', target] as const,
+  /** Hội thoại với trợ lý (NCL-07-CN-001). */
+  assistant: ['assistant'] as const,
+  conversation: (id: string) => ['assistant', 'conversation', id] as const,
+  conversations: (workspaceId: string | null) => ['assistant', 'conversations', workspaceId] as const,
   profile: ['profile', 'me'] as const,
   uiPreferences: ['ui-preferences'] as const,
   oauthProviders: ['auth', 'oauth', 'providers'] as const,

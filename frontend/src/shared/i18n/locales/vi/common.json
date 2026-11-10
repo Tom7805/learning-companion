@@ -165,7 +165,8 @@
     "WEB_ADDRESS_INVALID": "Đường dẫn chưa hợp lệ. Hãy dán địa chỉ trang bắt đầu bằng http:// hoặc https://.",
     "WEB_ADDRESS_BLOCKED": "Không lấy nội dung từ địa chỉ thuộc mạng nội bộ. Hãy dùng đường dẫn của một trang công khai.",
     "WEB_PAGE_UNAVAILABLE": "Không lấy được nội dung trang này. Bạn có thể dán văn bản của trang để thêm vào kho.",
-    "LIBRARY_DOCUMENT_IN_USE": "Tài liệu đang được dùng trong không gian học. Hãy xem các không gian học bị ảnh hưởng rồi xác nhận lại."
+    "LIBRARY_DOCUMENT_IN_USE": "Tài liệu đang được dùng trong không gian học. Hãy xem các không gian học bị ảnh hưởng rồi xác nhận lại.",
+    "AI_TEMPORARILY_UNAVAILABLE": "Dịch vụ trí tuệ nhân tạo đang tạm gián đoạn, hãy thử lại sau ít phút."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -952,7 +953,8 @@
     "tabs": {
       "label": "Các phần của không gian học",
       "overview": "Tổng quan",
-      "sources": "Tài liệu"
+      "sources": "Tài liệu",
+      "assistant": "Hỏi đáp"
     },
     "guide": {
       "title": "Gắn tài liệu đầu tiên",
@@ -1041,6 +1043,104 @@
       "warning_one": "Đang được dùng trong {{count}} không gian học:",
       "warning_other": "Đang được dùng trong {{count}} không gian học:",
       "consequence": "Xóa xong, các không gian học này sẽ không còn tài liệu đó."
+    }
+  },
+  "assistant": {
+    "nav": "Hội thoại mới",
+    "newChat": "Hội thoại mới",
+    "loadFailed": "Chưa tải được hội thoại, hãy thử lại.",
+    "disclaimer": "Trợ lý chỉ trả lời dựa trên tài liệu bạn chọn và có thể sai. Hãy bấm số trích dẫn để kiểm chứng.",
+    "notFound": {
+      "title": "Không tìm thấy hội thoại",
+      "body": "Hội thoại này không tồn tại, đã được xóa, hoặc không thuộc tài khoản của bạn."
+    },
+    "greeting": {
+      "named": "Chào {{name}}, hôm nay bạn muốn tìm hiểu gì?",
+      "plain": "Hôm nay bạn muốn tìm hiểu gì?",
+      "body": "Đính kèm giáo trình, bài giảng hay ghi chép rồi đặt câu hỏi. Mỗi ý trong câu trả lời đều chỉ ra đoạn gốc để bạn kiểm chứng."
+    },
+    "workspace": {
+      "greeting": "Hỏi trợ lý về “{{name}}”",
+      "body": "Trợ lý dùng mọi tài liệu đã gắn và sẵn sàng của không gian học này. Bỏ chọn bớt ở các thẻ bên dưới nếu chỉ muốn hỏi trong vài tài liệu.",
+      "noDocuments": "Không gian học chưa có tài liệu. Hãy gắn tài liệu ở thẻ Tài liệu rồi quay lại đặt câu hỏi.",
+      "history": "Hội thoại trước",
+      "new": "Hội thoại mới",
+      "empty": "Chưa có hội thoại nào."
+    },
+    "composer": {
+      "label": "Câu hỏi cho trợ lý",
+      "placeholder": "Hỏi bất kỳ điều gì về tài liệu đang chọn…",
+      "hint": "Enter để gửi, Shift Enter để xuống dòng.",
+      "tooLong": "Câu hỏi dài tối đa {{max}} ký tự.",
+      "send": "Gửi câu hỏi",
+      "stop": "Dừng trả lời"
+    },
+    "sources": {
+      "summary_one": "Đang dùng {{count}}/{{total}} tài liệu",
+      "summary_other": "Đang dùng {{count}}/{{total}} tài liệu",
+      "none": "Chưa chọn tài liệu nào",
+      "attach": "Đính kèm tài liệu",
+      "choose": "Chọn tài liệu",
+      "remove": "Bỏ {{title}} khỏi hội thoại"
+    },
+    "picker": {
+      "title": "Đính kèm tài liệu",
+      "description": "Trợ lý chỉ trả lời dựa trên các tài liệu bạn chọn.",
+      "tabs": "Cách đính kèm",
+      "tab": {
+        "library": "Chọn từ kho",
+        "upload": "Tải tệp mới"
+      },
+      "search": "Tìm theo tên tài liệu",
+      "noMatch": "Không có tài liệu nào khớp",
+      "empty": "Kho tài liệu còn trống",
+      "selected_one": "Đã chọn {{formatted}} tài liệu",
+      "selected_other": "Đã chọn {{formatted}} tài liệu",
+      "apply": "Dùng các tài liệu này",
+      "uploadHint": "Tệp được lưu vào kho và đính kèm luôn; trợ lý dùng được khi tệp xử lý xong.",
+      "done": "Xong"
+    },
+    "answer": {
+      "author": "Trợ lý",
+      "thinking": "đang tìm trong tài liệu…",
+      "noSources": "Bạn chưa chọn tài liệu nào. Hãy đính kèm tài liệu để trợ lý trả lời dựa trên đúng tài liệu đó.",
+      "notFound": "Không tìm thấy thông tin này trong các tài liệu đang chọn. Trợ lý không tự trả lời ngoài tài liệu để tránh nội dung sai.",
+      "elsewhere": "Các tài liệu khác của bạn có nhắc tới nội dung này:",
+      "addDocument": "Chọn thêm “{{title}}”",
+      "blocked": "Câu trả lời này đã bị bộ lọc an toàn chặn.",
+      "stopped": "Đã dừng trả lời. Phần trên là những gì trợ lý đã viết.",
+      "refunded": "Lượt của câu hỏi này đã được hoàn. Phần đã hiện vẫn được giữ.",
+      "sources": "Nguồn đã trích",
+      "documentGone": "Tài liệu không còn",
+      "citation": "Trích dẫn {{number}}: {{title}}, {{location}}",
+      "suggestions": "Hỏi tiếp",
+      "copy": "Sao chép",
+      "copied": "Đã sao chép",
+      "copyFailed": "Chưa sao chép được, hãy thử lại.",
+      "regenerate": "Trả lời lại"
+    },
+    "errors": {
+      "AI_TEMPORARILY_UNAVAILABLE": "Dịch vụ trợ lý bị gián đoạn giữa chừng.",
+      "AI_QUOTA_EXHAUSTED": "Bạn đã dùng hết lượt AI hôm nay. Lượt hồi lại vào nửa đêm; mọi chức năng học khác vẫn dùng bình thường.",
+      "NOT_FOUND": "Không tìm thấy hội thoại hay tài liệu này.",
+      "NETWORK_ERROR": "Mất kết nối khi đang nhận câu trả lời.",
+      "INTERNAL_ERROR": "Trợ lý gặp sự cố, hãy thử lại."
+    },
+    "announce": {
+      "COMPLETE": "Trợ lý đã trả lời xong.",
+      "NOT_FOUND": "Không tìm thấy thông tin trong tài liệu đã chọn.",
+      "NO_SOURCES": "Hãy chọn tài liệu trước khi hỏi.",
+      "FAILED": "Câu trả lời bị gián đoạn.",
+      "STOPPED": "Đã dừng trả lời.",
+      "BLOCKED": "Bộ lọc an toàn đã can thiệp.",
+      "SUPPORT": "Trợ lý gửi bạn lời nhắn kèm nguồn trợ giúp."
+    },
+    "location": {
+      "PAGE": "Trang {{number}}",
+      "SLIDE": "Trang trình chiếu {{number}}",
+      "IMAGE": "Ảnh {{number}}",
+      "PARAGRAPH": "Đoạn {{number}}",
+      "PARAGRAPH_RANGE": "Đoạn {{from}}–{{to}}"
     }
   },
   "account": {
@@ -1647,7 +1747,8 @@
       "LIBRARY_FOLDER": "Thư mục tài liệu",
       "LIBRARY_TAG": "Nhãn tài liệu",
       "LIBRARY_UPLOAD": "Lần tải tệp lên",
-      "WORKSPACE": "Không gian học"
+      "WORKSPACE": "Không gian học",
+      "CONVERSATION": "Hội thoại với trợ lý"
     },
     "actions": {
       "ACCOUNT_REGISTERED": "Đăng ký tài khoản",

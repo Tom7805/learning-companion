@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 import { useSidePanel } from '@/app/providers/sidePanel'
 import { DocumentViewer } from '../components/viewer/DocumentViewer'
-import { parseViewerLocation } from './useDocumentViewer'
+import { parseViewerLocation, type ViewerLocation } from './useDocumentViewer'
 
 const VIEWER_KEYS = ['viewer', 'kind', 'number', 'passage']
 
@@ -35,12 +35,18 @@ export function useViewerPanel(titleOf: (id: string) => string | undefined) {
     [setParams],
   )
 
+  /** Mở tài liệu ở khung xem bên; có {@code location} thì nhảy tới đúng trang và tô sáng đoạn (trích dẫn). */
   const openViewer = useCallback(
-    (id: string) =>
+    (id: string, location?: ViewerLocation) =>
       setParams((current) => {
         const next = new URLSearchParams(current)
         for (const key of VIEWER_KEYS) next.delete(key)
         next.set('viewer', id)
+        if (location) {
+          next.set('kind', location.kind)
+          next.set('number', String(location.number))
+          if (location.passage) next.set('passage', String(location.passage))
+        }
         return next
       }),
     [setParams],

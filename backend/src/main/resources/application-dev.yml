@@ -1,5 +1,9 @@
 # Môi trường phát triển: thư gửi qua bản mô phỏng, đồng hồ điều chỉnh được để thử các mốc hết hạn.
 app:
+  assistant:
+    retrieval:
+      # Vector của bản mô phỏng không mang nghĩa: chỉ nhận đoạn khớp từ ngữ, để kiểm thử "không tìm thấy" ổn định.
+      min-similarity: 2.0
   library:
     web-fetch:
       mode: ${APP_WEB_FETCH_MODE:mock}

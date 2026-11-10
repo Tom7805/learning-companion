@@ -165,7 +165,8 @@
     "WEB_ADDRESS_INVALID": "This link is not valid. Paste a page address starting with http:// or https://.",
     "WEB_ADDRESS_BLOCKED": "Content cannot be fetched from internal network addresses. Use the link of a public page.",
     "WEB_PAGE_UNAVAILABLE": "Could not fetch this page. You can paste its text to add it to your library.",
-    "LIBRARY_DOCUMENT_IN_USE": "This document is in use by study spaces. Review the affected study spaces, then confirm again."
+    "LIBRARY_DOCUMENT_IN_USE": "This document is in use by study spaces. Review the affected study spaces, then confirm again.",
+    "AI_TEMPORARILY_UNAVAILABLE": "The AI service is temporarily unavailable. Please try again in a few minutes."
   },
   "checkEmail": {
     "title": "Check your inbox",
@@ -952,7 +953,8 @@
     "tabs": {
       "label": "Study space sections",
       "overview": "Overview",
-      "sources": "Documents"
+      "sources": "Documents",
+      "assistant": "Ask"
     },
     "guide": {
       "title": "Attach your first document",
@@ -1041,6 +1043,104 @@
       "warning_one": "In use by {{count}} study space:",
       "warning_other": "In use by {{count}} study spaces:",
       "consequence": "After deletion, these study spaces will no longer have that document."
+    }
+  },
+  "assistant": {
+    "nav": "New chat",
+    "newChat": "New chat",
+    "loadFailed": "Could not load the conversation. Please try again.",
+    "disclaimer": "The assistant only answers from the documents you choose and can be wrong. Select a citation number to check the source.",
+    "notFound": {
+      "title": "Conversation not found",
+      "body": "This conversation does not exist, was deleted, or does not belong to your account."
+    },
+    "greeting": {
+      "named": "Hi {{name}}, what would you like to learn today?",
+      "plain": "What would you like to learn today?",
+      "body": "Attach a textbook, lecture slides or notes, then ask a question. Every point in the answer links back to the original passage so you can check it."
+    },
+    "workspace": {
+      "greeting": "Ask the assistant about “{{name}}”",
+      "body": "The assistant uses every ready document attached to this study space. Deselect some below to ask about only a few.",
+      "noDocuments": "This study space has no documents yet. Attach some in the Documents tab, then come back to ask.",
+      "history": "Previous chats",
+      "new": "New chat",
+      "empty": "No chats yet."
+    },
+    "composer": {
+      "label": "Question for the assistant",
+      "placeholder": "Ask anything about the selected documents…",
+      "hint": "Press Enter to send, Shift Enter for a new line.",
+      "tooLong": "Questions can be at most {{max}} characters.",
+      "send": "Send question",
+      "stop": "Stop answering"
+    },
+    "sources": {
+      "summary_one": "Using {{count}}/{{total}} document",
+      "summary_other": "Using {{count}}/{{total}} documents",
+      "none": "No documents selected",
+      "attach": "Attach documents",
+      "choose": "Choose documents",
+      "remove": "Remove {{title}} from the chat"
+    },
+    "picker": {
+      "title": "Attach documents",
+      "description": "The assistant only answers from the documents you choose.",
+      "tabs": "Ways to attach",
+      "tab": {
+        "library": "Pick from library",
+        "upload": "Upload a file"
+      },
+      "search": "Search by document name",
+      "noMatch": "No documents match",
+      "empty": "Your library is empty",
+      "selected_one": "{{formatted}} document selected",
+      "selected_other": "{{formatted}} documents selected",
+      "apply": "Use these documents",
+      "uploadHint": "Files are saved to your library and attached straight away; the assistant can use them once processing finishes.",
+      "done": "Done"
+    },
+    "answer": {
+      "author": "Assistant",
+      "thinking": "searching your documents…",
+      "noSources": "You have not selected any documents. Attach some so the assistant answers from exactly those documents.",
+      "notFound": "The selected documents do not cover this. The assistant does not answer beyond your documents to avoid making things up.",
+      "elsewhere": "Other documents of yours mention this:",
+      "addDocument": "Also use “{{title}}”",
+      "blocked": "This answer was blocked by the safety filter.",
+      "stopped": "Answer stopped. Above is what the assistant had written.",
+      "refunded": "The credit for this question has been refunded. The text shown so far is kept.",
+      "sources": "Cited sources",
+      "documentGone": "Document no longer available",
+      "citation": "Citation {{number}}: {{title}}, {{location}}",
+      "suggestions": "Ask next",
+      "copy": "Copy",
+      "copied": "Copied",
+      "copyFailed": "Could not copy. Please try again.",
+      "regenerate": "Answer again"
+    },
+    "errors": {
+      "AI_TEMPORARILY_UNAVAILABLE": "The assistant service was interrupted midway.",
+      "AI_QUOTA_EXHAUSTED": "You have used all of today's AI credits. They reset at midnight; everything else keeps working.",
+      "NOT_FOUND": "This conversation or document could not be found.",
+      "NETWORK_ERROR": "The connection dropped while receiving the answer.",
+      "INTERNAL_ERROR": "The assistant ran into a problem. Please try again."
+    },
+    "announce": {
+      "COMPLETE": "The assistant has finished answering.",
+      "NOT_FOUND": "Nothing about this was found in the selected documents.",
+      "NO_SOURCES": "Choose documents before asking.",
+      "FAILED": "The answer was interrupted.",
+      "STOPPED": "Answer stopped.",
+      "BLOCKED": "The safety filter stepped in.",
+      "SUPPORT": "The assistant sent you a message with places to get help."
+    },
+    "location": {
+      "PAGE": "Page {{number}}",
+      "SLIDE": "Slide {{number}}",
+      "IMAGE": "Image {{number}}",
+      "PARAGRAPH": "Paragraph {{number}}",
+      "PARAGRAPH_RANGE": "Paragraphs {{from}}–{{to}}"
     }
   },
   "account": {
@@ -1647,7 +1747,8 @@
       "LIBRARY_FOLDER": "Library folder",
       "LIBRARY_TAG": "Library tag",
       "LIBRARY_UPLOAD": "File upload",
-      "WORKSPACE": "Study space"
+      "WORKSPACE": "Study space",
+      "CONVERSATION": "Assistant conversation"
     },
     "actions": {
       "ACCOUNT_REGISTERED": "Account registered",

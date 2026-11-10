@@ -32,5 +32,7 @@ public enum AuditObjectType {
     /** Một lần tải tệp lên kho tài liệu (NCL-05-CN-002). */
     LIBRARY_UPLOAD,
     /** Một không gian học của người học (NCL-06-CN-001). */
-    WORKSPACE
+    WORKSPACE,
+    /** Một hội thoại với trợ lý hỏi đáp (NCL-07-CN-001). */
+    CONVERSATION
 }

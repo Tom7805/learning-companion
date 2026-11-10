@@ -11,6 +11,7 @@ import { useWorkspace, useWorkspaceDocuments, useWorkspaceMutation } from '../ap
 import { workspacesApi } from '../api/workspacesApi'
 import { AttachDocumentsDialog, type AttachTab } from '../components/AttachDocumentsDialog'
 import { CreateWorkspaceDialog } from '../components/CreateWorkspaceDialog'
+import { WorkspaceAssistant } from '../components/WorkspaceAssistant'
 import { WorkspaceGlyph } from '../components/WorkspaceGlyph'
 import { WorkspaceOverview } from '../components/WorkspaceOverview'
 import { WorkspaceSources } from '../components/WorkspaceSources'
@@ -196,7 +197,9 @@ function WorkspaceView({
           </Alert>
         )}
         {documents.data &&
-          (tab === 'overview' ? (
+          (tab === 'assistant' ? (
+            <WorkspaceAssistant workspace={workspace} documents={list} />
+          ) : tab === 'overview' ? (
             <WorkspaceOverview
               workspace={workspace}
               documents={list}

@@ -102,6 +102,10 @@ app:
     # Chặn tệp nén (văn bản soạn thảo, trình chiếu, sách điện tử) bung ra quá lớn.
     max-inflated-bytes: 536870912
     max-inflate-ratio: 100
+  assistant:
+    retrieval:
+      # Đoạn không khớp từ ngữ nào với câu hỏi chỉ được dùng khi độ gần nghĩa (cosin) đạt ngưỡng này (NCL-07-CN-001).
+      min-similarity: 0.78
   library:
     web-fetch:
       # http: lấy trang thật (chặn mạng nội bộ) | mock: trang mẫu cố định cho máy phát triển và kiểm thử.

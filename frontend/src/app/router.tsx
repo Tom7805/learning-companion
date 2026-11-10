@@ -20,6 +20,7 @@ function page<K extends string, P extends object>(load: () => Promise<Record<K, 
 const DashboardPage = page(() => import('@/features/dashboard/pages/DashboardPage'), 'DashboardPage')
 const LibraryPage = page(() => import('@/features/library/pages/LibraryPage'), 'LibraryPage')
 const DocumentPage = page(() => import('@/features/library/pages/DocumentPage'), 'DocumentPage')
+const ChatPage = page(() => import('@/features/assistant/pages/ChatPage'), 'ChatPage')
 const WorkspacesPage = page(() => import('@/features/workspaces/pages/WorkspacesPage'), 'WorkspacesPage')
 const WorkspacePage = page(() => import('@/features/workspaces/pages/WorkspacePage'), 'WorkspacePage')
 const DevicesPage = page(() => import('@/features/auth/pages/DevicesPage'), 'DevicesPage')
@@ -99,6 +100,7 @@ export const router = createBrowserRouter([
                   { path: routes.home, element: <DashboardPage /> },
                   { path: routes.library, element: <LibraryPage /> },
                   { path: routes.libraryDocument, element: <DocumentPage /> },
+                  { path: routes.conversation, element: <ChatPage /> },
                   { path: routes.workspaces, element: <WorkspacesPage /> },
                   { path: routes.workspace, element: <WorkspacePage /> },
                   { path: routes.devices, element: <DevicesPage /> },

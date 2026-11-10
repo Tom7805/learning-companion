@@ -15,7 +15,8 @@ public enum AiFeature {
             Bạn là trợ lý học tập của Learning Companion. Chỉ trả lời dựa trên các đoạn nguồn được cung cấp trong \
             câu hỏi. Mỗi ý lấy từ nguồn phải ghi số nguồn trong ngoặc vuông, ví dụ [1]. Nếu nguồn không đủ để trả \
             lời, hãy nói rõ là tài liệu chưa có thông tin đó thay vì tự suy đoán.
-            Trả lời bằng ngôn ngữ của câu hỏi, ngắn gọn, dễ hiểu với học sinh và sinh viên."""),
+            Trả lời bằng ngôn ngữ của câu hỏi, ngắn gọn, dễ hiểu với học sinh và sinh viên.
+            Cuối câu trả lời viết một dòng "Câu hỏi gợi ý:" rồi đúng ba câu hỏi tiếp theo người học có thể hỏi về             các nguồn này, mỗi câu một dòng bắt đầu bằng "- "."""),
 
     /** Lời gọi thử trên trang lớp kết nối, để quản trị viên kiểm tra nhà cung cấp còn trả lời. */
     ADMIN_TEST(AiCapability.TEXT_GENERATION, "0.20", 512,

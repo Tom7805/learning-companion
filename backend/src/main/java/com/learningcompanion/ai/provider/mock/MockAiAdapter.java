@@ -38,8 +38,11 @@ public class MockAiAdapter implements AiProviderAdapter {
 
     public static final int VECTOR_DIMENSIONS = 8;
 
-    /** Cách bản mô phỏng phản hồi. */
-    public enum Mode { OK, FAIL, HANG }
+    /**
+     * Cách bản mô phỏng phản hồi. BREAK_MIDWAY: sinh văn bản trả được nửa câu trả lời rồi lỗi, như dịch vụ mô hình đứt
+     * giữa chừng (NCL-07-CN-001 TC-05); các khả năng khác vẫn chạy bình thường.
+     */
+    public enum Mode { OK, FAIL, HANG, BREAK_MIDWAY }
 
     private final Map<String, Mode> modes = new ConcurrentHashMap<>();
     private volatile Duration chunkDelay = Duration.ofMillis(25);
@@ -110,24 +113,80 @@ public class MockAiAdapter implements AiProviderAdapter {
         lastRequest = request;
         String answer = "Đây là câu trả lời mô phỏng từ " + provider.code()
                 + ". Nội dung cố định giúp kiểm thử luôn cho cùng một kết quả.";
+        String grounded = groundedAnswer(request);
         if (scriptedReply != null) {
             answer = scriptedReply;
         } else if (request.messages().stream().anyMatch(m -> NAIVE_INJECTION.matcher(m.text()).find())) {
             answer = HIJACKED_REPLY;
+        } else if (grounded != null) {
+            answer = grounded;
         }
         List<String> pieces = new ArrayList<>();
         for (String word : answer.split(" ")) {
             pieces.add(pieces.isEmpty() ? word : " " + word);
         }
-        for (String piece : pieces) {
+        for (int i = 0; i < pieces.size(); i++) {
+            if (mode(provider.code()) == Mode.BREAK_MIDWAY && i == pieces.size() / 2) {
+                throw new ProviderCallException("MOCK_BROKEN_STREAM", "Bản mô phỏng đứt luồng giữa chừng");
+            }
             pause(chunkDelay);
-            onChunk.accept(new ChatChunk(piece));
+            onChunk.accept(new ChatChunk(pieces.get(i)));
         }
         int input = words(request.system());
         for (ChatRequest.Message message : request.messages()) {
             input += words(message.text());
         }
         return new ChatResult(answer, new AiUsage(input, pieces.size()), provider.code());
+    }
+
+    /** Vùng nguồn trong lượt hỏi (xem SourceDataWrapper): tiêu đề và nội dung từng đoạn. */
+    private static final Pattern SOURCE = Pattern.compile(
+            "<<<NGUON_DU_LIEU so=\"(\\d+)\"[^>]*tieu_de=\"([^\"]*)\"[^>]*>>>\\n(.*?)\\n<<<HET_NGUON",
+            Pattern.DOTALL);
+    private static final Pattern SENTENCES = Pattern.compile("(?<=[.!?])\\s+");
+    private static final Pattern WORD = Pattern.compile("[^\\p{L}\\p{N}]+");
+
+    /**
+     * Như một mô hình bám nguồn: khi lượt hỏi có đoạn nguồn, câu trả lời lấy từ tối đa hai đoạn câu khớp câu hỏi nhất,
+     * ghi số nguồn trong ngoặc vuông, rồi thêm ba câu hỏi gợi ý theo định dạng lời nhắc của trợ lý hỏi đáp.
+     */
+    static String groundedAnswer(ChatRequest request) {
+        String user = request.messages().isEmpty() ? "" : request.messages().get(request.messages().size() - 1).text();
+        int asked = user.lastIndexOf("Câu hỏi:");
+        java.util.Set<String> questionWords = new java.util.HashSet<>(List.of(WORD.split(
+                asked < 0 ? "" : user.substring(asked + 8).toLowerCase(java.util.Locale.ROOT))));
+        var matcher = SOURCE.matcher(user);
+        StringBuilder answer = new StringBuilder("Theo tài liệu đã chọn:");
+        String firstTitle = null;
+        int used = 0;
+        while (matcher.find() && used < 2) {
+            String text = matcher.group(3).strip().replaceAll("\\s+", " ");
+            if (text.isEmpty() || text.startsWith("[Đã lược")) {
+                continue;
+            }
+            String first = text;
+            long best = -1;
+            for (String sentence : SENTENCES.split(text)) {
+                long overlap = java.util.Arrays.stream(WORD.split(sentence.toLowerCase(java.util.Locale.ROOT)))
+                        .filter(word -> word.length() > 1 && questionWords.contains(word)).count();
+                if (overlap > best) {
+                    best = overlap;
+                    first = sentence;
+                }
+            }
+            first = (first.length() > 220 ? first.substring(0, 220) : first).replaceAll("[.!?]+$", "");
+            answer.append(used == 0 ? " " : " Ngoài ra, ").append(first).append(" [").append(matcher.group(1))
+                    .append("].");
+            if (firstTitle == null) {
+                firstTitle = matcher.group(2).replaceAll(" · .*$", "");
+            }
+            used++;
+        }
+        if (used == 0) {
+            return null;
+        }
+        return answer + "\nCâu hỏi gợi ý:\n- Ý chính của " + firstTitle + " là gì?\n- Cho một ví dụ minh họa trong "
+                + firstTitle + ".\n- Phần nào của " + firstTitle + " thường bị hiểu nhầm?";
     }
 
     @Override
