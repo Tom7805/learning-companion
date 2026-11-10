@@ -29,7 +29,7 @@ async function expectNoSeriousA11yViolations(page: Page) {
   ).toEqual([])
 }
 
-async function xsrf(page: Page) {
+async function xsrf(page: Page): Promise<Record<string, string>> {
   const token = (await page.context().cookies()).find((cookie) => cookie.name === 'XSRF-TOKEN')?.value
   return token ? { 'X-XSRF-TOKEN': token } : {}
 }
