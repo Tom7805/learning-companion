@@ -113,7 +113,8 @@ public class MockAiAdapter implements AiProviderAdapter {
         lastRequest = request;
         String answer = "Đây là câu trả lời mô phỏng từ " + provider.code()
                 + ". Nội dung cố định giúp kiểm thử luôn cho cùng một kết quả.";
-        String grounded = groundedAnswer(request);
+        String grounded = request.system() != null && request.system().contains("dàn ý chủ đề")
+                ? outlineAnswer(request) : groundedAnswer(request);
         if (scriptedReply != null) {
             answer = scriptedReply;
         } else if (request.messages().stream().anyMatch(m -> NAIVE_INJECTION.matcher(m.text()).find())) {
@@ -187,6 +188,45 @@ public class MockAiAdapter implements AiProviderAdapter {
         }
         return answer + "\nCâu hỏi gợi ý:\n- Ý chính của " + firstTitle + " là gì?\n- Cho một ví dụ minh họa trong "
                 + firstTitle + ".\n- Phần nào của " + firstTitle + " thường bị hiểu nhầm?";
+    }
+
+    /**
+     * Như một mô hình đề xuất dàn ý (NCL-06-CN-002): mỗi tài liệu nguồn thành một chủ đề cấp một, mỗi đoạn thành một chủ
+     * đề cấp hai lấy từ câu đầu của đoạn, kèm mục tiêu học và số nguồn theo định dạng của lời nhắc {@code TOPIC_OUTLINE}.
+     */
+    static String outlineAnswer(ChatRequest request) {
+        String user = request.messages().isEmpty() ? "" : request.messages().get(request.messages().size() - 1).text();
+        var matcher = SOURCE.matcher(user);
+        java.util.Map<String, java.util.List<String>> byDocument = new java.util.LinkedHashMap<>();
+        java.util.Map<String, java.util.List<Integer>> numbers = new java.util.LinkedHashMap<>();
+        while (matcher.find()) {
+            String text = matcher.group(3).strip().replaceAll("\\s+", " ");
+            if (text.isEmpty() || text.startsWith("[Đã lược")) {
+                continue;
+            }
+            String title = matcher.group(2).replaceAll(" · .*$", "");
+            String sentence = SENTENCES.split(text)[0].replaceAll("[.!?]+$", "");
+            String[] words = sentence.split(" ");
+            String topic = String.join(" ", java.util.Arrays.copyOf(words, Math.min(6, words.length)));
+            int number = Integer.parseInt(matcher.group(1));
+            byDocument.computeIfAbsent(title, key -> new ArrayList<>())
+                    .add("## " + topic + " :: Hiểu được " + lowerFirst(sentence) + " [" + number + "]");
+            numbers.computeIfAbsent(title, key -> new ArrayList<>()).add(number);
+        }
+        if (byDocument.isEmpty()) {
+            return null;
+        }
+        StringBuilder outline = new StringBuilder();
+        byDocument.forEach((title, lines) -> {
+            outline.append("# ").append(title).append(" :: Nắm được các ý chính của ").append(title).append(" [")
+                    .append(numbers.get(title).get(0)).append("]\n");
+            new java.util.LinkedHashSet<>(lines).forEach(line -> outline.append(line).append('\n'));
+        });
+        return outline.toString().strip();
+    }
+
+    private static String lowerFirst(String text) {
+        return text.isEmpty() ? text : Character.toLowerCase(text.charAt(0)) + text.substring(1);
     }
 
     @Override

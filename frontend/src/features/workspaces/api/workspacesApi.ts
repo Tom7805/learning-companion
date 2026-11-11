@@ -3,6 +3,8 @@ import { http } from '@/shared/api/httpClient'
 import type {
   AttachedDocument,
   AttachResult,
+  TopicInput,
+  TopicTree,
   UsageTarget,
   Workspace,
   WorkspaceInput,
@@ -57,6 +59,46 @@ export const workspacesApi = {
       params: { documentId: target.documentIds, folderId: target.folderId },
       paramsSerializer: { indexes: null },
     })
+    return data
+  },
+  /** Dàn ý chủ đề của không gian học (NCL-06-CN-002); mọi thao tác trả lại cả cây. */
+  async topics(id: string) {
+    const { data } = await http.get<TopicTree>(`${workspace(id)}/topics`)
+    return data
+  },
+  async addTopic(id: string, input: TopicInput) {
+    const { data } = await http.post<TopicTree>(`${workspace(id)}/topics`, input)
+    return data
+  },
+  /** Trợ lý đề xuất dàn ý từ các nguồn sẵn sàng; tốn lượt. */
+  async suggestTopics(id: string) {
+    const { data } = await http.post<TopicTree>(`${workspace(id)}/topics/suggest`, undefined, { timeout: 120_000 })
+    return data
+  },
+  async updateTopic(id: string, topicId: string, input: { title?: string; goal?: string }) {
+    const { data } = await http.patch<TopicTree>(`${workspace(id)}/topics/${encodeURIComponent(topicId)}`, input)
+    return data
+  },
+  async moveTopic(id: string, topicId: string, parentId: string | null, index: number) {
+    const { data } = await http.put<TopicTree>(`${workspace(id)}/topics/${encodeURIComponent(topicId)}/position`, {
+      parentId,
+      index,
+    })
+    return data
+  },
+  async mergeTopic(id: string, topicId: string, intoId: string) {
+    const { data } = await http.post<TopicTree>(`${workspace(id)}/topics/${encodeURIComponent(topicId)}/merge`, { intoId })
+    return data
+  },
+  async splitTopic(id: string, topicId: string, title: string, childIds: string[]) {
+    const { data } = await http.post<TopicTree>(`${workspace(id)}/topics/${encodeURIComponent(topicId)}/split`, {
+      title,
+      childIds,
+    })
+    return data
+  },
+  async deleteTopic(id: string, topicId: string) {
+    const { data } = await http.delete<TopicTree>(`${workspace(id)}/topics/${encodeURIComponent(topicId)}`)
     return data
   },
 }

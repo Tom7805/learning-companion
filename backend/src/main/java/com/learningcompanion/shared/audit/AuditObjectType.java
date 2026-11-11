@@ -36,5 +36,7 @@ public enum AuditObjectType {
     /** Một hội thoại với trợ lý hỏi đáp (NCL-07-CN-001). */
     CONVERSATION,
     /** Một trích dẫn trong câu trả lời của trợ lý (NCL-07-CN-002). */
-    CITATION
+    CITATION,
+    /** Chủ đề trong dàn ý của không gian học (NCL-06-CN-002). */
+    TOPIC
 }

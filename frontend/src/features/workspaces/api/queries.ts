@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/shared/api/queryKeys'
 import type { DocumentCard } from '@/features/library/types'
-import type { UsageTarget } from '../types'
+import type { UsageTarget, TopicTree } from '../types'
 import { workspacesApi } from './workspacesApi'
 
 /** Hỏi lại máy chủ sau mỗi chừng này khi còn tài liệu đang chờ hoặc đang xử lý. */
@@ -68,5 +68,30 @@ export function useWorkspaceMutation<TInput, TResult>(action: (input: TInput) =>
   return useMutation({
     mutationFn: action,
     onSettled: () => client.invalidateQueries({ queryKey: queryKeys.workspaces }),
+  })
+}
+
+/** Dàn ý chủ đề của không gian học. */
+export function useTopics(workspaceId: string) {
+  return useQuery({
+    queryKey: queryKeys.workspaceTopics(workspaceId),
+    queryFn: () => workspacesApi.topics(workspaceId),
+    staleTime: 30_000,
+    retry: false,
+  })
+}
+
+/**
+ * Thao tác trên dàn ý: máy chủ trả lại cả cây nên đặt thẳng vào bộ nhớ đệm; lỗi (ví dụ vượt ba cấp) thì giữ nguyên cây
+ * cũ để chủ đề trở về chỗ cũ.
+ */
+export function useTopicMutation<TInput>(workspaceId: string, action: (input: TInput) => Promise<TopicTree>) {
+  const client = useQueryClient()
+  return useMutation({
+    mutationFn: action,
+    onSuccess: (tree) => {
+      client.setQueryData(queryKeys.workspaceTopics(workspaceId), tree)
+      void client.invalidateQueries({ queryKey: queryKeys.quota })
+    },
   })
 }

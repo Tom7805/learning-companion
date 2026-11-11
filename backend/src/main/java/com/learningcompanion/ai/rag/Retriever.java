@@ -166,7 +166,7 @@ public class Retriever {
     }
 
     /** Thứ tự đoạn tại vị trí của nó, như khung xem tài liệu đánh số (NCL-05-CN-005). */
-    static int passageOf(DocumentChunk chunk, List<DocumentChunk> sameDocument) {
+    public static int passageOf(DocumentChunk chunk, List<DocumentChunk> sameDocument) {
         ChunkLocation at = chunk.getLocation();
         List<DocumentChunk> matching = sameDocument.stream()
                 .filter(other -> other.getLocation().kind() == at.kind() && other.getLocation().number() <= at.number()
