@@ -28,7 +28,9 @@ describe('ForgotPasswordPage', () => {
     await user.type(screen.getByLabelText('Thư điện tử'), '  lan.anh@gmail.com ')
     await user.click(screen.getByRole('button', { name: /Gửi hướng dẫn/ }))
 
-    expect(await screen.findByRole('heading', { name: 'Kiểm tra hộp thư của bạn' })).toHaveFocus()
+    // Tiêu điểm được chuyển trong effect sau khi tiêu đề xuất hiện: chờ, đừng kiểm tra ngay lúc vừa thấy tiêu đề.
+    const heading = await screen.findByRole('heading', { name: 'Kiểm tra hộp thư của bạn' })
+    await waitFor(() => expect(heading).toHaveFocus())
     expect(body).toEqual({ email: 'lan.anh@gmail.com' })
     expect(screen.getByTestId('forgot-sent-body')).toHaveTextContent(
       'Nếu lan.anh@gmail.com có tài khoản Learning Companion, hướng dẫn đặt lại mật khẩu đã được gửi tới địa chỉ này.',
