@@ -94,7 +94,7 @@ test.describe('NCL-01-CN-008 · Xuất toàn bộ dữ liệu', () => {
     await page.goto(link)
     await expect(page.getByRole('heading', { level: 1, name: 'Tải gói dữ liệu của bạn' })).toBeVisible()
     const sections = page.getByTestId('export-sections')
-    await expect(sections.getByRole('listitem')).toHaveCount(7)
+    await expect(sections.getByRole('listitem')).toHaveCount(8)
     await expect(sections).toContainText('Thư viện tài liệu')
     await expect(sections).toContainText('Giao diện')
     await expect(sections).toContainText('Thông báo')
