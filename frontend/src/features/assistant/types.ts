@@ -15,13 +15,17 @@ export type MessageStatus =
 
 /** Một trích dẫn: tài liệu (trống nếu đã bị xóa hẳn), vị trí và thứ tự đoạn để mở khung xem đúng chỗ. */
 export interface Citation {
-  id?: string
+  id: string
   number: number
   documentId?: string | null
   documentTitle: string
   location: ChunkLocation
   passage: number
   excerpt: string
+  /** Tài liệu còn trong kho (chưa xóa hẳn, chưa vào thùng rác) nên mở được ở khung xem. */
+  available: boolean
+  /** Phần của đoạn gốc liên quan nhất tới ý được trích, để tô sáng. */
+  highlight?: { start: number; end: number } | null
 }
 
 export interface ChatMessage {

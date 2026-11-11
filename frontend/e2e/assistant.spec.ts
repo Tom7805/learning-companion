@@ -128,6 +128,8 @@ test.describe('NCL-07-CN-001 · Hỏi đáp có căn cứ trên tài liệu đã
 
     // Số trích dẫn mở đúng đoạn ở khung xem bên.
     await answer.getByTestId('citation-marker').click()
+    // Trên điện thoại số trích dẫn mở ngăn trượt xem nhanh trước (NCL-07-CN-002).
+    if ((page.viewportSize()?.width ?? 1440) < 768) await page.getByTestId('citation-open').click()
     await expect(page).toHaveURL(/viewer=.*kind=PARAGRAPH/)
     await expect(page.getByTestId('side-panel')).toBeVisible()
     await expect(page.getByTestId('viewer-passage').filter({ hasText: 'thứ tự giữa' }).first()).toHaveAttribute(

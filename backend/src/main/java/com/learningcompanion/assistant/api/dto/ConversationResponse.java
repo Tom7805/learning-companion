@@ -34,7 +34,7 @@ public record ConversationResponse(UUID id, UUID workspaceId, String title, Inst
         return new ConversationResponse(conversation.getId(), conversation.getWorkspaceId(), conversation.getTitle(),
                 conversation.getCreatedAt(), conversation.getUpdatedAt(),
                 thread.messages().stream().map(message -> MessageResponse.of(message,
-                        thread.citations().getOrDefault(message.getId(), List.of()))).toList(),
+                        thread.citations().getOrDefault(message.getId(), List.of()), thread.available())).toList(),
                 thread.scope().stream().map(ScopeDocument::of).toList());
     }
 }

@@ -1,7 +1,7 @@
 import type { SafetyOutcome } from '@/features/safety'
 import { http } from '@/shared/api/httpClient'
 import { postEventStream } from '@/shared/api/sse'
-import type { AskBody, Conversation, ConversationSummary, StreamDone, StreamHandlers, StreamMeta } from '../types'
+import type { AskBody, Citation, Conversation, ConversationSummary, StreamDone, StreamHandlers, StreamMeta } from '../types'
 
 const conversation = (id: string) => `/assistant/conversations/${encodeURIComponent(id)}`
 
@@ -42,6 +42,11 @@ export const assistantApi = {
   },
   async conversation(id: string) {
     const { data } = await http.get<Conversation>(conversation(id))
+    return data
+  },
+  /** Đoạn gốc của một trích dẫn, kèm việc tài liệu còn mở được không (NCL-07-CN-002). */
+  async citation(id: string) {
+    const { data } = await http.get<Citation>(`/assistant/citations/${encodeURIComponent(id)}`)
     return data
   },
   async conversations(workspaceId?: string) {

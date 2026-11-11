@@ -175,12 +175,20 @@ public class ConversationService {
                 .reduce((first, second) -> second).map(Message::getDocumentIds).orElse(List.of());
         List<Document> scope = documentRepository.findAllByOwnerIdAndIdIn(conversation.getOwnerId(), lastScope)
                 .stream().filter(document -> !document.isTrashed()).toList();
-        return new Thread(conversation, thread, cited, scope);
+        Set<UUID> citedDocuments = cited.values().stream().flatMap(List::stream).map(Citation::getDocumentId)
+                .filter(Objects::nonNull).collect(Collectors.toSet());
+        Set<UUID> available = citedDocuments.isEmpty() ? Set.of()
+                : documentRepository.findAllByOwnerIdAndIdIn(conversation.getOwnerId(), citedDocuments).stream()
+                .filter(document -> !document.isTrashed()).map(Document::getId).collect(Collectors.toSet());
+        return new Thread(conversation, thread, cited, scope, available);
     }
 
-    /** Một hội thoại cùng tin nhắn, trích dẫn theo câu trả lời và các tài liệu còn lại của phạm vi gần nhất. */
+    /**
+     * Một hội thoại cùng tin nhắn, trích dẫn theo câu trả lời, các tài liệu còn lại của phạm vi gần nhất và các tài
+     * liệu được trích còn trong kho.
+     */
     public record Thread(Conversation conversation, List<Message> messages, Map<UUID, List<Citation>> citations,
-                         List<Document> scope) {
+                         List<Document> scope, Set<UUID> available) {
     }
 
     /** Hội thoại của người đang đăng nhập; của người khác thì 404 và lần từ chối được ghi nhật ký. */

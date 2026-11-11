@@ -51,7 +51,8 @@ public final class SseChatEmitter implements GroundedAnswerService.Listener {
         body.put("status", answer.status().name());
         body.put("text", answer.text());
         body.put("suggestions", answer.suggestions());
-        body.put("citations", answer.citations().stream().map(CitationResponse::of).toList());
+        body.put("citations", answer.citations().stream()
+                .map(citation -> CitationResponse.of(citation, true, answer.text())).toList());
         body.put("elsewhere", answer.elsewhere().stream()
                 .map(document -> Map.of("id", document.getId(), "title", document.getTitle())).toList());
         body.put("flaggedSources", answer.flaggedSources());

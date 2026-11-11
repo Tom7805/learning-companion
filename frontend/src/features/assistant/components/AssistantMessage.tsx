@@ -5,7 +5,8 @@ import { SafetyNotice } from '@/features/safety'
 import { cn } from '@/shared/lib/cn'
 import { Button, Spinner, toast } from '@/shared/ui'
 import type { ChatMessage, Citation } from '../types'
-import { locationLabel, type Translate } from '../lib/citations'
+import { citedDocuments, locationLabel } from '../lib/citations'
+import { CitationMarker } from './CitationPopover'
 import { SuggestedQuestions } from './SuggestedQuestions'
 
 const MARKER = /\[(\d{1,2}(?:\s*[,;]\s*\d{1,2})*)]/g
@@ -94,7 +95,7 @@ export function AssistantMessage({
   } else {
     body = (
       <div className="whitespace-pre-wrap text-[0.9375rem] leading-7 text-ink [overflow-wrap:anywhere]" data-testid="answer-text">
-        {renderWithCitations(message.content, cited, onOpenCitation, t)}
+        {renderWithCitations(message.content, cited, onOpenCitation)}
         {streaming && (
           <span className="ml-1 inline-flex translate-y-0.5 items-center" aria-hidden="true">
             <Spinner className="size-4" />
@@ -147,22 +148,30 @@ export function AssistantMessage({
         <section aria-label={t('assistant.answer.sources')} className="flex flex-col gap-1.5" data-testid="answer-sources">
           <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">{t('assistant.answer.sources')}</h3>
           <ol className="flex flex-col gap-1">
-            {message.citations.map((citation) => (
-              <li key={citation.number}>
+            {citedDocuments(message.citations).map(({ key, first, numbers }) => (
+              <li key={key} data-testid="answer-source" data-available={first.available}>
                 <button
                   type="button"
-                  onClick={() => onOpenCitation(citation)}
-                  disabled={!citation.documentId}
-                  className="flex w-full items-start gap-2 rounded-lg px-2 py-1.5 text-left text-sm hover:bg-ink/5 disabled:cursor-not-allowed"
+                  onClick={() => onOpenCitation(first)}
+                  disabled={!first.available}
+                  className="flex w-full items-start gap-2 rounded-lg px-2 py-1.5 text-left text-sm hover:bg-ink/5 disabled:cursor-not-allowed disabled:hover:bg-transparent"
                 >
-                  <span className="grid min-w-6 place-items-center rounded-md border-[1.5px] border-ink bg-sun px-1 text-xs font-semibold tabular-nums">
-                    {citation.number}
+                  <span className="flex shrink-0 gap-1">
+                    {numbers.map((number) => (
+                      <span key={number} className="grid min-w-6 place-items-center rounded-md border-[1.5px] border-ink bg-sun px-1 text-xs font-semibold tabular-nums">
+                        {number}
+                      </span>
+                    ))}
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="font-medium [overflow-wrap:anywhere]">
-                      {citation.documentId ? citation.documentTitle : t('assistant.answer.documentGone')}
+                    <span className={cn('font-medium [overflow-wrap:anywhere]', !first.available && 'text-muted line-through')}>
+                      {first.documentTitle}
                     </span>
-                    <span className="text-muted"> · {locationLabel(citation, t)}</span>
+                    {first.available ? (
+                      <span className="text-muted"> · {locationLabel(first, t)}</span>
+                    ) : (
+                      <span className="text-danger"> · {t('assistant.citation.gone')}</span>
+                    )}
                   </span>
                 </button>
               </li>
@@ -218,7 +227,6 @@ function renderWithCitations(
   text: string,
   cited: Map<number, Citation>,
   onOpen: (citation: Citation) => void,
-  t: Translate,
 ) {
   const parts: ReactNode[] = []
   let cursor = 0
@@ -228,30 +236,9 @@ function renderWithCitations(
     parts.push(text.slice(cursor, match.index))
     parts.push(
       <Fragment key={match.index}>
-        {numbers.map((number) => {
-          const citation = cited.get(number)!
-          return (
-            <button
-              key={number}
-              type="button"
-              onClick={() => onOpen(citation)}
-              data-testid="citation-marker"
-              data-number={number}
-              aria-label={t('assistant.answer.citation', {
-                number,
-                title: citation.documentId ? citation.documentTitle : t('assistant.answer.documentGone'),
-                location: locationLabel(citation, t),
-              })}
-              title={`${citation.documentTitle} · ${locationLabel(citation, t)}`}
-              className={cn(
-                'mx-0.5 inline-grid min-h-6 min-w-6 -translate-y-0.5 place-items-center rounded-md border-[1.5px] border-ink bg-sun px-1',
-                'align-baseline text-xs font-semibold tabular-nums hover:bg-ink hover:text-on-ink',
-              )}
-            >
-              {number}
-            </button>
-          )
-        })}
+        {numbers.map((number) => (
+          <CitationMarker key={number} citation={cited.get(number)!} onOpen={onOpen} />
+        ))}
       </Fragment>,
     )
     cursor = match.index + match[0].length

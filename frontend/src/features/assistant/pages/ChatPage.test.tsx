@@ -42,12 +42,15 @@ const meta = {
 }
 
 const citation: Citation = {
+  id: '00000000-0000-4000-8000-0000000000c9',
   number: 1,
   documentId: 'doc-1',
   documentTitle: 'Bài giảng cây nhị phân',
   location: { kind: 'PAGE', number: 8, end: 8 },
   passage: 2,
   excerpt: 'Duyệt theo thứ tự giữa thăm cây con trái trước.',
+  available: true,
+  highlight: { start: 0, end: 22 },
 }
 
 function sse(body: string) {
