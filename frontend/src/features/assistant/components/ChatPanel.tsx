@@ -3,9 +3,14 @@ import { useCallback, useMemo, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLibraryDocuments } from '@/features/library/api/queries'
 import { useViewerPanel } from '@/features/library/hooks/useViewerPanel'
+import { toApiError } from '@/shared/api/errors'
+import { saveBlob } from '@/shared/lib/download'
+import { toast } from '@/shared/ui'
+import { assistantApi } from '../api/assistantApi'
 import type { LibraryQuery } from '@/features/library/types'
 import { useChatStream } from '../hooks/useChatStream'
-import type { Citation, Conversation, ScopeDocument } from '../types'
+import type { ChatMessage, Citation, Conversation, ScopeDocument } from '../types'
+import { AiDisclosureDialog } from './AiDisclosureDialog'
 import { ChatComposer } from './ChatComposer'
 import { DocumentPickerDialog } from './DocumentPickerDialog'
 import { MessageList } from './MessageList'
@@ -113,10 +118,23 @@ export function ChatPanel({
     })
   }
 
+  /** Tải câu trả lời về dạng Markdown có dấu nhận biết; bộ đính dấu lỗi thì báo lỗi tạm thời, không có tệp (TC-04). */
+  const download = async (message: ChatMessage) => {
+    if (!chat.conversationId) return
+    try {
+      const file = await assistantApi.exportAnswer(chat.conversationId, message.id)
+      saveBlob(file.blob, file.fileName)
+    } catch (error) {
+      const { code } = toApiError(error)
+      toast.error(t(`errors.${code}`, { defaultValue: t('assistant.answer.downloadFailed') }))
+    }
+  }
+
   const empty = chat.messages.length === 0
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-5" data-testid="chat-panel">
+      <AiDisclosureDialog />
       {empty && greeting}
       {!empty && (
         <MessageList
@@ -127,6 +145,7 @@ export function ChatPanel({
           onRegenerate={chat.regenerate}
           onChooseSources={inWorkspace ? undefined : () => setPicking(true)}
           onAddDocument={inWorkspace && !workspaceDocuments?.length ? undefined : addDocument}
+          onDownload={chat.conversationId ? download : undefined}
         />
       )}
       <div className="sticky bottom-0 mt-auto flex flex-col gap-3 bg-paper/95 pb-2 pt-2 backdrop-blur-sm">

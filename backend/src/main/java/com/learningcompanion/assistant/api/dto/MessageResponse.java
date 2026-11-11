@@ -10,7 +10,7 @@ import java.util.UUID;
 /** Một tin nhắn của hội thoại kèm trích dẫn (với câu trả lời). */
 public record MessageResponse(UUID id, String role, String content, String status, List<UUID> documentIds,
                               List<String> suggestions, String errorCode, List<CitationResponse> citations,
-                              Instant createdAt) {
+                              boolean aiGenerated, Instant createdAt) {
 
     /** {@code available}: các tài liệu được trích còn trong kho. */
     public static MessageResponse of(Message message, List<Citation> citations, Set<UUID> available) {
@@ -19,6 +19,6 @@ public record MessageResponse(UUID id, String role, String content, String statu
                 message.getErrorCode(), citations.stream().map(citation -> CitationResponse.of(citation,
                         citation.getDocumentId() != null
                                 && available.contains(citation.getDocumentId()), message.getContent())).toList(),
-                message.getCreatedAt());
+                message.isAiGenerated(), message.getCreatedAt());
     }
 }

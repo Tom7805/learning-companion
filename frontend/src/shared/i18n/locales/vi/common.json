@@ -166,7 +166,8 @@
     "WEB_ADDRESS_BLOCKED": "Không lấy nội dung từ địa chỉ thuộc mạng nội bộ. Hãy dùng đường dẫn của một trang công khai.",
     "WEB_PAGE_UNAVAILABLE": "Không lấy được nội dung trang này. Bạn có thể dán văn bản của trang để thêm vào kho.",
     "LIBRARY_DOCUMENT_IN_USE": "Tài liệu đang được dùng trong không gian học. Hãy xem các không gian học bị ảnh hưởng rồi xác nhận lại.",
-    "AI_TEMPORARILY_UNAVAILABLE": "Dịch vụ trí tuệ nhân tạo đang tạm gián đoạn, hãy thử lại sau ít phút."
+    "AI_TEMPORARILY_UNAVAILABLE": "Dịch vụ trí tuệ nhân tạo đang tạm gián đoạn, hãy thử lại sau ít phút.",
+    "AI_LABEL_UNAVAILABLE": "Chưa gắn được dấu nhận biết nội dung do trí tuệ nhân tạo sinh ra nên chưa tải về được. Hãy thử lại sau ít phút."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -1117,7 +1118,11 @@
       "copy": "Sao chép",
       "copied": "Đã sao chép",
       "copyFailed": "Chưa sao chép được, hãy thử lại.",
-      "regenerate": "Trả lời lại"
+      "regenerate": "Trả lời lại",
+      "download": "Tải về",
+      "downloading": "Đang chuẩn bị tệp…",
+      "downloadLabel": "Tải câu trả lời về dạng Markdown",
+      "downloadFailed": "Chưa tải được câu trả lời, hãy thử lại."
     },
     "errors": {
       "AI_TEMPORARILY_UNAVAILABLE": "Dịch vụ trợ lý bị gián đoạn giữa chừng.",
@@ -2460,6 +2465,24 @@
         "ROLE_OVERRIDE": "Ép đổi vai",
         "FAKE_DELIMITER": "Giả dấu ranh giới"
       }
+    }
+  },
+  "ai": {
+    "label": {
+      "text": "Do AI sinh",
+      "edited": "Đã chỉnh sửa",
+      "hint": "Nội dung do trí tuệ nhân tạo sinh ra, có thể chưa chính xác. Hãy đối chiếu với tài liệu gốc."
+    },
+    "disclosure": {
+      "title": "Bạn đang trò chuyện với hệ thống trí tuệ nhân tạo",
+      "intro": "Trợ lý học tập là một hệ thống trí tuệ nhân tạo, không phải con người. Trước khi bắt đầu, hãy lưu ý:",
+      "limits": [
+        "Câu trả lời có thể sai hoặc thiếu, kể cả khi nghe rất chắc chắn. Hãy bấm số trích dẫn để kiểm chứng với tài liệu gốc.",
+        "Trợ lý chỉ dựa trên các tài liệu bạn chọn, không biết những gì nằm ngoài đó.",
+        "Mọi câu trả lời và học liệu do trí tuệ nhân tạo sinh ra đều có nhãn “Do AI sinh”, kể cả khi tải về.",
+        "Đừng dùng câu trả lời thay cho tư vấn của chuyên gia về sức khỏe, pháp lý hay tài chính."
+      ],
+      "acknowledge": "Đã hiểu, bắt đầu"
     }
   }
 }

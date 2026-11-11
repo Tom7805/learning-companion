@@ -15,6 +15,7 @@ export function MessageList({
   onRegenerate,
   onChooseSources,
   onAddDocument,
+  onDownload,
 }: {
   messages: ChatMessage[]
   busy: boolean
@@ -23,6 +24,7 @@ export function MessageList({
   onRegenerate: () => void
   onChooseSources?: () => void
   onAddDocument?: (document: { id: string; title: string }) => void
+  onDownload?: (message: ChatMessage) => Promise<void>
 }) {
   const { t } = useTranslation()
   const end = useRef<HTMLDivElement>(null)
@@ -53,6 +55,7 @@ export function MessageList({
             onRegenerate={onRegenerate}
             onChooseSources={onChooseSources}
             onAddDocument={onAddDocument}
+            onDownload={onDownload}
           />
         ),
       )}

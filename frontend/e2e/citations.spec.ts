@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright'
 import type { Browser, Page } from '@playwright/test'
-import { createVerifiedAccount, expect, test, type DevApi } from './fixtures/auth'
+import { acknowledgeAiDisclosure, createVerifiedAccount, expect, test, type DevApi } from './fixtures/auth'
 import { uniqueEmail } from './fixtures/testData'
 
 /**
@@ -37,6 +37,7 @@ async function xsrf(page: Page): Promise<Record<string, string>> {
 /** Người học có một bài giảng đã xử lý xong và một câu trả lời trích dẫn bài giảng đó, trong hội thoại riêng. */
 async function answered(page: Page, dev: DevApi, tag: string) {
   await createVerifiedAccount(page, dev, uniqueEmail(tag))
+  await acknowledgeAiDisclosure(page)
   await page.goto('/library')
   await expect(page.getByTestId('library-main')).toBeVisible()
   const response = await page.request.post('/api/v1/library/sources/text', {

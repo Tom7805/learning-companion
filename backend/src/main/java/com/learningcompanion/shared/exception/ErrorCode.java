@@ -146,6 +146,12 @@ public enum ErrorCode {
      */
     LIBRARY_DOCUMENT_IN_USE(HttpStatus.CONFLICT,
             "Tài liệu đang được dùng trong không gian học. Hãy xem các không gian học bị ảnh hưởng rồi xác nhận xóa."),
+    /**
+     * Bộ đính dấu nhận biết nội dung do trí tuệ nhân tạo sinh ra đang lỗi (NCL-04-CN-005 TC-04): chặn tải về thay vì
+     * xuất tệp không có dấu; lỗi tạm thời, người học thử lại sau.
+     */
+    AI_LABEL_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE,
+            "Chưa gắn được dấu nhận biết nội dung do trí tuệ nhân tạo sinh ra nên chưa tải về được, hãy thử lại sau."),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Hệ thống gặp sự cố, hãy thử lại sau.");
 
     private final HttpStatus status;

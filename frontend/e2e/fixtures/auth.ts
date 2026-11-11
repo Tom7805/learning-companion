@@ -143,6 +143,15 @@ export class DevApi {
     expect(response.ok()).toBeTruthy()
   }
 
+  /**
+   * Cho ngần ấy lần đính dấu nhận biết nội dung do trí tuệ nhân tạo sinh ra tiếp theo lỗi; số âm: lỗi cho tới khi đặt
+   * lại (NCL-04-CN-005 TC-04). Đặt lại lớp kết nối cũng bỏ.
+   */
+  async failNextAiLabel(calls: number) {
+    const response = await this.request.post(`${API}/dev/ai/label-failures`, { data: { calls } })
+    expect(response.ok()).toBeTruthy()
+  }
+
   /** Thông báo mẫu (NCL-02-CN-002) trỏ tới gói dữ liệu không tồn tại; trả về số thông báo đã tạo. */
   async sampleNotifications(email: string, count: number): Promise<number> {
     const response = await this.request.post(`${API}/dev/notifications/sample`, { data: { email, count } })
@@ -288,6 +297,20 @@ export async function createVerifiedAccount(page: Page, dev: DevApi, email: stri
   await registerThroughUi(page, email)
   await page.goto(await dev.verifyLink(email))
   await expect(page.getByRole('heading', { name: 'Tài khoản đã được kích hoạt' })).toBeVisible()
+}
+
+/**
+ * Ghi nhận người học đã đọc thông báo đang trò chuyện với hệ thống trí tuệ nhân tạo (NCL-04-CN-005), để các bài kiểm
+ * thử không nói về thông báo này vào thẳng khung trò chuyện. Gọi sau khi đã đăng nhập trên {@code page}.
+ */
+export async function acknowledgeAiDisclosure(page: Page) {
+  const cookie = async () => (await page.context().cookies()).find((item) => item.name === 'XSRF-TOKEN')?.value
+  if (!(await cookie())) await page.request.get('/api/v1/auth/session')
+  const token = await cookie()
+  const response = await page.request.post('/api/v1/assistant/disclosure', {
+    headers: token ? { 'X-XSRF-TOKEN': token } : {},
+  })
+  expect(response.ok()).toBeTruthy()
 }
 
 export async function loginThroughUi(page: Page, email: string, password = STRONG_PASSWORD, remember = false) {

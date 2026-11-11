@@ -150,6 +150,16 @@ public class Message implements OwnedEntity {
         return suggestions == null || suggestions.isBlank() ? List.of() : List.of(suggestions.split("\n"));
     }
 
+    /**
+     * Câu trả lời có nội dung do mô hình sinh ra, cần nhãn "do trí tuệ nhân tạo sinh ra" (NCL-04-CN-005): đã trả lời
+     * xong, bị dừng hay lỗi giữa chừng mà vẫn có phần đã hiện. Lời nhắc của hệ thống (chặn an toàn, không tìm thấy,
+     * chưa chọn tài liệu) không do mô hình viết nên không gắn nhãn.
+     */
+    public boolean isAiGenerated() {
+        return role == MessageRole.ASSISTANT && content != null && !content.isBlank()
+                && (status == Status.COMPLETE || status == Status.STOPPED || status == Status.FAILED);
+    }
+
     public String getErrorCode() {
         return errorCode;
     }
