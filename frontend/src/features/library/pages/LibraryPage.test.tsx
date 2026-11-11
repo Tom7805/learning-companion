@@ -51,7 +51,12 @@ describe('LibraryPage', () => {
     expect(await screen.findByTestId('library-empty')).toBeInTheDocument()
   })
 
-  it('xem một tài liệu bên cạnh mà vẫn ở lại thư viện, rồi mở toàn trang nếu cần', async () => {
+  it('xem một tài liệu bên cạnh và ghi vị trí mở trên địa chỉ trang', async () => {
+    server.use(http.get('*/api/v1/library/documents/:id/viewer', () => HttpResponse.json({
+      id: sampleDocument.id, title: sampleDocument.title, type: 'TEXT', status: 'READY', mimeType: 'text/plain',
+      percent: 100, processing: { units: 1, chunks: 1 },
+      chunks: [{ ordinal: 1, location: { kind: 'PARAGRAPH', number: 1, end: 1 }, content: sampleDocument.contentText, source: 'TEXT' }],
+    })))
     const { user, router } = renderWithProviders(
       <>
         <LibraryPage />
@@ -64,11 +69,12 @@ describe('LibraryPage', () => {
 
     const panel = screen.getByTestId('side-panel')
     expect(panel).toHaveAccessibleName('Ghi chú: Định luật Ohm')
-    expect(await within(panel).findByTestId('document-peek')).toHaveTextContent('I = U / R')
+    expect(await within(panel).findByTestId('reader-view')).toHaveTextContent('I = U / R')
     expect(router.state.location.pathname).toBe(routes.library)
+    expect(router.state.location.search).toContain(`viewer=${sampleDocument.id}`)
 
-    await user.click(within(panel).getByRole('link', { name: 'Mở toàn trang' }))
-    expect(router.state.location.pathname).toBe(documentPath(sampleDocument.id))
+    await user.click(within(panel).getByRole('button', { name: 'Đóng khung xem bên' }))
+    expect(router.state.location.pathname).toBe(routes.library)
     expect(screen.queryByTestId('side-panel')).not.toBeInTheDocument()
   })
 
@@ -81,7 +87,7 @@ describe('LibraryPage', () => {
       { path: routes.library },
     )
     const button = await screen.findByRole('button', { name: 'Xem Ghi chú: Định luật Ohm bên cạnh' })
-    server.use(http.get('*/api/v1/library/documents/:id', () => apiError(404, 'NOT_FOUND')))
+    server.use(http.get('*/api/v1/library/documents/:id/viewer', () => apiError(404, 'NOT_FOUND')))
 
     await user.click(button)
 

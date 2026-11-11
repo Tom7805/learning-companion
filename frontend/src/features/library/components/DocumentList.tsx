@@ -38,6 +38,7 @@ export function DocumentList({ documents, tags, ...handlers }: DocumentListProps
             <SelectBox document={document} checked={selected} onToggle={() => handlers.onToggleSelect(document.id)} />
             <Link
               to={documentPath(document.id)}
+              onClick={(event) => { event.preventDefault(); handlers.onPeek(document) }}
               data-testid="document-card"
               className="flex min-w-0 flex-1 flex-col gap-1 rounded-lg px-2 py-2 hover:bg-ink/5"
             >

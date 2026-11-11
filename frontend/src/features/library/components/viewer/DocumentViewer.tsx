@@ -1,156 +1,107 @@
-import { Download, Eye, FileLock2, RotateCw } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type TouchEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
+import { useSidePanel } from '@/app/providers/sidePanel'
+import { documentPath } from '@/app/routes'
 import { toApiError } from '@/shared/api/errors'
-import { saveBlob } from '@/shared/lib/download'
-import { formatBytes } from '@/shared/lib/format'
-import { Alert, Button, Spinner } from '@/shared/ui'
-import { FileOpenError, useOriginalFile } from '../../hooks/useOriginalFile'
-import type { LearningDocument } from '../../types'
+import { Alert, ErrorState, Skeleton } from '@/shared/ui'
+import { ProcessingPanel } from '../DocumentProcessing'
+import { useOriginalFile } from '../../hooks/useOriginalFile'
+import { useDocumentViewer, type ViewerLocation } from '../../hooks/useDocumentViewer'
+import { FindInDocument } from './FindInDocument'
+import { findMatches } from './viewerSearch'
+import { ImageViewer } from './ImageViewer'
+import { PdfViewer } from './PdfViewer'
+import { ReaderView } from './ReaderView'
+import { SlideViewer } from './SlideViewer'
+import { ViewerToolbar } from './ViewerToolbar'
 
-type Preview =
-  | { kind: 'idle' }
-  | { kind: 'loading' }
-  | { kind: 'text'; text: string }
-  | { kind: 'embed'; url: string; mime: string }
-  | { kind: 'unsupported' }
+const searchState = new Map<string, { term: string; index: number }>()
 
-/**
- * Tệp gốc: xem trước ngay trong trang hoặc tải xuống. Tệp được tải qua đường dẫn ký vào bộ nhớ trình duyệt,
- * không mở thẻ mới, nên đường dẫn không nằm lại trong lịch sử trình duyệt.
- */
-export function DocumentViewer({ document }: { document: LearningDocument }) {
+export function DocumentViewer({ id, location }: { id: string; location: ViewerLocation | null }) {
   const { t, i18n } = useTranslation()
-  const { open, renewals } = useOriginalFile(document.id)
-  const [preview, setPreview] = useState<Preview>({ kind: 'idle' })
-  const [busy, setBusy] = useState<'preview' | 'download' | null>(null)
-  const [errorKey, setErrorKey] = useState<string | null>(null)
-  const embedUrl = preview.kind === 'embed' ? preview.url : null
+  const panel = useSidePanel()
+  const viewer = useDocumentViewer(id, location)
+  const { open } = useOriginalFile(id)
+  const [fileUrl, setFileUrl] = useState<string | null>(null)
+  const [fileError, setFileError] = useState(false)
+  const [term, setTerm] = useState(searchState.get(id)?.term ?? '')
+  const [matchIndex, setMatchIndex] = useState(searchState.get(id)?.index ?? 0)
+  const swipeX = useRef<number | null>(null)
+  const type = viewer.query.data?.type
+  const ready = viewer.query.data?.status === 'READY'
 
   useEffect(() => {
-    if (!embedUrl) return undefined
-    return () => URL.revokeObjectURL(embedUrl)
-  }, [embedUrl])
+    if (!ready || (type !== 'PDF' && type !== 'IMAGE')) return undefined
+    let cancelled = false
+    let url: string | null = null
+    void open().then((blob) => {
+      if (cancelled) return
+      url = URL.createObjectURL(blob)
+      setFileUrl(url)
+    }).catch(() => { if (!cancelled) setFileError(true) })
+    return () => { cancelled = true; if (url) URL.revokeObjectURL(url) }
+  }, [ready, type, id, open])
 
-  const run = async (mode: 'preview' | 'download') => {
-    setBusy(mode)
-    setErrorKey(null)
-    if (mode === 'preview') setPreview({ kind: 'loading' })
-    try {
-      const blob = await open(mode === 'download')
-      if (mode === 'download') {
-        saveBlob(blob, document.originalFilename)
-      } else {
-        setPreview(await toPreview(blob, document.mimeType))
-      }
-    } catch (error) {
-      if (mode === 'preview') setPreview({ kind: 'idle' })
-      setErrorKey(error instanceof FileOpenError ? 'library.file.openFailed' : `errors.${toApiError(error).code}`)
-    } finally {
-      setBusy(null)
-    }
+  const matches = useMemo(() => findMatches(viewer.chunks, term), [viewer.chunks, term])
+  const selected = matches.length ? matches[Math.min(matchIndex, matches.length - 1)].chunk : viewer.target
+  const onTerm = (value: string) => {
+    searchState.set(id, { term: value, index: 0 })
+    setTerm(value)
+    setMatchIndex(0)
+    const first = findMatches(viewer.chunks, value)[0]
+    if (first) viewer.setPage(first.chunk.location.number)
+  }
+  const onNext = () => {
+    if (!matches.length) return
+    const next = (matchIndex + 1) % matches.length
+    searchState.set(id, { term, index: next })
+    setMatchIndex(next)
+    viewer.setPage(matches[next].chunk.location.number)
+  }
+  const onTouchStart = (event: TouchEvent<HTMLElement>) => { swipeX.current = event.touches[0]?.clientX ?? null }
+  const onTouchEnd = (event: TouchEvent<HTMLElement>) => {
+    if (swipeX.current === null) return
+    const distance = (event.changedTouches[0]?.clientX ?? swipeX.current) - swipeX.current
+    if (Math.abs(distance) > 70) viewer.turn(distance < 0 ? 1 : -1)
+    swipeX.current = null
   }
 
-  const shown = preview.kind === 'text' || preview.kind === 'embed' || preview.kind === 'unsupported'
-
-  return (
-    <section
-      aria-labelledby="original-file-title"
-      className="flex flex-col gap-4 rounded-card border-[1.5px] border-ink bg-sky-soft p-5 sm:p-6"
-    >
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="flex min-w-0 items-start gap-3">
-          <span
-            aria-hidden="true"
-            className="grid size-11 shrink-0 place-items-center rounded-2xl border-[1.5px] border-ink bg-sky"
-          >
-            <FileLock2 className="size-5" />
-          </span>
-          <div className="min-w-0">
-            <h2 id="original-file-title" className="text-lg font-medium">
-              {t('library.file.title')}
-            </h2>
-            <p className="truncate text-sm text-ink-soft" data-testid="original-filename">
-              {document.originalFilename} · {formatBytes(document.sizeBytes, i18n.language)}
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            variant="dark"
-            loading={busy === 'preview'}
-            disabled={busy !== null}
-            onClick={() => void run('preview')}
-            icon={shown ? <RotateCw className="size-4" aria-hidden="true" /> : <Eye className="size-4" aria-hidden="true" />}
-            data-testid="preview-file"
-          >
-            {shown ? t('library.file.reload') : t('library.file.preview')}
-          </Button>
-          <Button
-            variant="outline"
-            loading={busy === 'download'}
-            disabled={busy !== null}
-            onClick={() => void run('download')}
-            icon={<Download className="size-4" aria-hidden="true" />}
-          >
-            {t('library.file.download')}
-          </Button>
-        </div>
-      </div>
-
-      <p className="text-[0.8125rem] leading-relaxed text-ink-soft">{t('library.file.protected')}</p>
-
-      {renewals > 0 && (
-        <Alert tone="success" key={renewals} data-testid="link-renewed">
-          {t('library.file.renewed')}
-        </Alert>
-      )}
-      {errorKey && (
-        <Alert tone="danger" data-testid="file-error">
-          {t(errorKey, { defaultValue: t('errors.INTERNAL_ERROR') })}
-        </Alert>
-      )}
-
-      {preview.kind === 'loading' && (
-        <div className="grid h-40 place-items-center rounded-field border-[1.5px] border-dashed border-ink/40 bg-surface">
-          <Spinner className="size-6" label={t('library.file.loading')} />
-        </div>
-      )}
-      {preview.kind === 'text' && (
-        <pre
-          data-testid="file-preview"
-          tabIndex={0}
-          aria-label={t('library.file.previewLabel', { name: document.originalFilename })}
-          className="max-h-96 overflow-auto whitespace-pre-wrap rounded-field border-[1.5px] border-ink bg-surface p-4 font-sans text-sm leading-relaxed"
-        >
-          {preview.text}
-        </pre>
-      )}
-      {preview.kind === 'embed' &&
-        (preview.mime.startsWith('image/') ? (
-          <img
-            src={preview.url}
-            alt={document.title}
-            data-testid="file-preview"
-            className="max-h-[32rem] w-full rounded-field border-[1.5px] border-ink bg-surface object-contain"
-          />
-        ) : (
-          <iframe
-            src={preview.url}
-            title={t('library.file.previewLabel', { name: document.originalFilename })}
-            data-testid="file-preview"
-            className="h-[32rem] w-full rounded-field border-[1.5px] border-ink bg-surface"
-          />
-        ))}
-      {preview.kind === 'unsupported' && <Alert tone="info">{t('library.file.unsupported')}</Alert>}
-    </section>
-  )
-}
-
-async function toPreview(blob: Blob, mime: string): Promise<Preview> {
-  if (mime.startsWith('text/')) return { kind: 'text', text: await blob.text() }
-  if (mime === 'application/pdf' || mime.startsWith('image/')) {
-    return { kind: 'embed', url: URL.createObjectURL(blob), mime }
+  if (viewer.query.isPending) return <div aria-busy="true"><Skeleton className="h-40" /></div>
+  if (viewer.query.isError) {
+    const missing = toApiError(viewer.query.error).status === 404
+    return <ErrorState title={t(missing ? 'library.notFound.title' : 'library.loadFailed')}
+      description={missing ? t('library.notFound.body') : undefined}
+      onRetry={missing ? undefined : () => void viewer.query.refetch()} />
   }
-  return { kind: 'unsupported' }
+  const data = viewer.query.data
+  if (data.status !== 'READY') {
+    return <div data-testid="viewer-processing" className="space-y-4" aria-live="polite">
+      <ProcessingPanel document={data} />
+      {(data.status === 'PENDING' || data.status === 'PROCESSING') && <div>
+        <p className="mb-2 text-sm">{t('library.viewer.progress', { percent: data.percent.toLocaleString(i18n.language) })}</p>
+        <progress value={data.percent} max={100} className="w-full accent-sun" />
+      </div>}
+    </div>
+  }
+
+  const props = { chunks: viewer.chunks, page: viewer.page, target: selected, term, zoom: viewer.zoom }
+  return <section className="flex flex-col gap-4" data-testid="document-peek" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+    <div data-testid="document-viewer" className="flex flex-col gap-4">
+    <ProcessingPanel document={data} />
+    <div className="sticky top-0 z-10 flex flex-col gap-2 bg-surface pb-2">
+      <FindInDocument term={term} onTerm={onTerm} count={matches.length} active={matchIndex} onNext={onNext} />
+      <ViewerToolbar page={viewer.page} pages={viewer.maxPage} zoom={viewer.zoom} onPage={viewer.setPage}
+        onTurn={viewer.turn} onZoom={viewer.setZoom} />
+    </div>
+    {fileError && <Alert tone="danger">{t('library.file.openFailed')}</Alert>}
+    {data.type === 'PDF' && (fileUrl ? <PdfViewer key={`${viewer.page}:${viewer.zoom}`} url={fileUrl} {...props} /> : <Skeleton className="h-80" />)}
+    {data.type === 'IMAGE' && (fileUrl ? <ImageViewer url={fileUrl} {...props} /> : <Skeleton className="h-80" />)}
+    {data.type === 'PPTX' && <SlideViewer {...props} />}
+    {data.type !== 'PDF' && data.type !== 'IMAGE' && data.type !== 'PPTX' && <ReaderView {...props} />}
+    </div>
+    <Link to={documentPath(id)} onClick={() => panel.close(false)} className="self-start text-sm font-medium underline underline-offset-4">
+      {t('library.peek.openFull')}
+    </Link>
+  </section>
 }

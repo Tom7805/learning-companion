@@ -39,6 +39,18 @@ export interface DocumentChunk {
   source: 'TEXT' | 'OCR'
 }
 
+/** Nội dung được phép hiện trong khung xem; tài liệu chưa READY không có đoạn văn. */
+export interface ViewerContent {
+  id: string
+  title: string
+  type: DocumentType
+  status: DocumentStatus
+  mimeType: string
+  percent: number
+  processing: ProcessingInfo
+  chunks: DocumentChunk[]
+}
+
 /** Một tài liệu trong danh sách kho tài liệu, không kèm nội dung. */
 export interface DocumentCard {
   id: string

@@ -18,7 +18,8 @@ import { DocumentGrid } from '../components/DocumentGrid'
 import { DocumentInfoPanel } from '../components/DocumentInfoPanel'
 import type { DocumentItemHandlers } from '../components/DocumentItemControls'
 import { DocumentList } from '../components/DocumentList'
-import { DocumentPeek } from '../components/DocumentPeek'
+import { DocumentViewer } from '../components/viewer/DocumentViewer'
+import { parseViewerLocation } from '../hooks/useDocumentViewer'
 import { DuplicateDialog } from '../components/DuplicateDialog'
 import { FolderNameDialog } from '../components/FolderNameDialog'
 import { FolderTree } from '../components/FolderTree'
@@ -76,6 +77,35 @@ export function LibraryPage() {
   const documents = useLibraryDocuments(query)
   const actions = useDocumentActions()
   const panel = useSidePanel()
+  const viewerId = params.get('viewer')
+  const viewerKind = params.get('kind')
+  const viewerNumber = params.get('number')
+  const viewerPassage = params.get('passage')
+  useEffect(() => {
+    if (!viewerId) {
+      if (panel.content?.id.startsWith('viewer:')) panel.close()
+      return
+    }
+    const contentId = `viewer:${viewerId}:${viewerKind}:${viewerNumber}:${viewerPassage}`
+    const title = documents.data?.find((item) => item.id === viewerId)?.title ?? t('library.content')
+    if (panel.content?.id === contentId && panel.content.title === title) return
+    const location = parseViewerLocation(new URLSearchParams({
+      ...(viewerKind && { kind: viewerKind }), ...(viewerNumber && { number: viewerNumber }),
+      ...(viewerPassage && { passage: viewerPassage }),
+    }))
+    panel.open({
+      id: contentId,
+      title,
+      render: () => <DocumentViewer key={contentId} id={viewerId} location={location} />,
+      onClose: () => setParams((current) => {
+        const next = new URLSearchParams(current)
+        for (const key of ['viewer', 'kind', 'number', 'passage']) next.delete(key)
+        return next
+      }, { replace: true }),
+    })
+  // panel.content đổi khi đóng; thêm cả panel vào deps sẽ mở lại khung ngay trước lúc đổi trang.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewerId, viewerKind, viewerNumber, viewerPassage, panel.open, documents.data, setParams, t])
   const [selection, setSelection] = useState<{ scope: string; ids: Set<string> }>(() => ({ scope: '', ids: new Set() }))
   const [dialog, setDialog] = useState<DialogState>(null)
   const [treeOpen, setTreeOpen] = useState(false)
@@ -183,18 +213,24 @@ export function LibraryPage() {
         return next
       }),
     onToggleStar: (document) => void actions.toggleStar(document.id, document.title, !document.starred),
-    onInfo: (document) =>
+    onInfo: (document) => {
+      if (viewerId) setParams((current) => {
+        const next = new URLSearchParams(current)
+        for (const key of ['viewer', 'kind', 'number', 'passage']) next.delete(key)
+        return next
+      }, { replace: true })
       panel.open({
         id: `document-info:${document.id}`,
         title: document.title,
         render: () => <DocumentInfoPanel id={document.id} onClose={panel.close} />,
-      }),
-    onPeek: (document) =>
-      panel.open({
-        id: `document:${document.id}`,
-        title: document.title,
-        render: () => <DocumentPeek id={document.id} onOpenFull={panel.close} />,
-      }),
+      })
+    },
+    onPeek: (document) => setParams((current) => {
+      const next = new URLSearchParams(current)
+      next.set('viewer', document.id)
+      for (const key of ['kind', 'number', 'passage']) next.delete(key)
+      return next
+    }),
     onDragStart: (document: DocumentCard, data: DataTransfer) =>
       writeDraggedDocuments(data, selected.has(document.id) ? [...selected] : [document.id]),
   }

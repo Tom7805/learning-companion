@@ -52,7 +52,7 @@ public interface DocumentRepository extends OwnerScopedRepository<Document> {
      * tài liệu, nên mỗi tài liệu chỉ được xử lý một lần.
      */
     @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query("update Document d set d.status = :processing, d.processingStartedAt = :now, "
+    @Query("update Document d set d.status = :processing, d.processingStartedAt = :now, d.processingPercent = 5, "
             + "d.processingAttempts = d.processingAttempts + 1, d.version = d.version + 1 "
             + "where d.id = :id and d.ownerId = :ownerId and d.trashedAt is null and (d.status = :pending "
             + "or (d.status = :processing and d.processingStartedAt < :staleBefore))")
@@ -60,4 +60,10 @@ public interface DocumentRepository extends OwnerScopedRepository<Document> {
                                          @Param("now") Instant now, @Param("staleBefore") Instant staleBefore,
                                          @Param("pending") DocumentStatus pending,
                                          @Param("processing") DocumentStatus processing);
+
+    @Modifying
+    @Query("update Document d set d.processingPercent = :percent where d.id = :id and d.ownerId = :ownerId "
+            + "and d.status = :processing and d.trashedAt is null")
+    int updateProcessingPercentByOwnerId(@Param("id") UUID id, @Param("ownerId") UUID ownerId,
+                                @Param("percent") int percent, @Param("processing") DocumentStatus processing);
 }
