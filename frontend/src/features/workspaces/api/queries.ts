@@ -10,9 +10,18 @@ const PROCESSING_POLL_MS = 3_000
 const inProgress = (document: Pick<DocumentCard, 'status'>) =>
   document.status === 'PENDING' || document.status === 'PROCESSING'
 
-/** Mọi không gian học của người học; {@code enabled} false khi người đăng nhập là quản trị viên. */
-export function useWorkspaces(enabled = true) {
-  return useQuery({ queryKey: queryKeys.workspaceList, queryFn: workspacesApi.list, staleTime: 15_000, enabled })
+/**
+ * Mọi không gian học của người học; {@code enabled} false khi người đăng nhập là quản trị viên. {@code refetchOnMount}
+ * false cho chỗ chỉ hiện dữ liệu đã nạp (thanh bên trong ngăn kéo): mở ngăn kéo không gửi yêu cầu nào.
+ */
+export function useWorkspaces(enabled = true, refetchOnMount = true) {
+  return useQuery({
+    queryKey: queryKeys.workspaceList,
+    queryFn: workspacesApi.list,
+    staleTime: 15_000,
+    enabled,
+    refetchOnMount,
+  })
 }
 
 export function useWorkspace(id: string) {
