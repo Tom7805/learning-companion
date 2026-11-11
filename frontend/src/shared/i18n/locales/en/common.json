@@ -1141,6 +1141,12 @@
       "IMAGE": "Image {{number}}",
       "PARAGRAPH": "Paragraph {{number}}",
       "PARAGRAPH_RANGE": "Paragraphs {{from}}–{{to}}"
+    },
+    "citation": {
+      "gone": "Document no longer available",
+      "goneBody": "This document was deleted, so it can no longer be opened. The passage the assistant quoted is still shown below.",
+      "open": "Open in document",
+      "sheet": "Citation {{number}}"
     }
   },
   "account": {
@@ -1748,7 +1754,8 @@
       "LIBRARY_TAG": "Library tag",
       "LIBRARY_UPLOAD": "File upload",
       "WORKSPACE": "Study space",
-      "CONVERSATION": "Assistant conversation"
+      "CONVERSATION": "Assistant conversation",
+      "CITATION": "Assistant citation"
     },
     "actions": {
       "ACCOUNT_REGISTERED": "Account registered",

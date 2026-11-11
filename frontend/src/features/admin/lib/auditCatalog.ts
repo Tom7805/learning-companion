@@ -104,6 +104,7 @@ export const AUDIT_OBJECT_TYPES = [
   'LIBRARY_UPLOAD',
   'WORKSPACE',
   'CONVERSATION',
+  'CITATION',
 ]
 
 export function isAuditCategory(value: string | null | undefined): value is AuditCategory {

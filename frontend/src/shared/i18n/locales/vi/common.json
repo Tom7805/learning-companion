@@ -1141,6 +1141,12 @@
       "IMAGE": "Ảnh {{number}}",
       "PARAGRAPH": "Đoạn {{number}}",
       "PARAGRAPH_RANGE": "Đoạn {{from}}–{{to}}"
+    },
+    "citation": {
+      "gone": "Tài liệu không còn",
+      "goneBody": "Tài liệu này đã bị xóa nên không mở được nữa. Đoạn gốc lúc trợ lý trích vẫn hiện bên dưới.",
+      "open": "Mở trong tài liệu",
+      "sheet": "Trích dẫn {{number}}"
     }
   },
   "account": {
@@ -1748,7 +1754,8 @@
       "LIBRARY_TAG": "Nhãn tài liệu",
       "LIBRARY_UPLOAD": "Lần tải tệp lên",
       "WORKSPACE": "Không gian học",
-      "CONVERSATION": "Hội thoại với trợ lý"
+      "CONVERSATION": "Hội thoại với trợ lý",
+      "CITATION": "Trích dẫn của trợ lý"
     },
     "actions": {
       "ACCOUNT_REGISTERED": "Đăng ký tài khoản",

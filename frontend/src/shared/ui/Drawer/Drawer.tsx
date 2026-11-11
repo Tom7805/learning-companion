@@ -7,7 +7,8 @@ interface DrawerProps {
   /** Nhãn của ngăn kéo cho trình đọc màn hình. */
   label: string
   id?: string
-  side?: 'left' | 'right'
+  /** "bottom": ngăn trượt từ dưới lên trên điện thoại, cao vừa nội dung. */
+  side?: 'left' | 'right' | 'bottom'
   className?: string
   children: ReactNode
 }
@@ -48,13 +49,16 @@ export function Drawer({ open, onClose, label, id, side = 'left', className, chi
         if (event.target === event.currentTarget) onClose()
       }}
       className={cn(
-        'fixed inset-y-0 m-0 h-dvh max-h-none w-[min(86vw,320px)] max-w-none border-0 p-0 text-ink',
-        'backdrop:bg-scrim/50',
-        side === 'left' ? 'left-0 right-auto animate-slide-in-left' : 'left-auto right-0 animate-slide-in-right',
+        'fixed m-0 max-w-none border-0 p-0 text-ink backdrop:bg-scrim/50',
+        side === 'bottom'
+          ? 'inset-x-0 bottom-0 top-auto h-auto max-h-[85dvh] w-full rounded-t-card animate-fade-up'
+          : 'inset-y-0 h-dvh max-h-none w-[min(86vw,320px)]',
+        side === 'left' && 'left-0 right-auto animate-slide-in-left',
+        side === 'right' && 'left-auto right-0 animate-slide-in-right',
         className,
       )}
     >
-      {open && <div className="h-full">{children}</div>}
+      {open && <div className={side === 'bottom' ? undefined : 'h-full'}>{children}</div>}
     </dialog>
   )
 }

@@ -34,5 +34,7 @@ public enum AuditObjectType {
     /** Một không gian học của người học (NCL-06-CN-001). */
     WORKSPACE,
     /** Một hội thoại với trợ lý hỏi đáp (NCL-07-CN-001). */
-    CONVERSATION
+    CONVERSATION,
+    /** Một trích dẫn trong câu trả lời của trợ lý (NCL-07-CN-002). */
+    CITATION
 }
