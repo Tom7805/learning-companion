@@ -23,7 +23,9 @@ public final class CitationHighlighter {
         if (answer == null || excerpt == null || excerpt.isBlank()) {
             return null;
         }
-        Set<String> claim = new HashSet<>(TextTerms.words(sentenceCiting(answer, number)));
+        List<String> claimed = TextTerms.words(sentenceCiting(answer, number));
+        Set<String> claim = new HashSet<>(claimed);
+        Set<String> claimPairs = TextTerms.pairs(claimed);
         if (claim.isEmpty()) {
             return null;
         }
@@ -32,7 +34,9 @@ public final class CitationHighlighter {
         Matcher matcher = SENTENCE.matcher(excerpt);
         while (matcher.find()) {
             List<String> words = TextTerms.words(matcher.group());
-            long score = words.stream().distinct().filter(claim::contains).count();
+            // Số tiếng trùng là chính; số cặp tiếng liền nhau trùng phân định khi hai câu ngang nhau.
+            long shared = words.stream().distinct().filter(claim::contains).count();
+            long score = shared * 100 + TextTerms.pairs(words).stream().filter(claimPairs::contains).count();
             if (score > bestScore) {
                 bestScore = score;
                 int start = matcher.start();
@@ -42,7 +46,7 @@ public final class CitationHighlighter {
                 best = new Range(start, matcher.end());
             }
         }
-        return bestScore >= 2 ? best : null;
+        return bestScore >= 200 ? best : null;
     }
 
     /** Câu của câu trả lời có chứa số trích dẫn {@code [number]} (cả dạng [1, 2]); không có thì cả câu trả lời. */
