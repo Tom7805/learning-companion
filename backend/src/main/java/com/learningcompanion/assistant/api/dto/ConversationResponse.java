@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.UUID;
 
 /** Hội thoại đầy đủ: tin nhắn theo thứ tự và các tài liệu (còn trong kho) của phạm vi gần nhất. */
-public record ConversationResponse(UUID id, UUID workspaceId, String title, Instant createdAt, Instant updatedAt,
-                                   List<MessageResponse> messages, List<ScopeDocument> scope) {
+public record ConversationResponse(UUID id, UUID workspaceId, String title, boolean pinned, Instant createdAt,
+                                   Instant updatedAt, List<MessageResponse> messages, List<ScopeDocument> scope) {
 
     /** Tài liệu trong phạm vi: tên, loại và trạng thái xử lý để giao diện hiện thẻ chọn. */
     public record ScopeDocument(UUID id, String title, String type, String status) {
@@ -20,19 +20,19 @@ public record ConversationResponse(UUID id, UUID workspaceId, String title, Inst
         }
     }
 
-    /** Một dòng trong danh sách hội thoại. */
-    public record Summary(UUID id, UUID workspaceId, String title, Instant updatedAt) {
+    /** Một dòng trong lịch sử hội thoại: tên, đã ghim chưa và lần dùng gần nhất để chia nhóm theo ngày. */
+    public record Summary(UUID id, UUID workspaceId, String title, boolean pinned, Instant updatedAt) {
 
         public static Summary of(Conversation conversation) {
             return new Summary(conversation.getId(), conversation.getWorkspaceId(), conversation.getTitle(),
-                    conversation.getUpdatedAt());
+                    conversation.isPinned(), conversation.getUpdatedAt());
         }
     }
 
     public static ConversationResponse of(ConversationService.Thread thread) {
         Conversation conversation = thread.conversation();
         return new ConversationResponse(conversation.getId(), conversation.getWorkspaceId(), conversation.getTitle(),
-                conversation.getCreatedAt(), conversation.getUpdatedAt(),
+                conversation.isPinned(), conversation.getCreatedAt(), conversation.getUpdatedAt(),
                 thread.messages().stream().map(message -> MessageResponse.of(message,
                         thread.citations().getOrDefault(message.getId(), List.of()), thread.available())).toList(),
                 thread.scope().stream().map(ScopeDocument::of).toList());

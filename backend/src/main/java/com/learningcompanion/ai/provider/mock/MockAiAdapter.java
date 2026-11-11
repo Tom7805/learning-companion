@@ -121,6 +121,12 @@ public class MockAiAdapter implements AiProviderAdapter {
             answer = HIJACKED_REPLY;
         } else if (grounded != null) {
             answer = grounded;
+            if (request.messages().size() >= 3) {
+                // Như mô hình thật đọc thấy các lượt trước: nhắc lại câu hỏi trước để kiểm thử thấy ngữ cảnh được gửi.
+                String previous = request.messages().get(request.messages().size() - 3).text().strip();
+                answer = "Nối tiếp câu hỏi trước (“" + (previous.length() > 80 ? previous.substring(0, 80) : previous)
+                        + "”). " + answer;
+            }
         }
         List<String> pieces = new ArrayList<>();
         for (String word : answer.split(" ")) {

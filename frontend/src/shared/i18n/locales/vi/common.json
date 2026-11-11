@@ -1223,6 +1223,56 @@
       "goneBody": "Tài liệu này đã bị xóa nên không mở được nữa. Đoạn gốc lúc trợ lý trích vẫn hiện bên dưới.",
       "open": "Mở trong tài liệu",
       "sheet": "Trích dẫn {{number}}"
+    },
+    "history": {
+      "title": "Hội thoại",
+      "search": "Tìm hội thoại",
+      "searchPlaceholder": "Tìm theo tên hay nội dung",
+      "closeSearch": "Đóng tìm kiếm",
+      "empty": "Chưa có hội thoại nào. Hỏi trợ lý để bắt đầu.",
+      "noResults": "Không có hội thoại nào khớp “{{query}}”.",
+      "loadFailed": "Không tải được lịch sử hội thoại.",
+      "groups": {
+        "pinned": "Đã ghim",
+        "today": "Hôm nay",
+        "yesterday": "Hôm qua",
+        "week": "7 ngày qua",
+        "older": "Cũ hơn"
+      },
+      "pinnedMark": "Đã ghim",
+      "menu": "Thao tác với “{{title}}”",
+      "rename": "Đổi tên",
+      "pin": "Ghim lên đầu",
+      "unpin": "Bỏ ghim",
+      "move": "Chuyển vào không gian học",
+      "download": "Tải về (.md)",
+      "delete": "Xóa",
+      "renameDialog": {
+        "title": "Đổi tên hội thoại",
+        "label": "Tên hội thoại",
+        "required": "Nhập tên hội thoại.",
+        "tooLong": "Tên tối đa 120 ký tự.",
+        "save": "Lưu tên"
+      },
+      "moveDialog": {
+        "title": "Chuyển “{{title}}” vào không gian học",
+        "body": "Từ câu hỏi tiếp theo, trợ lý trả lời dựa trên các tài liệu đã gắn với không gian học được chọn.",
+        "label": "Không gian học",
+        "empty": "Bạn chưa có không gian học nào. Hãy tạo một không gian học trước.",
+        "confirm": "Chuyển"
+      },
+      "deleteDialog": {
+        "title": "Xóa hội thoại “{{title}}”?",
+        "body": "Hội thoại được chuyển vào thùng rác và không còn hiện trong lịch sử.",
+        "confirm": "Xóa hội thoại"
+      },
+      "renamed": "Đã đổi tên hội thoại.",
+      "pinned": "Đã ghim hội thoại lên đầu.",
+      "unpinned": "Đã bỏ ghim hội thoại.",
+      "moved": "Đã chuyển hội thoại vào “{{name}}”.",
+      "deleted": "Đã xóa hội thoại.",
+      "failed": "Chưa thực hiện được. Vui lòng thử lại.",
+      "downloadFailed": "Chưa tải được hội thoại. Vui lòng thử lại."
     }
   },
   "account": {

@@ -25,7 +25,7 @@ public class Conversation implements OwnedEntity {
     @Column(name = "owner_id", nullable = false, updatable = false)
     private UUID ownerId;
 
-    @Column(name = "workspace_id", updatable = false)
+    @Column(name = "workspace_id")
     private UUID workspaceId;
 
     @Column(nullable = false, length = TITLE_MAX_LENGTH)
@@ -39,6 +39,9 @@ public class Conversation implements OwnedEntity {
 
     @Column(name = "trashed_at")
     private Instant trashedAt;
+
+    @Column(name = "pinned_at")
+    private Instant pinnedAt;
 
     @Version
     private long version;
@@ -70,6 +73,44 @@ public class Conversation implements OwnedEntity {
 
     public void touch(Instant now) {
         this.updatedAt = now;
+    }
+
+    /** Đổi tên (NCL-07-CN-003); tên trống thì giữ tên cũ, quá dài thì cắt như tên tự đặt. */
+    public void rename(String newTitle) {
+        if (newTitle != null && !newTitle.isBlank()) {
+            this.title = titleOf(newTitle);
+        }
+    }
+
+    /** Ghim lên đầu danh sách hay bỏ ghim; thời điểm ghim xếp các hội thoại đã ghim với nhau, mới ghim trước. */
+    public void pin(boolean pinned, Instant now) {
+        if (pinned && pinnedAt == null) {
+            this.pinnedAt = now;
+        } else if (!pinned) {
+            this.pinnedAt = null;
+        }
+    }
+
+    /**
+     * Chuyển hội thoại vào một không gian học (hay ra thành hội thoại riêng khi {@code null}): từ lượt hỏi sau, phạm vi
+     * tài liệu theo không gian học mới (TC-04).
+     */
+    public void moveTo(UUID newWorkspaceId) {
+        this.workspaceId = newWorkspaceId;
+    }
+
+    /** Bỏ vào thùng rác; không còn hiện trong danh sách và mở lại trả 404. */
+    public void trash(Instant now) {
+        this.trashedAt = now;
+        this.pinnedAt = null;
+    }
+
+    public boolean isPinned() {
+        return pinnedAt != null;
+    }
+
+    public Instant getPinnedAt() {
+        return pinnedAt;
     }
 
     public boolean isTrashed() {

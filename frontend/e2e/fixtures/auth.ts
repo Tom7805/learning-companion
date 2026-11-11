@@ -112,6 +112,21 @@ export class DevApi {
   }
 
   /** Dựng sẵn {@code count} không gian học "{prefix} 001"… cho tài khoản (NCL-06-CN-001 TC-01). Trả về mã theo thứ tự. */
+  /**
+   * Dựng sẵn hội thoại riêng ở nhiều thời điểm (NCL-07-CN-003): mỗi hội thoại một câu hỏi (cũng là tên) và một câu trả
+   * lời đã xong, lùi {@code hoursAgo} giờ so với bây giờ.
+   */
+  async seedConversations(
+    email: string,
+    items: { question: string; answer?: string; hoursAgo: number; pinned?: boolean }[],
+  ): Promise<string[]> {
+    const response = await this.request.post(`${API}/dev/assistant/conversations/seed`, {
+      data: { email, items: items.map((item) => ({ pinned: false, ...item })) },
+    })
+    expect(response.ok()).toBeTruthy()
+    return (await response.json()).conversations
+  }
+
   async seedWorkspaces(email: string, count: number, prefix?: string): Promise<string[]> {
     const response = await this.request.post(`${API}/dev/workspaces/seed`, { data: { email, count, prefix } })
     expect(response.ok()).toBeTruthy()

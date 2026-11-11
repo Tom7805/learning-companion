@@ -20,7 +20,9 @@ export const queryKeys = {
   aiDisclosure: ['assistant', 'disclosure'] as const,
   conversation: (id: string) => ['assistant', 'conversation', id] as const,
   citation: (id: string) => ['assistant', 'citation', id] as const,
-  conversations: (workspaceId: string | null) => ['assistant', 'conversations', workspaceId] as const,
+  conversations: (workspaceId: string | null, query = '') => ['assistant', 'conversations', workspaceId, query] as const,
+  /** Mọi danh sách hội thoại, để làm mới sau khi đổi tên, ghim, chuyển hay xóa. */
+  conversationLists: ['assistant', 'conversations'] as const,
   profile: ['profile', 'me'] as const,
   uiPreferences: ['ui-preferences'] as const,
   oauthProviders: ['auth', 'oauth', 'providers'] as const,

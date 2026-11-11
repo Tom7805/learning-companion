@@ -1223,6 +1223,56 @@
       "goneBody": "This document was deleted, so it can no longer be opened. The passage the assistant quoted is still shown below.",
       "open": "Open in document",
       "sheet": "Citation {{number}}"
+    },
+    "history": {
+      "title": "Conversations",
+      "search": "Search conversations",
+      "searchPlaceholder": "Search by title or content",
+      "closeSearch": "Close search",
+      "empty": "No conversations yet. Ask the assistant to get started.",
+      "noResults": "No conversations match “{{query}}”.",
+      "loadFailed": "Could not load your conversation history.",
+      "groups": {
+        "pinned": "Pinned",
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "week": "Previous 7 days",
+        "older": "Older"
+      },
+      "pinnedMark": "Pinned",
+      "menu": "Actions for “{{title}}”",
+      "rename": "Rename",
+      "pin": "Pin to top",
+      "unpin": "Unpin",
+      "move": "Move to a study space",
+      "download": "Download (.md)",
+      "delete": "Delete",
+      "renameDialog": {
+        "title": "Rename conversation",
+        "label": "Conversation name",
+        "required": "Enter a name.",
+        "tooLong": "Names can be at most 120 characters.",
+        "save": "Save name"
+      },
+      "moveDialog": {
+        "title": "Move “{{title}}” to a study space",
+        "body": "From the next question on, the assistant answers from the documents attached to the chosen study space.",
+        "label": "Study space",
+        "empty": "You have no study spaces yet. Create one first.",
+        "confirm": "Move"
+      },
+      "deleteDialog": {
+        "title": "Delete “{{title}}”?",
+        "body": "The conversation moves to the trash and no longer appears in your history.",
+        "confirm": "Delete conversation"
+      },
+      "renamed": "Conversation renamed.",
+      "pinned": "Conversation pinned to the top.",
+      "unpinned": "Conversation unpinned.",
+      "moved": "Conversation moved to “{{name}}”.",
+      "deleted": "Conversation deleted.",
+      "failed": "That did not work. Please try again.",
+      "downloadFailed": "Could not download the conversation. Please try again."
     }
   },
   "account": {

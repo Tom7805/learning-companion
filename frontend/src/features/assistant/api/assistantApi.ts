@@ -64,29 +64,55 @@ export const assistantApi = {
    * lỗi thì máy chủ trả lỗi tạm thời (AI_LABEL_UNAVAILABLE) thay vì tệp; lỗi đọc từ Blob về JSON để giao diện báo đúng.
    */
   async exportAnswer(conversationId: string, messageId: string): Promise<AnswerFile> {
-    try {
-      const response = await http.get<Blob>(`${conversation(conversationId)}/messages/${encodeURIComponent(messageId)}/export`, {
-        responseType: 'blob',
-        headers: { Accept: 'text/markdown, application/json' },
-      })
-      return { blob: response.data, fileName: fileNameOf(String(response.headers['content-disposition'] ?? '')) }
-    } catch (error) {
-      if (isAxiosError(error) && error.response?.data instanceof Blob) {
-        try {
-          error.response.data = JSON.parse(await error.response.data.text())
-        } catch {
-          // Không phải JSON: để nguyên, toApiError trả INTERNAL_ERROR.
-        }
-      }
-      throw error
-    }
+    return markdownFile(`${conversation(conversationId)}/messages/${encodeURIComponent(messageId)}/export`)
   },
-  async conversations(workspaceId?: string) {
-    const { data } = await http.get<ConversationSummary[]>('/assistant/conversations', {
-      params: workspaceId ? { workspaceId } : undefined,
-    })
+  /** Tải cả hội thoại về dạng Markdown kèm nguồn của từng câu trả lời (NCL-07-CN-003). */
+  async exportConversation(id: string): Promise<AnswerFile> {
+    return markdownFile(`${conversation(id)}/export`)
+  },
+  /** Lịch sử hội thoại: đã ghim lên trước rồi mới dùng trước; {@code query} tìm theo tên và nội dung. */
+  async conversations(workspaceId?: string, query?: string) {
+    const params: Record<string, string> = {}
+    if (workspaceId) params.workspaceId = workspaceId
+    if (query?.trim()) params.q = query.trim()
+    const { data } = await http.get<ConversationSummary[]>('/assistant/conversations', { params })
     return data
   },
+  async updateConversation(id: string, change: { title?: string; pinned?: boolean }) {
+    const { data } = await http.patch<ConversationSummary>(conversation(id), change)
+    return data
+  },
+  /** Chuyển hội thoại vào không gian học; {@code null} thì thành hội thoại riêng. */
+  async moveConversation(id: string, workspaceId: string | null) {
+    const { data } = await http.put<ConversationSummary>(`${conversation(id)}/workspace`, { workspaceId })
+    return data
+  },
+  async deleteConversation(id: string) {
+    await http.delete(conversation(id))
+  },
+}
+
+/**
+ * Tệp Markdown có dấu nhận biết do trí tuệ nhân tạo sinh ra. Bộ đính dấu lỗi thì máy chủ trả lỗi tạm thời
+ * (AI_LABEL_UNAVAILABLE) thay vì tệp; lỗi đọc từ Blob về JSON để giao diện báo đúng.
+ */
+async function markdownFile(url: string): Promise<AnswerFile> {
+  try {
+    const response = await http.get<Blob>(url, {
+      responseType: 'blob',
+      headers: { Accept: 'text/markdown, application/json' },
+    })
+    return { blob: response.data, fileName: fileNameOf(String(response.headers['content-disposition'] ?? '')) }
+  } catch (error) {
+    if (isAxiosError(error) && error.response?.data instanceof Blob) {
+      try {
+        error.response.data = JSON.parse(await error.response.data.text())
+      } catch {
+        // Không phải JSON: để nguyên, toApiError trả INTERNAL_ERROR.
+      }
+    }
+    throw error
+  }
 }
 
 /** Tên tệp trong Content-Disposition (ưu tiên filename* mã UTF-8). */

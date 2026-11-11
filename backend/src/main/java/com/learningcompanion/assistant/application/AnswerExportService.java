@@ -7,6 +7,7 @@ import com.learningcompanion.assistant.domain.Citation;
 import com.learningcompanion.assistant.domain.CitationRepository;
 import com.learningcompanion.assistant.domain.Conversation;
 import com.learningcompanion.assistant.domain.Message;
+import com.learningcompanion.assistant.domain.MessageRole;
 import com.learningcompanion.shared.exception.BusinessException;
 import com.learningcompanion.shared.exception.ErrorCode;
 import com.learningcompanion.shared.web.ClientInfo;
@@ -63,6 +64,42 @@ public class AnswerExportService {
         }
         AiProvenance provenance = AiProvenance.generated(answer.getId(), AiFeature.ASSISTANT_CHAT.name(),
                 answer.getCreatedAt());
+        return new Export(fileName(title), labels.markdown(title, body.toString(), provenance));
+    }
+
+    /**
+     * Tải cả hội thoại về dạng văn bản định dạng nhẹ (NCL-07-CN-003): từng câu hỏi và câu trả lời theo thứ tự, mỗi câu
+     * trả lời kèm danh sách nguồn đã trích (tên tài liệu và vị trí). Có câu trả lời do trí tuệ nhân tạo sinh ra nên tệp
+     * luôn mang dấu nhận biết; bộ đính dấu lỗi thì không xuất tệp.
+     */
+    @Transactional(readOnly = true)
+    public Export conversation(UUID conversationId, ClientInfo client) {
+        ConversationService.Thread thread = conversations.thread(conversationId, client);
+        Conversation conversation = thread.conversation();
+        String title = conversation.getTitle() == null || conversation.getTitle().isBlank()
+                ? "Hội thoại với trợ lý" : conversation.getTitle().strip();
+        StringBuilder body = new StringBuilder("# ").append(title).append('\n');
+        for (Message message : thread.messages()) {
+            if (message.getRole() == MessageRole.USER) {
+                body.append("\n## Câu hỏi\n\n").append(message.getContent().strip()).append('\n');
+                continue;
+            }
+            if (!message.isAiGenerated()) {
+                continue;
+            }
+            body.append("\n## Trả lời\n\n").append(message.getContent().strip()).append('\n');
+            List<Citation> cited = thread.citations().getOrDefault(message.getId(), List.of());
+            if (!cited.isEmpty()) {
+                body.append("\n**Nguồn**\n\n");
+                Map<Integer, Citation> byNumber = new LinkedHashMap<>();
+                cited.forEach(citation -> byNumber.putIfAbsent(citation.getNumber(), citation));
+                byNumber.values().forEach(citation -> body.append(citation.getNumber()).append(". ")
+                        .append(citation.getDocumentTitle()).append(" · ")
+                        .append(GroundedAnswerService.locationLabel(citation.getLocation())).append('\n'));
+            }
+        }
+        AiProvenance provenance = AiProvenance.generated(conversation.getId(), AiFeature.ASSISTANT_CHAT.name(),
+                conversation.getCreatedAt());
         return new Export(fileName(title), labels.markdown(title, body.toString(), provenance));
     }
 

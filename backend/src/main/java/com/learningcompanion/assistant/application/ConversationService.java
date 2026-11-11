@@ -26,11 +26,13 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -147,16 +149,114 @@ public class ConversationService {
         cited.forEach(citations::save);
     }
 
-    /** Hội thoại của không gian học (hoặc hội thoại riêng khi {@code workspaceId} trống), mới dùng trước. */
+    /** Số hội thoại tối đa trong một trang của lịch sử. */
+    public static final int HISTORY_LIMIT = 50;
+    /** Số ký tự tối đa của từ khóa tìm hội thoại. */
+    public static final int QUERY_MAX_LENGTH = 100;
+
+    /**
+     * Lịch sử hội thoại (NCL-07-CN-003): của không gian học, hoặc hội thoại riêng khi {@code workspaceId} trống; đã ghim
+     * lên trước rồi mới dùng trước. Có {@code query} thì chỉ lấy hội thoại có tên hay nội dung chứa cụm đó (TC-03).
+     */
     @Transactional(readOnly = true)
-    public List<Conversation> list(UUID workspaceId, ClientInfo client) {
+    public List<Conversation> list(UUID workspaceId, String query, ClientInfo client) {
         UUID ownerId = owner.requireOwnerId();
+        String pattern = likePattern(query);
+        PageRequest page = PageRequest.of(0, HISTORY_LIMIT);
         if (workspaceId == null) {
-            return conversations.findTop50ByOwnerIdAndWorkspaceIdIsNullAndTrashedAtIsNullOrderByUpdatedAtDesc(ownerId);
+            return conversations.privateHistoryByOwnerId(ownerId, pattern, page);
         }
         Workspace workspace = workspaces.require(workspaceId, client);
-        return conversations.findTop50ByOwnerIdAndWorkspaceIdAndTrashedAtIsNullOrderByUpdatedAtDesc(ownerId,
-                workspace.getId());
+        return conversations.workspaceHistoryByOwnerId(ownerId, workspace.getId(), pattern, page);
+    }
+
+    /** Mẫu {@code like} viết thường, thoát ký tự đại diện bằng {@code !}; không có từ khóa thì khớp mọi thứ. */
+    static String likePattern(String query) {
+        String clean = query == null ? "" : query.strip().replaceAll("\\s+", " ");
+        if (clean.isEmpty()) {
+            return "%";
+        }
+        if (clean.length() > QUERY_MAX_LENGTH) {
+            clean = clean.substring(0, QUERY_MAX_LENGTH);
+        }
+        String escaped = clean.toLowerCase(Locale.ROOT).replace("!", "!!").replace("%", "!%").replace("_", "!_");
+        return "%" + escaped + "%";
+    }
+
+    /** Thay đổi một hội thoại: đổi tên, ghim, chuyển vào không gian học; trường để trống thì giữ nguyên. */
+    public record Change(String title, Boolean pinned, boolean moving, UUID workspaceId) {
+    }
+
+    /**
+     * Đổi tên, ghim hay bỏ ghim, chuyển vào không gian học (hay ra thành hội thoại riêng). Không gian học của người khác
+     * trả 404 và lần từ chối được ghi nhật ký; sau khi chuyển, lượt hỏi tiếp theo dùng phạm vi tài liệu của không gian
+     * học mới (TC-04).
+     */
+    @Transactional
+    public Conversation update(UUID conversationId, Change change, ClientInfo client) {
+        Conversation conversation = require(conversationId, client);
+        if (change.title() != null) {
+            if (change.title().isBlank()) {
+                throw new BusinessException(ErrorCode.VALIDATION_FAILED);
+            }
+            conversation.rename(change.title());
+        }
+        if (change.pinned() != null) {
+            conversation.pin(change.pinned(), clock.instant());
+        }
+        if (change.moving()) {
+            UUID target = change.workspaceId() == null ? null
+                    : workspaces.require(change.workspaceId(), client).getId();
+            conversation.moveTo(target);
+        }
+        return conversation;
+    }
+
+    /** Bỏ hội thoại vào thùng rác; không còn trong lịch sử và mở lại trả 404. */
+    @Transactional
+    public void trash(UUID conversationId, ClientInfo client) {
+        require(conversationId, client).trash(clock.instant());
+    }
+
+    /**
+     * Các lượt hỏi đáp trước câu hỏi đang trả lời, cũ trước, để câu hỏi nối tiếp hiểu được ngữ cảnh (TC-02). Chỉ lấy
+     * câu trả lời đã hiện cho người học (xong hoặc bị dừng) cùng câu hỏi của nó; lượt mới nhất được giữ trước khi
+     * vượt {@code budget} ký tự. Chạy trên luồng nền nên nhận chủ sở hữu trực tiếp.
+     */
+    @Transactional(readOnly = true)
+    public List<Exchange> history(UUID ownerId, UUID conversationId, UUID beforeQuestionId, int maxTurns,
+                                  int budget) {
+        List<Message> thread = messages.findAllByOwnerIdAndConversationIdOrderByCreatedAtAsc(ownerId,
+                conversationId);
+        List<Exchange> exchanges = new ArrayList<>();
+        Message question = null;
+        for (Message message : thread) {
+            if (message.getId().equals(beforeQuestionId)) {
+                break;
+            }
+            if (message.getRole() == MessageRole.USER) {
+                question = message;
+            } else if (question != null && (message.getStatus() == Message.Status.COMPLETE
+                    || message.getStatus() == Message.Status.STOPPED) && !message.getContent().isBlank()) {
+                exchanges.add(new Exchange(question.getContent(), message.getContent()));
+                question = null;
+            }
+        }
+        List<Exchange> kept = new ArrayList<>();
+        int used = 0;
+        for (int i = exchanges.size() - 1; i >= 0 && kept.size() < maxTurns; i--) {
+            Exchange exchange = exchanges.get(i);
+            used += exchange.question().length() + exchange.answer().length();
+            if (used > budget && !kept.isEmpty()) {
+                break;
+            }
+            kept.addFirst(exchange);
+        }
+        return kept;
+    }
+
+    /** Một lượt hỏi đáp trước đó của hội thoại. */
+    public record Exchange(String question, String answer) {
     }
 
     /** Hội thoại đầy đủ: tin nhắn theo thứ tự, trích dẫn của từng câu trả lời và tài liệu của phạm vi gần nhất. */
