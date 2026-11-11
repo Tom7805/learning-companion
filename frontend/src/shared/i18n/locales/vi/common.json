@@ -2484,5 +2484,21 @@
       ],
       "acknowledge": "Đã hiểu, bắt đầu"
     }
+  },
+  "content": {
+    "code": {
+      "plain": "Văn bản",
+      "copy": "Sao chép",
+      "copied": "Đã chép",
+      "copyLabel": "Sao chép mã {{language}}",
+      "copyFailed": "Chưa sao chép được mã, hãy thử lại.",
+      "label": "Mã {{language}}"
+    },
+    "table": {
+      "label": "Bảng, cuộn ngang để xem đủ các cột"
+    },
+    "math": {
+      "invalid": "Công thức sai cú pháp nên hiện nguyên văn"
+    }
   }
 }

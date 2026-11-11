@@ -2484,5 +2484,21 @@
       ],
       "acknowledge": "Got it, start"
     }
+  },
+  "content": {
+    "code": {
+      "plain": "Text",
+      "copy": "Copy",
+      "copied": "Copied",
+      "copyLabel": "Copy {{language}} code",
+      "copyFailed": "Could not copy the code. Please try again.",
+      "label": "{{language}} code"
+    },
+    "table": {
+      "label": "Table, scroll sideways to see every column"
+    },
+    "math": {
+      "invalid": "This formula has a syntax error, shown as written"
+    }
   }
 }

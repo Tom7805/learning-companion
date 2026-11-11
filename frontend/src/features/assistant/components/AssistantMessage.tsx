@@ -1,7 +1,8 @@
 import { AlertTriangle, Check, Copy, Download, FileSearch, FileText, Library, RotateCcw, Sparkles } from 'lucide-react'
-import { Fragment, useState, type ReactNode } from 'react'
+import { useMemo, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SafetyNotice } from '@/features/safety'
+import { MarkdownRenderer, type CitationRendering } from '@/shared/content/MarkdownRenderer'
 import { cn } from '@/shared/lib/cn'
 import { AiLabel, Button, Spinner, toast } from '@/shared/ui'
 import type { ChatMessage, Citation } from '../types'
@@ -9,8 +10,6 @@ import { isAiGenerated } from '../lib/aiLabel'
 import { citedDocuments, locationLabel } from '../lib/citations'
 import { CitationMarker } from './CitationPopover'
 import { SuggestedQuestions } from './SuggestedQuestions'
-
-const MARKER = /\[(\d{1,2}(?:\s*[,;]\s*\d{1,2})*)]/g
 
 /**
  * Một câu trả lời của trợ lý (NCL-07-CN-001): chữ hiện dần, số trích dẫn bấm được để mở đúng đoạn ở khung xem bên,
@@ -45,7 +44,13 @@ export function AssistantMessage({
   const [downloading, setDownloading] = useState(false)
   const generated = isAiGenerated(message)
   const streaming = message.status === 'STREAMING'
-  const cited = new Map(message.citations.map((citation) => [citation.number, citation]))
+  const citations = useMemo<CitationRendering>(() => {
+    const cited = new Map(message.citations.map((citation) => [citation.number, citation]))
+    return {
+      has: (number) => cited.has(number),
+      render: (number) => <CitationMarker citation={cited.get(number)!} onOpen={onOpenCitation} />,
+    }
+  }, [message.citations, onOpenCitation])
 
   const copy = async () => {
     try {
@@ -111,10 +116,10 @@ export function AssistantMessage({
     body = <Notice icon={<AlertTriangle className="size-5" aria-hidden="true" />}>{t('assistant.answer.blocked')}</Notice>
   } else {
     body = (
-      <div className="whitespace-pre-wrap text-[0.9375rem] leading-7 text-ink [overflow-wrap:anywhere]" data-testid="answer-text">
-        {renderWithCitations(message.content, cited, onOpenCitation)}
+      <div data-testid="answer-text">
+        <MarkdownRenderer content={message.content} citations={citations} />
         {streaming && (
-          <span className="ml-1 inline-flex translate-y-0.5 items-center" aria-hidden="true">
+          <span className="mt-1 inline-flex items-center" aria-hidden="true">
             <Spinner className="size-4" />
           </span>
         )}
@@ -251,29 +256,4 @@ function Notice({ icon, children, testId }: { icon: ReactNode; children: ReactNo
       <div className="min-w-0 flex-1">{children}</div>
     </div>
   )
-}
-
-/** Thay các số trích dẫn [1], [2, 3] bằng nút bấm mở đúng đoạn; số không có nguồn thì để nguyên chữ. */
-function renderWithCitations(
-  text: string,
-  cited: Map<number, Citation>,
-  onOpen: (citation: Citation) => void,
-) {
-  const parts: ReactNode[] = []
-  let cursor = 0
-  for (const match of text.matchAll(MARKER)) {
-    const numbers = match[1].split(/[,;]/).map((part) => Number(part.trim()))
-    if (!numbers.every((number) => cited.has(number))) continue
-    parts.push(text.slice(cursor, match.index))
-    parts.push(
-      <Fragment key={match.index}>
-        {numbers.map((number) => (
-          <CitationMarker key={number} citation={cited.get(number)!} onOpen={onOpen} />
-        ))}
-      </Fragment>,
-    )
-    cursor = match.index + match[0].length
-  }
-  parts.push(text.slice(cursor))
-  return parts
 }
