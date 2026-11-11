@@ -2,6 +2,7 @@ package com.learningcompanion.devtools;
 
 import com.learningcompanion.ai.config.application.AiConfigService;
 import com.learningcompanion.ai.gateway.CircuitBreakerRegistry;
+import com.learningcompanion.ai.labeling.MachineReadableWatermark;
 import com.learningcompanion.ai.provider.mock.MockAiAdapter;
 import com.learningcompanion.shared.web.ApiPaths;
 import java.time.Duration;
@@ -33,9 +34,11 @@ public class DevAiGatewayController {
     private final CircuitBreakerRegistry breakers;
     private final JdbcTemplate jdbc;
     private final AiConfigService configs;
+    private final MachineReadableWatermark watermark;
 
     public DevAiGatewayController(MockAiAdapter mock, CircuitBreakerRegistry breakers, JdbcTemplate jdbc,
-                                  AiConfigService configs) {
+                                  AiConfigService configs, MachineReadableWatermark watermark) {
+        this.watermark = watermark;
         this.mock = mock;
         this.breakers = breakers;
         this.jdbc = jdbc;
@@ -72,6 +75,17 @@ public class DevAiGatewayController {
     }
 
     /**
+     * Cho {@code calls} lần đính dấu nhận biết nội dung do trí tuệ nhân tạo sinh ra tiếp theo lỗi (âm: lỗi cho tới khi
+     * đặt lại), để thử chặn tải về (NCL-04-CN-005 TC-04). Đặt lại lớp kết nối cũng bỏ.
+     */
+    @PostMapping("/label-failures")
+    public ResponseEntity<Void> labelFailures(@RequestBody Map<String, Integer> body) {
+        Integer calls = body.get("calls");
+        watermark.simulateFailures(calls == null ? 0 : calls);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
      * Đưa lớp kết nối về trạng thái ban đầu: hai bản mô phỏng bật, định tuyến mặc định, mạch đóng, cảnh báo đã xác
      * nhận, nhà cung cấp thêm trong lúc thử bị tắt.
      */
@@ -79,6 +93,7 @@ public class DevAiGatewayController {
     @Transactional
     public ResponseEntity<Void> reset(@RequestParam(defaultValue = "25") long chunkDelayMs) {
         mock.reset();
+        watermark.reset();
         mock.setChunkDelay(Duration.ofMillis(chunkDelayMs));
         breakers.reset();
         jdbc.update("update ai_providers set enabled = true, no_training_confirmed_at = coalesce("

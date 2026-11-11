@@ -16,6 +16,7 @@ export const queryKeys = {
   workspaceUsage: (target: object) => ['workspaces', 'usage', target] as const,
   /** Hội thoại với trợ lý (NCL-07-CN-001). */
   assistant: ['assistant'] as const,
+  aiDisclosure: ['assistant', 'disclosure'] as const,
   conversation: (id: string) => ['assistant', 'conversation', id] as const,
   citation: (id: string) => ['assistant', 'citation', id] as const,
   conversations: (workspaceId: string | null) => ['assistant', 'conversations', workspaceId] as const,

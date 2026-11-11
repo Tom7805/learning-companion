@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/shared/api/queryKeys'
-import type { Citation } from '../types'
+import type { AiDisclosure, Citation } from '../types'
 import { assistantApi } from './assistantApi'
 
 /** Một hội thoại đã lưu; {@code id} trống thì không hỏi máy chủ (hội thoại mới chưa gửi câu nào). */
@@ -36,5 +36,28 @@ export function useConversations(workspaceId?: string) {
     queryKey: queryKeys.conversations(workspaceId ?? null),
     queryFn: () => assistantApi.conversations(workspaceId),
     staleTime: 15_000,
+  })
+}
+
+/** Thông báo đang trò chuyện với hệ thống trí tuệ nhân tạo đã được đọc chưa (NCL-04-CN-005 TC-01). */
+export function useAiDisclosure() {
+  return useQuery({
+    queryKey: queryKeys.aiDisclosure,
+    queryFn: () => assistantApi.disclosure(),
+    staleTime: Infinity,
+    retry: false,
+  })
+}
+
+/** Ghi nhận đã đọc; giao diện đóng thông báo ngay, không chờ máy chủ. */
+export function useAcknowledgeDisclosure() {
+  const client = useQueryClient()
+  return useMutation({
+    mutationFn: () => assistantApi.acknowledgeDisclosure(),
+    onMutate: () => {
+      const previous = client.getQueryData<AiDisclosure>(queryKeys.aiDisclosure)
+      client.setQueryData<AiDisclosure>(queryKeys.aiDisclosure, { version: previous?.version ?? 1, acknowledged: true })
+    },
+    onSuccess: (data) => client.setQueryData(queryKeys.aiDisclosure, data),
   })
 }

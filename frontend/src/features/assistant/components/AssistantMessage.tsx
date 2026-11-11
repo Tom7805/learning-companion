@@ -1,10 +1,11 @@
-import { AlertTriangle, Check, Copy, FileSearch, FileText, Library, RotateCcw, Sparkles } from 'lucide-react'
+import { AlertTriangle, Check, Copy, Download, FileSearch, FileText, Library, RotateCcw, Sparkles } from 'lucide-react'
 import { Fragment, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SafetyNotice } from '@/features/safety'
 import { cn } from '@/shared/lib/cn'
-import { Button, Spinner, toast } from '@/shared/ui'
+import { AiLabel, Button, Spinner, toast } from '@/shared/ui'
 import type { ChatMessage, Citation } from '../types'
+import { isAiGenerated } from '../lib/aiLabel'
 import { citedDocuments, locationLabel } from '../lib/citations'
 import { CitationMarker } from './CitationPopover'
 import { SuggestedQuestions } from './SuggestedQuestions'
@@ -14,7 +15,8 @@ const MARKER = /\[(\d{1,2}(?:\s*[,;]\s*\d{1,2})*)]/g
 /**
  * Một câu trả lời của trợ lý (NCL-07-CN-001): chữ hiện dần, số trích dẫn bấm được để mở đúng đoạn ở khung xem bên,
  * danh sách nguồn đã trích, ba câu hỏi gợi ý, và các thao tác sao chép, trả lời lại. Trường hợp không tìm thấy, chưa
- * chọn nguồn, lỗi hay bị bộ lọc an toàn can thiệp đều có lời giải thích riêng.
+ * chọn nguồn, lỗi hay bị bộ lọc an toàn can thiệp đều có lời giải thích riêng. Nội dung do mô hình sinh ra luôn có
+ * nhãn "Do AI sinh", kể cả khi mở lại hội thoại cũ, và tải về được dạng Markdown có dấu nhận biết (NCL-04-CN-005).
  */
 export function AssistantMessage({
   message,
@@ -25,6 +27,7 @@ export function AssistantMessage({
   onRegenerate,
   onChooseSources,
   onAddDocument,
+  onDownload,
 }: {
   message: ChatMessage
   last: boolean
@@ -34,9 +37,13 @@ export function AssistantMessage({
   onRegenerate: () => void
   onChooseSources?: () => void
   onAddDocument?: (document: { id: string; title: string }) => void
+  /** Tải câu trả lời về; không có thì không hiện nút (câu trả lời chưa được máy chủ lưu). */
+  onDownload?: (message: ChatMessage) => Promise<void>
 }) {
   const { t } = useTranslation()
   const [copied, setCopied] = useState(false)
+  const [downloading, setDownloading] = useState(false)
+  const generated = isAiGenerated(message)
   const streaming = message.status === 'STREAMING'
   const cited = new Map(message.citations.map((citation) => [citation.number, citation]))
 
@@ -47,6 +54,16 @@ export function AssistantMessage({
       window.setTimeout(() => setCopied(false), 2000)
     } catch {
       toast.error(t('assistant.answer.copyFailed'))
+    }
+  }
+
+  const download = async () => {
+    if (!onDownload) return
+    setDownloading(true)
+    try {
+      await onDownload(message)
+    } finally {
+      setDownloading(false)
     }
   }
 
@@ -117,6 +134,7 @@ export function AssistantMessage({
           <Sparkles className="size-4" />
         </span>
         {t('assistant.answer.author')}
+        {generated && <AiLabel />}
         {streaming && message.content === '' && <span className="text-muted">{t('assistant.answer.thinking')}</span>}
       </div>
       {body}
@@ -195,6 +213,19 @@ export function AssistantMessage({
           >
             {copied ? t('assistant.answer.copied') : t('assistant.answer.copy')}
           </Button>
+          {generated && onDownload && (
+            <Button
+              variant="ghost"
+              className="h-9 px-3 text-sm"
+              onClick={() => void download()}
+              disabled={downloading}
+              aria-label={t('assistant.answer.downloadLabel')}
+              icon={downloading ? <Spinner className="size-4" /> : <Download className="size-4" aria-hidden="true" />}
+              data-testid="answer-download"
+            >
+              {downloading ? t('assistant.answer.downloading') : t('assistant.answer.download')}
+            </Button>
+          )}
           {last && (
             <Button
               variant="ghost"

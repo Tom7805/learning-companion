@@ -37,6 +37,8 @@ export interface ChatMessage {
   suggestions: string[]
   errorCode?: string | null
   citations: Citation[]
+  /** Câu trả lời có nội dung do mô hình sinh ra, cần nhãn "Do AI sinh" (NCL-04-CN-005); máy chủ tính khi đọc lại. */
+  aiGenerated?: boolean
   createdAt: string
   /** Chỉ có trong phiên: bộ lọc an toàn can thiệp. */
   safety?: SafetyOutcome | null
@@ -105,3 +107,16 @@ export interface StreamHandlers {
 }
 
 export const QUESTION_MAX = 4000
+
+/** Người học đã đọc thông báo đang trò chuyện với hệ thống trí tuệ nhân tạo chưa (NCL-04-CN-005 TC-01). */
+export interface AiDisclosure {
+  version: number
+  acknowledged: boolean
+  acknowledgedAt?: string | null
+}
+
+/** Tệp câu trả lời tải về, đã có dấu nhận biết do trí tuệ nhân tạo sinh ra. */
+export interface AnswerFile {
+  blob: Blob
+  fileName: string
+}

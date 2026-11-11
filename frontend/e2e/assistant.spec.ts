@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright'
 import type { Browser, Page } from '@playwright/test'
-import { createVerifiedAccount, expect, test, type DevApi } from './fixtures/auth'
+import { acknowledgeAiDisclosure, createVerifiedAccount, expect, test, type DevApi } from './fixtures/auth'
 import { uniqueEmail } from './fixtures/testData'
 
 /**
@@ -56,6 +56,7 @@ async function pasteDocument(page: Page, title: string, text: string) {
 async function signUp(page: Page, dev: DevApi, tag: string) {
   const email = uniqueEmail(tag)
   await createVerifiedAccount(page, dev, email)
+  await acknowledgeAiDisclosure(page)
   // Mở một trang của ứng dụng để có cookie chống giả mạo yêu cầu.
   await page.goto('/library')
   await expect(page.getByTestId('library-main')).toBeVisible()
@@ -289,6 +290,7 @@ async function otherLearner(browser: Browser, dev: DevApi) {
   const context = await browser.newContext()
   const page = await context.newPage()
   await createVerifiedAccount(page, dev, uniqueEmail('hd-stranger'))
+  await acknowledgeAiDisclosure(page)
   await page.goto('/library')
   return page
 }

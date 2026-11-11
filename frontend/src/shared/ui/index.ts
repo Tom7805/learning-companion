@@ -1,4 +1,5 @@
 // Chỉ xuất các thành phần đã hiện thực; các thư mục còn trống sẽ được thêm khi story cần tới.
+export { AiLabel } from './AiLabel'
 export { Alert } from './Alert'
 export { Avatar } from './Avatar'
 export { Badge } from './Badge'
