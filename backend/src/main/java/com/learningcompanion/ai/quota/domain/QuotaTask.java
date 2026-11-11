@@ -22,6 +22,8 @@ public enum QuotaTask {
     FLASHCARD_GENERATION(Weight.LONG, 3),
     /** Sinh bài kiểm tra từ tài liệu. */
     QUIZ_GENERATION(Weight.LONG, 5),
+    /** Đề xuất dàn ý chủ đề của không gian học từ các nguồn (NCL-06-CN-002). */
+    TOPIC_OUTLINE(Weight.LONG, 2),
     /** Sinh đề cương ôn tập dài. */
     STUDY_GUIDE(Weight.LONG, 5);
 

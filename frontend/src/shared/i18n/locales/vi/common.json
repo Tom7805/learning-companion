@@ -167,7 +167,9 @@
     "WEB_PAGE_UNAVAILABLE": "Không lấy được nội dung trang này. Bạn có thể dán văn bản của trang để thêm vào kho.",
     "LIBRARY_DOCUMENT_IN_USE": "Tài liệu đang được dùng trong không gian học. Hãy xem các không gian học bị ảnh hưởng rồi xác nhận lại.",
     "AI_TEMPORARILY_UNAVAILABLE": "Dịch vụ trí tuệ nhân tạo đang tạm gián đoạn, hãy thử lại sau ít phút.",
-    "AI_LABEL_UNAVAILABLE": "Chưa gắn được dấu nhận biết nội dung do trí tuệ nhân tạo sinh ra nên chưa tải về được. Hãy thử lại sau ít phút."
+    "AI_LABEL_UNAVAILABLE": "Chưa gắn được dấu nhận biết nội dung do trí tuệ nhân tạo sinh ra nên chưa tải về được. Hãy thử lại sau ít phút.",
+    "TOPIC_DEPTH_EXCEEDED": "Dàn ý chủ đề có tối đa ba cấp. Chủ đề được giữ ở chỗ cũ.",
+    "TOPIC_NO_READY_SOURCES": "Không gian học chưa có tài liệu nào sẵn sàng để đề xuất dàn ý."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -955,7 +957,8 @@
       "label": "Các phần của không gian học",
       "overview": "Tổng quan",
       "sources": "Tài liệu",
-      "assistant": "Hỏi đáp"
+      "assistant": "Hỏi đáp",
+      "outline": "Dàn ý"
     },
     "guide": {
       "title": "Gắn tài liệu đầu tiên",
@@ -1044,6 +1047,74 @@
       "warning_one": "Đang được dùng trong {{count}} không gian học:",
       "warning_other": "Đang được dùng trong {{count}} không gian học:",
       "consequence": "Xóa xong, các không gian học này sẽ không còn tài liệu đó."
+    },
+    "outline": {
+      "title": "Dàn ý chủ đề",
+      "subtitle": "Khung các phần cần học của không gian học, kèm mục tiêu học của từng phần.",
+      "count_one": "{{count}} chủ đề",
+      "count_other": "{{count}} chủ đề",
+      "suggest": "Đề xuất dàn ý",
+      "suggestAgain": "Đề xuất lại",
+      "suggesting": "Trợ lý đang đọc nguồn…",
+      "suggestHint": "Trợ lý đọc các tài liệu sẵn sàng rồi đề xuất chủ đề, mục tiêu học và trích dẫn. Chủ đề bạn đã tự thêm hay sửa được giữ nguyên.",
+      "needSources": "Gắn ít nhất một tài liệu đã xử lý xong để trợ lý đề xuất dàn ý.",
+      "cost": "Tốn lượt AI",
+      "add": "Thêm chủ đề",
+      "addChild": "Thêm chủ đề con",
+      "added_one": "Đã thêm {{count}} chủ đề mới vào dàn ý.",
+      "added_other": "Đã thêm {{count}} chủ đề mới vào dàn ý.",
+      "addedNone": "Trợ lý không tìm thấy chủ đề mới nào để bổ sung.",
+      "blocked": "Bộ lọc an toàn đã chặn yêu cầu đề xuất dàn ý. Hãy kiểm tra lại nội dung tài liệu.",
+      "empty": {
+        "title": "Chưa có dàn ý",
+        "body": "Nhờ trợ lý đề xuất dàn ý từ tài liệu, hoặc tự thêm chủ đề đầu tiên."
+      },
+      "noGoal": "Chưa có mục tiêu học",
+      "sources_one": "{{count}} nguồn",
+      "sources_other": "{{count}} nguồn",
+      "showSources": "Nguồn của “{{title}}”",
+      "sourceGone": "Tài liệu không còn",
+      "actions": "Thao tác với “{{title}}”",
+      "edit": "Sửa tên và mục tiêu",
+      "moveUp": "Chuyển lên",
+      "moveDown": "Chuyển xuống",
+      "indent": "Thụt vào thành chủ đề con",
+      "outdent": "Đưa ra ngoài một cấp",
+      "merge": "Gộp vào chủ đề khác",
+      "split": "Tách thành chủ đề mới",
+      "delete": "Xóa chủ đề",
+      "deleteConfirm": {
+        "title": "Xóa chủ đề “{{title}}”?",
+        "body": "Chủ đề cùng mọi chủ đề con sẽ bị xóa khỏi dàn ý.",
+        "confirm": "Xóa chủ đề"
+      },
+      "editor": {
+        "createTitle": "Thêm chủ đề",
+        "createChildTitle": "Thêm chủ đề con vào “{{parent}}”",
+        "editTitle": "Sửa chủ đề",
+        "titleLabel": "Tên chủ đề",
+        "goalLabel": "Mục tiêu học (không bắt buộc)",
+        "goalPlaceholder": "Ví dụ: Giải thích được vai trò của màng tế bào",
+        "save": "Lưu",
+        "titleRequired": "Nhập tên chủ đề.",
+        "titleTooLong": "Tên chủ đề tối đa 200 ký tự.",
+        "goalTooLong": "Mục tiêu học tối đa 500 ký tự."
+      },
+      "mergeDialog": {
+        "title": "Gộp “{{title}}” vào…",
+        "body": "Các chủ đề con và nguồn của chủ đề này chuyển sang chủ đề được chọn.",
+        "target": "Chủ đề đích",
+        "confirm": "Gộp"
+      },
+      "splitDialog": {
+        "title": "Tách “{{title}}”",
+        "body": "Tạo chủ đề mới cùng cấp ngay sau, mang theo các chủ đề con bạn chọn.",
+        "newTitle": "Tên chủ đề mới",
+        "children": "Chủ đề con chuyển sang",
+        "confirm": "Tách"
+      },
+      "drag": "Kéo “{{title}}” thả vào chủ đề khác",
+      "level": "Cấp {{level}}"
     }
   },
   "assistant": {
@@ -2302,7 +2373,8 @@
       "DOCUMENT_SUMMARY": "Tóm tắt tài liệu",
       "FLASHCARD_GENERATION": "Sinh thẻ ghi nhớ",
       "QUIZ_GENERATION": "Sinh bài kiểm tra",
-      "STUDY_GUIDE": "Sinh đề cương ôn tập"
+      "STUDY_GUIDE": "Sinh đề cương ôn tập",
+      "TOPIC_OUTLINE": "Đề xuất dàn ý chủ đề"
     },
     "weights": {
       "LIGHT": "Tác vụ nhẹ",

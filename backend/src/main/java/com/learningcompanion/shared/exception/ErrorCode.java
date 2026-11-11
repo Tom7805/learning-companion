@@ -152,6 +152,11 @@ public enum ErrorCode {
      */
     AI_LABEL_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE,
             "Chưa gắn được dấu nhận biết nội dung do trí tuệ nhân tạo sinh ra nên chưa tải về được, hãy thử lại sau."),
+    /** Dàn ý chủ đề tối đa ba cấp (NCL-06-CN-002 TC-04): thao tác làm một chủ đề xuống cấp thứ tư bị từ chối. */
+    TOPIC_DEPTH_EXCEEDED(HttpStatus.UNPROCESSABLE_CONTENT, "Dàn ý chủ đề có tối đa ba cấp."),
+    /** Đề xuất dàn ý khi không gian học chưa có tài liệu nào sẵn sàng. */
+    TOPIC_NO_READY_SOURCES(HttpStatus.CONFLICT,
+            "Không gian học chưa có tài liệu nào sẵn sàng để đề xuất dàn ý."),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Hệ thống gặp sự cố, hãy thử lại sau.");
 
     private final HttpStatus status;

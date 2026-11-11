@@ -2,7 +2,7 @@
  * Các thẻ của trang không gian học. Story sau thêm chức năng (hỏi đáp, ghi chú, thẻ ghi nhớ…) thì thêm một mục vào
  * đây và một nhánh hiển thị trong WorkspacePage.
  */
-export const WORKSPACE_TABS = ['overview', 'assistant', 'sources'] as const
+export const WORKSPACE_TABS = ['overview', 'outline', 'assistant', 'sources'] as const
 
 export type WorkspaceTab = (typeof WORKSPACE_TABS)[number]
 

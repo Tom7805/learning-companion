@@ -1,4 +1,4 @@
-import { FileText, LayoutDashboard, MessagesSquare, type LucideIcon } from 'lucide-react'
+import { FileText, LayoutDashboard, ListTree, MessagesSquare, type LucideIcon } from 'lucide-react'
 import { useRef, type KeyboardEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/shared/lib/cn'
@@ -6,6 +6,7 @@ import { WORKSPACE_TABS, workspacePanelId, workspaceTabId, type WorkspaceTab } f
 
 const icons: Record<WorkspaceTab, LucideIcon> = {
   overview: LayoutDashboard,
+  outline: ListTree,
   assistant: MessagesSquare,
   sources: FileText,
 }
@@ -46,7 +47,7 @@ export function WorkspaceTabs({
     <div
       role="tablist"
       aria-label={t('workspaces.tabs.label')}
-      className="flex gap-1 self-start rounded-field border-[1.5px] border-ink bg-field p-1"
+      className="flex max-w-full gap-1 self-start overflow-x-auto rounded-field border-[1.5px] border-ink bg-field p-1"
     >
       {WORKSPACE_TABS.map((name) => {
         const selected = tab === name
@@ -67,7 +68,7 @@ export function WorkspaceTabs({
             onKeyDown={onKeyDown}
             data-testid={`workspace-tab-${name}`}
             className={cn(
-              'inline-flex h-10 items-center justify-center gap-2 rounded-[10px] px-4 text-[0.9375rem] font-medium',
+              'inline-flex h-10 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-[10px] px-3 text-[0.9375rem] font-medium sm:px-4',
               'transition-colors duration-150',
               selected
                 ? 'border-[1.5px] border-ink bg-surface text-ink shadow-[2px_2px_0_var(--color-ink)]'

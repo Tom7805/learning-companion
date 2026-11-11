@@ -13,6 +13,7 @@ export const queryKeys = {
   workspaceList: ['workspaces', 'list'] as const,
   workspace: (id: string) => ['workspaces', 'detail', id] as const,
   workspaceDocuments: (id: string) => ['workspaces', 'detail', id, 'documents'] as const,
+  workspaceTopics: (id: string) => ['workspaces', 'detail', id, 'topics'] as const,
   workspaceUsage: (target: object) => ['workspaces', 'usage', target] as const,
   /** Hội thoại với trợ lý (NCL-07-CN-001). */
   assistant: ['assistant'] as const,

@@ -16,7 +16,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variants: Record<Variant, string> = {
-  accent: 'bg-accent text-on-accent border-ink hover:bg-accent-strong',
+  accent: 'bg-accent text-on-accent border-ink hover:brightness-110',
   dark: 'bg-ink text-on-ink border-ink hover:bg-ink-soft',
   outline: 'bg-surface text-ink border-ink hover:bg-paper',
   ghost: 'bg-transparent text-ink border-transparent hover:bg-ink/5',

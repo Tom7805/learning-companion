@@ -1,4 +1,4 @@
-import type { DocumentCard, TagColor } from '@/features/library/types'
+import type { ChunkLocation, DocumentCard, TagColor } from '@/features/library/types'
 
 /** Biểu tượng của không gian học; khớp với enum WorkspaceIcon ở máy chủ. */
 export type WorkspaceIcon =
@@ -77,4 +77,46 @@ export interface AttachResult {
 export interface UsageTarget {
   documentIds?: string[]
   folderId?: string
+}
+
+/** Một đoạn nguồn mà chủ đề trích tới (NCL-06-CN-002); {@code available} sai khi tài liệu đã bị xóa. */
+export interface TopicSource {
+  documentId?: string | null
+  documentTitle: string
+  location: ChunkLocation
+  passage: number
+  excerpt: string
+  available: boolean
+}
+
+/** Một chủ đề trong dàn ý, kèm các chủ đề con. */
+export interface TopicNode {
+  id: string
+  parentId?: string | null
+  title: string
+  goal: string
+  /** Chủ đề do trợ lý đề xuất: mang nhãn "Do AI sinh". */
+  aiGenerated: boolean
+  /** Người học đã sửa tay chủ đề do trợ lý đề xuất. */
+  edited: boolean
+  /** Số tài liệu nguồn liên quan. */
+  sourceCount: number
+  sources: TopicSource[]
+  children: TopicNode[]
+}
+
+export interface TopicTree {
+  topics: TopicNode[]
+  /** Số tài liệu sẵn sàng của không gian học: chưa có thì chưa đề xuất được dàn ý. */
+  readySources: number
+  /** Số chủ đề mới thêm ở lần đề xuất vừa rồi. */
+  added?: number | null
+  /** Bộ lọc an toàn chặn yêu cầu đề xuất. */
+  safety?: 'BLOCKED' | 'SUPPORT' | null
+}
+
+export interface TopicInput {
+  title: string
+  goal?: string
+  parentId?: string | null
 }

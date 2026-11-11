@@ -167,7 +167,9 @@
     "WEB_PAGE_UNAVAILABLE": "Could not fetch this page. You can paste its text to add it to your library.",
     "LIBRARY_DOCUMENT_IN_USE": "This document is in use by study spaces. Review the affected study spaces, then confirm again.",
     "AI_TEMPORARILY_UNAVAILABLE": "The AI service is temporarily unavailable. Please try again in a few minutes.",
-    "AI_LABEL_UNAVAILABLE": "We could not attach the AI-generated marker, so the download is blocked for now. Please try again in a few minutes."
+    "AI_LABEL_UNAVAILABLE": "We could not attach the AI-generated marker, so the download is blocked for now. Please try again in a few minutes.",
+    "TOPIC_DEPTH_EXCEEDED": "Topic outlines have at most three levels. The topic stayed where it was.",
+    "TOPIC_NO_READY_SOURCES": "This study space has no ready documents to suggest an outline from."
   },
   "checkEmail": {
     "title": "Check your inbox",
@@ -955,7 +957,8 @@
       "label": "Study space sections",
       "overview": "Overview",
       "sources": "Documents",
-      "assistant": "Ask"
+      "assistant": "Ask",
+      "outline": "Outline"
     },
     "guide": {
       "title": "Attach your first document",
@@ -1044,6 +1047,74 @@
       "warning_one": "In use by {{count}} study space:",
       "warning_other": "In use by {{count}} study spaces:",
       "consequence": "After deletion, these study spaces will no longer have that document."
+    },
+    "outline": {
+      "title": "Topic outline",
+      "subtitle": "The parts to learn in this study space, each with a learning goal.",
+      "count_one": "{{count}} topic",
+      "count_other": "{{count}} topics",
+      "suggest": "Suggest an outline",
+      "suggestAgain": "Suggest again",
+      "suggesting": "The assistant is reading your sources…",
+      "suggestHint": "The assistant reads the ready documents and suggests topics, learning goals and citations. Topics you added or edited are kept.",
+      "needSources": "Attach at least one processed document so the assistant can suggest an outline.",
+      "cost": "Uses AI credits",
+      "add": "Add topic",
+      "addChild": "Add subtopic",
+      "added_one": "Added {{count}} new topic to the outline.",
+      "added_other": "Added {{count}} new topics to the outline.",
+      "addedNone": "The assistant found no new topics to add.",
+      "blocked": "The safety filter blocked the outline request. Please check the document content.",
+      "empty": {
+        "title": "No outline yet",
+        "body": "Ask the assistant to suggest an outline from your documents, or add the first topic yourself."
+      },
+      "noGoal": "No learning goal yet",
+      "sources_one": "{{count}} source",
+      "sources_other": "{{count}} sources",
+      "showSources": "Sources of “{{title}}”",
+      "sourceGone": "Document no longer available",
+      "actions": "Actions for “{{title}}”",
+      "edit": "Edit name and goal",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "indent": "Indent as a subtopic",
+      "outdent": "Move out one level",
+      "merge": "Merge into another topic",
+      "split": "Split into a new topic",
+      "delete": "Delete topic",
+      "deleteConfirm": {
+        "title": "Delete topic “{{title}}”?",
+        "body": "The topic and all its subtopics will be removed from the outline.",
+        "confirm": "Delete topic"
+      },
+      "editor": {
+        "createTitle": "Add topic",
+        "createChildTitle": "Add a subtopic to “{{parent}}”",
+        "editTitle": "Edit topic",
+        "titleLabel": "Topic name",
+        "goalLabel": "Learning goal (optional)",
+        "goalPlaceholder": "For example: Explain the role of the cell membrane",
+        "save": "Save",
+        "titleRequired": "Enter a topic name.",
+        "titleTooLong": "Topic names can be up to 200 characters.",
+        "goalTooLong": "Learning goals can be up to 500 characters."
+      },
+      "mergeDialog": {
+        "title": "Merge “{{title}}” into…",
+        "body": "Its subtopics and sources move to the chosen topic.",
+        "target": "Target topic",
+        "confirm": "Merge"
+      },
+      "splitDialog": {
+        "title": "Split “{{title}}”",
+        "body": "Create a new topic right after it at the same level, taking the subtopics you choose.",
+        "newTitle": "New topic name",
+        "children": "Subtopics to move",
+        "confirm": "Split"
+      },
+      "drag": "Drag “{{title}}” onto another topic",
+      "level": "Level {{level}}"
     }
   },
   "assistant": {
@@ -2302,7 +2373,8 @@
       "DOCUMENT_SUMMARY": "Summarise a document",
       "FLASHCARD_GENERATION": "Generate flashcards",
       "QUIZ_GENERATION": "Generate a quiz",
-      "STUDY_GUIDE": "Generate a study guide"
+      "STUDY_GUIDE": "Generate a study guide",
+      "TOPIC_OUTLINE": "Suggest a topic outline"
     },
     "weights": {
       "LIGHT": "Light task",
