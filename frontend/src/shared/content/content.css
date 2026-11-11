@@ -1,0 +1,200 @@
+/*
+ * Nội dung có định dạng (NCL-02-CN-003): khoảng cách, danh sách nhiều cấp, trích đoạn, bảng và màu cú pháp của khối mã.
+ * Khối mã luôn nền tối (--color-night) ở cả chế độ sáng và tối; các màu cú pháp đạt tương phản 4,5:1 trên nền đó.
+ */
+.rich-content {
+  font-size: 0.9375rem;
+  line-height: 1.75rem;
+  color: var(--color-ink);
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+.rich-content > :first-child {
+  margin-top: 0;
+}
+
+.rich-content > :last-child {
+  margin-bottom: 0;
+}
+
+.rich-content p {
+  margin: 0.75rem 0;
+}
+
+.rich-content .rich-heading {
+  margin: 1.25rem 0 0.5rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.rich-content strong {
+  font-weight: 600;
+}
+
+.rich-content ul,
+.rich-content ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.rich-content ul {
+  list-style: disc;
+}
+
+.rich-content ul ul {
+  list-style: circle;
+}
+
+.rich-content ul ul ul {
+  list-style: square;
+}
+
+.rich-content ol {
+  list-style: decimal;
+}
+
+.rich-content ol ol {
+  list-style: lower-alpha;
+}
+
+.rich-content ol ol ol {
+  list-style: lower-roman;
+}
+
+.rich-content li {
+  margin: 0.25rem 0;
+}
+
+.rich-content li > ul,
+.rich-content li > ol {
+  margin: 0.25rem 0;
+}
+
+.rich-content li::marker {
+  color: var(--color-muted);
+}
+
+/* Danh sách việc cần làm của GFM: ô đánh dấu thay cho dấu đầu dòng. */
+.rich-content li.task-list-item {
+  list-style: none;
+  margin-left: -1.25rem;
+}
+
+.rich-content blockquote {
+  margin: 0.75rem 0;
+  border-left: 3px solid var(--color-sun-strong);
+  padding: 0.25rem 0 0.25rem 1rem;
+  color: var(--color-ink-soft);
+}
+
+.rich-content hr {
+  margin: 1.25rem 0;
+  border: 0;
+  border-top: 1px solid var(--color-line);
+}
+
+.rich-content :not(pre) > code {
+  border-radius: 0.375rem;
+  background: var(--color-field);
+  padding: 0.0625rem 0.375rem;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+  font-size: 0.8125rem;
+}
+
+.rich-content .rich-table th,
+.rich-content .rich-table td {
+  border-bottom: 1px solid var(--color-line);
+  padding: 0.5rem 0.75rem;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.rich-content .rich-table td {
+  white-space: normal;
+  min-width: 6rem;
+  max-width: 22rem;
+}
+
+.rich-content .rich-table th {
+  background: var(--color-field);
+  font-weight: 600;
+}
+
+.rich-content .rich-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.rich-content .katex {
+  font-size: 1.08em;
+}
+
+.rich-content .katex-display {
+  margin: 0;
+}
+
+/* Màu cú pháp (lớp của highlight.js) trên nền tối của khối mã. */
+.rich-code {
+  color: #f5f5f7;
+}
+
+.rich-code .hljs-comment,
+.rich-code .hljs-quote,
+.rich-code .hljs-meta {
+  color: #a1a8b3;
+  font-style: italic;
+}
+
+.rich-code .hljs-keyword,
+.rich-code .hljs-selector-tag,
+.rich-code .hljs-doctag,
+.rich-code .hljs-template-tag {
+  color: #ff8c84;
+}
+
+.rich-code .hljs-string,
+.rich-code .hljs-regexp,
+.rich-code .hljs-addition,
+.rich-code .hljs-template-variable {
+  color: #a5d6ff;
+}
+
+.rich-code .hljs-title,
+.rich-code .hljs-title.function_,
+.rich-code .hljs-section {
+  color: #d9b8ff;
+}
+
+.rich-code .hljs-number,
+.rich-code .hljs-literal,
+.rich-code .hljs-attr,
+.rich-code .hljs-attribute,
+.rich-code .hljs-variable,
+.rich-code .hljs-symbol {
+  color: #8fcaff;
+}
+
+.rich-code .hljs-built_in,
+.rich-code .hljs-type,
+.rich-code .hljs-title.class_,
+.rich-code .hljs-params {
+  color: #ffb470;
+}
+
+.rich-code .hljs-name,
+.rich-code .hljs-selector-id,
+.rich-code .hljs-selector-class {
+  color: #8ddb8c;
+}
+
+.rich-code .hljs-deletion {
+  color: #ffb3ad;
+}
+
+.rich-code .hljs-emphasis {
+  font-style: italic;
+}
+
+.rich-code .hljs-strong {
+  font-weight: 700;
+}
