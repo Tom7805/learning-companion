@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/shared/api/queryKeys'
 import type { AiDisclosure, Citation } from '../types'
 import { assistantApi } from './assistantApi'
@@ -30,13 +30,44 @@ export function useCitation(citation: Citation, enabled: boolean) {
   })
 }
 
-/** Hội thoại của không gian học (hoặc hội thoại riêng khi không có {@code workspaceId}). */
-export function useConversations(workspaceId?: string) {
+/**
+ * Lịch sử hội thoại của không gian học (hoặc hội thoại riêng khi không có {@code workspaceId}); {@code query} tìm theo
+ * tên và nội dung (NCL-07-CN-003). Đang gõ từ khóa thì giữ kết quả cũ cho tới khi có kết quả mới.
+ */
+export function useConversations(workspaceId?: string, query = '') {
   return useQuery({
-    queryKey: queryKeys.conversations(workspaceId ?? null),
-    queryFn: () => assistantApi.conversations(workspaceId),
+    queryKey: queryKeys.conversations(workspaceId ?? null, query.trim()),
+    queryFn: () => assistantApi.conversations(workspaceId, query),
     staleTime: 15_000,
+    placeholderData: keepPreviousData,
   })
+}
+
+/** Đổi tên, ghim, chuyển vào không gian học hay xóa một hội thoại; xong thì làm mới mọi danh sách và hội thoại đó. */
+export function useConversationActions() {
+  const client = useQueryClient()
+  const refresh = (id: string) => {
+    void client.invalidateQueries({ queryKey: queryKeys.conversationLists })
+    void client.invalidateQueries({ queryKey: queryKeys.conversation(id) })
+  }
+  const update = useMutation({
+    mutationFn: ({ id, ...change }: { id: string; title?: string; pinned?: boolean }) =>
+      assistantApi.updateConversation(id, change),
+    onSuccess: (_, { id }) => refresh(id),
+  })
+  const move = useMutation({
+    mutationFn: ({ id, workspaceId }: { id: string; workspaceId: string | null }) =>
+      assistantApi.moveConversation(id, workspaceId),
+    onSuccess: (_, { id }) => refresh(id),
+  })
+  const remove = useMutation({
+    mutationFn: (id: string) => assistantApi.deleteConversation(id),
+    onSuccess: (_, id) => {
+      void client.invalidateQueries({ queryKey: queryKeys.conversationLists })
+      client.removeQueries({ queryKey: queryKeys.conversation(id) })
+    },
+  })
+  return { update, move, remove }
 }
 
 /** Thông báo đang trò chuyện với hệ thống trí tuệ nhân tạo đã được đọc chưa (NCL-04-CN-005 TC-01). */

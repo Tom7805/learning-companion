@@ -1,6 +1,7 @@
 package com.learningcompanion.assistant.application;
 
 import com.learningcompanion.ai.config.domain.AiFeature;
+import com.learningcompanion.ai.gateway.model.ChatRequest;
 import com.learningcompanion.ai.quota.domain.QuotaTask;
 import com.learningcompanion.ai.rag.Retriever;
 import com.learningcompanion.ai.safety.application.SafeGenerationService;
@@ -39,6 +40,11 @@ public class GroundedAnswerService {
 
     static final int EXCERPT_MAX = 1200;
     static final int ELSEWHERE_LIMIT = 3;
+    /** Số lượt hỏi đáp trước tối đa gửi kèm câu hỏi nối tiếp (NCL-07-CN-003 TC-02). */
+    static final int HISTORY_TURNS = 6;
+    /** Giới hạn ký tự của các lượt trước gửi kèm, để lời nhắc không phình theo độ dài hội thoại. */
+    static final int HISTORY_BUDGET = 6000;
+    private static final java.util.regex.Pattern CITATION_MARK = java.util.regex.Pattern.compile("\\s?\\[\\d+]");
 
     private final Retriever retriever;
     private final SafeGenerationService generation;
@@ -86,8 +92,14 @@ public class GroundedAnswerService {
                 return;
             }
             String question = turn.question().getContent();
-            List<Retriever.Hit> hits = retriever.retrieve(ownerId, ready.stream().map(Document::getId).toList(),
-                    question);
+            List<ConversationService.Exchange> earlier = conversations.history(ownerId, turn.conversation().getId(),
+                    turn.question().getId(), HISTORY_TURNS, HISTORY_BUDGET);
+            List<UUID> readyIds = ready.stream().map(Document::getId).toList();
+            List<Retriever.Hit> hits = retriever.retrieve(ownerId, readyIds, question);
+            if (hits.isEmpty() && !earlier.isEmpty()) {
+                // Câu hỏi nối tiếp thường thiếu chủ đề ("còn ví dụ nào khác?"): tìm lại kèm câu hỏi trước.
+                hits = retriever.retrieve(ownerId, readyIds, earlier.getLast().question() + "\n" + question);
+            }
             if (hits.isEmpty()) {
                 List<Document> elsewhere = retriever.elsewhere(ownerId,
                         turn.scope().stream().map(Document::getId).toList(), question, ELSEWHERE_LIMIT);
@@ -109,6 +121,7 @@ public class GroundedAnswerService {
                     .withSources(sources)
                     .withSubject(AuditObjectType.CONVERSATION, turn.conversation().getId())
                     .withQuota(QuotaTask.ASSISTANT_QUESTION)
+                    .withHistory(historyMessages(earlier))
                     .withClient(client), chunk -> splitter.accept(chunk.text()));
             splitter.finish();
 
@@ -159,17 +172,34 @@ public class GroundedAnswerService {
         listener.done(answer);
     }
 
+    /**
+     * Các lượt trước dạng tin nhắn cho mô hình. Số trích dẫn cũ được bỏ khỏi câu trả lời vì trỏ tới danh sách nguồn của
+     * lượt đó, không phải của lượt đang hỏi.
+     */
+    static List<ChatRequest.Message> historyMessages(List<ConversationService.Exchange> earlier) {
+        List<ChatRequest.Message> turns = new ArrayList<>();
+        for (ConversationService.Exchange exchange : earlier) {
+            turns.add(new ChatRequest.Message(ChatRequest.Role.USER, exchange.question()));
+            turns.add(new ChatRequest.Message(ChatRequest.Role.ASSISTANT,
+                    CITATION_MARK.matcher(exchange.answer()).replaceAll("")));
+        }
+        return turns;
+    }
+
     /** Tiêu đề nguồn gửi cho mô hình: tên tài liệu kèm vị trí, ví dụ "Bài giảng cây nhị phân · Trang 8". */
     static String sourceTitle(Retriever.Hit hit) {
-        ChunkLocation location = hit.chunk().getLocation();
-        String where = switch (location.kind()) {
+        return hit.document().getTitle() + " · " + locationLabel(hit.chunk().getLocation());
+    }
+
+    /** Vị trí đọc được của một đoạn, ví dụ "Trang 8" hay "Đoạn 3–5". */
+    static String locationLabel(ChunkLocation location) {
+        return switch (location.kind()) {
             case PAGE -> "Trang " + location.number();
             case SLIDE -> "Trang trình chiếu " + location.number();
             case IMAGE -> "Ảnh " + location.number();
             case PARAGRAPH -> location.end() > location.number()
                     ? "Đoạn " + location.number() + "–" + location.end() : "Đoạn " + location.number();
         };
-        return hit.document().getTitle() + " · " + where;
     }
 
     private static List<Citation> citations(UUID ownerId, UUID answerId, String text, List<Retriever.Hit> hits) {

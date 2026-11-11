@@ -58,6 +58,7 @@ export interface Conversation {
   id: string
   workspaceId?: string | null
   title: string
+  pinned?: boolean
   createdAt: string
   updatedAt: string
   messages: ChatMessage[]
@@ -68,6 +69,7 @@ export interface ConversationSummary {
   id: string
   workspaceId?: string | null
   title: string
+  pinned: boolean
   updatedAt: string
 }
 

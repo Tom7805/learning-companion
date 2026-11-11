@@ -41,6 +41,8 @@ interface SidebarProps extends SidebarAccountProps {
   meter?: ReactNode
   /** Khu không gian học của người học (NCL-06-CN-001), nằm ngay dưới nhóm mục chức năng; ẩn khi thu gọn. */
   workspaces?: ReactNode
+  /** Lịch sử hội thoại với trợ lý (NCL-07-CN-003), dưới khu không gian học; ẩn khi thu gọn. */
+  conversations?: ReactNode
 }
 
 /**
@@ -56,6 +58,7 @@ export function Sidebar({
   bell,
   meter,
   workspaces,
+  conversations,
   ...account
 }: SidebarProps) {
   const { t } = useTranslation()
@@ -174,6 +177,8 @@ export function Sidebar({
       </nav>
 
       {!collapsed && workspaces}
+
+      {!collapsed && conversations}
 
       {!collapsed && (
         <section aria-labelledby={recentId} className="flex min-h-0 flex-col gap-1.5" data-testid="sidebar-recent">

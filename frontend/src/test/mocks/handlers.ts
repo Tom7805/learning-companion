@@ -96,6 +96,7 @@ export const handlers = [
   http.get('*/api/v1/legal/current', () => HttpResponse.json(legalCurrent)),
   // Người học trong các bài kiểm thử đã đọc thông báo trí tuệ nhân tạo (NCL-04-CN-005); bài kiểm thử thông báo tự ghi đè.
   http.get('*/api/v1/assistant/disclosure', () => HttpResponse.json({ version: 1, acknowledged: true })),
+  http.get('*/api/v1/assistant/conversations', () => HttpResponse.json([])),
   http.post('*/api/v1/auth/register', async ({ request }) => {
     const body = (await request.json()) as { email: string }
     return HttpResponse.json({ email: body.email.trim().toLowerCase(), resendAvailableInSeconds: 60 }, { status: 202 })

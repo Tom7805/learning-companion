@@ -75,45 +75,57 @@ public class SafeGenerationService {
      */
     public record Request(UUID actorId, AiFeature feature, String meterCode, AiConfigResolver.ResolvedConfig config,
                           String question, List<SourcePassage> sources, AuditObjectType subjectType, UUID subjectId,
-                          QuotaTask quotaTask, ClientInfo client) {
+                          QuotaTask quotaTask, ClientInfo client, List<ChatRequest.Message> history) {
 
         public Request {
             Objects.requireNonNull(feature, "feature");
             Objects.requireNonNull(question, "question");
             sources = sources == null ? List.of() : List.copyOf(sources);
+            history = history == null ? List.of() : List.copyOf(history);
         }
 
         public static Request of(UUID actorId, AiFeature feature, String question) {
-            return new Request(actorId, feature, null, null, question, List.of(), null, null, null, null);
+            return new Request(actorId, feature, null, null, question, List.of(), null, null, null, null, List.of());
         }
 
         public Request withSources(List<SourcePassage> value) {
             return new Request(actorId, feature, meterCode, config, question, value, subjectType, subjectId,
-                    quotaTask, client);
+                    quotaTask, client, history);
         }
 
         public Request withMeterCode(String value) {
             return new Request(actorId, feature, value, config, question, sources, subjectType, subjectId,
-                    quotaTask, client);
+                    quotaTask, client, history);
         }
 
         public Request withConfig(AiConfigResolver.ResolvedConfig value) {
             return new Request(actorId, feature, meterCode, value, question, sources, subjectType, subjectId,
-                    quotaTask, client);
+                    quotaTask, client, history);
         }
 
         public Request withSubject(AuditObjectType type, UUID id) {
-            return new Request(actorId, feature, meterCode, config, question, sources, type, id, quotaTask, client);
+            return new Request(actorId, feature, meterCode, config, question, sources, type, id, quotaTask, client,
+                    history);
         }
 
         public Request withQuota(QuotaTask value) {
             return new Request(actorId, feature, meterCode, config, question, sources, subjectType, subjectId,
-                    value, client);
+                    value, client, history);
         }
 
         public Request withClient(ClientInfo value) {
             return new Request(actorId, feature, meterCode, config, question, sources, subjectType, subjectId,
-                    quotaTask, value);
+                    quotaTask, value, history);
+        }
+
+        /**
+         * Các lượt hỏi đáp trước của cùng hội thoại, cũ trước (NCL-07-CN-003 TC-02): gửi cho mô hình trước lượt hỏi
+         * hiện tại để câu hỏi nối tiếp hiểu được ngữ cảnh. Không đi qua lớp bao nguồn vì là lời của chính người học
+         * và câu trả lời đã qua bộ lọc.
+         */
+        public Request withHistory(List<ChatRequest.Message> value) {
+            return new Request(actorId, feature, meterCode, config, question, sources, subjectType, subjectId,
+                    quotaTask, client, value);
         }
 
         String meter() {
@@ -168,7 +180,9 @@ public class SafeGenerationService {
         String system = config.systemPrompt().strip() + "\n\n" + wrapped.guard();
         String user = wrapped.block().isEmpty() ? request.question()
                 : "Nguồn:\n" + wrapped.block() + "\nCâu hỏi: " + request.question();
-        ChatRequest base = config.toRequest(List.of(new ChatRequest.Message(ChatRequest.Role.USER, user)));
+        List<ChatRequest.Message> turns = new java.util.ArrayList<>(request.history());
+        turns.add(new ChatRequest.Message(ChatRequest.Role.USER, user));
+        ChatRequest base = config.toRequest(turns);
         ChatRequest chat = new ChatRequest(system, base.messages(), base.maxOutputUnits(), base.tuning());
 
         OutputGate gate = new OutputGate(levels, onChunk);

@@ -16,6 +16,7 @@ import {
   useNotificationStream,
   useUnreadCount,
 } from '@/features/notifications'
+import { SidebarConversations } from '@/features/assistant'
 import { usePageViewTracking, usePrivacyStatus } from '@/features/privacy'
 import { QuotaMeter, useQuotaStatus } from '@/features/quota'
 import { useProfile, type SettingsSection } from '@/features/settings'
@@ -230,6 +231,7 @@ function AppShellFrame() {
             bell={bell(collapsed ? 'compact' : 'sidebar')}
             meter={meter(collapsed ? 'compact' : 'sidebar')}
             workspaces={learnerReady ? <SidebarWorkspaces /> : undefined}
+            conversations={learnerReady ? <SidebarConversations /> : undefined}
             {...menu}
           />
         </div>
@@ -315,6 +317,7 @@ function AppShellFrame() {
             bell={bell('sidebar', closeDrawer)}
             meter={meter('sidebar', closeDrawer)}
             workspaces={learnerReady ? <SidebarWorkspaces onNavigate={closeDrawer} /> : undefined}
+            conversations={learnerReady ? <SidebarConversations onNavigate={closeDrawer} /> : undefined}
             {...menu}
           />
         </Drawer>
