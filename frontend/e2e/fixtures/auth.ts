@@ -171,7 +171,7 @@ export class DevApi {
   }
 
   /** Cho một nhà cung cấp mô phỏng lỗi ngay (FAIL), treo (HANG) hoặc chạy bình thường (OK). */
-  async setAiMockMode(providerCode: string, mode: 'OK' | 'FAIL' | 'HANG') {
+  async setAiMockMode(providerCode: string, mode: 'OK' | 'FAIL' | 'HANG' | 'BREAK_MIDWAY') {
     const response = await this.request.post(`${API}/dev/ai/mock/${providerCode}`, { params: { mode } })
     expect(response.ok()).toBeTruthy()
   }

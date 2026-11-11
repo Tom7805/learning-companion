@@ -14,6 +14,8 @@ public interface DocumentRepository extends OwnerScopedRepository<Document> {
 
     List<Document> findAllByOwnerIdOrderByCreatedAtDesc(UUID ownerId);
 
+    List<Document> findAllByOwnerIdAndIdIn(UUID ownerId, Collection<UUID> ids);
+
     @Query("select coalesce(sum(d.sizeBytes), 0) from Document d where d.ownerId = :ownerId")
     long sumSizeBytesByOwnerId(@Param("ownerId") UUID ownerId);
 

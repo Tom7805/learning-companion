@@ -99,7 +99,10 @@ class ContentSafetyIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("ANSWERED"))
                 .andExpect(jsonPath("$.flaggedSources[0]").value(1))
-                .andExpect(jsonPath("$.text").value(org.hamcrest.Matchers.startsWith("Đây là câu trả lời mô phỏng")));
+                // Câu trả lời bám nguồn của bản mô phỏng, không phải câu trả lời bị chiếm quyền.
+                .andExpect(jsonPath("$.text").value(org.hamcrest.Matchers.startsWith("Theo tài liệu đã chọn")))
+                .andExpect(jsonPath("$.text").value(org.hamcrest.Matchers.not(
+                        org.hamcrest.Matchers.containsString(MockAiAdapter.HIJACKED_REPLY))));
 
         // Mô hình không bao giờ đọc thấy câu chèn chỉ dẫn; nguồn nằm trong vùng dữ liệu có đánh dấu, lời nhắc hệ
         // thống có quy tắc an toàn dữ liệu với đúng mã ranh giới.

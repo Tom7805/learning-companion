@@ -1,4 +1,8 @@
 app:
+  assistant:
+    retrieval:
+      # Vector của bản mô phỏng không mang nghĩa: chỉ nhận đoạn khớp từ ngữ.
+      min-similarity: 2.0
   library:
     web-fetch:
       mode: ${APP_WEB_FETCH_MODE:mock}

@@ -1,10 +1,14 @@
-import { FileText, LayoutDashboard, type LucideIcon } from 'lucide-react'
+import { FileText, LayoutDashboard, MessagesSquare, type LucideIcon } from 'lucide-react'
 import { useRef, type KeyboardEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/shared/lib/cn'
 import { WORKSPACE_TABS, workspacePanelId, workspaceTabId, type WorkspaceTab } from '../lib/tabs'
 
-const icons: Record<WorkspaceTab, LucideIcon> = { overview: LayoutDashboard, sources: FileText }
+const icons: Record<WorkspaceTab, LucideIcon> = {
+  overview: LayoutDashboard,
+  assistant: MessagesSquare,
+  sources: FileText,
+}
 
 /** Hàng thẻ của trang không gian học: phím mũi tên, Home, End chuyển thẻ; số tài liệu hiện ngay trên thẻ Tài liệu. */
 export function WorkspaceTabs({

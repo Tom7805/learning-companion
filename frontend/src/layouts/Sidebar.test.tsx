@@ -33,7 +33,7 @@ describe('Sidebar', () => {
     const { user, onQuickOpen } = renderSidebar('expanded')
 
     const nav = screen.getByRole('navigation', { name: 'Chức năng' })
-    expect(within(nav).getAllByRole('link').map((link) => link.textContent)).toEqual(['Trang chính', 'Không gian học', 'Thư viện'])
+    expect(within(nav).getAllByRole('link').map((link) => link.textContent)).toEqual(['Trang chính', 'Hội thoại mới', 'Không gian học', 'Thư viện'])
     expect(within(nav).getByRole('link', { name: 'Thư viện' })).toHaveAttribute('aria-current', 'page')
     expect(within(nav).getByRole('link', { name: 'Trang chính' })).not.toHaveAttribute('aria-current')
     expect(screen.getByTestId('sidebar-recent')).toHaveTextContent('Tài liệu bạn mở sẽ hiện ở đây')

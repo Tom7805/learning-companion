@@ -3,6 +3,9 @@ export const routes = {
   library: '/library',
   libraryDocument: '/library/:id',
   /** Danh sách không gian học và trang của từng không gian (NCL-06-CN-001). */
+  /** Hội thoại riêng với trợ lý; không có mã là hội thoại mới (NCL-07-CN-001). */
+  chat: '/chat',
+  conversation: '/chat/:id?',
   workspaces: '/workspaces',
   workspace: '/workspaces/:id',
   devices: '/devices',
@@ -39,6 +42,7 @@ export const routes = {
 } as const
 
 export const documentPath = (id: string) => `/library/${encodeURIComponent(id)}`
+export const chatPath = (id: string) => `/chat/${encodeURIComponent(id)}`
 export const workspacePath = (id: string) => `/workspaces/${encodeURIComponent(id)}`
 export const dataExportPath = (id: string) => `/exports/${encodeURIComponent(id)}`
 export const notificationPath = (id: string) => `/notifications/${encodeURIComponent(id)}`
