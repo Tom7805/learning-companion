@@ -16,7 +16,8 @@ const SHOWN = 5
  */
 export function SidebarWorkspaces({ onNavigate }: { onNavigate?: () => void }) {
   const { t, i18n } = useTranslation()
-  const workspaces = useWorkspaces()
+  // Khung ứng dụng đã nạp danh sách; mở ngăn kéo trên điện thoại không gửi thêm yêu cầu.
+  const workspaces = useWorkspaces(true, false)
   const headingId = useId()
   const list = workspaces.data ?? []
 
