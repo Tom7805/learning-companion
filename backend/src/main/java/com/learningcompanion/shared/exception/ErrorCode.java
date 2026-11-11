@@ -140,6 +140,12 @@ public enum ErrorCode {
      */
     WEB_PAGE_UNAVAILABLE(HttpStatus.UNPROCESSABLE_CONTENT,
             "Không lấy được nội dung trang này. Bạn có thể dán văn bản của trang để thêm vào kho."),
+    /**
+     * Tài liệu sắp xóa đang gắn với không gian học (NCL-06-CN-001 TC-03); {@code details.workspaces} liệt kê mã và tên
+     * các không gian học bị ảnh hưởng. Chỉ xóa khi yêu cầu gửi lại kèm {@code confirmInUse=true}.
+     */
+    LIBRARY_DOCUMENT_IN_USE(HttpStatus.CONFLICT,
+            "Tài liệu đang được dùng trong không gian học. Hãy xem các không gian học bị ảnh hưởng rồi xác nhận xóa."),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Hệ thống gặp sự cố, hãy thử lại sau.");
 
     private final HttpStatus status;

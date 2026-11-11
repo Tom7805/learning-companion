@@ -46,9 +46,10 @@ export function useDocumentActions() {
       }
     },
 
-    async trash(documentIds: string[]) {
+    /** {@code confirmInUse}: hộp thoại đã nêu tên các không gian học đang dùng tài liệu và người học vẫn xác nhận. */
+    async trash(documentIds: string[], confirmInUse = false) {
       try {
-        const result = await bulk.mutateAsync({ action: 'TRASH', documentIds })
+        const result = await bulk.mutateAsync({ action: 'TRASH', documentIds, ...(confirmInUse && { confirmInUse }) })
         toast.success(t('library.deleteDocuments.done', { count: result.affected }))
         return true
       } catch (error) {

@@ -50,6 +50,7 @@ test.describe('NCL-02-CN-001 · Khung ứng dụng trên máy tính', () => {
     const before = (await main.boundingBox())!.width
     await expect(sidebar.getByRole('navigation', { name: 'Chức năng' }).getByRole('link')).toHaveText([
       'Trang chính',
+      'Không gian học',
       'Thư viện',
     ])
     await expectNoSeriousA11yViolations(page)

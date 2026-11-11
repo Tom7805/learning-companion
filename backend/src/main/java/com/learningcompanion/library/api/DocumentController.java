@@ -7,6 +7,7 @@ import com.learningcompanion.library.api.dto.DocumentResponse;
 import com.learningcompanion.library.application.BulkActionService;
 import com.learningcompanion.library.application.DocumentQuery;
 import com.learningcompanion.library.application.DocumentService;
+import com.learningcompanion.library.application.DocumentUsageGuard;
 import com.learningcompanion.library.domain.DocumentStatus;
 import com.learningcompanion.library.domain.DocumentType;
 import com.learningcompanion.shared.security.SignedUrlService;
@@ -39,10 +40,12 @@ public class DocumentController {
 
     private final DocumentService documents;
     private final BulkActionService bulk;
+    private final DocumentUsageGuard usage;
 
-    public DocumentController(DocumentService documents, BulkActionService bulk) {
+    public DocumentController(DocumentService documents, BulkActionService bulk, DocumentUsageGuard usage) {
         this.documents = documents;
         this.bulk = bulk;
+        this.usage = usage;
     }
 
     /**
@@ -94,14 +97,22 @@ public class DocumentController {
         return DocumentCardResponse.of(documents.setTags(id, body.tagIds(), ClientInfo.from(request)));
     }
 
-    /** Đưa vào thùng rác (QTN-18); tệp gốc vẫn giữ để khôi phục được. */
+    /**
+     * Đưa vào thùng rác (QTN-18); tệp gốc vẫn giữ để khôi phục được. Tài liệu đang gắn với không gian học chỉ xóa khi
+     * có {@code confirmInUse=true} (NCL-06-CN-001 TC-03).
+     */
     @DeleteMapping("/{id}")
-    public TrashedResponse trash(@PathVariable UUID id, HttpServletRequest request) {
+    public TrashedResponse trash(@PathVariable UUID id, @RequestParam(defaultValue = "false") boolean confirmInUse,
+                                 HttpServletRequest request) {
+        usage.requireConfirmed(List.of(id), confirmInUse);
         return new TrashedResponse(documents.trash(id, ClientInfo.from(request)).getTrashBatchId());
     }
 
     @PostMapping("/bulk")
     public BulkActionService.Result bulk(@Valid @RequestBody BulkActionRequest body, HttpServletRequest request) {
+        if (body.action() == BulkActionService.Action.TRASH) {
+            usage.requireConfirmed(body.documentIds(), Boolean.TRUE.equals(body.confirmInUse()));
+        }
         return bulk.apply(body.action(), body.documentIds(), body.folderId(), body.tagIds(),
                 ClientInfo.from(request));
     }

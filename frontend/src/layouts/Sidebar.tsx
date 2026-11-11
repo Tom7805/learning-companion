@@ -39,6 +39,8 @@ interface SidebarProps extends SidebarAccountProps {
   bell?: ReactNode
   /** Đồng hồ lượt trí tuệ nhân tạo của người học (NCL-04-CN-003), nằm ngay trên trình đơn tài khoản. */
   meter?: ReactNode
+  /** Khu không gian học của người học (NCL-06-CN-001), nằm ngay dưới nhóm mục chức năng; ẩn khi thu gọn. */
+  workspaces?: ReactNode
 }
 
 /**
@@ -53,6 +55,7 @@ export function Sidebar({
   onQuickOpen,
   bell,
   meter,
+  workspaces,
   ...account
 }: SidebarProps) {
   const { t } = useTranslation()
@@ -169,6 +172,8 @@ export function Sidebar({
           ))}
         </ul>
       </nav>
+
+      {!collapsed && workspaces}
 
       {!collapsed && (
         <section aria-labelledby={recentId} className="flex min-h-0 flex-col gap-1.5" data-testid="sidebar-recent">

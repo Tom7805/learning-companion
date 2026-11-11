@@ -8,8 +8,8 @@ import java.util.UUID;
 
 /**
  * Thao tác trên nhiều tài liệu: {@code folderId} cho MOVE (rỗng là thư mục gốc), {@code tagIds} cho ADD_TAGS và
- * REMOVE_TAGS.
+ * REMOVE_TAGS, {@code confirmInUse} cho TRASH khi có tài liệu đang gắn với không gian học.
  */
 public record BulkActionRequest(@NotNull BulkActionService.Action action, @NotEmpty List<UUID> documentIds,
-                                UUID folderId, List<UUID> tagIds) {
+                                UUID folderId, List<UUID> tagIds, Boolean confirmInUse) {
 }

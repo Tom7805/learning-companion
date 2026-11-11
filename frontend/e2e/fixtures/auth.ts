@@ -111,6 +111,13 @@ export class DevApi {
     return response.json()
   }
 
+  /** Dựng sẵn {@code count} không gian học "{prefix} 001"… cho tài khoản (NCL-06-CN-001 TC-01). Trả về mã theo thứ tự. */
+  async seedWorkspaces(email: string, count: number, prefix?: string): Promise<string[]> {
+    const response = await this.request.post(`${API}/dev/workspaces/seed`, { data: { email, count, prefix } })
+    expect(response.ok()).toBeTruthy()
+    return (await response.json()).workspaces
+  }
+
   /**
    * Dừng hoặc chạy lại tác vụ nền xử lý tài liệu (NCL-05-CN-003). Kiểm thử tải lên dừng nó để thấy tài liệu chờ xử
    * lý; chạy lại thì hàng chờ được quét ngay.

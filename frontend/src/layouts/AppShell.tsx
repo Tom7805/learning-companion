@@ -19,6 +19,7 @@ import {
 import { usePageViewTracking, usePrivacyStatus } from '@/features/privacy'
 import { QuotaMeter, useQuotaStatus } from '@/features/quota'
 import { useProfile, type SettingsSection } from '@/features/settings'
+import { SidebarWorkspaces, useWorkspaces } from '@/features/workspaces'
 import { useUiPreferencesSync, useUpdateUiPreferences } from '@/features/settings/api/queries'
 import { queryKeys } from '@/shared/api/queryKeys'
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery'
@@ -105,7 +106,10 @@ function AppShellFrame() {
   const unreadCount = useUnreadCount(notificationsEnabled, { poll: !streaming }).data ?? 0
   const notificationPanel = useNotificationPanel()
   // Đồng hồ lượt trí tuệ nhân tạo (NCL-04-CN-003): chỉ người học có lượt; quản trị viên không dùng chức năng học tập.
-  const quota = useQuotaStatus(Boolean(account) && !isAdmin && !privacy.isPending && !acceptanceRequired)
+  const learnerReady = Boolean(account) && !isAdmin && !privacy.isPending && !acceptanceRequired
+  const quota = useQuotaStatus(learnerReady)
+  // Danh sách không gian học cho thanh bên (NCL-06-CN-001), nạp sẵn để mở ngăn kéo trên điện thoại không phải chờ.
+  useWorkspaces(learnerReady)
   // Thông báo hoàn lượt vừa tới thì đồng hồ hỏi lại ngay.
   useEffect(() => {
     if (unreadCount > 0) void queryClient.invalidateQueries({ queryKey: queryKeys.quota })
@@ -225,6 +229,7 @@ function AppShellFrame() {
             onQuickOpen={() => setQuickOpen(true)}
             bell={bell(collapsed ? 'compact' : 'sidebar')}
             meter={meter(collapsed ? 'compact' : 'sidebar')}
+            workspaces={learnerReady ? <SidebarWorkspaces /> : undefined}
             {...menu}
           />
         </div>
@@ -309,6 +314,7 @@ function AppShellFrame() {
             }}
             bell={bell('sidebar', closeDrawer)}
             meter={meter('sidebar', closeDrawer)}
+            workspaces={learnerReady ? <SidebarWorkspaces onNavigate={closeDrawer} /> : undefined}
             {...menu}
           />
         </Drawer>

@@ -43,8 +43,8 @@ describe('QuickOpen', () => {
 
     const input = screen.getByRole('combobox', { name: 'Tìm trang hoặc tài liệu' })
     expect(input).toHaveFocus()
-    await waitFor(() => expect(options()).toHaveLength(4))
-    expect(options()).toEqual(['Trang chính', 'Thư viện', 'Ghi chú: Định luật Ohm', 'Bài tập Vật lý 11'])
+    await waitFor(() => expect(options()).toHaveLength(5))
+    expect(options()).toEqual(['Trang chính', 'Không gian học', 'Thư viện', 'Ghi chú: Định luật Ohm', 'Bài tập Vật lý 11'])
     const listbox = screen.getByRole('listbox')
     expect(within(listbox).getByText('Trang')).toBeInTheDocument()
     expect(within(listbox).getByText('Tài liệu')).toBeInTheDocument()
@@ -53,7 +53,7 @@ describe('QuickOpen', () => {
 
   it('gõ không dấu vẫn tìm được, mũi tên chọn và Enter mở tài liệu', async () => {
     const { user, router, onClose } = renderQuickOpen()
-    await waitFor(() => expect(options()).toHaveLength(4))
+    await waitFor(() => expect(options()).toHaveLength(5))
 
     await user.keyboard('vat ly')
     expect(options()).toEqual(['Bài tập Vật lý 11'])
@@ -70,10 +70,10 @@ describe('QuickOpen', () => {
 
   it('phím mũi tên đi vòng qua kết quả; bấm chuột vào một trang thì mở trang đó', async () => {
     const { user, router } = renderQuickOpen()
-    await waitFor(() => expect(options()).toHaveLength(4))
+    await waitFor(() => expect(options()).toHaveLength(5))
 
     await user.keyboard('{ArrowUp}')
-    expect(screen.getAllByRole('option')[3]).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getAllByRole('option')[4]).toHaveAttribute('aria-selected', 'true')
     await user.keyboard('{ArrowDown}{ArrowDown}')
     expect(screen.getAllByRole('option')[1]).toHaveAttribute('aria-selected', 'true')
 

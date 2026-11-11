@@ -8,6 +8,12 @@ export const queryKeys = {
   libraryDocuments: (query: object) => ['library', 'documents', 'list', query] as const,
   folderTree: ['library', 'folders'] as const,
   tags: ['library', 'tags'] as const,
+  /** Tiền tố chung của mọi dữ liệu không gian học: gắn, gỡ hay xóa đều làm mới cả nhóm. */
+  workspaces: ['workspaces'] as const,
+  workspaceList: ['workspaces', 'list'] as const,
+  workspace: (id: string) => ['workspaces', 'detail', id] as const,
+  workspaceDocuments: (id: string) => ['workspaces', 'detail', id, 'documents'] as const,
+  workspaceUsage: (target: object) => ['workspaces', 'usage', target] as const,
   profile: ['profile', 'me'] as const,
   uiPreferences: ['ui-preferences'] as const,
   oauthProviders: ['auth', 'oauth', 'providers'] as const,

@@ -26,8 +26,10 @@ export function UploadQueue({
   items: UploadItem[]
   onCancel: (key: string) => void
   onRetry: (key: string) => void
-  onRename: (item: UploadItem) => void
-  onShowDuplicate: (item: UploadItem) => void
+  /** Không truyền thì không có nút đổi tên, ví dụ khi tải ngay tại không gian học. */
+  onRename?: (item: UploadItem) => void
+  /** Không truyền thì không có nút xem chi tiết bản trùng. */
+  onShowDuplicate?: (item: UploadItem) => void
   onClear: () => void
 }) {
   const { t, i18n } = useTranslation()
@@ -65,8 +67,8 @@ export function UploadQueue({
             text={statusText(item, t, i18n.language)}
             onCancel={() => onCancel(item.key)}
             onRetry={() => onRetry(item.key)}
-            onRename={() => onRename(item)}
-            onShowDuplicate={() => onShowDuplicate(item)}
+            onRename={onRename && (() => onRename(item))}
+            onShowDuplicate={onShowDuplicate && (() => onShowDuplicate(item))}
           />
         ))}
       </ul>
@@ -89,8 +91,8 @@ function UploadRow({
   text: string
   onCancel: () => void
   onRetry: () => void
-  onRename: () => void
-  onShowDuplicate: () => void
+  onRename?: () => void
+  onShowDuplicate?: () => void
 }) {
   const { t, i18n } = useTranslation()
   const labelId = useId()
@@ -144,7 +146,7 @@ function UploadRow({
               {t('common.retry')}
             </Button>
           )}
-          {item.state === 'done' && item.document && (
+          {item.state === 'done' && item.document && onRename && (
             <Button
               variant="ghost"
               className="h-9 px-3 text-sm"
@@ -157,9 +159,11 @@ function UploadRow({
           )}
           {item.state === 'duplicate' && item.duplicate && (
             <>
-              <Button variant="ghost" className="hidden h-9 px-3 text-sm sm:inline-flex" onClick={onShowDuplicate}>
-                {t('library.upload.duplicate.details')}
-              </Button>
+              {onShowDuplicate && (
+                <Button variant="ghost" className="hidden h-9 px-3 text-sm sm:inline-flex" onClick={onShowDuplicate}>
+                  {t('library.upload.duplicate.details')}
+                </Button>
+              )}
               <Link to={documentPath(item.duplicate.documentId)} className={buttonClasses('outline', 'md', 'h-9 px-3 text-sm')}>
                 {t('library.upload.duplicate.openExisting')}
               </Link>

@@ -101,7 +101,7 @@ class DataExportIT {
         JsonNode ready = awaitReady(lan, id);
         assertThat(ready.get("fileName").asString()).matches("learning-companion-export-\\d{4}-\\d{2}-\\d{2}\\.zip");
         assertThat(values(ready.get("sections"), "id")).containsExactly("account", "profile", "appearance",
-                "notifications", "privacy", "library");
+                "notifications", "privacy", "library", "workspaces");
 
         MockMailGateway.CapturedMail mail = awaitMail(lan.email(), "DATA_EXPORT_READY");
         assertThat(String.join(" ", mail.links())).contains("/exports/" + id);

@@ -102,6 +102,7 @@ export const AUDIT_OBJECT_TYPES = [
   'LIBRARY_FOLDER',
   'LIBRARY_TAG',
   'LIBRARY_UPLOAD',
+  'WORKSPACE',
 ]
 
 export function isAuditCategory(value: string | null | undefined): value is AuditCategory {

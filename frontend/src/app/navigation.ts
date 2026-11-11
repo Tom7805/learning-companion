@@ -2,6 +2,7 @@ import type { LucideIcon } from 'lucide-react'
 import { adminNavigation } from '@/features/admin/navigation'
 import { dashboardNavigation } from '@/features/dashboard/navigation'
 import { libraryNavigation } from '@/features/library/navigation'
+import { workspacesNavigation } from '@/features/workspaces/navigation'
 
 /** Một mục chức năng trên thanh bên. {@code label} là khóa dịch; {@code order} nhỏ đứng trước. */
 export interface NavigationEntry {
@@ -18,7 +19,11 @@ export interface NavigationEntry {
  * Nhóm mục chức năng của thanh bên (NCL-02-CN-001). Mỗi chức năng tự khai báo mục của mình trong tệp navigation.ts
  * của nó; khi một chức năng mới hoàn thành, chỉ cần thêm danh sách của nó vào đây, không phải sửa thanh bên.
  */
-export const navigation: NavigationEntry[] = [...dashboardNavigation, ...libraryNavigation].sort(
+export const navigation: NavigationEntry[] = [
+  ...dashboardNavigation,
+  ...workspacesNavigation,
+  ...libraryNavigation,
+].sort(
   (left, right) => left.order - right.order,
 )
 

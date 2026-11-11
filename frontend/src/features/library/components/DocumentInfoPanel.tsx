@@ -8,6 +8,8 @@ import { useDateFormat } from '@/shared/hooks/useDateFormat'
 import { saveBlob } from '@/shared/lib/download'
 import { formatBytes } from '@/shared/lib/format'
 import { Badge, Button, ConfirmDialog, ErrorState, Skeleton, buttonClasses, toast } from '@/shared/ui'
+import { useDocumentUsage } from '@/features/workspaces/api/queries'
+import { DeleteImpactNote, UsedInWorkspaces } from '@/features/workspaces/components/UsedInWorkspaces'
 import { useDocumentInfo, useFolderTree, useTags } from '../api/queries'
 import { useDocumentActions } from '../hooks/useDocumentActions'
 import { useOriginalFile } from '../hooks/useOriginalFile'
@@ -33,6 +35,7 @@ export function DocumentInfoPanel({ id, onClose }: { id: string; onClose: () => 
   const tags = useTags()
   const actions = useDocumentActions()
   const file = useOriginalFile(id)
+  const usage = useDocumentUsage({ documentIds: [id] })
   const [open, setOpen] = useState<Open>(null)
   const [downloading, setDownloading] = useState(false)
   const [moveError, setMoveError] = useState<string | null>(null)
@@ -91,6 +94,10 @@ export function DocumentInfoPanel({ id, onClose }: { id: string; onClose: () => 
         <dt className="text-muted">{t('library.info.tags')}</dt>
         <dd className="flex flex-wrap gap-1.5" data-testid="info-tags">
           {documentTags.length ? documentTags.map((tag) => <TagChip key={tag.id} tag={tag} />) : t('library.info.noTags')}
+        </dd>
+        <dt className="text-muted">{t('library.info.workspaces')}</dt>
+        <dd>
+          <UsedInWorkspaces workspaces={usage.data} loading={usage.isPending} onNavigate={onClose} />
         </dd>
         <dt className="text-muted">{t('library.info.added')}</dt>
         <dd>
@@ -186,16 +193,23 @@ export function DocumentInfoPanel({ id, onClose }: { id: string; onClose: () => 
       <ConfirmDialog
         open={open === 'delete'}
         title={t('library.deleteDocuments.title', { count: 1 })}
-        description={t('library.deleteDocuments.body')}
+        description={
+          <>
+            {t('library.deleteDocuments.body')}
+            <DeleteImpactNote workspaces={usage.data} />
+          </>
+        }
         confirmLabel={t('library.deleteDocuments.confirm')}
         cancelLabel={t('common.cancel')}
-        loading={actions.pending}
+        loading={actions.pending || usage.isFetching}
         onCancel={() => setOpen(null)}
         onConfirm={() =>
-          void actions.trash([doc.id]).then((done) => {
+          void actions.trash([doc.id], Boolean(usage.data?.length)).then((done) => {
             if (done) {
               setOpen(null)
               onClose()
+            } else {
+              void usage.refetch()
             }
           })
         }

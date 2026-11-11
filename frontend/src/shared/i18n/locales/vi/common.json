@@ -164,7 +164,8 @@
     "DOCUMENT_NOT_FAILED": "Tài liệu này không ở trạng thái lỗi nên không cần thử lại.",
     "WEB_ADDRESS_INVALID": "Đường dẫn chưa hợp lệ. Hãy dán địa chỉ trang bắt đầu bằng http:// hoặc https://.",
     "WEB_ADDRESS_BLOCKED": "Không lấy nội dung từ địa chỉ thuộc mạng nội bộ. Hãy dùng đường dẫn của một trang công khai.",
-    "WEB_PAGE_UNAVAILABLE": "Không lấy được nội dung trang này. Bạn có thể dán văn bản của trang để thêm vào kho."
+    "WEB_PAGE_UNAVAILABLE": "Không lấy được nội dung trang này. Bạn có thể dán văn bản của trang để thêm vào kho.",
+    "LIBRARY_DOCUMENT_IN_USE": "Tài liệu đang được dùng trong không gian học. Hãy xem các không gian học bị ảnh hưởng rồi xác nhận lại."
   },
   "checkEmail": {
     "title": "Kiểm tra hộp thư của bạn",
@@ -691,7 +692,8 @@
       "unstar": "Bỏ sao",
       "downloadFailed": "Chưa tải được tệp gốc, hãy thử lại.",
       "source": "Trang gốc",
-      "fetchedAt": "Lấy nội dung lúc {{time}}"
+      "fetchedAt": "Lấy nội dung lúc {{time}}",
+      "workspaces": "Không gian học"
     },
     "tags": {
       "manage": "Quản lý nhãn",
@@ -877,6 +879,168 @@
         "textRequired": "Hãy dán văn bản cần thêm.",
         "submit": "Thêm văn bản"
       }
+    }
+  },
+  "workspaces": {
+    "nav": "Không gian học",
+    "title": "Không gian học",
+    "subtitle": "Mỗi điều cần học một nơi làm việc riêng, gắn với đúng nhóm tài liệu bạn chọn từ kho. Tạo bao nhiêu cũng được.",
+    "create": "Tạo không gian học",
+    "edit": "Sửa",
+    "search": "Tìm không gian học",
+    "summary_one": "{{formatted}} không gian học",
+    "summary_other": "{{formatted}} không gian học",
+    "summaryFiltered": "{{shown}} / {{total}} không gian học",
+    "documentCount_one": "{{formatted}} tài liệu",
+    "documentCount_other": "{{formatted}} tài liệu",
+    "noDocuments": "Chưa gắn tài liệu",
+    "loadFailed": "Chưa tải được không gian học, hãy thử lại.",
+    "actionFailed": "Chưa thực hiện được, hãy thử lại.",
+    "backToList": "Tất cả không gian học",
+    "empty": {
+      "title": "Chưa có không gian học nào",
+      "body": "Tạo một không gian học cho môn hay chủ đề bạn muốn học, rồi gắn tài liệu từ kho vào đó. Một tài liệu dùng được cho nhiều không gian học mà không phải tải lại.",
+      "action": "Tạo không gian học đầu tiên"
+    },
+    "noMatch": {
+      "title": "Không có không gian học nào khớp",
+      "body": "Thử từ khóa khác, hoặc bỏ ô tìm để xem tất cả.",
+      "clear": "Bỏ tìm kiếm"
+    },
+    "notFound": {
+      "title": "Không tìm thấy không gian học",
+      "body": "Không gian học này không tồn tại, đã được xóa, hoặc không thuộc tài khoản của bạn."
+    },
+    "sidebar": {
+      "title": "Không gian học",
+      "empty": "Chưa có không gian học nào. Bấm dấu cộng để tạo.",
+      "all_one": "Xem tất cả {{formatted}} không gian học",
+      "all_other": "Xem tất cả {{formatted}} không gian học"
+    },
+    "form": {
+      "createTitle": "Tạo không gian học",
+      "editTitle": "Sửa không gian học",
+      "createHint": "Đặt tên theo điều bạn muốn học. Biểu tượng, màu và mô tả đổi được bất cứ lúc nào.",
+      "name": "Tên không gian học",
+      "nameHint": "{{used}}/{{max}} ký tự",
+      "nameRequired": "Hãy đặt tên cho không gian học.",
+      "nameTooLong": "Tên dài tối đa 100 ký tự.",
+      "icon": "Biểu tượng",
+      "color": "Màu",
+      "description": "Mô tả (không bắt buộc)",
+      "descriptionPlaceholder": "Ví dụ: ôn thi cuối kỳ, chương 1 đến chương 4",
+      "descriptionCount": "{{used}}/{{max}} ký tự",
+      "create": "Tạo không gian học",
+      "save": "Lưu thay đổi",
+      "created": "Đã tạo không gian học “{{name}}”.",
+      "updated": "Đã lưu không gian học “{{name}}”."
+    },
+    "icons": {
+      "BOOK": "Sách",
+      "CALCULATOR": "Máy tính",
+      "FLASK": "Bình thí nghiệm",
+      "ATOM": "Nguyên tử",
+      "GLOBE": "Quả địa cầu",
+      "CODE": "Mã nguồn",
+      "LANGUAGES": "Ngôn ngữ",
+      "CHART": "Biểu đồ",
+      "BRAIN": "Bộ não",
+      "PALETTE": "Bảng màu",
+      "MUSIC": "Nốt nhạc",
+      "BRIEFCASE": "Cặp tài liệu"
+    },
+    "tabs": {
+      "label": "Các phần của không gian học",
+      "overview": "Tổng quan",
+      "sources": "Tài liệu"
+    },
+    "guide": {
+      "title": "Gắn tài liệu đầu tiên",
+      "body": "“{{name}}” chưa có tài liệu. Gắn giáo trình, bài giảng hay ghi chép để mọi việc học trong không gian này dựa trên đúng những tài liệu đó.",
+      "steps": {
+        "pick": {
+          "title": "Chọn từ kho hoặc tải mới",
+          "body": "Chọn tài liệu đã có trong kho, hoặc tải tệp mới lên ngay tại đây."
+        },
+        "share": {
+          "title": "Một tài liệu, nhiều nơi dùng",
+          "body": "Tài liệu chỉ lưu và xử lý một lần; gắn vào bao nhiêu không gian học cũng không tốn thêm dung lượng."
+        },
+        "study": {
+          "title": "Học trên đúng tài liệu",
+          "body": "Mở tài liệu ngay bên cạnh để đọc. Gỡ ra khi không cần nữa, tài liệu vẫn ở kho."
+        }
+      },
+      "fromLibrary": "Chọn từ kho",
+      "upload": "Tải tệp mới"
+    },
+    "overview": {
+      "stats": {
+        "total": "Tài liệu",
+        "ready": "Sẵn sàng",
+        "processing": "Đang xử lý",
+        "failed": "Xử lý lỗi"
+      },
+      "recent": "Vừa gắn",
+      "allSources": "Xem tất cả tài liệu",
+      "next": "Bấm tên tài liệu để đọc ngay ở khung xem bên cạnh."
+    },
+    "sources": {
+      "hint": "Tài liệu ở đây là liên kết tới kho: gỡ ra không xóa tài liệu.",
+      "emptyTitle": "Chưa gắn tài liệu nào",
+      "emptyBody": "Gắn tài liệu từ kho hoặc tải tệp mới để bắt đầu.",
+      "attachedAt": "Gắn lúc {{time}}",
+      "open": "Mở",
+      "openNamed": "Mở {{title}}",
+      "detach": "Gỡ",
+      "detachNamed": "Gỡ {{title}} khỏi không gian học",
+      "detachTitle": "Gỡ tài liệu khỏi không gian học?",
+      "detachBody": "“{{title}}” sẽ không còn trong “{{name}}”. Tài liệu vẫn nguyên trong kho và trong các không gian học khác.",
+      "detachConfirm": "Gỡ khỏi không gian học",
+      "detached": "Đã gỡ “{{title}}”. Tài liệu vẫn ở trong kho.",
+      "loadFailed": "Chưa tải được danh sách tài liệu, hãy thử lại."
+    },
+    "attach": {
+      "action": "Gắn tài liệu",
+      "title": "Gắn tài liệu",
+      "description": "Chọn tài liệu cho “{{name}}”. Tài liệu trong kho được dùng lại, không tải lên lần nữa.",
+      "tabs": "Cách gắn tài liệu",
+      "tab": {
+        "library": "Chọn từ kho",
+        "upload": "Tải tệp mới"
+      },
+      "folder": "Thư mục",
+      "search": "Tìm theo tên tài liệu",
+      "noMatch": "Không có tài liệu nào khớp",
+      "folderEmpty": "Thư mục này chưa có tài liệu",
+      "already": "Đã gắn",
+      "selected_one": "Đã chọn {{formatted}} tài liệu",
+      "selected_other": "Đã chọn {{formatted}} tài liệu",
+      "submit": "Gắn vào không gian học",
+      "done_one": "Đã gắn {{formatted}} tài liệu vào “{{name}}”.",
+      "done_other": "Đã gắn {{formatted}} tài liệu vào “{{name}}”.",
+      "gone": "Có tài liệu không còn trong kho. Hãy đóng hộp thoại rồi chọn lại.",
+      "libraryEmptyTitle": "Kho tài liệu còn trống",
+      "libraryEmptyBody": "Tải tệp lên ngay tại đây: tệp được lưu trong kho và gắn luôn vào không gian học này.",
+      "uploadInstead": "Tải tệp mới",
+      "uploadHint": "Tệp được lưu trong kho, ở thư mục “{{folder}}”, và gắn ngay vào không gian học này.",
+      "folderFailed": "Chưa chuẩn bị được thư mục trong kho, hãy thử lại.",
+      "reused": "Tệp trùng nội dung với tài liệu đã có trong kho: không lưu thêm, bản đã có được gắn vào không gian học.",
+      "linkFailed": "Có tệp đã tải lên kho nhưng chưa gắn được. Hãy gắn tệp đó ở thẻ “Chọn từ kho”.",
+      "finish": "Xong"
+    },
+    "delete": {
+      "action": "Xóa",
+      "title": "Xóa không gian học “{{name}}”?",
+      "body": "Không gian học sẽ vào thùng rác; bạn khôi phục được từ thùng rác. Tài liệu đã gắn vẫn nguyên trong kho.",
+      "confirm": "Chuyển vào thùng rác",
+      "done": "Đã chuyển không gian học “{{name}}” vào thùng rác. Tài liệu vẫn ở trong kho."
+    },
+    "usage": {
+      "none": "Chưa gắn với không gian học nào",
+      "warning_one": "Đang được dùng trong {{count}} không gian học:",
+      "warning_other": "Đang được dùng trong {{count}} không gian học:",
+      "consequence": "Xóa xong, các không gian học này sẽ không còn tài liệu đó."
     }
   },
   "account": {
@@ -1482,7 +1646,8 @@
       "AI_SAFETY_EVENT": "Lần lọc nội dung",
       "LIBRARY_FOLDER": "Thư mục tài liệu",
       "LIBRARY_TAG": "Nhãn tài liệu",
-      "LIBRARY_UPLOAD": "Lần tải tệp lên"
+      "LIBRARY_UPLOAD": "Lần tải tệp lên",
+      "WORKSPACE": "Không gian học"
     },
     "actions": {
       "ACCOUNT_REGISTERED": "Đăng ký tài khoản",

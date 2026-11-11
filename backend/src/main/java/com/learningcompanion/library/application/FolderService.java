@@ -22,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -81,6 +82,20 @@ public class FolderService {
             throw new BusinessException(ErrorCode.NOT_FOUND);
         }
         return folder;
+    }
+
+    /** Thư mục đang hoạt động của một người học, nếu còn; dùng khi thư mục có thể đã bị xóa mà không phải lỗi. */
+    @Transactional(readOnly = true)
+    public Optional<Folder> findActive(UUID ownerId, UUID id) {
+        return folders.findByIdAndOwnerId(id, ownerId).filter(folder -> !folder.isTrashed());
+    }
+
+    /** Mã mọi tài liệu còn hoạt động trong thư mục và các thư mục con cháu: những gì sẽ vào thùng rác cùng thư mục. */
+    @Transactional(readOnly = true)
+    public List<UUID> activeDocumentIdsUnder(UUID id, ClientInfo client) {
+        Folder folder = require(id, client);
+        return documents.findActiveIdsByOwnerIdAndFolderIdIn(folder.getOwnerId(),
+                descendantsOf(folder.getOwnerId(), folder.getId()));
     }
 
     /** Kiểm tra tên trước khi lưu, để giao diện báo trùng ngay khi đang gõ. */

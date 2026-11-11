@@ -155,6 +155,8 @@ export interface BulkRequest {
   documentIds: string[]
   folderId?: string | null
   tagIds?: string[]
+  /** TRASH: người học đã được báo tên các không gian học đang dùng tài liệu và vẫn xác nhận xóa. */
+  confirmInUse?: boolean
 }
 
 export interface BulkResult {

@@ -3,6 +3,7 @@ package com.learningcompanion.library.api;
 import com.learningcompanion.library.api.dto.FolderRequest;
 import com.learningcompanion.library.api.dto.FolderTreeResponse;
 import com.learningcompanion.library.api.dto.FolderTreeResponse.FolderResponse;
+import com.learningcompanion.library.application.DocumentUsageGuard;
 import com.learningcompanion.library.application.FolderService;
 import com.learningcompanion.shared.web.ApiPaths;
 import com.learningcompanion.shared.web.ClientInfo;
@@ -29,9 +30,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class FolderController {
 
     private final FolderService folders;
+    private final DocumentUsageGuard usage;
 
-    public FolderController(FolderService folders) {
+    public FolderController(FolderService folders, DocumentUsageGuard usage) {
         this.folders = folders;
+        this.usage = usage;
     }
 
     @GetMapping
@@ -65,10 +68,17 @@ public class FolderController {
         return FolderResponse.of(folders.move(id, body.parentId(), ClientInfo.from(request)), 0);
     }
 
-    /** Thư mục cùng mọi thứ bên trong vào thùng rác (QTN-18). */
+    /**
+     * Thư mục cùng mọi thứ bên trong vào thùng rác (QTN-18). Bên trong có tài liệu đang gắn với không gian học thì chỉ
+     * xóa khi có {@code confirmInUse=true} (NCL-06-CN-001 TC-03).
+     */
     @DeleteMapping("/{id}")
-    public FolderService.Trashed trash(@PathVariable UUID id, HttpServletRequest request) {
-        return folders.trash(id, ClientInfo.from(request));
+    public FolderService.Trashed trash(@PathVariable UUID id,
+                                       @RequestParam(defaultValue = "false") boolean confirmInUse,
+                                       HttpServletRequest request) {
+        ClientInfo client = ClientInfo.from(request);
+        usage.requireConfirmed(folders.activeDocumentIdsUnder(id, client), confirmInUse);
+        return folders.trash(id, client);
     }
 
     public record RenameRequest(@NotBlank @Size(max = 120) String name) {

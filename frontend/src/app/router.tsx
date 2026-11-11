@@ -20,6 +20,8 @@ function page<K extends string, P extends object>(load: () => Promise<Record<K, 
 const DashboardPage = page(() => import('@/features/dashboard/pages/DashboardPage'), 'DashboardPage')
 const LibraryPage = page(() => import('@/features/library/pages/LibraryPage'), 'LibraryPage')
 const DocumentPage = page(() => import('@/features/library/pages/DocumentPage'), 'DocumentPage')
+const WorkspacesPage = page(() => import('@/features/workspaces/pages/WorkspacesPage'), 'WorkspacesPage')
+const WorkspacePage = page(() => import('@/features/workspaces/pages/WorkspacePage'), 'WorkspacePage')
 const DevicesPage = page(() => import('@/features/auth/pages/DevicesPage'), 'DevicesPage')
 const SecurityPage = page(() => import('@/features/auth/pages/SecurityPage'), 'SecurityPage')
 const PrivacyPage = page(() => import('@/features/privacy/pages/PrivacyPage'), 'PrivacyPage')
@@ -97,6 +99,8 @@ export const router = createBrowserRouter([
                   { path: routes.home, element: <DashboardPage /> },
                   { path: routes.library, element: <LibraryPage /> },
                   { path: routes.libraryDocument, element: <DocumentPage /> },
+                  { path: routes.workspaces, element: <WorkspacesPage /> },
+                  { path: routes.workspace, element: <WorkspacePage /> },
                   { path: routes.devices, element: <DevicesPage /> },
                   { path: routes.security, element: <SecurityPage /> },
                   { path: routes.privacySettings, element: <PrivacyPage /> },
